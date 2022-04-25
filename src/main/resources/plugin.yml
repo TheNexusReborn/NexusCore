@@ -1,0 +1,11 @@
+main: com.thenexusreborn.nexuscore.NexusCore
+version: ${project.version}
+name: NexusCore
+description: The main core of The Nexus Reborn
+commands:
+  rank:
+    description: Set player ranks
+  setstat:
+    description: Set stats
+  consolodateStats:
+    description: Consolodates stats
