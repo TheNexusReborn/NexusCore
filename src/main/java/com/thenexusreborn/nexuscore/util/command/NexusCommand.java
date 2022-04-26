@@ -1,7 +1,7 @@
 package com.thenexusreborn.nexuscore.util.command;
 
+import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.nexuscore.NexusCore;
-import com.thenexusreborn.nexuscore.player.Rank;
 import com.thenexusreborn.nexuscore.util.collection.IncrementalMap;
 import com.thenexusreborn.nexuscore.util.nms.NMS;
 import org.bukkit.command.PluginCommand;

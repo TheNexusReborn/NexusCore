@@ -1,5 +1,7 @@
 package com.thenexusreborn.nexuscore.cmds;
 
+import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.player.*;
 import com.thenexusreborn.nexuscore.util.MCUtils;
@@ -45,7 +47,7 @@ public class RankCommand implements TabExecutor {
         if (rank == Rank.NEXUS) {
             sender.sendMessage(MCUtils.color("&cThe Nexus Team rank cannot be set with a command."));
             for (Player player : Bukkit.getOnlinePlayers()) {
-                NexusPlayer onlineNexusPlayer = plugin.getPlayerManager().getNexusPlayer(player.getUniqueId());
+                NexusPlayer onlineNexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(player.getUniqueId());
                 if (onlineNexusPlayer.getRank() == Rank.NEXUS) {
                     player.sendMessage(MCUtils.color("&c" + sender.getName() + " tried to set " + args[0] + "'s rank to Nexus Team"));
                 }
@@ -108,9 +110,9 @@ public class RankCommand implements TabExecutor {
         };
         
         try {
-            plugin.getPlayerManager().getNexusPlayerAsync(UUID.fromString(args[0]), consumer);
+            NexusAPI.getApi().getPlayerManager().getNexusPlayerAsync(UUID.fromString(args[0]), consumer);
         } catch (Exception e) {
-            plugin.getPlayerManager().getNexusPlayerAsync(args[0], consumer);
+            NexusAPI.getApi().getPlayerManager().getNexusPlayerAsync(args[0], consumer);
         }
     
         return true;

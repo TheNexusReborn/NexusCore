@@ -1,7 +1,8 @@
 package com.thenexusreborn.nexuscore.util.command;
 
+import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.nexuscore.NexusCore;
-import com.thenexusreborn.nexuscore.player.Rank;
 import com.thenexusreborn.nexuscore.util.MCUtils;
 import com.thenexusreborn.nexuscore.util.collection.IncrementalMap;
 import org.bukkit.Bukkit;
@@ -53,7 +54,7 @@ public class CommandManager implements TabExecutor {
             if (sender instanceof ConsoleCommandSender) {
                 actorRank = Rank.ADMIN;
             } else {
-                actorRank = plugin.getPlayerManager().getNexusPlayer(((Player) sender).getUniqueId()).getRank();
+                actorRank = NexusAPI.getApi().getPlayerManager().getNexusPlayer(((Player) sender).getUniqueId()).getRank();
             }
             
             if (actorRank.ordinal() > starCommand.getMinRank().ordinal()) {

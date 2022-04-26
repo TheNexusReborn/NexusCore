@@ -11,12 +11,15 @@ public class ActionBar {
     
     private String message;
     
+    public ActionBar() {
+    }
+    
     public ActionBar(String message) {
         this.message = MCUtils.color(message);
     }
     
     public void setText(String message) {
-        this.message = message;
+        this.message = MCUtils.color(message);
     }
     
     /**
@@ -24,7 +27,9 @@ public class ActionBar {
      * @param player The player to send it to.
      */
     public void send(Player player) {
-        PacketPlayOutChat packet = new PacketPlayOutChat(new ChatComponentText(message), (byte) 2);
-        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
+        if (message != null) {
+            PacketPlayOutChat packet = new PacketPlayOutChat(new ChatComponentText(message), (byte) 2);
+            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
+        }
     }
 }

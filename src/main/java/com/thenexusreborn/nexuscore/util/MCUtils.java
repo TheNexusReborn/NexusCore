@@ -1,7 +1,8 @@
 package com.thenexusreborn.nexuscore.util;
 
+import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.nexuscore.NexusCore;
-import com.thenexusreborn.nexuscore.player.Rank;
 import org.bukkit.*;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
@@ -49,7 +50,7 @@ public final class MCUtils {
             return Rank.ADMIN;
         } else if (sender instanceof Player) {
             Player player = (Player) sender;
-            return plugin.getPlayerManager().getNexusPlayer(player.getUniqueId()).getRank();
+            return NexusAPI.getApi().getPlayerManager().getNexusPlayer(player.getUniqueId()).getRank();
         }
         return Rank.MEMBER;
     }

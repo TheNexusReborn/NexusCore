@@ -1,8 +1,11 @@
 package com.thenexusreborn.nexuscore.cmds;
 
+import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.player.*;
+import com.thenexusreborn.api.stats.StatRegistry;
+import com.thenexusreborn.api.util.Operator;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.player.*;
-import com.thenexusreborn.nexuscore.stats.StatRegistry;
 import com.thenexusreborn.nexuscore.util.*;
 import org.bukkit.command.*;
 
@@ -34,9 +37,9 @@ public class SetStatCmd implements TabExecutor {
         NexusPlayer player;
         try {
             UUID uuid = UUID.fromString(args[0]);
-            player = plugin.getPlayerManager().getNexusPlayer(uuid);
+            player = NexusAPI.getApi().getPlayerManager().getNexusPlayer(uuid);
         } catch (Exception e) {
-            player = plugin.getPlayerManager().getNexusPlayer(args[0]);
+            player = NexusAPI.getApi().getPlayerManager().getNexusPlayer(args[0]);
         }
         
         if (player == null) {

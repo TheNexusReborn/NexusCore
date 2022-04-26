@@ -1,7 +1,8 @@
 package com.thenexusreborn.nexuscore.chat;
 
+import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.nexuscore.NexusCore;
-import com.thenexusreborn.nexuscore.player.*;
 import com.thenexusreborn.nexuscore.util.MCUtils;
 import org.bukkit.event.*;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -17,7 +18,7 @@ public class ChatManager implements Listener {
     
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent e) {
-        NexusPlayer nexusPlayer = plugin.getPlayerManager().getNexusPlayer(e.getPlayer().getUniqueId());
+        NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(e.getPlayer().getUniqueId());
         String chatColor;
         Rank rank = nexusPlayer.getRank();
         if (rank == Rank.NEXUS) {
