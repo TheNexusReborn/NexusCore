@@ -15,6 +15,8 @@ import org.bukkit.event.*;
 import org.bukkit.event.player.*;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.UUID;
+
 public class SpigotPlayerManager extends PlayerManager implements Listener {
     
     private final NexusCore plugin;
@@ -37,43 +39,49 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
         };
         abr.runTaskTimer(plugin, 20L, 20L);
         if (!players.containsKey(e.getPlayer().getUniqueId())) {
-            getNexusPlayerAsync(e.getPlayer().getUniqueId(), nexusPlayer -> {
-                nexusPlayer.setLastLogin(System.currentTimeMillis());
-                if (nexusPlayer.getFirstJoined() == 0) {
-                    nexusPlayer.setFirstJoined(System.currentTimeMillis());
-                }
-    
-                NexusScoreboard nexusScoreboard = new SpigotNexusScoreboard(nexusPlayer);
-                nexusScoreboard.init();
-                nexusPlayer.setScoreboard(nexusScoreboard);
-                e.getPlayer().setScoreboard(((SpigotScoreboard) nexusScoreboard.getScoreboard()).getScoreboard());
-                
-                if (!players.containsKey(e.getPlayer().getUniqueId())) {
-                    players.put(e.getPlayer().getUniqueId(), nexusPlayer);
-                }
-                
-                NexusPlayerLoadEvent nexusPlayerLoadEvent = new NexusPlayerLoadEvent(nexusPlayer, originalJoinMessage);
-                Bukkit.getPluginManager().callEvent(nexusPlayerLoadEvent);
-                String joinMessage = nexusPlayerLoadEvent.getJoinMessage();
-                if (joinMessage != null) {
-                    Bukkit.broadcastMessage(MCUtils.color(joinMessage));
-                }
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    getNexusPlayerAsync(e.getPlayer().getUniqueId(), nexusPlayer -> {
+                        nexusPlayer.setLastLogin(System.currentTimeMillis());
+                        if (nexusPlayer.getFirstJoined() == 0) {
+                            nexusPlayer.setFirstJoined(System.currentTimeMillis());
+                        }
         
-                for (String statName : StatRegistry.getStats()) {
-                    if (!nexusPlayer.hasStat(statName)) {
-                        nexusPlayer.setStat(statName, 0, Operator.ADD);
-                    }
+                        NexusScoreboard nexusScoreboard = new SpigotNexusScoreboard(nexusPlayer);
+                        nexusScoreboard.init();
+                        nexusPlayer.setScoreboard(nexusScoreboard);
+                        e.getPlayer().setScoreboard(((SpigotScoreboard) nexusScoreboard.getScoreboard()).getScoreboard());
+        
+                        if (!players.containsKey(e.getPlayer().getUniqueId())) {
+                            players.put(e.getPlayer().getUniqueId(), nexusPlayer);
+                        }
+        
+                        NexusPlayerLoadEvent nexusPlayerLoadEvent = new NexusPlayerLoadEvent(nexusPlayer, originalJoinMessage);
+                        Bukkit.getPluginManager().callEvent(nexusPlayerLoadEvent);
+                        String joinMessage = nexusPlayerLoadEvent.getJoinMessage();
+                        if (joinMessage != null) {
+                            Bukkit.broadcastMessage(MCUtils.color(joinMessage));
+                        }
+        
+                        for (String statName : StatRegistry.getStats()) {
+                            if (!nexusPlayer.hasStat(statName)) {
+                                nexusPlayer.setStat(statName, 0, Operator.ADD);
+                            }
+                        }
+        
+                        cancel();
+                        actionBar.setText("&aYour data has been loaded.");
+                        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                            nexusPlayer.sendMessage("&6&l>> &dWelcome to &5&lThe Nexus Reborn&5!");
+                            nexusPlayer.sendMessage("&6&l>> &dThis server is a project to bring back TheNexusMC, as least, some of it.");
+                            nexusPlayer.sendMessage("&6&l>> &dWe are currently in &aPre-Alpha &dso expect some bugs and instability, as well as a lack of features.");
+                            nexusPlayer.sendMessage("&6&l>> &dIf you would like to support us, please go to &eshop.thenexusreborn.com &dThat would mean a lot to us.");
+                            abr.cancel();
+                        }, 20L);
+                    });
                 }
-                
-                actionBar.setText("&aYour data has been loaded.");
-                Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                    nexusPlayer.sendMessage("&6&l>> &dWelcome to &5&lThe Nexus Reborn&5!");
-                    nexusPlayer.sendMessage("&6&l>> &dThis server is a project to bring back TheNexusMC, as least, some of it.");
-                    nexusPlayer.sendMessage("&6&l>> &dWe are currently in &aPre-Alpha &dso expect some bugs and instability, as well as a lack of features.");
-                    nexusPlayer.sendMessage("&6&l>> &dIf you would like to support us, please go to &eshop.thenexusreborn.com &dThat would mean a lot to us.");
-                    abr.cancel();
-                }, 20L);
-            });
+            }.runTaskTimerAsynchronously(plugin, 1L, 20L);
         } else {
             NexusPlayer nexusPlayer = players.get(e.getPlayer().getUniqueId());
             NexusScoreboard nexusScoreboard = new SpigotNexusScoreboard(nexusPlayer);
@@ -90,8 +98,7 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
         NexusPlayer nexusPlayer = this.players.get(e.getPlayer().getUniqueId());
         if (nexusPlayer != null) {
             nexusPlayer.setLastLogout(System.currentTimeMillis());
-            saveToMySQLAsync(nexusPlayer);
-            System.out.println("Removed: " + this.players.remove(e.getPlayer().getUniqueId()));
+            this.players.remove(e.getPlayer().getUniqueId()); //No need to save to database. Proxy will handle that
         }
     }
     
@@ -104,5 +111,10 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                 }
             }
         }
+    }
+    
+    @Override
+    public NexusPlayer createPlayerData(UUID uniqueId, String name) {
+        throw new UnsupportedOperationException("Not allowed to create player data on a Spigot Server");
     }
 }
