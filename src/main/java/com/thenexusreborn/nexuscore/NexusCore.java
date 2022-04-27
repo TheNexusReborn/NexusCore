@@ -4,7 +4,6 @@ import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.scoreboard.NexusScoreboard;
 import com.thenexusreborn.api.scoreboard.wrapper.ITeam;
-import com.thenexusreborn.api.stats.StatRegistry;
 import com.thenexusreborn.nexuscore.chat.ChatManager;
 import com.thenexusreborn.nexuscore.cmds.*;
 import com.thenexusreborn.nexuscore.player.*;
@@ -61,10 +60,6 @@ public class NexusCore extends JavaPlugin {
         registerCommand("setstat", new SetStatCmd(this));
         registerCommand("consolodatestats", new ConsolodateStatsCmd(this));
     
-        StatRegistry.registerDoubleStat("nexites", 0);
-        StatRegistry.registerDoubleStat("credits", 0);
-        StatRegistry.registerDoubleStat("xp", 0);
-        
         new BukkitRunnable() {
             @Override
             public void run() {
