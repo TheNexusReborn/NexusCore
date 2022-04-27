@@ -3,3 +3,4 @@ mysql:
   user: user
   database: database
   password: password
+serverName: Server

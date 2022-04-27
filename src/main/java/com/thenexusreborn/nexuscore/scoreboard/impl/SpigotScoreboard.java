@@ -7,6 +7,7 @@ import java.util.*;
 
 public class SpigotScoreboard implements IScoreboard {
     
+    
     private Scoreboard scoreboard;
     
     public SpigotScoreboard(Scoreboard scoreboard) {
@@ -15,7 +16,11 @@ public class SpigotScoreboard implements IScoreboard {
     
     @Override
     public ITeam getTeam(String team) {
-        return new SpigotTeam(scoreboard.getTeam(team));
+        Team t = scoreboard.getTeam(team);
+        if (t == null) {
+            return null;
+        }
+        return new SpigotTeam(t);
     }
     
     @Override
