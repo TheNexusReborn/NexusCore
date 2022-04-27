@@ -7,6 +7,7 @@ import com.thenexusreborn.api.scoreboard.wrapper.ITeam;
 import com.thenexusreborn.nexuscore.chat.ChatManager;
 import com.thenexusreborn.nexuscore.cmds.*;
 import com.thenexusreborn.nexuscore.player.*;
+import com.thenexusreborn.nexuscore.proxy.ProxyMessageListener;
 import com.thenexusreborn.nexuscore.util.ActionBar;
 import com.thenexusreborn.nexuscore.util.command.CommandManager;
 import com.thenexusreborn.nexuscore.util.nms.NMS;
@@ -52,6 +53,13 @@ public class NexusCore extends JavaPlugin {
             e.printStackTrace();
             return;
         }
+        
+        this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+        this.getServer().getMessenger().registerOutgoingPluginChannel(this, "nexus");
+    
+        ProxyMessageListener messageListener = new ProxyMessageListener(this);
+        this.getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", messageListener);
+        this.getServer().getMessenger().registerIncomingPluginChannel(this, "nexus", messageListener);
         
         Bukkit.getServer().getPluginManager().registerEvents((SpigotPlayerManager) NexusAPI.getApi().getPlayerManager(), this);
         Bukkit.getServer().getPluginManager().registerEvents(chatManager, this);
