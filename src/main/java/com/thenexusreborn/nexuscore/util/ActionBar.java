@@ -9,17 +9,21 @@ import org.bukkit.entity.Player;
  */
 public class ActionBar {
     
-    private String message;
+    private String text;
     
     public ActionBar() {
     }
     
-    public ActionBar(String message) {
-        this.message = MCUtils.color(message);
+    public ActionBar(String text) {
+        this.text = MCUtils.color(text);
     }
     
     public void setText(String message) {
-        this.message = MCUtils.color(message);
+        this.text = MCUtils.color(message);
+    }
+    
+    public String getText() {
+        return text;
     }
     
     /**
@@ -27,8 +31,8 @@ public class ActionBar {
      * @param player The player to send it to.
      */
     public void send(Player player) {
-        if (message != null) {
-            PacketPlayOutChat packet = new PacketPlayOutChat(new ChatComponentText(message), (byte) 2);
+        if (text != null) {
+            PacketPlayOutChat packet = new PacketPlayOutChat(new ChatComponentText(getText()), (byte) 2);
             ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
         }
     }
