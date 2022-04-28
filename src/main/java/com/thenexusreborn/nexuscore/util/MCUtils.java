@@ -7,6 +7,7 @@ import org.bukkit.*;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
+import java.text.DecimalFormat;
 import java.util.*;
 
 /**
@@ -53,6 +54,10 @@ public final class MCUtils {
             return NexusAPI.getApi().getPlayerManager().getNexusPlayer(player.getUniqueId()).getRank();
         }
         return Rank.MEMBER;
+    }
+    
+    public static String formatNumber(Number number) {
+        return new DecimalFormat("#.#").format(number);
     }
     
     /**
