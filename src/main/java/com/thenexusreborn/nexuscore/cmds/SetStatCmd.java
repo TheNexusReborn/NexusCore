@@ -85,12 +85,12 @@ public class SetStatCmd implements TabExecutor {
             Number oldValue = value;
             operator = Operator.MULTIPLY;
             value = 0;
-            player.setStat(args[1], value, operator);
+            player.changeStat(args[1], value, operator);
             operator = Operator.ADD;
             value = oldValue;
         }
         
-        player.setStat(args[1], value, operator);
+        player.changeStat(args[1], value, operator);
         sender.sendMessage(MCUtils.color("&eYou modified the stat &b" + args[1] + " &ewith the value &b" + value + " &eand the operation &b" + operator.name().toLowerCase()));
         return true;
     }
