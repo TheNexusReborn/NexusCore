@@ -35,12 +35,16 @@ public final class SpigotNexusPlayer extends NexusPlayer {
         return null;
     }
     
-    public void setActionBar(String text) {
-        this.actionBar.setText(text);
-    }
-    
     public ActionBar getActionBar() {
         return actionBar;
+    }
+    
+    public void setActionBar(ActionBar actionBar) {
+        if (actionBar == null) {
+            this.actionBar = new ActionBar();
+        } else {
+            this.actionBar = actionBar;
+        }
     }
     
     public Player getPlayer() {
