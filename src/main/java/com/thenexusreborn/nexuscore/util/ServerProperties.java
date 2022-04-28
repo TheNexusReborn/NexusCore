@@ -112,7 +112,7 @@ public final class ServerProperties {
     }
     
     public static int getServerPort() {
-        return (int) SERVER_PROPERTIES.get("server-port");
+        return Integer.parseInt((String) SERVER_PROPERTIES.get("server-port"));
     }
     
     public static boolean getEnableRcon() {

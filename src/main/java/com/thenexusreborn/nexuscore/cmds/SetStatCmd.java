@@ -5,8 +5,7 @@ import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.stats.StatRegistry;
 import com.thenexusreborn.api.util.Operator;
 import com.thenexusreborn.nexuscore.NexusCore;
-import com.thenexusreborn.nexuscore.player.*;
-import com.thenexusreborn.nexuscore.util.*;
+import com.thenexusreborn.nexuscore.util.MCUtils;
 import org.bukkit.command.*;
 
 import java.util.*;
@@ -60,7 +59,7 @@ public class SetStatCmd implements TabExecutor {
                 sender.sendMessage(MCUtils.color("&cYou provided an invalid integer value for that stat type."));
                 return true;
             }
-        } else if (StatRegistry.isDoubleStat(args[2])) {
+        } else if (StatRegistry.isDoubleStat(args[1])) {
             try {
                 value = Math.abs(Double.parseDouble(args[2]));
             } catch (NumberFormatException e) {
