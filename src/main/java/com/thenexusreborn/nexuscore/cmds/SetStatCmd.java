@@ -83,7 +83,6 @@ public class SetStatCmd implements TabExecutor {
             sender.sendMessage(MCUtils.color("&eYou modified the stat &b" + args[1] + " &ewith the value &b" + value + " &eand the operation &b" + operator.name().toLowerCase()));
         };
     
-        NexusPlayer player;
         try {
             UUID uuid = UUID.fromString(args[0]);
             NexusAPI.getApi().getPlayerManager().getNexusPlayerAsync(uuid, consumer);

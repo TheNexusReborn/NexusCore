@@ -38,8 +38,13 @@ public class ChatManager implements Listener {
             }
         }
         
-        String format = "&8(&2&l{level}&8) &r" + nexusPlayer.getDisplayName() + "&8: " + chatColor + e.getMessage().replace("%", "%%");
+        String format = "&8(&2&l{level}&8) &r" + nexusPlayer.getDisplayName() + "{tag}&8: " + chatColor + e.getMessage().replace("%", "%%");
         format = format.replace("{level}", nexusPlayer.getLevel() + "");
+        if (nexusPlayer.getTag() != null) {
+            format = format.replace("{tag}", " " + nexusPlayer.getTag().getDisplayName());
+        } else {
+            format = format.replace("{tag}", "");
+        }
         e.setFormat(MCUtils.color(format));
     }
     

@@ -10,3 +10,4 @@ commands:
     description: Set stats
   consolodateStats:
     description: Consolodates stats
+  tag:
