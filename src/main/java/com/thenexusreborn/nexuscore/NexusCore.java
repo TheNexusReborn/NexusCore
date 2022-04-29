@@ -75,8 +75,6 @@ public class NexusCore extends JavaPlugin {
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     NexusPlayer nexusPlayer = playerManager.getNexusPlayer(player.getUniqueId());
                     if (nexusPlayer != null) {
-                        ActionBar actionBar = ((SpigotNexusPlayer) nexusPlayer).getActionBar();
-                        actionBar.send(player);
                         if (nexusPlayer.getScoreboard() != null) {
                             for (Player other : Bukkit.getOnlinePlayers()) {
                                 NexusPlayer otherNexusPlayer = playerManager.getNexusPlayer(other.getUniqueId());
@@ -109,6 +107,8 @@ public class NexusCore extends JavaPlugin {
                         if (nexusPlayer.getScoreboard() != null) {
                             nexusPlayer.getScoreboard().update();
                         }
+                        ActionBar actionBar = ((SpigotNexusPlayer) nexusPlayer).getActionBar();
+                        actionBar.send(player);
                     }
                 }
             }
