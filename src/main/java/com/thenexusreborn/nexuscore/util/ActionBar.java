@@ -31,8 +31,9 @@ public class ActionBar {
      * @param player The player to send it to.
      */
     public void send(Player player) {
-        if (getText() != null) {
-            PacketPlayOutChat packet = new PacketPlayOutChat(new ChatComponentText(MCUtils.color(getText())), (byte) 2);
+        String text = getText();
+        if (text != null) {
+            PacketPlayOutChat packet = new PacketPlayOutChat(new ChatComponentText(MCUtils.color(text)), (byte) 2);
             ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
         }
     }
