@@ -3,14 +3,15 @@ package com.thenexusreborn.nexuscore.cmds;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.nexuscore.NexusCore;
-import com.thenexusreborn.nexuscore.player.*;
 import com.thenexusreborn.nexuscore.util.MCUtils;
 import com.thenexusreborn.nexuscore.util.helper.TimeHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
+import java.sql.*;
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.function.Consumer;
 
 public class RankCommand implements TabExecutor {
@@ -107,6 +108,26 @@ public class RankCommand implements TabExecutor {
                 nexusPlayer.removeRank(rank);
                 sender.sendMessage(MCUtils.color("&eYou removed the rank " + rankName + " &efrom &b" + nexusPlayer.getName()));
             }
+    
+            StringBuilder sb = new StringBuilder();
+            for (Entry<Rank, Long> entry : nexusPlayer.getRanks().entrySet()) {
+                sb.append(entry.getKey().name()).append("=").append(entry.getValue()).append(",");
+            }
+    
+            String ranks;
+            if (sb.length() > 0) {
+                ranks = sb.substring(0, sb.toString().length() - 1);
+            } else {
+                ranks = "";
+            }
+            
+            NexusAPI.getApi().getThreadFactory().runAsync(() -> {
+                try (Connection connection = plugin.getConnection(); Statement statement = connection.createStatement()) {
+                    statement.executeUpdate("update players set ranks='" + ranks + "' where uuid='" + nexusPlayer.getUniqueId() +  "';");
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            });
         };
         
         try {
