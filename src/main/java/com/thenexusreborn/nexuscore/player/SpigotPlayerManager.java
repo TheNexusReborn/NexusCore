@@ -8,11 +8,12 @@ import com.thenexusreborn.nexuscore.scoreboard.SpigotNexusScoreboard;
 import com.thenexusreborn.nexuscore.scoreboard.impl.SpigotScoreboard;
 import com.thenexusreborn.nexuscore.util.*;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.*;
 import org.bukkit.event.player.*;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.UUID;
+import java.util.*;
 
 public class SpigotPlayerManager extends PlayerManager implements Listener {
     
@@ -20,6 +21,18 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
     
     public SpigotPlayerManager(NexusCore plugin) {
         this.plugin = plugin;
+        
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (UUID uuid : new HashSet<>(players.keySet())) {
+                    Player player = Bukkit.getPlayer(uuid);
+                    if (player == null) {
+                        players.remove(uuid);
+                    }
+                }
+            }
+        }.runTaskTimer(plugin, 1L, 12000);
     }
     
     @EventHandler
