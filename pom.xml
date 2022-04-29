@@ -41,6 +41,10 @@
                                     <pattern>com.mysql</pattern>
                                     <shadedPattern>com.thenexusreborn.mysql</shadedPattern>
                                 </relocation>
+                                <relocation>
+                                    <pattern>com.google.gson</pattern>
+                                    <shadedPattern>com.thenexusreborn.gson</shadedPattern>
+                                </relocation>
                             </relocations>
                         </configuration>
                     </execution>
