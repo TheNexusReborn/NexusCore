@@ -54,13 +54,12 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                 }
                 
                 actionBar.setText("&aYour data has been loaded.");
-                Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                    nexusPlayer.sendMessage("&6&l>> &dWelcome to &5&lThe Nexus Reborn&5!");
-                    nexusPlayer.sendMessage("&6&l>> &dThis server is a project to bring back TheNexusMC, as least, some of it.");
-                    nexusPlayer.sendMessage("&6&l>> &dWe are currently in &aPre-Alpha &dso expect some bugs and instability, as well as a lack of features.");
-                    nexusPlayer.sendMessage("&6&l>> &dIf you would like to support us, please go to &eshop.thenexusreborn.com &dThat would mean a lot to us.");
-                    abr.cancel();
-                }, 40L);
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        abr.cancel();
+                    }
+                }.runTaskLater(plugin, 40L);
             });
         } else {
             NexusPlayer nexusPlayer = players.get(e.getPlayer().getUniqueId());
