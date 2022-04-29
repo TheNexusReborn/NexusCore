@@ -26,22 +26,22 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
     public void onPlayerJoin(PlayerJoinEvent e) {
         String originalJoinMessage = e.getJoinMessage();
         e.setJoinMessage(null);
-        ActionBar actionBar = new ActionBar("&cPlease wait while your data is loaded.");
-        actionBar.send(e.getPlayer());
-        BukkitRunnable abr = new BukkitRunnable() {
-            @Override
-            public void run() {
-                actionBar.send(e.getPlayer());
-            }
-        };
-        abr.runTaskTimer(plugin, 20L, 20L);
         if (!players.containsKey(e.getPlayer().getUniqueId())) {
+            ActionBar actionBar = new ActionBar("&cPlease wait while your data is loaded.");
+            actionBar.send(e.getPlayer());
+            BukkitRunnable abr = new BukkitRunnable() {
+                @Override
+                public void run() {
+                    actionBar.send(e.getPlayer());
+                }
+            };
+            abr.runTaskTimer(plugin, 20L, 20L);
             getNexusPlayerAsync(e.getPlayer().getUniqueId(), nexusPlayer -> {
                 NexusScoreboard nexusScoreboard = new SpigotNexusScoreboard(nexusPlayer);
                 nexusScoreboard.init();
                 nexusPlayer.setScoreboard(nexusScoreboard);
                 e.getPlayer().setScoreboard(((SpigotScoreboard) nexusScoreboard.getScoreboard()).getScoreboard());
-                
+    
                 if (!players.containsKey(e.getPlayer().getUniqueId())) {
                     players.put(e.getPlayer().getUniqueId(), nexusPlayer);
                 }
@@ -52,7 +52,7 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                 if (joinMessage != null) {
                     Bukkit.broadcastMessage(MCUtils.color(joinMessage));
                 }
-                
+    
                 actionBar.setText("&aYour data has been loaded.");
                 new BukkitRunnable() {
                     @Override
@@ -67,8 +67,12 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
             nexusScoreboard.init();
             nexusPlayer.setScoreboard(nexusScoreboard);
             e.getPlayer().setScoreboard(((SpigotScoreboard) nexusScoreboard.getScoreboard()).getScoreboard());
-            actionBar.setText("&aYour data has been loaded.");
-            Bukkit.getScheduler().runTaskLater(plugin, abr::cancel, 20L);
+            NexusPlayerLoadEvent nexusPlayerLoadEvent = new NexusPlayerLoadEvent(nexusPlayer, originalJoinMessage);
+            Bukkit.getPluginManager().callEvent(nexusPlayerLoadEvent);
+            String joinMessage = nexusPlayerLoadEvent.getJoinMessage();
+            if (joinMessage != null) {
+                Bukkit.broadcastMessage(MCUtils.color(joinMessage));
+            }
         }
     }
     
