@@ -105,4 +105,13 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
     public NexusPlayer createPlayerData(UUID uniqueId, String name) {
         throw new UnsupportedOperationException("Not allowed to create player data on a Spigot Server");
     }
+    
+    @EventHandler
+    public void onCommandPreProcess(PlayerCommandPreprocessEvent e) {
+        if (e.getMessage().startsWith("minecraft:")) {
+            if (!e.getPlayer().hasPermission("nexuscore.admin")) {
+                e.setCancelled(true);
+            }
+        }
+    }
 }

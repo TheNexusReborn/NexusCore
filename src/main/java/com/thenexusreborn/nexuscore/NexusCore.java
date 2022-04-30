@@ -71,6 +71,7 @@ public class NexusCore extends JavaPlugin {
         getCommand("say").setExecutor(new SayCommand(this));
         getCommand("message").setExecutor(new MessageCommand(this));
         getCommand("reply").setExecutor(new ReplyCommand(this));
+        getCommand("me").setExecutor(new MeCommand());
     
         new BukkitRunnable() {
             @Override

@@ -16,3 +16,4 @@ commands:
   reply:
     aliases: [r]
   say:
+  me: 
