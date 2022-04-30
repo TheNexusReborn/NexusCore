@@ -48,7 +48,7 @@ public class ProgressBar {
         int leftOver = (totalBars - progressBars);
         
         StringBuilder completedBuilder = new StringBuilder(), notCompletedBuilder = new StringBuilder();
-        for (int i = 0; i < progressBars; i++) {
+        for (int i = 0; i < leftOver; i++) {
             notCompletedBuilder.append(symbol);
         }
     
