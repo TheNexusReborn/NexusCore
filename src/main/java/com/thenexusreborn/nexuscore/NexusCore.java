@@ -1,9 +1,7 @@
 package com.thenexusreborn.nexuscore;
 
 import com.thenexusreborn.api.NexusAPI;
-import com.thenexusreborn.api.player.*;
-import com.thenexusreborn.api.scoreboard.NexusScoreboard;
-import com.thenexusreborn.api.scoreboard.wrapper.ITeam;
+import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.nexuscore.chat.ChatManager;
 import com.thenexusreborn.nexuscore.cmds.*;
 import com.thenexusreborn.nexuscore.player.*;
@@ -72,35 +70,35 @@ public class NexusCore extends JavaPlugin {
         getCommand("message").setExecutor(new MessageCommand(this));
         getCommand("reply").setExecutor(new ReplyCommand(this));
     
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                PlayerManager playerManager = NexusAPI.getApi().getPlayerManager();
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    NexusPlayer nexusPlayer = playerManager.getNexusPlayer(player.getUniqueId());
-                    if (nexusPlayer != null) {
-                        if (nexusPlayer.getScoreboard() != null) {
-                            for (Player other : Bukkit.getOnlinePlayers()) {
-                                NexusPlayer otherNexusPlayer = playerManager.getNexusPlayer(other.getUniqueId());
-                                if (otherNexusPlayer != null) {
-                                    ITeam otherTeam = nexusPlayer.getScoreboard().getPlayerTeams().get(otherNexusPlayer.getUniqueId());
-                                    String correctChar = NexusScoreboard.BEGIN_CHARS.get(nexusPlayer.getRank());
-                                    if (otherTeam == null) {
-                                        nexusPlayer.getScoreboard().createPlayerTeam(otherNexusPlayer);
-                                    } else {
-                                        if (otherTeam.getName().startsWith(correctChar)) {
-                                            nexusPlayer.getScoreboard().updatePlayerTeam(otherNexusPlayer);
-                                        } else {
-                                            nexusPlayer.getScoreboard().refreshPlayerTeam(otherNexusPlayer);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }.runTaskTimer(this, 1L, 20L);
+//        new BukkitRunnable() {
+//            @Override
+//            public void run() {
+//                PlayerManager playerManager = NexusAPI.getApi().getPlayerManager();
+//                for (Player player : Bukkit.getOnlinePlayers()) {
+//                    NexusPlayer nexusPlayer = playerManager.getNexusPlayer(player.getUniqueId());
+//                    if (nexusPlayer != null) {
+//                        if (nexusPlayer.getScoreboard() != null) {
+//                            for (Player other : Bukkit.getOnlinePlayers()) {
+//                                NexusPlayer otherNexusPlayer = playerManager.getNexusPlayer(other.getUniqueId());
+//                                if (otherNexusPlayer != null) {
+//                                    ITeam otherTeam = nexusPlayer.getScoreboard().getPlayerTeams().get(otherNexusPlayer.getUniqueId());
+//                                    String correctChar = NexusScoreboard.BEGIN_CHARS.get(nexusPlayer.getRank());
+//                                    if (otherTeam == null) {
+//                                        nexusPlayer.getScoreboard().createPlayerTeam(otherNexusPlayer);
+//                                    } else {
+//                                        if (otherTeam.getName().startsWith(correctChar)) {
+//                                            nexusPlayer.getScoreboard().updatePlayerTeam(otherNexusPlayer);
+//                                        } else {
+//                                            nexusPlayer.getScoreboard().refreshPlayerTeam(otherNexusPlayer);
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }.runTaskTimer(this, 1L, 20L);
         
         new BukkitRunnable() {
             @Override

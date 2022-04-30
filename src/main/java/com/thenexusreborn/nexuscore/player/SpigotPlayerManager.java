@@ -5,7 +5,7 @@ import com.thenexusreborn.api.scoreboard.NexusScoreboard;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.api.events.NexusPlayerLoadEvent;
 import com.thenexusreborn.nexuscore.scoreboard.SpigotNexusScoreboard;
-import com.thenexusreborn.nexuscore.scoreboard.impl.SpigotScoreboard;
+import com.thenexusreborn.nexuscore.scoreboard.impl.*;
 import com.thenexusreborn.nexuscore.util.*;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -65,7 +65,11 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                 if (joinMessage != null) {
                     Bukkit.broadcastMessage(MCUtils.color(joinMessage));
                 }
-    
+                
+                if (nexusScoreboard.getTablistHandler() == null) {
+                    nexusScoreboard.setTablistHandler(new RankTablistHandler(nexusScoreboard));
+                }
+                
                 actionBar.setText("&aYour data has been loaded.");
                 new BukkitRunnable() {
                     @Override
