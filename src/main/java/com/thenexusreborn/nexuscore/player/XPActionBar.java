@@ -26,7 +26,7 @@ public class XPActionBar extends ActionBar {
         }
         
         int level = player.getLevel();
-        int currentXp = (int) (player.getStatValue("xp") + player.getPlayTimeXp());
+        int currentXp = (int) player.getStatValue("xp");
         int levelXp = currentXp - NexusPlayer.levels.get(level);
         int nextLevelXp = NexusPlayer.levels.get(level + 1) - NexusPlayer.levels.get(level);
         int xpToNextLevel = nextLevelXp - levelXp;
