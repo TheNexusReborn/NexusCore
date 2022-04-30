@@ -11,3 +11,8 @@ commands:
   consolodateStats:
     description: Consolodates stats
   tag:
+  message:
+    aliases: [msg, whisper, tell]
+  reply:
+    aliases: [r]
+  say:

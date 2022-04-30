@@ -68,6 +68,9 @@ public class NexusCore extends JavaPlugin {
         registerCommand("setstat", new SetStatCmd(this));
         registerCommand("consolodatestats", new ConsolodateStatsCmd(this));
         getCommand("tag").setExecutor(new TagCommand(this));
+        getCommand("say").setExecutor(new SayCommand(this));
+        getCommand("message").setExecutor(new MessageCommand(this));
+        getCommand("reply").setExecutor(new ReplyCommand(this));
     
         new BukkitRunnable() {
             @Override
