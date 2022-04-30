@@ -39,6 +39,20 @@ public class MessageCommand implements CommandExecutor {
             target = NexusAPI.getApi().getPlayerManager().getNexusPlayer(args[0]);
         }
         
+        if (target == null) {
+            player.sendMessage("&cThat player is not online.");
+            return true;
+        }
+        
+        StringBuilder sb = new StringBuilder();
+        for (int i = 1; i < args.length; i++) {
+            sb.append(args[i]).append(" ");
+        }
+        
+        player.sendMessage("&6&l>> &d&lPRIVATE &dto " + target.getRank().getColor() + target.getName() + "&8: &5" + sb);
+        target.sendMessage("&6&l>> &d&lPRIVATE &dfrom " + player.getRank().getColor() + player.getName() + "&8: &5" + sb);
+        player.setLastMessage(target);
+        target.setLastMessage(player);
         return true;
     }
 }
