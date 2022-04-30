@@ -4,6 +4,7 @@ import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.util.MCUtils;
+import org.bukkit.ChatColor;
 import org.bukkit.event.*;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
@@ -38,7 +39,7 @@ public class ChatManager implements Listener {
             }
         }
         
-        String format = "&8(&2&l{level}&8) &r" + nexusPlayer.getDisplayName() + "{tag}&8: " + chatColor + e.getMessage().replace("%", "%%");
+        String format = "&8(&2&l{level}&8) &r" + nexusPlayer.getDisplayName() + "{tag}&8: " + chatColor + ChatColor.stripColor(MCUtils.color(e.getMessage().replace("%", "%%")));
         format = format.replace("{level}", nexusPlayer.getLevel() + "");
         if (nexusPlayer.getTag() != null) {
             format = format.replace("{tag}", " " + nexusPlayer.getTag().getDisplayName());
