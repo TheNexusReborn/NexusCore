@@ -54,10 +54,21 @@ public final class SpigotNexusPlayer extends NexusPlayer {
     
     @Override
     public <T extends Number> void changeStat(String statName, T statValue, Operator operator) {
+         int previousLevel = 0;
+         if (statName.equalsIgnoreCase("xp")) {
+             previousLevel = getLevel();
+         }
         super.changeStat(statName, statValue, operator);
         
         if (!statName.equalsIgnoreCase("xp")) {
             return;
+        }
+        
+        if (getLevel() > previousLevel) {
+            sendMessage("&5╔══════════════════════════════");
+            sendMessage("&5║  &5&k&liiii&a&lLEVEL UP!&5&l&kiiii");
+            sendMessage("&5║  &7&oYou are now &e&l&oLevel " + getLevel() + "&7&o!");
+            sendMessage("&5╚══════════════════════════════");
         }
     
         if (getActionBar() instanceof XPActionBar) {
