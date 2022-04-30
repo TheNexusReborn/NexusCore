@@ -3,11 +3,9 @@ package com.thenexusreborn.nexuscore.player;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.tags.Tag;
 import com.thenexusreborn.api.util.Operator;
-import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.util.*;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 
@@ -62,22 +60,12 @@ public final class SpigotNexusPlayer extends NexusPlayer {
             return;
         }
     
-        int level = getLevel();
-        int currentXp = (int) (getStatValue("xp") + getPlayTimeXp());
-        int levelXp = currentXp - NexusPlayer.levels.get(level);
-        int nextLevelXp = NexusPlayer.levels.get(level + 1) - NexusPlayer.levels.get(level);
-        int xpToNextLevel = nextLevelXp - levelXp;
-        ProgressBar progressBar = new ProgressBar(levelXp, nextLevelXp, 100, "|", "&a", "&c");
-        
-        String format = "&aLVL " + level + "&8[" + progressBar.display() + "&8] &7" + levelXp + " XP&8/&7" + nextLevelXp + "XP";
-        setActionBar(new ActionBar(format));
-        ActionBar current = getActionBar();
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                setActionBar(current);
-            }
-        }.runTaskLater(NexusCore.getPlugin(NexusCore.class), 60L);
+        if (getActionBar() instanceof XPActionBar) {
+            XPActionBar actionBar = (XPActionBar) getActionBar();
+            actionBar.update();
+        } else {
+            setActionBar(new XPActionBar(this, getActionBar(), System.currentTimeMillis()));
+        }
     }
     
     @Override
