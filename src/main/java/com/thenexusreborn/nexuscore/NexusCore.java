@@ -29,7 +29,7 @@ public class NexusCore extends JavaPlugin {
     private CommandManager commandManager;
     private ChatManager chatManager;
     
-    public static final Environment ENVIRONMENT = Environment.EXPERIMENTAL;
+    public static final Environment ENVIRONMENT = Environment.PRODUCTION;
     
     @Override
     public void onEnable() {
