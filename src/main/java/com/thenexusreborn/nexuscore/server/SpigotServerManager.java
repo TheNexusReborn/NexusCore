@@ -16,14 +16,14 @@ public class SpigotServerManager extends ServerManager {
     
     @Override
     public void setupCurrentServer() {
-        int multicraftId = plugin.getConfig().getInt("serverinfo.multicraftid");
+        int multicraftId = plugin.getConfig().getInt("serverInfo.multicraftid");
         String ip = ServerProperties.getServerIp();
-        String name = plugin.getConfig().getString("serverinfo.name");
+        String name = plugin.getConfig().getString("serverInfo.name");
         int port = ServerProperties.getServerPort();
         int players = Bukkit.getOnlinePlayers().size();
         int maxPlayers = Bukkit.getMaxPlayers();
         int hiddenPlayers = 0;
-        String type = plugin.getConfig().getString("serverinfo.type");
+        String type = plugin.getConfig().getString("serverInfo.type");
         String status = "loading";
         String state = "none";
         this.currentServer = new ServerInfo(multicraftId, ip, name, port, players, maxPlayers, hiddenPlayers, type, status, state);
