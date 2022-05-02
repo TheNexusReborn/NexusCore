@@ -2,7 +2,7 @@ package com.thenexusreborn.nexuscore;
 
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.NexusPlayer;
-import com.thenexusreborn.api.server.ServerInfo;
+import com.thenexusreborn.api.server.*;
 import com.thenexusreborn.nexuscore.chat.ChatManager;
 import com.thenexusreborn.nexuscore.cmds.*;
 import com.thenexusreborn.nexuscore.menu.MenuManager;
@@ -20,6 +20,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.sql.*;
+import java.util.*;
 
 public class NexusCore extends JavaPlugin {
     
@@ -88,7 +89,22 @@ public class NexusCore extends JavaPlugin {
             }
         }.runTaskTimer(this, 1L, 1L);
         
-        
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                List<ServerInfo> allServers = NexusAPI.getApi().getDataManager().getAllServers();
+                ServerManager serverManager = NexusAPI.getApi().getServerManager();
+                for (ServerInfo server : new ArrayList<>(serverManager.getServers())) {
+                    NexusAPI.getApi().getDataManager().updateServerInfo(server);
+                }
+    
+                for (ServerInfo server : allServers) {
+                    if (!serverManager.getServers().contains(server)) {
+                        serverManager.addServer(server);
+                    }
+                }
+            }
+        }.runTaskTimerAsynchronously(this, 1L, 20L);
     }
     
     @Override
