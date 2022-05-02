@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore;
 
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.*;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.nexuscore.chat.ChatManager;
 import com.thenexusreborn.nexuscore.cmds.*;
@@ -28,8 +28,6 @@ public class NexusCore extends JavaPlugin {
     
     private CommandManager commandManager;
     private ChatManager chatManager;
-    
-    public static final Environment ENVIRONMENT = Environment.PRODUCTION;
     
     @Override
     public void onEnable() {
