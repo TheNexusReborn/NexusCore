@@ -9,7 +9,7 @@ import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
 import java.sql.*;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class TagCommand implements CommandExecutor {
@@ -28,9 +28,7 @@ public class TagCommand implements CommandExecutor {
         }
     
     
-        TagManager tagManager = NexusAPI.getApi().getTagManager();
-        
-        if (args[0].equalsIgnoreCase("unlock")) {
+        if (args[0].equalsIgnoreCase("unlock") || args[0].equalsIgnoreCase("remove")) {
             Rank senderRank = MCUtils.getSenderRank(plugin, sender);
             if (senderRank.ordinal() > Rank.ADMIN.ordinal()) {
                 sender.sendMessage(MCUtils.color("&cYou do not have permission to use that command."));
@@ -38,7 +36,7 @@ public class TagCommand implements CommandExecutor {
             }
     
             if (!(args.length > 2)) {
-                sender.sendMessage(MCUtils.color("&cUsage: /tag unlock <player> <tagName>"));
+                sender.sendMessage(MCUtils.color("&cUsage: /tag " + args[0] + " <player> <tagName>"));
                 return true;
             }
     
@@ -47,14 +45,19 @@ public class TagCommand implements CommandExecutor {
                 sb.append(args[i]).append(" ");
             }
             String tagName = sb.substring(0, sb.length() - 1);
-            Tag tag = tagManager.getTag(tagName);
-            if (tag == null) {
-                sender.sendMessage(MCUtils.color("&cThe name of the tag you provided is not valid."));
-                return true;
-            }
-    
+            Tag tag = new Tag(tagName);
+            
             Consumer<NexusPlayer> action = nexusPlayer -> {
-                nexusPlayer.unlockTag(tag);
+                String cmdAction, verb;
+                if (args[0].equalsIgnoreCase("unlock")) {
+                    nexusPlayer.unlockTag(tag);
+                    cmdAction = "unlocked";
+                    verb = "for";
+                } else {
+                    nexusPlayer.removeTag(tag);
+                    cmdAction = "removed";
+                    verb = "from";
+                }
                 
                 NexusAPI.getApi().getThreadFactory().runAsync(() -> {
                     try (Connection connection = NexusAPI.getApi().getConnection(); Statement statement = connection.createStatement()) {
@@ -65,7 +68,7 @@ public class TagCommand implements CommandExecutor {
                     }
                 });
                 
-                sender.sendMessage(MCUtils.color("&eYou unlocked the tag " + tag.getDisplayName() + " &efor player &b" + nexusPlayer.getName()));
+                sender.sendMessage(MCUtils.color("&eYou " + cmdAction + " the tag " + tag.getDisplayName() + " &e" + verb + " the player &b" + nexusPlayer.getName()));
             };
     
             try {
@@ -89,17 +92,16 @@ public class TagCommand implements CommandExecutor {
             player.sendMessage(MCUtils.color("&cPlease wait for your data to load before using this command."));
             return true;
         }
-        
+    
+        Set<Tag> unlockedTags = nexusPlayer.getUnlockedTags();
         if (args[0].equalsIgnoreCase("list")) {
-            nexusPlayer.sendMessage("&eList of tags registered...");
-            for (Tag tag : tagManager.getTags().values()) {
-                String status;
-                if (nexusPlayer.isTagUnlocked(tag)) {
-                    status = "&aUnlocked";
-                } else {
-                    status = "&cLocked";
+            if (unlockedTags.size() > 0) {
+                nexusPlayer.sendMessage("&eList of available tags...");
+                for (Tag tag : unlockedTags) {
+                    nexusPlayer.sendMessage(" &8- &e" + tag.getName() + " " + tag.getDisplayName());
                 }
-                nexusPlayer.sendMessage(" &8- &e" + tag.getName() + " " + tag.getDisplayName() + " " + status);
+            } else {
+                nexusPlayer.sendMessage("&cYou have no tags unlocked.");
             }
         } else if (args[0].equalsIgnoreCase("set")) {
             if (!(args.length > 1)) {
@@ -112,14 +114,16 @@ public class TagCommand implements CommandExecutor {
                 sb.append(args[i]).append(" ");
             }
             String tagName = sb.substring(0, sb.length() - 1);
-            Tag tag = tagManager.getTag(tagName);
-            if (tag == null) {
-                nexusPlayer.sendMessage("&cThe name of the tag you provided is not valid.");
-                return true;
+             
+            Tag tag = null;
+            for (Tag unlocked : unlockedTags) {
+                if (unlocked.getName().equalsIgnoreCase(tagName)) {
+                    tag = unlocked;
+                }
             }
             
-            if (!nexusPlayer.isTagUnlocked(tag)) {
-                nexusPlayer.sendMessage("&cYou have not unlocked that tag yet.");
+            if (tag == null) {
+                nexusPlayer.sendMessage("&cYou do not have a tag with that name.");
                 return true;
             }
             
