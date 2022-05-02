@@ -8,3 +8,4 @@ serverInfo:
   serverName: Server
   type: Default
   multicraftid: 0
+environment: DEVELOPMENT
