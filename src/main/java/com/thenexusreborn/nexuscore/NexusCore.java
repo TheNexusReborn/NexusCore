@@ -1,7 +1,8 @@
 package com.thenexusreborn.nexuscore;
 
-import com.thenexusreborn.api.*;
+import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.NexusPlayer;
+import com.thenexusreborn.api.server.ServerInfo;
 import com.thenexusreborn.nexuscore.chat.ChatManager;
 import com.thenexusreborn.nexuscore.cmds.*;
 import com.thenexusreborn.nexuscore.menu.MenuManager;
@@ -86,11 +87,18 @@ public class NexusCore extends JavaPlugin {
                 }
             }
         }.runTaskTimer(this, 1L, 1L);
+        
+        
     }
     
     @Override
     public void onDisable() {
         NexusAPI.getApi().getPlayerManager().saveData();
+        ServerInfo serverInfo = NexusAPI.getApi().getServerManager().getCurrentServer();
+        serverInfo.setStatus("offline");
+        serverInfo.setState("none");
+        serverInfo.setPlayers(0);
+        NexusAPI.getApi().getDataManager().pushServerInfo(serverInfo);
     }
     
     private void registerCommand(String cmd, TabExecutor tabExecutor) {
