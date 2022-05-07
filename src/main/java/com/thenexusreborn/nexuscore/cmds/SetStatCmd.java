@@ -79,6 +79,12 @@ public class SetStatCmd implements TabExecutor {
                 value = oldValue;
             }
     
+            double currentValue = player.getStatValue(args[1]);
+            if (operator.calculate(currentValue, value).doubleValue() < 0) {
+                sender.sendMessage(MCUtils.color(MsgType.WARN + "You cannot modify a stat below 0"));
+                return;
+            }
+    
             player.changeStat(args[1], value, operator);
             sender.sendMessage(MCUtils.color("&eYou modified the stat &b" + args[1] + " &ewith the value &b" + value + " &eand the operation &b" + operator.name().toLowerCase()));
         };
