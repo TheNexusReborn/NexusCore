@@ -135,8 +135,12 @@ public class NexusCore extends JavaPlugin {
         return nms;
     }
     
-    public Connection getConnection() throws SQLException {
-        String url = "jdbc:mysql://" + getConfig().getString("mysql.host") + "/" + getConfig().getString("mysql.database") + "?user=" + getConfig().getString("mysql.user") + "&password=" + getConfig().getString("mysql.password");
+    public Connection getConnection(String database) throws SQLException {
+        String url = "jdbc:mysql://" + getConfig().getString("mysql.host") + "/" + database + "?user=" + getConfig().getString("mysql.user") + "&password=" + getConfig().getString("mysql.password");
         return DriverManager.getConnection(url);
+    }
+    
+    public Connection getConnection() throws SQLException {
+        return getConnection(getConfig().getString("mysql.database"));
     }
 }
