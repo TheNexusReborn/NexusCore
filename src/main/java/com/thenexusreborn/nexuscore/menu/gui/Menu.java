@@ -1,9 +1,10 @@
 package com.thenexusreborn.nexuscore.menu.gui;
 
+import com.thenexusreborn.api.util.Pair;
 import com.thenexusreborn.nexuscore.menu.element.*;
 import com.thenexusreborn.nexuscore.menu.slot.Slot;
 import com.thenexusreborn.nexuscore.util.*;
-import com.thenexusreborn.nexuscore.util.collection.IncrementalMap;
+import com.thenexusreborn.api.collection.IncrementalMap;
 import org.bukkit.*;
 import org.bukkit.inventory.*;
 import org.bukkit.plugin.java.JavaPlugin;
