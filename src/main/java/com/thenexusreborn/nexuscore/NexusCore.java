@@ -100,6 +100,11 @@ public class NexusCore extends JavaPlugin {
                         serverManager.addServer(server);
                     }
                 }
+                
+                ServerInfo current = NexusAPI.getApi().getServerManager().getCurrentServer();
+                current.setStatus("online");
+                current.setPlayers(Bukkit.getOnlinePlayers().size());
+                NexusAPI.getApi().getDataManager().pushServerInfo(current);
             }
         }.runTaskTimerAsynchronously(this, 1L, 20L);
     }
