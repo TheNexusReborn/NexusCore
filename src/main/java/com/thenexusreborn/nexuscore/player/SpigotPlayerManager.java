@@ -1,5 +1,9 @@
 package com.thenexusreborn.nexuscore.player;
 
+import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.networking.NetworkManager;
+import com.thenexusreborn.api.networking.commands.SocketCommand;
+import com.thenexusreborn.api.networking.socket.*;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.scoreboard.NexusScoreboard;
 import com.thenexusreborn.nexuscore.NexusCore;
@@ -91,6 +95,10 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                 Bukkit.broadcastMessage(MCUtils.color(joinMessage));
             }
         }
+    
+        String name = NexusAPI.getApi().getServerManager().getCurrentServer().getName();
+        NetworkSocket socket = NexusAPI.getApi().getSocketManager().getSocket(name);
+        socket.sendCommand("playerlogin " + name + " " + e.getPlayer().getName());
     }
     
     @EventHandler
