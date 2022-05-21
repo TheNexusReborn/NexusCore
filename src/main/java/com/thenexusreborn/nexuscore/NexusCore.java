@@ -1,8 +1,6 @@
 package com.thenexusreborn.nexuscore;
 
 import com.thenexusreborn.api.NexusAPI;
-import com.thenexusreborn.api.networking.NetworkManager;
-import com.thenexusreborn.api.networking.commands.SocketCommand;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.server.*;
 import com.thenexusreborn.nexuscore.chat.ChatManager;
@@ -109,7 +107,6 @@ public class NexusCore extends JavaPlugin {
                 NexusAPI.getApi().getDataManager().pushServerInfo(current);
             }
         }.runTaskTimerAsynchronously(this, 1L, 20L);
-        NetworkManager.getSocketCommandHandler().addCommand(new SocketCommand("playerlogin", null, "When a player logs in."));
     }
     
     @Override
