@@ -21,6 +21,11 @@ public class ChatManager implements Listener {
     public void onPlayerChat(AsyncPlayerChatEvent e) {
         NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(e.getPlayer().getUniqueId());
         String chatColor;
+        
+        if (e.isCancelled()) {
+            return;
+        }
+        
         Rank rank = nexusPlayer.getRank();
         if (rank == Rank.NEXUS) {
             chatColor = "&6";
