@@ -107,6 +107,13 @@ public class NexusCore extends JavaPlugin {
                 NexusAPI.getApi().getDataManager().pushServerInfo(current);
             }
         }.runTaskTimerAsynchronously(this, 1L, 20L);
+        
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                NexusAPI.getApi().getNetworkManager().send("register", NexusAPI.getApi().getServerManager().getCurrentServer().getName());
+            }
+        }.runTaskLater(this, 1L);
     }
     
     @Override
@@ -117,6 +124,7 @@ public class NexusCore extends JavaPlugin {
         serverInfo.setState("none");
         serverInfo.setPlayers(0);
         NexusAPI.getApi().getDataManager().pushServerInfo(serverInfo);
+        NexusAPI.getApi().getNetworkManager().close();
     }
     
     private void registerCommand(String cmd, TabExecutor tabExecutor) {
