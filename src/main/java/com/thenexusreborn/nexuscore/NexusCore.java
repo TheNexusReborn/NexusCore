@@ -107,13 +107,6 @@ public class NexusCore extends JavaPlugin {
                 NexusAPI.getApi().getDataManager().pushServerInfo(current);
             }
         }.runTaskTimerAsynchronously(this, 1L, 20L);
-        
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                NexusAPI.getApi().getNetworkManager().send("register", NexusAPI.getApi().getServerManager().getCurrentServer().getName());
-            }
-        }.runTaskLater(this, 1L);
     }
     
     @Override
