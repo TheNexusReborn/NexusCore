@@ -80,6 +80,11 @@ public final class SpigotNexusPlayer extends NexusPlayer {
     }
     
     @Override
+    public boolean isOnline() {
+        return Bukkit.getPlayer(this.getUniqueId()) != null;
+    }
+    
+    @Override
     public void sendMessage(String message) {
         Player player = getPlayer();
         if (player != null) {

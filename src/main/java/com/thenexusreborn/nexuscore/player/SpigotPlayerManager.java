@@ -1,5 +1,6 @@
 package com.thenexusreborn.nexuscore.player;
 
+import com.thenexusreborn.api.StaffChat;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.scoreboard.NexusScoreboard;
 import com.thenexusreborn.nexuscore.NexusCore;
@@ -77,6 +78,10 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                         abr.cancel();
                     }
                 }.runTaskLater(plugin, 40L);
+                
+                if (nexusPlayer.getRank().ordinal() <= Rank.MEDIA.ordinal()) {
+                    StaffChat.sendJoin(nexusPlayer);
+                }
             });
         } else {
             NexusPlayer nexusPlayer = players.get(e.getPlayer().getUniqueId());
@@ -89,6 +94,9 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
             String joinMessage = nexusPlayerLoadEvent.getJoinMessage();
             if (joinMessage != null) {
                 Bukkit.broadcastMessage(MCUtils.color(joinMessage));
+            }
+            if (nexusPlayer.getRank().ordinal() <= Rank.MEDIA.ordinal()) {
+                StaffChat.sendJoin(nexusPlayer);
             }
         }
     }

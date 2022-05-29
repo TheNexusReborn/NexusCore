@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.util;
 
-import com.thenexusreborn.nexuscore.util.helper.*;
+import com.thenexusreborn.api.helper.*;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;

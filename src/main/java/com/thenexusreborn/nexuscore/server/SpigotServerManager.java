@@ -19,6 +19,9 @@ public class SpigotServerManager extends ServerManager {
         int multicraftId = plugin.getConfig().getInt("serverInfo.multicraftid");
         String ip = ServerProperties.getServerIp();
         String name = plugin.getConfig().getString("serverInfo.name");
+        if (name == null || name.equals("")) {
+            name = plugin.getConfig().getString("serverName");
+        }
         int port = ServerProperties.getServerPort();
         int players = Bukkit.getOnlinePlayers().size();
         int maxPlayers = Bukkit.getMaxPlayers();
@@ -27,7 +30,7 @@ public class SpigotServerManager extends ServerManager {
         String status = "loading";
         String state = "none";
         this.currentServer = new ServerInfo(multicraftId, ip, name, port, players, maxPlayers, hiddenPlayers, type, status, state);
-        if (multicraftId > 0) {
+        if (multicraftId != 0) {
             NexusAPI.getApi().getDataManager().pushServerInfoAsync(this.currentServer);
         }
     }

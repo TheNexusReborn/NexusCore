@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.util;
 
-import com.thenexusreborn.nexuscore.util.helper.StringHelper;
+import com.thenexusreborn.api.helper.StringHelper;
 import org.bukkit.Material;
 
 import java.util.*;

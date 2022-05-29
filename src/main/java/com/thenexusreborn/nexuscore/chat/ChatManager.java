@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.chat;
 
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.*;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.util.MCUtils;
@@ -24,6 +24,14 @@ public class ChatManager implements Listener {
         
         if (e.isCancelled()) {
             return;
+        }
+        
+        if (e.getMessage().startsWith("@")) {
+            if (nexusPlayer.getRank().ordinal() <= Rank.HELPER.ordinal()) {
+                StaffChat.sendChat(nexusPlayer, e.getMessage().substring(1));
+                e.setCancelled(true);
+                return;
+            }
         }
         
         Rank rank = nexusPlayer.getRank();

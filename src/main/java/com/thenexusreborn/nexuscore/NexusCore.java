@@ -1,15 +1,15 @@
 package com.thenexusreborn.nexuscore;
 
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.*;
+import com.thenexusreborn.api.network.cmd.NetworkCommand;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.server.*;
-import com.thenexusreborn.nexuscore.chat.ChatManager;
+import com.thenexusreborn.nexuscore.chat.*;
 import com.thenexusreborn.nexuscore.cmds.*;
 import com.thenexusreborn.nexuscore.menu.MenuManager;
 import com.thenexusreborn.nexuscore.player.*;
 import com.thenexusreborn.nexuscore.proxy.ProxyMessageListener;
 import com.thenexusreborn.nexuscore.util.ActionBar;
-import com.thenexusreborn.nexuscore.util.command.CommandManager;
 import com.thenexusreborn.nexuscore.util.nms.NMS;
 import com.thenexusreborn.nexuscore.util.nms.NMS.Version;
 import com.thenexusreborn.nexuscore.util.updater.Updater;
@@ -28,7 +28,6 @@ public class NexusCore extends JavaPlugin {
     
     private NMS nms;
     
-    private CommandManager commandManager;
     private ChatManager chatManager;
     
     @Override
@@ -40,7 +39,6 @@ public class NexusCore extends JavaPlugin {
         Updater updater = new Updater(this);
         Bukkit.getServer().getScheduler().runTaskTimer(this, updater, 1L, 1L);
         
-        commandManager = new CommandManager(this);
         chatManager = new ChatManager(this);
     
         NexusAPI.setApi(new SpigotNexusAPI(this));
@@ -103,8 +101,15 @@ public class NexusCore extends JavaPlugin {
                         serverManager.addServer(server);
                     }
                 }
+                
+                ServerInfo current = NexusAPI.getApi().getServerManager().getCurrentServer();
+                current.setStatus("online");
+                current.setPlayers(Bukkit.getOnlinePlayers().size());
+                NexusAPI.getApi().getDataManager().pushServerInfo(current);
             }
         }.runTaskTimerAsynchronously(this, 1L, 20L);
+        
+        NexusAPI.getApi().getNetworkManager().addCommand(new NetworkCommand("staffchat", (StaffChat::handleIncoming)));
     }
     
     @Override
@@ -115,16 +120,13 @@ public class NexusCore extends JavaPlugin {
         serverInfo.setState("none");
         serverInfo.setPlayers(0);
         NexusAPI.getApi().getDataManager().pushServerInfo(serverInfo);
+        NexusAPI.getApi().getNetworkManager().close();
     }
     
     private void registerCommand(String cmd, TabExecutor tabExecutor) {
         PluginCommand command = getCommand(cmd);
         command.setExecutor(tabExecutor);
         command.setTabCompleter(tabExecutor);
-    }
-    
-    public CommandManager getCommandManager() {
-        return commandManager;
     }
     
     public ChatManager getChatManager() {
