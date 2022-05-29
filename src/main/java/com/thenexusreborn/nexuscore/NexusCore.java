@@ -4,7 +4,8 @@ import com.thenexusreborn.api.*;
 import com.thenexusreborn.api.network.cmd.NetworkCommand;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.server.*;
-import com.thenexusreborn.nexuscore.chat.*;
+import com.thenexusreborn.nexuscore.anticheat.AnticheatManager;
+import com.thenexusreborn.nexuscore.chat.ChatManager;
 import com.thenexusreborn.nexuscore.cmds.*;
 import com.thenexusreborn.nexuscore.menu.MenuManager;
 import com.thenexusreborn.nexuscore.player.*;
@@ -13,6 +14,7 @@ import com.thenexusreborn.nexuscore.util.ActionBar;
 import com.thenexusreborn.nexuscore.util.nms.NMS;
 import com.thenexusreborn.nexuscore.util.nms.NMS.Version;
 import com.thenexusreborn.nexuscore.util.updater.Updater;
+import me.vagdedes.spartan.api.API;
 import org.bukkit.Bukkit;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
@@ -110,6 +112,8 @@ public class NexusCore extends JavaPlugin {
         }.runTaskTimerAsynchronously(this, 1L, 20L);
         
         NexusAPI.getApi().getNetworkManager().addCommand(new NetworkCommand("staffchat", (StaffChat::handleIncoming)));
+        
+        getServer().getPluginManager().registerEvents(new AnticheatManager(), this);
     }
     
     @Override

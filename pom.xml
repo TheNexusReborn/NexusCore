@@ -93,5 +93,12 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <dependency>
+            <groupId>me.vagdedes</groupId>
+            <artifactId>Spartan</artifactId>
+            <scope>system</scope>
+            <version>469</version>
+            <systemPath>${basedir}/lib/Spartan.jar</systemPath>
+        </dependency>
     </dependencies>
 </project>
