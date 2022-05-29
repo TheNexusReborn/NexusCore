@@ -3,6 +3,7 @@ package com.thenexusreborn.nexuscore;
 import com.thenexusreborn.api.*;
 import com.thenexusreborn.api.network.cmd.NetworkCommand;
 import com.thenexusreborn.api.player.NexusPlayer;
+import com.thenexusreborn.api.scoreboard.TablistHandler;
 import com.thenexusreborn.api.server.*;
 import com.thenexusreborn.nexuscore.anticheat.AnticheatManager;
 import com.thenexusreborn.nexuscore.chat.ChatManager;
@@ -14,7 +15,6 @@ import com.thenexusreborn.nexuscore.util.ActionBar;
 import com.thenexusreborn.nexuscore.util.nms.NMS;
 import com.thenexusreborn.nexuscore.util.nms.NMS.Version;
 import com.thenexusreborn.nexuscore.util.updater.Updater;
-import me.vagdedes.spartan.api.API;
 import org.bukkit.Bukkit;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
@@ -92,6 +92,18 @@ public class NexusCore extends JavaPlugin {
         new BukkitRunnable() {
             @Override
             public void run() {
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(player.getUniqueId());
+                    if (nexusPlayer != null) {
+                        if (nexusPlayer.getScoreboard() != null) {
+                            TablistHandler tablistHandler = nexusPlayer.getScoreboard().getTablistHandler();
+                            if (tablistHandler != null) {
+                                tablistHandler.update();
+                            }
+                        }
+                    }
+                }
+                
                 List<ServerInfo> allServers = NexusAPI.getApi().getDataManager().getAllServers();
                 ServerManager serverManager = NexusAPI.getApi().getServerManager();
                 for (ServerInfo server : new ArrayList<>(serverManager.getServers())) {
