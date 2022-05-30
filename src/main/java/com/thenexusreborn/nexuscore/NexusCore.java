@@ -11,7 +11,7 @@ import com.thenexusreborn.nexuscore.cmds.*;
 import com.thenexusreborn.nexuscore.menu.MenuManager;
 import com.thenexusreborn.nexuscore.player.*;
 import com.thenexusreborn.nexuscore.proxy.ProxyMessageListener;
-import com.thenexusreborn.nexuscore.util.ActionBar;
+import com.thenexusreborn.nexuscore.util.*;
 import com.thenexusreborn.nexuscore.util.nms.NMS;
 import com.thenexusreborn.nexuscore.util.nms.NMS.Version;
 import com.thenexusreborn.nexuscore.util.updater.Updater;
@@ -72,6 +72,15 @@ public class NexusCore extends JavaPlugin {
         getCommand("message").setExecutor(new MessageCommand(this));
         getCommand("reply").setExecutor(new ReplyCommand(this));
         getCommand("me").setExecutor(new MeCommand());
+        getCommand("discord").setExecutor((sender, cmd, label, args) -> {
+            sender.sendMessage(MCUtils.color(MsgType.INFO + "Discord: &bhttps://discord.gg/bawZKSWEpT"));
+            return true;
+        });
+    
+        getCommand("shop").setExecutor((sender, cmd, label, args) -> {
+            sender.sendMessage(MCUtils.color(MsgType.INFO + "Shop: &bhttps://shop.thenexusreborn.com/"));
+            return true;
+        });
     
         new BukkitRunnable() {
             @Override
