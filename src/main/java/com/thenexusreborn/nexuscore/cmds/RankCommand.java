@@ -124,6 +124,9 @@ public class RankCommand implements TabExecutor {
             NexusAPI.getApi().getThreadFactory().runAsync(() -> {
                 try (Connection connection = plugin.getConnection(); Statement statement = connection.createStatement()) {
                     statement.executeUpdate("update players set ranks='" + ranks + "' where uuid='" + nexusPlayer.getUniqueId() +  "';");
+                    if (!nexusPlayer.isOnline()) {
+                        NexusAPI.getApi().getPlayerManager().getPlayers().remove(nexusPlayer.getUniqueId());
+                    }
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
