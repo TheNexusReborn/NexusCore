@@ -9,6 +9,9 @@ public class AnticheatManager implements Listener {
     
     @EventHandler
     public void onPlayerViolation(PlayerViolationEvent e) {
+        if (e.isCancelled()) {
+            return;
+        }
         if (!e.isFalsePositive()) {
             if (e.getViolation() % 10 == 0) {
                 StaffChat.sendAnticheat(NexusAPI.getApi().getPlayerManager().getNexusPlayer(e.getPlayer().getUniqueId()), e.getHackType().toString(), e.getViolation());
