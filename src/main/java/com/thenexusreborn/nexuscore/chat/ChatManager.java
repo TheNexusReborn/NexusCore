@@ -2,8 +2,9 @@ package com.thenexusreborn.nexuscore.chat;
 
 import com.thenexusreborn.api.*;
 import com.thenexusreborn.api.player.*;
+import com.thenexusreborn.api.punishment.*;
 import com.thenexusreborn.nexuscore.NexusCore;
-import com.thenexusreborn.nexuscore.util.MCUtils;
+import com.thenexusreborn.nexuscore.util.*;
 import org.bukkit.ChatColor;
 import org.bukkit.event.*;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -32,6 +33,18 @@ public class ChatManager implements Listener {
                 e.setCancelled(true);
                 return;
             }
+        }
+    
+        Punishment punishment = NexusAPI.getApi().getPunishmentManager().getPunishmentByTarget(nexusPlayer.getUniqueId());
+        if (punishment != null && punishment.isActive()) {
+            e.setCancelled(true);
+            if (punishment.getType() == PunishmentType.MUTE) {
+                nexusPlayer.sendMessage(MsgType.WARN + "You are muted. You cannot speak now.");
+            } else if (punishment.getType() == PunishmentType.WARN) {
+                nexusPlayer.sendMessage(MsgType.WARN + "You have an unconfirmed warning, please type the code " + punishment.getAcknowledgeInfo().getCode() + " to confirm.");
+            }
+            
+            return;
         }
         
         Rank rank = nexusPlayer.getRank();

@@ -1,8 +1,9 @@
 package com.thenexusreborn.nexuscore;
 
 import com.thenexusreborn.api.*;
-import com.thenexusreborn.api.network.cmd.NetworkCommand;
+import com.thenexusreborn.api.network.cmd.*;
 import com.thenexusreborn.api.player.NexusPlayer;
+import com.thenexusreborn.api.punishment.*;
 import com.thenexusreborn.api.scoreboard.TablistHandler;
 import com.thenexusreborn.api.server.*;
 import com.thenexusreborn.nexuscore.anticheat.AnticheatManager;
@@ -35,13 +36,6 @@ public class NexusCore extends JavaPlugin {
     @Override
     public void onEnable() {
         this.saveDefaultConfig();
-        
-        nms = NMS.getNMS(Version.MC_1_8_R3);
-        
-        Updater updater = new Updater(this);
-        Bukkit.getServer().getScheduler().runTaskTimer(this, updater, 1L, 1L);
-        
-        chatManager = new ChatManager(this);
     
         NexusAPI.setApi(new SpigotNexusAPI(this));
         try {
@@ -52,6 +46,13 @@ public class NexusCore extends JavaPlugin {
             e.printStackTrace();
             return;
         }
+        
+        nms = NMS.getNMS(Version.MC_1_8_R3);
+        
+        Updater updater = new Updater(this);
+        Bukkit.getServer().getScheduler().runTaskTimer(this, updater, 1L, 1L);
+        
+        chatManager = new ChatManager(this);
         
         this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         this.getServer().getMessenger().registerOutgoingPluginChannel(this, "nexus");
@@ -81,6 +82,20 @@ public class NexusCore extends JavaPlugin {
             sender.sendMessage(MCUtils.color(MsgType.INFO + "Shop: &bhttps://shop.thenexusreborn.com/"));
             return true;
         });
+        
+        PunishmentCommands puCmds = new PunishmentCommands(this);
+        getCommand("ban").setExecutor(puCmds);
+        getCommand("tempban").setExecutor(puCmds);
+        getCommand("mute").setExecutor(puCmds);
+        getCommand("tempmute").setExecutor(puCmds);
+        getCommand("kick").setExecutor(puCmds);
+        getCommand("warn").setExecutor(puCmds);
+        //blacklist
+        
+        PunishRemoveCommands prCmds = new PunishRemoveCommands(this);
+        getCommand("unban").setExecutor(prCmds);
+        getCommand("unmute").setExecutor(prCmds);
+        //Unblacklist
     
         new BukkitRunnable() {
             @Override
@@ -97,7 +112,8 @@ public class NexusCore extends JavaPlugin {
                 }
             }
         }.runTaskTimer(this, 1L, 1L);
-        
+    
+        ServerInfo currentServer = NexusAPI.getApi().getServerManager().getCurrentServer();
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -124,15 +140,25 @@ public class NexusCore extends JavaPlugin {
                         serverManager.addServer(server);
                     }
                 }
-                
-                ServerInfo current = NexusAPI.getApi().getServerManager().getCurrentServer();
-                current.setStatus("online");
-                current.setPlayers(Bukkit.getOnlinePlayers().size());
-                NexusAPI.getApi().getDataManager().pushServerInfo(current);
+    
+                currentServer.setStatus("online");
+                currentServer.setPlayers(Bukkit.getOnlinePlayers().size());
+                NexusAPI.getApi().getDataManager().pushServerInfo(currentServer);
             }
         }.runTaskTimerAsynchronously(this, 1L, 20L);
         
         NexusAPI.getApi().getNetworkManager().addCommand(new NetworkCommand("staffchat", (StaffChat::handleIncoming)));
+        NexusAPI.getApi().getNetworkManager().getCommand("punishment").setExecutor((cmd, origin, args) -> new BukkitRunnable() {
+            @Override
+            public void run() {
+                int id = Integer.parseInt(args[0]);
+                Punishment punishment = NexusAPI.getApi().getDataManager().getPunishment(id);
+                if (punishment.getType() == PunishmentType.MUTE || punishment.getType() == PunishmentType.WARN) {
+                    //The Spigot Servers will handle only mutes and warnings as they are chat based. Proxy will handle bans, blacklists, and kicks
+                    NexusAPI.getApi().getPunishmentManager().addPunishment(punishment);
+                }
+            }
+        }.runTaskAsynchronously(this));
         
         getServer().getPluginManager().registerEvents(new AnticheatManager(), this);
     }
