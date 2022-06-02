@@ -32,3 +32,4 @@ commands:
   unban:
   unmute:
   unblacklist:
+  pardon:

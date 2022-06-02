@@ -1,13 +1,15 @@
 package com.thenexusreborn.nexuscore.cmds;
 
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.*;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.punishment.*;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.util.*;
 import org.bukkit.command.*;
+import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.UUID;
+import java.util.*;
 
 public class PunishRemoveCommands implements CommandExecutor {
     
@@ -40,6 +42,7 @@ public class PunishRemoveCommands implements CommandExecutor {
     
         if (!(args.length > 1)) {
             sender.sendMessage(MCUtils.color(MsgType.WARN + "Usage: /" + label + " <target> <reason>"));
+            return true;
         }
     
         NexusPlayer target;
@@ -61,8 +64,47 @@ public class PunishRemoveCommands implements CommandExecutor {
             return true;
         }
     
-        Punishment punishment = NexusAPI.getApi().getPunishmentManager().getPunishmentByTarget(target.getUniqueId());
+        List<Punishment> punishments = NexusAPI.getApi().getPunishmentManager().getPunishmentsByTarget(target.getUniqueId());
+        if (punishments.size() == 0) {
+            sender.sendMessage(MCUtils.color(MsgType.WARN + "That player does not have any punishments"));
+            return true;
+        }
         
+        List<Punishment> activePunishments = new ArrayList<>();
+        for (Punishment punishment : punishments) {
+            if (punishment.getType() == type || all) {
+                if (punishment.isActive()) {
+                    activePunishments.add(punishment);
+                }
+            }
+        }
+        
+        if (activePunishments.size() == 0) {
+            sender.sendMessage(MCUtils.color(MsgType.WARN + "That player does not have any active punishmentss."));
+            return true;
+        }
+        
+        StringBuilder reasonBuilder = new StringBuilder();
+        for (int i = 1; i < args.length; i++) {
+            reasonBuilder.append(args[i]).append(" ");
+        }
+        
+        String reason = reasonBuilder.toString().trim();
+    
+        String actor;
+        if (sender instanceof Player) {
+            actor = ((Player) sender).getUniqueId().toString();
+        } else {
+            actor = sender.getName();
+        }
+        
+        PardonInfo info = new PardonInfo(System.currentTimeMillis(), actor, reason);
+        for (Punishment punishment : activePunishments) {
+            punishment.setPardonInfo(info);
+            NexusAPI.getApi().getDataManager().pushPunishment(punishment);
+            NexusAPI.getApi().getNetworkManager().send("removepunishment", punishment.getId() + "");
+            StaffChat.sendPunishmentRemoval(punishment);
+        }
         
         return true;
     }

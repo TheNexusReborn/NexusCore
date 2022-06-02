@@ -95,6 +95,7 @@ public class NexusCore extends JavaPlugin {
         PunishRemoveCommands prCmds = new PunishRemoveCommands(this);
         getCommand("unban").setExecutor(prCmds);
         getCommand("unmute").setExecutor(prCmds);
+        getCommand("pardon").setExecutor(prCmds);
         //Unblacklist
     
         new BukkitRunnable() {
@@ -153,7 +154,7 @@ public class NexusCore extends JavaPlugin {
             public void run() {
                 int id = Integer.parseInt(args[0]);
                 Punishment punishment = NexusAPI.getApi().getDataManager().getPunishment(id);
-                if (punishment.getType() == PunishmentType.MUTE || punishment.getType() == PunishmentType.WARN) {
+                if (punishment.getType() == PunishmentType.MUTE || punishment.getType() == PunishmentType.WARN || punishment.getType() == PunishmentType.BAN || punishment.getType() == PunishmentType.BLACKLIST) {
                     //The Spigot Servers will handle only mutes and warnings as they are chat based. Proxy will handle bans, blacklists, and kicks
                     NexusAPI.getApi().getPunishmentManager().addPunishment(punishment);
                 }

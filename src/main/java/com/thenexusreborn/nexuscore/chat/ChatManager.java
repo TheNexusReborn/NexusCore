@@ -9,6 +9,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.event.*;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
+import java.util.List;
+
 public class ChatManager implements Listener {
     private NexusCore plugin;
     
@@ -35,16 +37,18 @@ public class ChatManager implements Listener {
             }
         }
     
-        Punishment punishment = NexusAPI.getApi().getPunishmentManager().getPunishmentByTarget(nexusPlayer.getUniqueId());
-        if (punishment != null && punishment.isActive()) {
-            e.setCancelled(true);
-            if (punishment.getType() == PunishmentType.MUTE) {
-                nexusPlayer.sendMessage(MsgType.WARN + "You are muted. You cannot speak now.");
-            } else if (punishment.getType() == PunishmentType.WARN) {
-                nexusPlayer.sendMessage(MsgType.WARN + "You have an unconfirmed warning, please type the code " + punishment.getAcknowledgeInfo().getCode() + " to confirm.");
+        List<Punishment> punishments = NexusAPI.getApi().getPunishmentManager().getPunishmentsByTarget(e.getPlayer().getUniqueId());
+        for (Punishment punishment : punishments) {
+            if (punishment != null && punishment.isActive()) {
+                e.setCancelled(true);
+                if (punishment.getType() == PunishmentType.MUTE) {
+                    nexusPlayer.sendMessage(MsgType.WARN + "You are muted. You cannot speak now.");
+                } else if (punishment.getType() == PunishmentType.WARN) {
+                    nexusPlayer.sendMessage(MsgType.WARN + "You have an unconfirmed warning, please type the code " + punishment.getAcknowledgeInfo().getCode() + " to confirm.");
+                }
+        
+                return;
             }
-            
-            return;
         }
         
         Rank rank = nexusPlayer.getRank();

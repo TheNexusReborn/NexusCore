@@ -98,7 +98,7 @@
             <artifactId>Spartan</artifactId>
             <scope>system</scope>
             <version>469</version>
-            <systemPath>${basedir}/lib/Spartan.jar</systemPath>
+            <systemPath>${basedir}/../lib/Spartan.jar</systemPath>
         </dependency>
     </dependencies>
 </project>
