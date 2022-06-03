@@ -4,6 +4,7 @@ import com.thenexusreborn.api.*;
 import com.thenexusreborn.api.helper.TimeHelper;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.punishment.*;
+import com.thenexusreborn.api.util.Utils;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.util.*;
 import org.bukkit.command.*;
@@ -126,6 +127,11 @@ public class PunishmentCommands implements CommandExecutor {
         
         String reason = sb.toString().trim();
         Punishment punishment = new Punishment(System.currentTimeMillis(), length, actor, target.getUniqueId().toString(), server, reason, type, Visibility.SILENT);
+        
+        if (punishment.getType() == PunishmentType.WARN) {
+            punishment.setAcknowledgeInfo(new AcknowledgeInfo(Utils.generateCode(8, true, true, true)));
+        }
+        
         NexusAPI.getApi().getDataManager().pushPunishment(punishment);
         if (punishment.getId() < 1) {
             sender.sendMessage(MCUtils.color(MsgType.WARN + "Could not create the punishment. Please report to Firestar311."));

@@ -2,7 +2,7 @@ package com.thenexusreborn.nexuscore;
 
 import com.thenexusreborn.api.*;
 import com.thenexusreborn.api.network.cmd.*;
-import com.thenexusreborn.api.player.NexusPlayer;
+import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.punishment.*;
 import com.thenexusreborn.api.scoreboard.TablistHandler;
 import com.thenexusreborn.api.server.*;
@@ -90,13 +90,13 @@ public class NexusCore extends JavaPlugin {
         getCommand("tempmute").setExecutor(puCmds);
         getCommand("kick").setExecutor(puCmds);
         getCommand("warn").setExecutor(puCmds);
-        //blacklist
+        getCommand("blacklist").setExecutor(puCmds);
         
         PunishRemoveCommands prCmds = new PunishRemoveCommands(this);
         getCommand("unban").setExecutor(prCmds);
         getCommand("unmute").setExecutor(prCmds);
         getCommand("pardon").setExecutor(prCmds);
-        //Unblacklist
+        getCommand("unblacklist").setExecutor(prCmds);
     
         new BukkitRunnable() {
             @Override
@@ -155,8 +155,17 @@ public class NexusCore extends JavaPlugin {
                 int id = Integer.parseInt(args[0]);
                 Punishment punishment = NexusAPI.getApi().getDataManager().getPunishment(id);
                 if (punishment.getType() == PunishmentType.MUTE || punishment.getType() == PunishmentType.WARN || punishment.getType() == PunishmentType.BAN || punishment.getType() == PunishmentType.BLACKLIST) {
-                    //The Spigot Servers will handle only mutes and warnings as they are chat based. Proxy will handle bans, blacklists, and kicks
                     NexusAPI.getApi().getPunishmentManager().addPunishment(punishment);
+    
+                    Player player = Bukkit.getPlayer(UUID.fromString(punishment.getTarget()));
+                    if (player != null && punishment.isActive()) {
+                        if (punishment.getType() == PunishmentType.MUTE) {
+                            player.sendMessage(MCUtils.color(MsgType.WARN + "You have been muted by " + punishment.getActorNameCache() + " for " + punishment.getReason() + ". (" + punishment.formatTimeLeft() + ")"));
+                        } else if (punishment.getType() == PunishmentType.WARN) {
+                            player.sendMessage(MCUtils.color(MsgType.WARN + "You have been warned by " + punishment.getActorNameCache() + " for " + punishment.getReason() + "."));
+                            player.sendMessage(MCUtils.color(MsgType.WARN + "You must type the code " + punishment.getAcknowledgeInfo().getCode() + " in chat before you can speak again."));
+                        }
+                    }
                 }
             }
         }.runTaskAsynchronously(this));
