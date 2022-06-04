@@ -97,6 +97,10 @@ public class NexusCore extends JavaPlugin {
         getCommand("unmute").setExecutor(prCmds);
         getCommand("pardon").setExecutor(prCmds);
         getCommand("unblacklist").setExecutor(prCmds);
+        
+        PunishmentHistoryCmds phCmds = new PunishmentHistoryCmds(this);
+        getCommand("history").setExecutor(phCmds);
+        getCommand("staffhistory").setExecutor(phCmds);
     
         new BukkitRunnable() {
             @Override

@@ -33,3 +33,5 @@ commands:
   unmute:
   unblacklist:
   pardon:
+  history:
+  staffhistory:
