@@ -1,8 +1,9 @@
 package com.thenexusreborn.nexuscore.anticheat;
 
 import com.thenexusreborn.api.*;
+import com.thenexusreborn.api.punishment.*;
+import com.thenexusreborn.nexuscore.util.MCUtils;
 import me.vagdedes.spartan.api.*;
-import org.bukkit.Bukkit;
 import org.bukkit.event.*;
 
 public class AnticheatManager implements Listener {
@@ -23,7 +24,12 @@ public class AnticheatManager implements Listener {
                 } else {
                     NexusAPI.getApi().getLogger().info("Banned for multiple violation counts");
                 }
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tempban " + e.getPlayer().getName() + " 30d Cheating");
+    
+                Punishment punishment = new Punishment(System.currentTimeMillis(), 2592000000L, "PowerMoveRegulator", e.getPlayer().getUniqueId().toString(), 
+                        NexusAPI.getApi().getServerManager().getCurrentServer().getName(), "Cheating", PunishmentType.BAN, Visibility.SILENT);
+                
+                NexusAPI.getApi().getDataManager().pushPunishment(punishment);
+                e.getPlayer().kickPlayer(MCUtils.color(punishment.formatKick()));
             }
         }
     }
