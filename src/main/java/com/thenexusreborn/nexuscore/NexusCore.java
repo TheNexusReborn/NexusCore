@@ -101,6 +101,8 @@ public class NexusCore extends JavaPlugin {
         PunishmentHistoryCmds phCmds = new PunishmentHistoryCmds(this);
         getCommand("history").setExecutor(phCmds);
         getCommand("staffhistory").setExecutor(phCmds);
+        
+        getCommand("alts").setExecutor(new AltsCommand(this));
     
         new BukkitRunnable() {
             @Override
