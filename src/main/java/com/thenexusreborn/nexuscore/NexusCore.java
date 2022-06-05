@@ -27,8 +27,6 @@ import java.util.*;
 
 public class NexusCore extends JavaPlugin {
     
-    private Driver mysqlDriver;
-    
     private NMS nms;
     
     private ChatManager chatManager;
