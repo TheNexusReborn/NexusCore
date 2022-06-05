@@ -3,7 +3,6 @@ package com.thenexusreborn.nexuscore.cmds;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.nexuscore.NexusCore;
-import com.thenexusreborn.nexuscore.player.*;
 import com.thenexusreborn.nexuscore.util.MCUtils;
 import org.bukkit.command.*;
 
@@ -32,6 +31,7 @@ public class ConsolodateStatsCmd implements TabExecutor {
         }
     
         NexusPlayer player;
+        //TODO need to load offline players
         try {
             UUID uuid = UUID.fromString(args[0]);
             player = NexusAPI.getApi().getPlayerManager().getNexusPlayer(uuid);
