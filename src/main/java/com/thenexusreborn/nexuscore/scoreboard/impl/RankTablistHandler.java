@@ -27,7 +27,6 @@ public class RankTablistHandler extends TablistHandler {
         BEGIN_CHARS.put(Rank.ARCHITECT, "j");
         BEGIN_CHARS.put(Rank.NEXUS, "k");
         BEGIN_CHARS.put(Rank.ADMIN, "l");
-        BEGIN_CHARS.put(Rank.SR_MOD, "m");
         BEGIN_CHARS.put(Rank.MOD, "n");
         BEGIN_CHARS.put(Rank.HELPER, "o");
     }
