@@ -51,6 +51,9 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
             };
             abr.runTaskTimer(plugin, 20L, 20L);
             getNexusPlayerAsync(e.getPlayer().getUniqueId(), nexusPlayer -> {
+                if (Bukkit.getPlayer(e.getPlayer().getUniqueId()) == null) {
+                    return;
+                }
                 NexusScoreboard nexusScoreboard = new SpigotNexusScoreboard(nexusPlayer);
                 nexusScoreboard.init();
                 nexusPlayer.setScoreboard(nexusScoreboard);
@@ -105,7 +108,9 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
     public void onPlayerQuit(PlayerQuitEvent e) {
         NexusPlayer nexusPlayer = this.players.get(e.getPlayer().getUniqueId());
         if (nexusPlayer != null) {
-            this.players.remove(e.getPlayer().getUniqueId()); //No need to save to database. And stat changes are saved automatically
+            this.players.remove(e.getPlayer().getUniqueId());
+        } else {
+            e.setQuitMessage(null);
         }
     }
     

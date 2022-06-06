@@ -17,3 +17,22 @@ commands:
     aliases: [r]
   say:
   me: 
+  discord:
+  shop:
+    aliases: [store]
+  ban:
+  tempban:
+    aliases: [tb]
+  mute:
+  tempmute:
+    aliases: [tm]
+  kick:
+  warn:
+  blacklist:
+  unban:
+  unmute:
+  unblacklist:
+  pardon:
+  history:
+  staffhistory:
+  alts:
