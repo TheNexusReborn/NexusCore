@@ -22,13 +22,7 @@ public class AnticheatManager implements Listener {
                     StaffChat.sendAnticheat(NexusAPI.getApi().getPlayerManager().getNexusPlayer(e.getPlayer().getUniqueId()), e.getHackType().toString(), e.getViolation());
                 }
     
-                if (e.getViolation() >= 30 || API.getVL(e.getPlayer()) >= 30) {
-                    if (e.getViolation() >= 30) {
-                        NexusAPI.getApi().getLogger().info("Banned for a single violation count");
-                    } else {
-                        NexusAPI.getApi().getLogger().info("Banned for multiple violation counts");
-                    }
-        
+                if (e.getViolation() >= 30) {
                     Punishment punishment = new Punishment(System.currentTimeMillis(), 2592000000L, "PowerMoveRegulator", e.getPlayer().getUniqueId().toString(),
                             NexusAPI.getApi().getServerManager().getCurrentServer().getName(), "Cheating", PunishmentType.BAN, Visibility.SILENT);
         
