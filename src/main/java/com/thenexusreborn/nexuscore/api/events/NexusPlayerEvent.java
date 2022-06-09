@@ -6,9 +6,9 @@ import org.bukkit.event.*;
 
 public abstract class NexusPlayerEvent extends Event {
     
-    private static final HandlerList handlers = new HandlerList();
+    protected static final HandlerList handlers = new HandlerList();
     
-    private NexusPlayer nexusPlayer;
+    protected NexusPlayer nexusPlayer;
     
     public NexusPlayerEvent(NexusPlayer nexusPlayer) {
         this.nexusPlayer = nexusPlayer;
