@@ -58,7 +58,7 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                 nexusScoreboard.init();
                 nexusPlayer.setScoreboard(nexusScoreboard);
                 e.getPlayer().setScoreboard(((SpigotScoreboard) nexusScoreboard.getScoreboard()).getScoreboard());
-    
+                
                 if (!players.containsKey(e.getPlayer().getUniqueId())) {
                     players.put(e.getPlayer().getUniqueId(), nexusPlayer);
                 }

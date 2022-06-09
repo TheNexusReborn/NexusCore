@@ -13,6 +13,7 @@ public final class SpigotNexusPlayer extends NexusPlayer {
     public static final int version = 3;
     
     private ActionBar actionBar = new ActionBar();
+    private boolean spokenInChat = false;
     
     public SpigotNexusPlayer(UUID uniqueId, String name) {
         super(uniqueId, name);
@@ -20,6 +21,14 @@ public final class SpigotNexusPlayer extends NexusPlayer {
     
     public SpigotNexusPlayer(UUID uniqueId, Map<Rank, Long> ranks, long firstJoined, long lastLogin, long lastLogout, long playTime, String lastKnownName, Tag tag, Set<Tag> unlockedTags, boolean prealpha, boolean alpha, boolean beta) {
         super(uniqueId, ranks, firstJoined, lastLogin, lastLogout, playTime, lastKnownName, tag, unlockedTags, prealpha, alpha, beta);
+    }
+    
+    public void setSpokenInChat(boolean spokenInChat) {
+        this.spokenInChat = spokenInChat;
+    }
+    
+    public boolean hasSpokenInChat() {
+        return this.spokenInChat;
     }
     
     @Override
