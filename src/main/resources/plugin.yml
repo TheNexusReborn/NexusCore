@@ -36,3 +36,7 @@ commands:
   history:
   staffhistory:
   alts:
+  vanish:
+    aliases: [v]
+  incognito:
+    aliases: [i]

@@ -10,6 +10,7 @@ import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.*;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 
@@ -71,11 +72,19 @@ public class ChatManager implements Listener {
             chatColor = "&7";
         }
         
-        nexusPlayer.setSpokenInChat(true);
-        if (nexusPlayer.getPreferences().get("incognito").getValue()) {
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                player.showPlayer(nexusPlayer.getPlayer());
-            }
+        if (!nexusPlayer.hasSpokenInChat()) {
+            nexusPlayer.setSpokenInChat(true);
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    if (nexusPlayer.getPreferences().get("incognito").getValue()) {
+                        for (Player player : Bukkit.getOnlinePlayers()) {
+                            player.showPlayer(nexusPlayer.getPlayer());
+                            
+                        }
+                    }
+                }
+            }.runTask(plugin);
         }
         
         if (handler != null) {
