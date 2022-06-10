@@ -1,6 +1,7 @@
 package com.thenexusreborn.nexuscore.cmds;
 
 import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.helper.StringHelper;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.tournament.Tournament;
 import com.thenexusreborn.api.tournament.Tournament.ScoreInfo;
@@ -71,6 +72,7 @@ public class TournamentCommand implements TabExecutor {
                 sender.sendMessage(MCUtils.color(MsgType.WARN + "Error while creating a tournament."));
                 return true;
             }
+            NexusAPI.getApi().getNetworkManager().send("tournament ", tournament.getId() + "");
             sender.sendMessage(MCUtils.color(MsgType.INFO + "Successfully created a tournament with the name &b" + tournament.getName() + " &eand id &b" + tournament.getId()));
         } else if (args[0].equalsIgnoreCase("delete")) {
             if (senderRank.ordinal() > Rank.ADMIN.ordinal()) {
@@ -201,6 +203,10 @@ public class TournamentCommand implements TabExecutor {
                 }
                 tournament.setPointsPerSurvival(value);
                 sender.sendMessage(MCUtils.color("&eYou set the points per survival to &b" + value));
+            } else if (args[0].equalsIgnoreCase("setservers")) {
+                String[] servers = args[1].split(",");
+                tournament.setServers(servers);
+                sender.sendMessage(MCUtils.color("&eYou set the servers to &b" + StringHelper.join(servers, ",")));
             } else {
                 UUID uuid = getUUIDFromInput(args[1], sender);
                 if (uuid == null) {
