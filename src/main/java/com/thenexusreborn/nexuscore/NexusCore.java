@@ -265,7 +265,7 @@ public class NexusCore extends JavaPlugin {
                 
                 scores.clear();
             }
-        }.runTaskTimerAsynchronously(this, 20L, 300L);
+        }.runTaskTimerAsynchronously(this, 20L, 1200L);
         
         getServer().getPluginManager().registerEvents(new AnticheatManager(), this);
     }
