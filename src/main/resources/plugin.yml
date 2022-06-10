@@ -40,3 +40,5 @@ commands:
     aliases: [v]
   incognito:
     aliases: [i]
+  tournament:
+    aliases: [tm]

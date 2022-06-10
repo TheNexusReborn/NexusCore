@@ -1,7 +1,7 @@
 package com.thenexusreborn.nexuscore.util;
 
 import com.thenexusreborn.api.NexusAPI;
-import com.thenexusreborn.api.player.Rank;
+import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.util.Utils;
 import com.thenexusreborn.nexuscore.NexusCore;
 import org.bukkit.*;
@@ -45,6 +45,24 @@ public final class MCUtils {
         nameToTicks.put("night", 14000);
     
         nameToTicks.put("midnight", 18000);
+    }
+    
+    public static NexusPlayer getPlayerFromInput(String input) {
+        NexusPlayer player;
+        try {
+            UUID uuid = UUID.fromString(input);
+            player = NexusAPI.getApi().getPlayerManager().getNexusPlayer(uuid);
+            if (player == null) {
+                player = NexusAPI.getApi().getDataManager().loadPlayer(uuid);
+            }
+        } catch (Exception e) {
+            player = NexusAPI.getApi().getPlayerManager().getNexusPlayer(input);
+            if (player == null) {
+                player = NexusAPI.getApi().getDataManager().loadPlayer(input);
+            }
+        }
+        
+        return player;
     }
     
     public static Rank getSenderRank(NexusCore plugin, CommandSender sender) {

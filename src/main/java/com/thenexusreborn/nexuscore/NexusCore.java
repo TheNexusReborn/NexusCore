@@ -1,12 +1,14 @@
 package com.thenexusreborn.nexuscore;
 
 import com.thenexusreborn.api.*;
-import com.thenexusreborn.api.network.cmd.*;
-import com.thenexusreborn.api.player.*;
+import com.thenexusreborn.api.network.cmd.NetworkCommand;
+import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Preference.Info;
 import com.thenexusreborn.api.punishment.*;
 import com.thenexusreborn.api.scoreboard.TablistHandler;
 import com.thenexusreborn.api.server.*;
+import com.thenexusreborn.api.tournament.Tournament;
+import com.thenexusreborn.api.tournament.Tournament.ScoreInfo;
 import com.thenexusreborn.nexuscore.anticheat.AnticheatManager;
 import com.thenexusreborn.nexuscore.api.events.*;
 import com.thenexusreborn.nexuscore.chat.ChatManager;
@@ -26,6 +28,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.sql.*;
 import java.util.*;
+import java.util.Map.Entry;
 
 public class NexusCore extends JavaPlugin {
     
@@ -114,6 +117,8 @@ public class NexusCore extends JavaPlugin {
         ToggleCmds toggleCmds = new ToggleCmds(this);
         getCommand("incognito").setExecutor(toggleCmds);
         getCommand("vanish").setExecutor(toggleCmds);
+        
+        getCommand("tournament").setExecutor(new TournamentCommand(this));
     
         new BukkitRunnable() {
             @Override
@@ -187,7 +192,80 @@ public class NexusCore extends JavaPlugin {
             }
         }.runTaskAsynchronously(this));
     
-        
+        new BukkitRunnable() {
+            private Map<UUID, Integer> scores = new HashMap<>();
+            @Override
+            public void run() {
+                Tournament tournament = NexusAPI.getApi().getTournament();
+                if (tournament == null) {
+                    return;
+                }
+                
+                if (!tournament.isActive()) {
+                    return;
+                }
+                
+                try (Connection connection = getConnection(); Statement statement = connection.createStatement()) {
+                    ResultSet resultSet = statement.executeQuery("select * from stats where name='sg_tournament_points';");
+                    while (resultSet.next()) {
+                        UUID uuid = UUID.fromString(resultSet.getString("uuid"));
+                        int value = Integer.parseInt(resultSet.getString("value"));
+                        if (value != 0) {
+                            scores.put(uuid, value);
+                        }
+                    }
+                    
+                    resultSet = statement.executeQuery("select * from statchanges where statName='sg_tournament_points';");
+                    while (resultSet.next()) {
+                        UUID uuid = UUID.fromString(resultSet.getString("uuid"));
+                        int value = Integer.parseInt(resultSet.getString("value"));
+                        if (value != 0) {
+                            if (scores.containsKey(uuid)) {
+                                scores.put(uuid, scores.get(uuid) + value);
+                            } else {
+                                scores.put(uuid, value);
+                            }
+                        }
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+    
+                Iterator<Entry<UUID, Integer>> iterator = scores.entrySet().iterator();
+                while (iterator.hasNext()) {
+                    Entry<UUID, Integer> entry = iterator.next();
+                    ScoreInfo scoreInfo = tournament.getScoreCache().get(entry.getKey());
+                    if (scoreInfo != null) {
+                        scoreInfo.setScore(entry.getValue());
+                        iterator.remove();
+                    }
+                }
+    
+                try (Connection connection = getConnection(); Statement statement = connection.createStatement()) {
+                    for (Entry<UUID, Integer> entry : scores.entrySet()) {
+                        String name = null;
+                        Player player = Bukkit.getPlayer(entry.getKey());
+                        if (player != null) {
+                            name = player.getName();
+                        } else {
+                            ResultSet resultSet = statement.executeQuery("select lastKnownName from players where uuid='" + entry.getKey().toString() + "';");
+                            if (resultSet.next()) {
+                                name = resultSet.getString("lastKnownName");
+                            }
+                        }
+                        
+                        if (name != null) {
+                            ScoreInfo scoreInfo = new ScoreInfo(entry.getKey(), name, entry.getValue());
+                            tournament.getScoreCache().put(scoreInfo.getUuid(), scoreInfo);
+                        }
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                
+                scores.clear();
+            }
+        }.runTaskTimerAsynchronously(this, 20L, 300L);
         
         getServer().getPluginManager().registerEvents(new AnticheatManager(), this);
     }
