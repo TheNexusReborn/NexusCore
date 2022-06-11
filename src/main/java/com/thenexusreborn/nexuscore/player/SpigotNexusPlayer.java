@@ -15,6 +15,8 @@ public final class SpigotNexusPlayer extends NexusPlayer {
     private ActionBar actionBar = new ActionBar();
     private boolean spokenInChat = false;
     
+    //TODO Make proxy methods for Player methods that has a Player null check to prevent issues and change all interactions with Bukkit Player to use these methods
+    
     public SpigotNexusPlayer(UUID uniqueId, String name) {
         super(uniqueId, name);
     }
