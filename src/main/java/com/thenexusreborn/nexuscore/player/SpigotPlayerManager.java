@@ -74,6 +74,12 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                     nexusScoreboard.setTablistHandler(new RankTablistHandler(nexusScoreboard));
                 }
                 
+                if (nexusPlayer.getRank().ordinal() <= Rank.HELPER.ordinal()) {
+                    Player player = e.getPlayer();
+                    player.addAttachment(plugin, "spartan.info", true);
+                    player.addAttachment(plugin, "spartan.notifications", true);
+                }
+                
                 actionBar.setText("&aYour data has been loaded.");
                 new BukkitRunnable() {
                     @Override

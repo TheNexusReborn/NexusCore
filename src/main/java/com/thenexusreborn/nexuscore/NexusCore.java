@@ -2,7 +2,7 @@ package com.thenexusreborn.nexuscore;
 
 import com.thenexusreborn.api.*;
 import com.thenexusreborn.api.network.cmd.NetworkCommand;
-import com.thenexusreborn.api.player.NexusPlayer;
+import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.player.Preference.Info;
 import com.thenexusreborn.api.punishment.*;
 import com.thenexusreborn.api.scoreboard.TablistHandler;
@@ -23,6 +23,7 @@ import com.thenexusreborn.nexuscore.util.updater.Updater;
 import org.bukkit.Bukkit;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -147,6 +148,15 @@ public class NexusCore extends JavaPlugin {
                             TablistHandler tablistHandler = nexusPlayer.getScoreboard().getTablistHandler();
                             if (tablistHandler != null) {
                                 tablistHandler.update();
+                            }
+                        }
+                        
+                        if (nexusPlayer.getRank().ordinal() > Rank.HELPER.ordinal()) {
+                            Set<PermissionAttachmentInfo> effectivePermissions = player.getEffectivePermissions();
+                            for (PermissionAttachmentInfo perm : effectivePermissions) {
+                                if (perm.getPermission().equalsIgnoreCase("spartan.info") || perm.getPermission().equals("spartan.notifications")) {
+                                    player.removeAttachment(perm.getAttachment());
+                                }
                             }
                         }
                     }
