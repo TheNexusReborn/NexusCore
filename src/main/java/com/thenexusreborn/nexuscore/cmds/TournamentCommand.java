@@ -72,6 +72,7 @@ public class TournamentCommand implements TabExecutor {
                 sender.sendMessage(MCUtils.color(MsgType.WARN + "Error while creating a tournament."));
                 return true;
             }
+            NexusAPI.getApi().setTournament(tournament);
             NexusAPI.getApi().getNetworkManager().send("tournament ", tournament.getId() + "");
             sender.sendMessage(MCUtils.color(MsgType.INFO + "Successfully created a tournament with the name &b" + tournament.getName() + " &eand id &b" + tournament.getId()));
         } else if (args[0].equalsIgnoreCase("delete")) {
@@ -90,7 +91,7 @@ public class TournamentCommand implements TabExecutor {
             sender.sendMessage(MCUtils.color(MsgType.VERBOSE + "Removing existing stats from that tournament..."));
             Tournament finalTournament1 = tournament;
             NexusAPI.getApi().getThreadFactory().runAsync(() -> {
-                try (Connection connection = NexusAPI.getApi().getConnection(); Statement statement = connection.createStatement()) {
+                try (Connection connection = NexusAPI.getApi().getConnection(); Statement statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE)) {
                     ResultSet resultSet = statement.executeQuery("select * from stats where name like concat('%', 'tournament', '%');");
                     while (resultSet.next()) {
                         resultSet.deleteRow();
@@ -102,6 +103,7 @@ public class TournamentCommand implements TabExecutor {
                     }
                     
                     statement.execute("delete from tournaments where id='" + finalTournament1.getId() + "';");
+                    NexusAPI.getApi().getNetworkManager().send("tournament", "delete", finalTournament1.getId() + "");
                 } catch (Exception e) {
                     sender.sendMessage(MCUtils.color(MsgType.WARN + "There was an error processing stat purge"));
                     e.printStackTrace();
@@ -109,9 +111,10 @@ public class TournamentCommand implements TabExecutor {
             });
             
             sender.sendMessage(MCUtils.color("&eYou successfully deleted the tournament"));
+            return true;
         } else {
             if (tournament == null) {
-                sender.sendMessage(MCUtils.color("&cThere is not tournament currently setup."));
+                sender.sendMessage(MCUtils.color("&cThere is no tournament currently setup."));
                 return true;
             }
             
@@ -132,8 +135,16 @@ public class TournamentCommand implements TabExecutor {
                             lines.add("  &a" + place + ". &b" + scoreInfo.getName() + " &7-> &f" + scoreInfo.getScore());
                             place++;
                         }
+    
+                        String formattedLastUpdated;
+                        if (lastUpdated == 0) {
+                            formattedLastUpdated = "Never";
+                        } else {
+                            formattedLastUpdated = Timer.formatLongerTime((int) ((System.currentTimeMillis() - lastUpdated)) / 1000) + " ago";
+                        }
+                        
                         sender.sendMessage(MCUtils.color("&6&l>> &eLeaderboard for tournament &b" + finalTournament.getName()));
-                        sender.sendMessage(MCUtils.color("&6&l>> &7&oLast Updated: " + Timer.formatTime((int) (System.currentTimeMillis() - lastUpdated)) + " ago"));
+                        sender.sendMessage(MCUtils.color("&6&l>> &7&oLast Updated: " + formattedLastUpdated));
                         lines.forEach(line -> sender.sendMessage(MCUtils.color(line)));
                     }
                 }.runTaskAsynchronously(plugin);
@@ -145,9 +156,17 @@ public class TournamentCommand implements TabExecutor {
                 }
                 
                 Player player = (Player) sender;
-                
-                int score = NexusAPI.getApi().getTournament().getScoreCache().getOrDefault(player.getUniqueId(), new ScoreInfo(player.getUniqueId(), player.getName(), 0)).getScore();
+    
+                ScoreInfo scoreInfo = NexusAPI.getApi().getTournament().getScoreCache().getOrDefault(player.getUniqueId(), new ScoreInfo(player.getUniqueId(), player.getName(), 0));
+                int score = scoreInfo.getScore();
                 player.sendMessage(MCUtils.color("&eYour score is currently &b" + score));
+                String lastUpdated;
+                if (scoreInfo.getLastUpdated() == 0) {
+                    lastUpdated = "Never";
+                } else {
+                    lastUpdated = Timer.formatLongerTime((int) ((System.currentTimeMillis() - scoreInfo.getLastUpdated())) / 1000) + " ago";
+                }
+                sender.sendMessage(MCUtils.color("&6&l>> &7&oLast Updated: " + lastUpdated));
                 return true;
             }
             
@@ -171,7 +190,7 @@ public class TournamentCommand implements TabExecutor {
                 return true;
             }
             
-            if (args[0].equalsIgnoreCase("setactive")) {
+            if (args[0].equalsIgnoreCase("setactive") || args[0].equalsIgnoreCase("sa")) {
                 boolean value = Boolean.parseBoolean(args[1]);
                 tournament.setActive(value);
                 sender.sendMessage(MCUtils.color("&eYou set the tournament active status to &b" + value));
@@ -226,6 +245,7 @@ public class TournamentCommand implements TabExecutor {
                     sender.sendMessage(MCUtils.color("&eYou set the host of the tournament to &e" + name));
                 }
             }
+            NexusAPI.getApi().getDataManager().pushTournament(tournament);
             NexusAPI.getApi().getNetworkManager().send("tournament", tournament.getId() + "");
         }
         

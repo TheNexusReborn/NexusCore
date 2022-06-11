@@ -41,4 +41,4 @@ commands:
   incognito:
     aliases: [i]
   tournament:
-    aliases: [tm]
+    aliases: [tt]

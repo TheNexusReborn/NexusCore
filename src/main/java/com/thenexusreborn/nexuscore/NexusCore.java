@@ -201,10 +201,6 @@ public class NexusCore extends JavaPlugin {
                     return;
                 }
                 
-                if (!tournament.isActive()) {
-                    return;
-                }
-                
                 try (Connection connection = getConnection(); Statement statement = connection.createStatement()) {
                     ResultSet resultSet = statement.executeQuery("select * from stats where name='sg_tournament_points';");
                     while (resultSet.next()) {
@@ -237,6 +233,7 @@ public class NexusCore extends JavaPlugin {
                     ScoreInfo scoreInfo = tournament.getScoreCache().get(entry.getKey());
                     if (scoreInfo != null) {
                         scoreInfo.setScore(entry.getValue());
+                        scoreInfo.setLastUpdated(System.currentTimeMillis());
                         iterator.remove();
                     }
                 }
@@ -256,6 +253,7 @@ public class NexusCore extends JavaPlugin {
                         
                         if (name != null) {
                             ScoreInfo scoreInfo = new ScoreInfo(entry.getKey(), name, entry.getValue());
+                            scoreInfo.setLastUpdated(System.currentTimeMillis());
                             tournament.getScoreCache().put(scoreInfo.getUuid(), scoreInfo);
                         }
                     }
