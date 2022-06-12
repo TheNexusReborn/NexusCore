@@ -1,13 +1,15 @@
 package com.thenexusreborn.nexuscore.cmds;
 
 import com.thenexusreborn.api.NexusAPI;
-import com.thenexusreborn.api.player.*;
+import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.api.punishment.Punishment;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.util.*;
+import org.bukkit.Bukkit;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
+import java.sql.*;
 import java.util.*;
 
 public class PunishmentHistoryCmds implements CommandExecutor {
@@ -30,43 +32,62 @@ public class PunishmentHistoryCmds implements CommandExecutor {
             sender.sendMessage(MCUtils.color(MsgType.WARN + "Usage: /" + label + " <target> [page]"));
             return true;
         }
-    
-        NexusPlayer target;
-        try {
-            UUID targetUUID = UUID.fromString(args[0]);
-            target = NexusAPI.getApi().getPlayerManager().getNexusPlayer(targetUUID);
-            if (target == null) {
-                target = NexusAPI.getApi().getDataManager().loadPlayer(targetUUID);
-            }
-        } catch (Exception e) {
-            target = NexusAPI.getApi().getPlayerManager().getNexusPlayer(args[0]);
-            if (target == null) {
-                target = NexusAPI.getApi().getDataManager().loadPlayer(args[0]);
-            }
-        }
         
-        if (target == null) {
-            sender.sendMessage(MCUtils.color(MsgType.WARN + "Invalid target. Have they joined before?"));
-            return true;
-        }
-    
-        String actor;
-        if (sender instanceof Player) {
-            actor = ((Player) sender).getUniqueId().toString();
-        } else {
-            actor = sender.getName();
+        String commandTarget = "", commandTargetName = "";
+        if (cmd.getName().equalsIgnoreCase("history")) {
+            try {
+                UUID uuid = UUID.fromString(args[0]);
+                commandTarget = uuid.toString();
+                Player player = Bukkit.getPlayer(uuid);
+                if (player != null) {
+                    commandTargetName = player.getName();
+                } else {
+                    try (Connection connection = NexusAPI.getApi().getConnection(); Statement statement = connection.createStatement()) {
+                        ResultSet resultSet = statement.executeQuery("select lastKnownName from players where uuid='" + uuid + "'");
+                        if (resultSet.next()) {
+                            commandTargetName = resultSet.getString("lastKnownName");
+                        } else {
+                            sender.sendMessage(MCUtils.color(MsgType.WARN + "Could not find a name for that UUID. Have they joined before?"));
+                            return true;
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                        sender.sendMessage(MCUtils.color(MsgType.WARN + "SQL Error while proccessing your request. Please report this as a bug."));
+                        return true;
+                    }
+                } 
+            } catch (Exception e) {
+                commandTargetName = args[0];
+                if (commandTargetName.equalsIgnoreCase("PowerMoveRegulator") || commandTargetName.equalsIgnoreCase("Console")) {
+                    commandTarget = commandTargetName;
+                } else {
+                    try (Connection connection = NexusAPI.getApi().getConnection(); Statement statement = connection.createStatement()) {
+                        ResultSet resultSet = statement.executeQuery("select uuid from players where lastKnownName='" + commandTargetName + "';");
+                        if (resultSet.next()) {
+                            commandTarget = resultSet.getString("uuid");
+                        } else {
+                            sender.sendMessage(MCUtils.color(MsgType.WARN + "Could not find a UUID for that player name. Have they joined before?"));
+                            return true; 
+                        }
+                    } catch (SQLException se) {
+                        se.printStackTrace();
+                        sender.sendMessage(MCUtils.color(MsgType.WARN + "SQL Error while proccessing your request. Please report this as a bug."));
+                        return true;
+                    }
+                }
+            }
         }
         
         Set<Punishment> unfilteredPunishments = new TreeSet<>();
         if (cmd.getName().equals("staffhistory")) {
             for (Punishment punishment : NexusAPI.getApi().getPunishmentManager().getPunishments()) {
-                if (punishment.getActor().equals(actor)) {
+                if (punishment.getActor().equals(commandTarget)) {
                     unfilteredPunishments.add(punishment);
                 }
             }
         } else if (cmd.getName().equals("history")) {
             for (Punishment punishment : NexusAPI.getApi().getPunishmentManager().getPunishments()) {
-                if (punishment.getTarget().equalsIgnoreCase(target.getUniqueId().toString())) {
+                if (punishment.getTarget().equalsIgnoreCase(commandTarget)) {
                     unfilteredPunishments.add(punishment);
                 }
             }
@@ -101,7 +122,7 @@ public class PunishmentHistoryCmds implements CommandExecutor {
             type = "History";
         }
         
-        sender.sendMessage(MCUtils.color("&6&l>> &e" + type + " for " + target.getName() + " Page " + (page + 1) + "/" + totalPages));
+        sender.sendMessage(MCUtils.color("&6&l>> &e" + type + " for " + commandTargetName + " Page " + (page + 1) + "/" + totalPages));
         boolean isStaff = cmd.getName().equals("staffhistory");
         for (int i = start; i < end; i++) {
             Punishment punishment = punishments.get(i);
