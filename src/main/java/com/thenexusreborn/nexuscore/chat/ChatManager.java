@@ -61,16 +61,12 @@ public class ChatManager implements Listener {
             }
         }
         
-        Rank rank = nexusPlayer.getRank();
-        if (rank == Rank.NEXUS) {
-            chatColor = "&6";
-        } else if (rank.ordinal() >= Rank.ADMIN.ordinal() && rank.ordinal() <= Rank.HELPER.ordinal()) {
-            chatColor = "&b";
-        } else if (rank.ordinal() >= Rank.VIP.ordinal() && rank.ordinal() <= Rank.IRON.ordinal()) {
-            chatColor = "&f";
-        } else {
-            chatColor = "&7";
+        if (nexusPlayer.getPreferences().get("vanish").getValue()) {
+            e.setCancelled(true);
+            nexusPlayer.sendMessage(MsgType.WARN + "You are not allowed to speak in vanish mode.");
+            return;
         }
+        
         
         if (!nexusPlayer.hasSpokenInChat()) {
             nexusPlayer.setSpokenInChat(true);
@@ -85,6 +81,17 @@ public class ChatManager implements Listener {
                     }
                 }
             }.runTask(plugin);
+        }
+        
+        Rank rank = nexusPlayer.getRank();
+        if (rank == Rank.NEXUS) {
+            chatColor = "&6";
+        } else if (rank.ordinal() >= Rank.ADMIN.ordinal() && rank.ordinal() <= Rank.HELPER.ordinal()) {
+            chatColor = "&b";
+        } else if (rank.ordinal() >= Rank.VIP.ordinal() && rank.ordinal() <= Rank.IRON.ordinal()) {
+            chatColor = "&f";
+        } else {
+            chatColor = "&7";
         }
         
         if (handler != null) {
