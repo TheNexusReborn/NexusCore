@@ -2,7 +2,7 @@ package com.thenexusreborn.nexuscore.cmds;
 
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.*;
-import com.thenexusreborn.api.stats.StatRegistry;
+import com.thenexusreborn.api.stats.StatHelper;
 import com.thenexusreborn.api.util.Operator;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.util.*;
@@ -35,20 +35,20 @@ public class SetStatCmd implements TabExecutor {
         }
     
         Consumer<NexusPlayer> consumer = player -> {
-            if (!StatRegistry.isValidStat(args[1])) {
+            if (!StatHelper.isValidStat(args[1])) {
                 sender.sendMessage(MCUtils.color("&cCould not find a stat with that name."));
                 return;
             }
     
             Number value;
-            if (StatRegistry.isIntegerStat(args[1])) {
+            if (StatHelper.isIntegerStat(args[1])) {
                 try {
                     value = Math.abs(Integer.parseInt(args[2]));
                 } catch (NumberFormatException e) {
                     sender.sendMessage(MCUtils.color("&cYou provided an invalid integer value for that stat type."));
                     return;
                 }
-            } else if (StatRegistry.isDoubleStat(args[1])) {
+            } else if (StatHelper.isDoubleStat(args[1])) {
                 try {
                     value = Math.abs(Double.parseDouble(args[2]));
                 } catch (NumberFormatException e) {
