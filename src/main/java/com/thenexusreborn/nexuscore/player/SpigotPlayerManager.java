@@ -11,14 +11,18 @@ import com.thenexusreborn.nexuscore.util.*;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.*;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.*;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 public class SpigotPlayerManager extends PlayerManager implements Listener {
     
     private final NexusCore plugin;
+    
+    private Map<UUID, Integer> clicksPerSecond = Collections.synchronizedMap(new HashMap<>());
     
     public SpigotPlayerManager(NexusCore plugin) {
         this.plugin = plugin;
@@ -34,6 +38,40 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                 }
             }
         }.runTaskTimer(plugin, 1L, 12000);
+        
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (Entry<UUID, Integer> entry : new HashMap<>(clicksPerSecond).entrySet()) {
+                    UUID uuid = entry.getKey();
+                    int cps = entry.getValue();
+                    Player player = Bukkit.getPlayer(uuid);
+                    if (player == null) {
+                        clicksPerSecond.remove(uuid);
+                        continue;
+                    }
+                    
+                    if (cps > 16) {
+                        player.sendMessage(MCUtils.color(MsgType.WARN + "You are clicking at " + cps + " and the server limit is 16. If you do this too long, you may get auto-banned by the anti-cheat."));
+                    }
+                    
+                    clicksPerSecond.put(uuid, 0);
+                }
+            }
+        }.runTaskTimer(plugin, 0L, 20L);
+    }
+    
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onPlayerInteract(PlayerInteractEvent e) {
+        if (e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK) {
+            if (clicksPerSecond.containsKey(e.getPlayer().getUniqueId())) {
+                int clicks = clicksPerSecond.get(e.getPlayer().getUniqueId()) + 1;
+                this.clicksPerSecond.put(e.getPlayer().getUniqueId(), clicks);
+                if (clicks > 16) {
+                    e.setCancelled(true);
+                }
+            }
+        }
     }
     
     @EventHandler
@@ -80,6 +118,8 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                     player.addAttachment(plugin, "spartan.notifications", true);
                 }
                 
+                this.clicksPerSecond.put(e.getPlayer().getUniqueId(), 0);
+                
                 actionBar.setText("&aYour data has been loaded.");
                 new BukkitRunnable() {
                     @Override
@@ -118,6 +158,8 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
         } else {
             e.setQuitMessage(null);
         }
+        
+        this.clicksPerSecond.remove(e.getPlayer().getUniqueId());
     }
     
     @Override
