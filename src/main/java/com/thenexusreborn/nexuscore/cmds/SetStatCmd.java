@@ -76,7 +76,7 @@ public class SetStatCmd implements TabExecutor {
                 return;
             }
             
-            StatChange statChange = new StatChange(stat.getUuid(), stat.getName(), stat.getType(), value, operator, System.currentTimeMillis());
+            StatChange statChange = new StatChange(StatHelper.getInfo(stat.getName()), stat.getUuid(), value, operator, System.currentTimeMillis());
             StatHelper.changeStat(stat, operator, value);
             NexusAPI.getApi().getDataManager().pushStatChangeAsync(statChange);
             sender.sendMessage(MCUtils.color(MsgType.INFO + "You changed the stat with the operation " + operator.name()));
