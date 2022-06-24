@@ -15,7 +15,6 @@ import com.thenexusreborn.nexuscore.chat.ChatManager;
 import com.thenexusreborn.nexuscore.cmds.*;
 import com.thenexusreborn.nexuscore.menu.MenuManager;
 import com.thenexusreborn.nexuscore.player.*;
-import com.thenexusreborn.nexuscore.proxy.ProxyMessageListener;
 import com.thenexusreborn.nexuscore.util.*;
 import com.thenexusreborn.nexuscore.util.nms.NMS;
 import com.thenexusreborn.nexuscore.util.nms.NMS.Version;
@@ -68,17 +67,13 @@ public class NexusCore extends JavaPlugin {
         this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         this.getServer().getMessenger().registerOutgoingPluginChannel(this, "nexus");
     
-        ProxyMessageListener messageListener = new ProxyMessageListener(this);
-        this.getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", messageListener);
-        this.getServer().getMessenger().registerIncomingPluginChannel(this, "nexus", messageListener);
-        
         Bukkit.getServer().getPluginManager().registerEvents((SpigotPlayerManager) NexusAPI.getApi().getPlayerManager(), this);
         Bukkit.getServer().getPluginManager().registerEvents(chatManager, this);
         Bukkit.getServer().getPluginManager().registerEvents(new MenuManager(), this);
         
         registerCommand("rank", new RankCommand(this));
         registerCommand("setstat", new SetStatCmd(this));
-        registerCommand("consolodatestats", new ConsolodateStatsCmd(this));
+        registerCommand("consolidatestats", new ConsolidateStatsCmd(this));
         getCommand("tag").setExecutor(new TagCommand(this));
         getCommand("say").setExecutor(new SayCommand(this));
         getCommand("message").setExecutor(new MessageCommand(this));

@@ -2,7 +2,6 @@ package com.thenexusreborn.nexuscore.player;
 
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.tags.Tag;
-import com.thenexusreborn.api.util.Operator;
 import com.thenexusreborn.nexuscore.util.*;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -17,12 +16,30 @@ public final class SpigotNexusPlayer extends NexusPlayer {
     
     //TODO Make proxy methods for Player methods that has a Player null check to prevent issues and change all interactions with Bukkit Player to use these methods
     
+    public SpigotNexusPlayer(CachedPlayer cachedPlayer) {
+        super(cachedPlayer);
+    }
+    
+    public SpigotNexusPlayer(UUID uniqueId) {
+        super(uniqueId);
+    }
+    
     public SpigotNexusPlayer(UUID uniqueId, String name) {
         super(uniqueId, name);
     }
     
-    public SpigotNexusPlayer(UUID uniqueId, Map<Rank, Long> ranks, long firstJoined, long lastLogin, long lastLogout, long playTime, String lastKnownName, Tag tag, Set<Tag> unlockedTags, boolean prealpha, boolean alpha, boolean beta) {
-        super(uniqueId, ranks, firstJoined, lastLogin, lastLogout, playTime, lastKnownName, tag, unlockedTags, prealpha, alpha, beta);
+    public SpigotNexusPlayer(UUID uniqueId, Map<Rank, Long> ranks, long firstJoined, long lastLogin, long lastLogout, String lastKnownName, Tag tag, Set<String> unlockedTags, boolean prealpha, boolean alpha, boolean beta) {
+        super(uniqueId);
+        this.ranks = ranks;
+        this.firstJoined = firstJoined;
+        this.lastLogin = lastLogin;
+        this.lastLogout = lastLogout;
+        this.name = lastKnownName;
+        this.tag = tag;
+        this.unlockedTags = unlockedTags;
+        this.prealpha = prealpha;
+        this.alpha = alpha;
+        this.beta = beta;
     }
     
     public void setSpokenInChat(boolean spokenInChat) {
@@ -34,17 +51,13 @@ public final class SpigotNexusPlayer extends NexusPlayer {
     }
     
     @Override
-    public String getNameFromServer() {
+    public String getName() {
         Player player = getPlayer();
         if (player != null) {
             return player.getName();
-        } else {
-            OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(this.getUniqueId());
-            if (offlinePlayer != null) {
-                return offlinePlayer.getName();
-            }
         }
-        return null;
+        
+        return super.getName();
     }
     
     public ActionBar getActionBar() {
@@ -63,32 +76,32 @@ public final class SpigotNexusPlayer extends NexusPlayer {
         return Bukkit.getPlayer(uniqueId);
     }
     
-    @Override
-    public <T extends Number> void changeStat(String statName, T statValue, Operator operator) {
-         int previousLevel = 0;
-         if (statName.equalsIgnoreCase("xp")) {
-             previousLevel = getLevel();
-         }
-        super.changeStat(statName, statValue, operator);
-        
-        if (!statName.equalsIgnoreCase("xp")) {
-            return;
-        }
-        
-        if (getLevel() > previousLevel) {
-            sendMessage("&5╔══════════════════════════════");
-            sendMessage("&5║  &5&k&liiii&a&lLEVEL UP!&5&l&kiiii");
-            sendMessage("&5║  &7&oYou are now &e&l&oLevel " + getLevel() + "&7&o!");
-            sendMessage("&5╚══════════════════════════════");
-        }
-    
-        if (getActionBar() instanceof XPActionBar) {
-            XPActionBar actionBar = (XPActionBar) getActionBar();
-            actionBar.update();
-        } else {
-            setActionBar(new XPActionBar(this, getActionBar(), System.currentTimeMillis()));
-        }
-    }
+//    @Override
+//    public <T extends Number> void changeStat(String statName, T statValue, Operator operator) {
+//         int previousLevel = 0;
+//         if (statName.equalsIgnoreCase("xp")) {
+//             previousLevel = getLevel();
+//         }
+//        super.changeStat(statName, statValue, operator);
+//        
+//        if (!statName.equalsIgnoreCase("xp")) {
+//            return;
+//        }
+//        
+//        if (getLevel() > previousLevel) {
+//            sendMessage("&5╔══════════════════════════════");
+//            sendMessage("&5║  &5&k&liiii&a&lLEVEL UP!&5&l&kiiii");
+//            sendMessage("&5║  &7&oYou are now &e&l&oLevel " + getLevel() + "&7&o!");
+//            sendMessage("&5╚══════════════════════════════");
+//        }
+//    
+//        if (getActionBar() instanceof XPActionBar) {
+//            XPActionBar actionBar = (XPActionBar) getActionBar();
+//            actionBar.update();
+//        } else {
+//            setActionBar(new XPActionBar(this, getActionBar(), System.currentTimeMillis()));
+//        }
+//    }
     
     @Override
     public boolean isOnline() {

@@ -8,8 +8,8 @@ commands:
     description: Set player ranks
   setstat:
     description: Set stats
-  consolodateStats:
-    description: Consolodates stats
+  consolidateStats:
+    description: Consolidates stats
   tag:
   message:
     aliases: [msg, whisper, tell]

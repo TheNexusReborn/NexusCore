@@ -45,16 +45,15 @@ public class TagCommand implements CommandExecutor {
                 sb.append(args[i]).append(" ");
             }
             String tagName = sb.substring(0, sb.length() - 1);
-            Tag tag = new Tag(tagName);
             
             Consumer<NexusPlayer> action = nexusPlayer -> {
                 String cmdAction, verb;
                 if (args[0].equalsIgnoreCase("unlock")) {
-                    nexusPlayer.unlockTag(tag);
+                    nexusPlayer.unlockTag(tagName);
                     cmdAction = "unlocked";
                     verb = "for";
                 } else {
-                    nexusPlayer.removeTag(tag);
+                    nexusPlayer.unlockTag(tagName);
                     cmdAction = "removed";
                     verb = "from";
                 }
@@ -68,7 +67,7 @@ public class TagCommand implements CommandExecutor {
                     }
                 });
                 
-                sender.sendMessage(MCUtils.color("&eYou " + cmdAction + " the tag " + tag.getDisplayName() + " &e" + verb + " the player &b" + nexusPlayer.getName()));
+                sender.sendMessage(MCUtils.color("&eYou " + cmdAction + " the tag " + new Tag(tagName).getDisplayName() + " &e" + verb + " the player &b" + nexusPlayer.getName()));
             };
     
             try {
@@ -93,11 +92,12 @@ public class TagCommand implements CommandExecutor {
             return true;
         }
     
-        Set<Tag> unlockedTags = nexusPlayer.getUnlockedTags();
+        Set<String> unlockedTags = nexusPlayer.getUnlockedTags();
         if (args[0].equalsIgnoreCase("list")) {
             if (unlockedTags.size() > 0) {
                 nexusPlayer.sendMessage("&eList of available tags...");
-                for (Tag tag : unlockedTags) {
+                for (String rawTag : unlockedTags) {
+                    Tag tag = new Tag(rawTag);
                     nexusPlayer.sendMessage(" &8- &e" + tag.getName() + " " + tag.getDisplayName());
                 }
             } else {
@@ -116,9 +116,9 @@ public class TagCommand implements CommandExecutor {
             String tagName = sb.substring(0, sb.length() - 1);
              
             Tag tag = null;
-            for (Tag unlocked : unlockedTags) {
-                if (unlocked.getName().equalsIgnoreCase(tagName)) {
-                    tag = unlocked;
+            for (String unlocked : unlockedTags) {
+                if (unlocked.equalsIgnoreCase(tagName)) {
+                    tag = new Tag(unlocked);
                 }
             }
             
