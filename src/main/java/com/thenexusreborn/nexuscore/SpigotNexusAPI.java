@@ -41,16 +41,18 @@ public class SpigotNexusAPI extends NexusAPI {
     
     @Override
     public void registerStats(StatRegistry registry) {
-        registry.register(new Stat.Info("xp", StatType.DOUBLE, 0.0));
-        registry.register(new Stat.Info("nexites", StatType.DOUBLE, 0.0));
-        registry.register(new Stat.Info("credits", StatType.DOUBLE, 0.0));
-        registry.register(new Stat.Info("playtime", StatType.LONG, 0));
-        registry.register(new Stat.Info("firstjoined", StatType.LONG, 0));
-        registry.register(new Stat.Info("lastlogin", StatType.LONG, 0));
-        registry.register(new Stat.Info("lastlogout", StatType.LONG, 0));
-        registry.register(new Stat.Info("prealpha", StatType.BOOLEAN, false));
-        registry.register(new Stat.Info("alpha", StatType.BOOLEAN, false));
-        registry.register(new Stat.Info("beta", StatType.BOOLEAN, false));
+        registry.register("xp", StatType.DOUBLE, 0.0);
+        //TODO registry.register("level", StatType.INTEGER, 0);
+        registry.register("nexites", StatType.DOUBLE, 0.0);
+        registry.register("credits", StatType.DOUBLE, 0.0);
+        registry.register("playtime", StatType.LONG, 0);
+        registry.register("firstjoined", StatType.LONG, 0);
+        registry.register("lastlogin", StatType.LONG, 0);
+        registry.register("lastlogout", StatType.LONG, 0);
+        registry.register("prealpha", StatType.BOOLEAN, false);
+        registry.register("alpha", StatType.BOOLEAN, false);
+        registry.register("beta", StatType.BOOLEAN, false);
+        registry.register("tag", StatType.STRING, "");
     
         for (NexusSpigotPlugin nexusPlugin : plugin.getNexusPlugins()) {
             nexusPlugin.registerStats(registry);
