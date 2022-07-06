@@ -1,15 +1,14 @@
 package com.thenexusreborn.nexuscore;
 
-import com.thenexusreborn.api.*;
-import com.thenexusreborn.api.network.cmd.NetworkCommand;
+import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.player.Preference.Info;
-import com.thenexusreborn.api.punishment.*;
 import com.thenexusreborn.api.scoreboard.TablistHandler;
 import com.thenexusreborn.api.server.*;
 import com.thenexusreborn.api.tournament.Tournament;
 import com.thenexusreborn.api.tournament.Tournament.ScoreInfo;
 import com.thenexusreborn.nexuscore.anticheat.AnticheatManager;
+import com.thenexusreborn.nexuscore.api.NexusSpigotPlugin;
 import com.thenexusreborn.nexuscore.api.events.*;
 import com.thenexusreborn.nexuscore.chat.ChatManager;
 import com.thenexusreborn.nexuscore.cmds.*;
@@ -33,6 +32,8 @@ import java.util.Map.Entry;
 public class NexusCore extends JavaPlugin {
     
     private NMS nms;
+    
+    private List<NexusSpigotPlugin> nexusPlugins = new ArrayList<>();
     
     private ChatManager chatManager;
     
@@ -175,28 +176,6 @@ public class NexusCore extends JavaPlugin {
             }
         }.runTaskTimerAsynchronously(this, 1L, 20L);
         
-        NexusAPI.getApi().getNetworkManager().addCommand(new NetworkCommand("staffchat", (StaffChat::handleIncoming)));
-        NexusAPI.getApi().getNetworkManager().getCommand("punishment").setExecutor((cmd, origin, args) -> new BukkitRunnable() {
-            @Override
-            public void run() {
-                int id = Integer.parseInt(args[0]);
-                Punishment punishment = NexusAPI.getApi().getDataManager().getPunishment(id);
-                if (punishment.getType() == PunishmentType.MUTE || punishment.getType() == PunishmentType.WARN || punishment.getType() == PunishmentType.BAN || punishment.getType() == PunishmentType.BLACKLIST) {
-                    NexusAPI.getApi().getPunishmentManager().addPunishment(punishment);
-    
-                    Player player = Bukkit.getPlayer(UUID.fromString(punishment.getTarget()));
-                    if (player != null && punishment.isActive()) {
-                        if (punishment.getType() == PunishmentType.MUTE) {
-                            player.sendMessage(MCUtils.color(MsgType.WARN + "You have been muted by " + punishment.getActorNameCache() + " for " + punishment.getReason() + ". (" + punishment.formatTimeLeft() + ")"));
-                        } else if (punishment.getType() == PunishmentType.WARN) {
-                            player.sendMessage(MCUtils.color(MsgType.WARN + "You have been warned by " + punishment.getActorNameCache() + " for " + punishment.getReason() + "."));
-                            player.sendMessage(MCUtils.color(MsgType.WARN + "You must type the code " + punishment.getAcknowledgeInfo().getCode() + " in chat before you can speak again."));
-                        }
-                    }
-                }
-            }
-        }.runTaskAsynchronously(this));
-    
         new BukkitRunnable() {
             private Map<UUID, Integer> scores = new HashMap<>();
             @Override
@@ -273,6 +252,10 @@ public class NexusCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new AnticheatManager(), this);
     }
     
+    public void addNexusPlugin(NexusSpigotPlugin plugin) {
+        this.nexusPlugins.add(plugin);
+    }
+    
     @Override
     public void onDisable() {
         NexusAPI.getApi().getPlayerManager().saveData();
@@ -305,5 +288,9 @@ public class NexusCore extends JavaPlugin {
     
     public Connection getConnection() throws SQLException {
         return getConnection(getConfig().getString("mysql.database"));
+    }
+    
+    public List<NexusSpigotPlugin> getNexusPlugins() {
+        return new ArrayList<>(this.nexusPlugins);
     }
 }
