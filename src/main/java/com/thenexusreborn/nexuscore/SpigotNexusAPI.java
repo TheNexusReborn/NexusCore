@@ -1,6 +1,7 @@
 package com.thenexusreborn.nexuscore;
 
 import com.thenexusreborn.api.*;
+import com.thenexusreborn.api.data.objects.*;
 import com.thenexusreborn.api.network.NetworkContext;
 import com.thenexusreborn.api.network.cmd.NetworkCommand;
 import com.thenexusreborn.api.player.NexusPlayer;
@@ -8,11 +9,13 @@ import com.thenexusreborn.api.punishment.*;
 import com.thenexusreborn.api.registry.*;
 import com.thenexusreborn.api.tournament.Tournament;
 import com.thenexusreborn.nexuscore.api.NexusSpigotPlugin;
+import com.thenexusreborn.nexuscore.datatest.TestProfile;
 import com.thenexusreborn.nexuscore.player.*;
 import com.thenexusreborn.nexuscore.server.SpigotServerManager;
 import com.thenexusreborn.nexuscore.thread.SpigotThreadFactory;
 import com.thenexusreborn.nexuscore.util.*;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -23,7 +26,6 @@ public class SpigotNexusAPI extends NexusAPI {
     
     private NexusCore plugin;
     
-    
     public SpigotNexusAPI(NexusCore plugin) {
         super(Environment.valueOf(plugin.getConfig().getString("environment").toUpperCase()), NetworkContext.CLIENT, plugin.getLogger(), new SpigotPlayerManager(plugin), new SpigotThreadFactory(plugin), new SpigotPlayerFactory(), new SpigotServerManager(plugin));
         this.plugin = plugin;
@@ -31,7 +33,11 @@ public class SpigotNexusAPI extends NexusAPI {
     
     @Override
     public void registerDatabases(DatabaseRegistry registry) {
-    
+        FileConfiguration config = plugin.getConfig();
+        Database testDatabase = new Database("test", config.getString("mysql.host"), config.getString("mysql.user"), config.getString("mysql.password"));
+        Table table = new Table(TestProfile.class);
+        testDatabase.addTable(table);
+        registry.register(testDatabase);
     
         for (NexusSpigotPlugin nexusPlugin : plugin.getNexusPlugins()) {
             nexusPlugin.registerDatabases(registry);
