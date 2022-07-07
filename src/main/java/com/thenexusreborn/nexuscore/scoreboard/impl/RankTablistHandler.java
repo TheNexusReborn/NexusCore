@@ -23,8 +23,8 @@ public class RankTablistHandler extends TablistHandler {
         BEGIN_CHARS.put(Rank.IRON, "f");
         BEGIN_CHARS.put(Rank.MEMBER, "g");
         BEGIN_CHARS.put(Rank.MEDIA, "h");
-        BEGIN_CHARS.put(Rank.VIP, "i");
-        BEGIN_CHARS.put(Rank.ARCHITECT, "j");
+        BEGIN_CHARS.put(Rank.ARCHITECT, "i");
+        BEGIN_CHARS.put(Rank.VIP, "j");
         BEGIN_CHARS.put(Rank.NEXUS, "k");
         BEGIN_CHARS.put(Rank.ADMIN, "l");
         BEGIN_CHARS.put(Rank.MOD, "n");
