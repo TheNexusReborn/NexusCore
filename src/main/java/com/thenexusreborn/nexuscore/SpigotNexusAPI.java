@@ -6,7 +6,6 @@ import com.thenexusreborn.api.network.cmd.NetworkCommand;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.punishment.*;
 import com.thenexusreborn.api.registry.*;
-import com.thenexusreborn.api.stats.*;
 import com.thenexusreborn.api.tournament.Tournament;
 import com.thenexusreborn.nexuscore.api.NexusSpigotPlugin;
 import com.thenexusreborn.nexuscore.player.*;
@@ -41,19 +40,6 @@ public class SpigotNexusAPI extends NexusAPI {
     
     @Override
     public void registerStats(StatRegistry registry) {
-        registry.register("xp", StatType.DOUBLE, 0.0);
-        //TODO registry.register("level", StatType.INTEGER, 0);
-        registry.register("nexites", StatType.DOUBLE, 0.0);
-        registry.register("credits", StatType.DOUBLE, 0.0);
-        registry.register("playtime", StatType.LONG, 0);
-        registry.register("firstjoined", StatType.LONG, 0);
-        registry.register("lastlogin", StatType.LONG, 0);
-        registry.register("lastlogout", StatType.LONG, 0);
-        registry.register("prealpha", StatType.BOOLEAN, false);
-        registry.register("alpha", StatType.BOOLEAN, false);
-        registry.register("beta", StatType.BOOLEAN, false);
-        registry.register("tag", StatType.STRING, "");
-    
         for (NexusSpigotPlugin nexusPlugin : plugin.getNexusPlugins()) {
             nexusPlugin.registerStats(registry);
         }
