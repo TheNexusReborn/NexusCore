@@ -178,4 +178,17 @@ public class Timer {
     public void cancel() {
         this.cancelled = true;
     }
+    
+    @Override
+    public String toString() {
+        return "Timer{" +
+                "lastUpdates=" + lastUpdates +
+                ", callback=" + ((callback == null) ? null : callback.getClass().getName()) +
+                ", cancelled=" + cancelled +
+                ", length=" + length +
+                ", paused=" + paused +
+                ", running=" + running +
+                ", time=" + time +
+                '}';
+    }
 }
