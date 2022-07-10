@@ -2,6 +2,7 @@ package com.thenexusreborn.nexuscore.player;
 
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.tags.Tag;
+import com.thenexusreborn.nexuscore.datatest.TestProfile;
 import com.thenexusreborn.nexuscore.util.*;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -10,6 +11,8 @@ import java.util.*;
 
 public final class SpigotNexusPlayer extends NexusPlayer {
     public static final int version = 3;
+    
+    private TestProfile testProfile;
     
     private ActionBar actionBar = new ActionBar();
     private boolean spokenInChat = false;
@@ -40,6 +43,14 @@ public final class SpigotNexusPlayer extends NexusPlayer {
         setPrealpha(prealpha);
         setAlpha(alpha);
         setBeta(beta);
+    }
+    
+    public TestProfile getTestProfile() {
+        return testProfile;
+    }
+    
+    public void setTestProfile(TestProfile testProfile) {
+        this.testProfile = testProfile;
     }
     
     public void setSpokenInChat(boolean spokenInChat) {

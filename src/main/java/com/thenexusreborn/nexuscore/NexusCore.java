@@ -1,10 +1,12 @@
 package com.thenexusreborn.nexuscore;
 
 import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.data.objects.Database;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.player.Preference.Info;
 import com.thenexusreborn.api.scoreboard.TablistHandler;
 import com.thenexusreborn.api.server.*;
+import com.thenexusreborn.api.tags.Tag;
 import com.thenexusreborn.api.tournament.Tournament;
 import com.thenexusreborn.api.tournament.Tournament.ScoreInfo;
 import com.thenexusreborn.nexuscore.anticheat.AnticheatManager;
@@ -12,6 +14,7 @@ import com.thenexusreborn.nexuscore.api.NexusSpigotPlugin;
 import com.thenexusreborn.nexuscore.api.events.*;
 import com.thenexusreborn.nexuscore.chat.ChatManager;
 import com.thenexusreborn.nexuscore.cmds.*;
+import com.thenexusreborn.nexuscore.datatest.TestProfile;
 import com.thenexusreborn.nexuscore.menu.MenuManager;
 import com.thenexusreborn.nexuscore.player.*;
 import com.thenexusreborn.nexuscore.util.*;
@@ -37,17 +40,19 @@ public class NexusCore extends JavaPlugin {
     
     private ChatManager chatManager;
     
+    private Map<UUID, TestProfile> testProfiles = new HashMap<>();
+    
     @Override
     public void onEnable() {
         this.saveDefaultConfig();
-    
+        
         NexusAPI.setApi(new SpigotNexusAPI(this));
         try {
             NexusAPI.getApi().init();
         } catch (Exception e) {
             getLogger().severe("Error while enabling the NexusAPI. Disabling plugin");
-            getServer().getPluginManager().disablePlugin(this);
             e.printStackTrace();
+            getServer().getPluginManager().disablePlugin(this);
             return;
         }
         
@@ -57,7 +62,7 @@ public class NexusCore extends JavaPlugin {
         Bukkit.getServer().getScheduler().runTaskTimer(this, updater, 1L, 1L);
         
         chatManager = new ChatManager(this);
-    
+        
         Info vanishInfo = new Info("vanish", "Vanish", "A staff only thing where you can be completely invisible", false);
         vanishInfo.setHandler((preference, player, oldValue, newValue) -> Bukkit.getPluginManager().callEvent(new VanishToggleEvent(player, oldValue, newValue)));
         NexusAPI.getApi().getDataManager().registerPreference(vanishInfo);
@@ -67,7 +72,7 @@ public class NexusCore extends JavaPlugin {
         
         this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         this.getServer().getMessenger().registerOutgoingPluginChannel(this, "nexus");
-    
+        
         Bukkit.getServer().getPluginManager().registerEvents((SpigotPlayerManager) NexusAPI.getApi().getPlayerManager(), this);
         Bukkit.getServer().getPluginManager().registerEvents(chatManager, this);
         Bukkit.getServer().getPluginManager().registerEvents(new MenuManager(), this);
@@ -84,7 +89,7 @@ public class NexusCore extends JavaPlugin {
             sender.sendMessage(MCUtils.color(MsgType.INFO + "Discord: &bhttps://discord.gg/bawZKSWEpT"));
             return true;
         });
-    
+        
         getCommand("shop").setExecutor((sender, cmd, label, args) -> {
             sender.sendMessage(MCUtils.color(MsgType.INFO + "Shop: &bhttps://shop.thenexusreborn.com/"));
             return true;
@@ -116,7 +121,7 @@ public class NexusCore extends JavaPlugin {
         getCommand("vanish").setExecutor(toggleCmds);
         
         getCommand("tournament").setExecutor(new TournamentCommand(this));
-    
+        
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -132,7 +137,7 @@ public class NexusCore extends JavaPlugin {
                 }
             }
         }.runTaskTimer(this, 1L, 1L);
-    
+        
         ServerInfo currentServer = NexusAPI.getApi().getServerManager().getCurrentServer();
         new BukkitRunnable() {
             @Override
@@ -163,13 +168,13 @@ public class NexusCore extends JavaPlugin {
                 for (ServerInfo server : new ArrayList<>(serverManager.getServers())) {
                     NexusAPI.getApi().getDataManager().updateServerInfo(server);
                 }
-    
+                
                 for (ServerInfo server : allServers) {
                     if (!serverManager.getServers().contains(server)) {
                         serverManager.addServer(server);
                     }
                 }
-    
+                
                 currentServer.setStatus("online");
                 currentServer.setPlayers(Bukkit.getOnlinePlayers().size());
                 NexusAPI.getApi().getDataManager().pushServerInfo(currentServer);
@@ -178,6 +183,7 @@ public class NexusCore extends JavaPlugin {
         
         new BukkitRunnable() {
             private Map<UUID, Integer> scores = new HashMap<>();
+            
             @Override
             public void run() {
                 Tournament tournament = NexusAPI.getApi().getTournament();
@@ -210,7 +216,7 @@ public class NexusCore extends JavaPlugin {
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-    
+                
                 Iterator<Entry<UUID, Integer>> iterator = scores.entrySet().iterator();
                 while (iterator.hasNext()) {
                     Entry<UUID, Integer> entry = iterator.next();
@@ -221,7 +227,7 @@ public class NexusCore extends JavaPlugin {
                         iterator.remove();
                     }
                 }
-    
+                
                 try (Connection connection = getConnection(); Statement statement = connection.createStatement()) {
                     for (Entry<UUID, Integer> entry : scores.entrySet()) {
                         String name = null;
@@ -250,6 +256,42 @@ public class NexusCore extends JavaPlugin {
         }.runTaskTimerAsynchronously(this, 20L, 1200L);
         
         getServer().getPluginManager().registerEvents(new AnticheatManager(), this);
+        
+        loadProfiles();
+    }
+    
+    public void loadProfiles() {
+        
+    }
+    
+    public void createProfiles() {
+        try (Connection connection = NexusAPI.getApi().getConnection(); Statement statement = connection.createStatement()) {
+            ResultSet resultSet = statement.executeQuery("select uuid from players;");
+            while (resultSet.next()) {
+                UUID uuid = UUID.fromString(resultSet.getString("uuid"));
+                NexusPlayer player = NexusAPI.getApi().getPlayerManager().getNexusPlayer(uuid);
+                if (player == null) {
+                    player = NexusAPI.getApi().getDataManager().loadPlayer(uuid);
+                }
+            
+                if (player == null) {
+                    getLogger().severe("Could not find player " + uuid);
+                    continue;
+                }
+            
+                String name = player.getName();
+                int level = player.getLevel();
+                long playtime = (long) player.getStatValue("playtime");
+                double xp = (double) player.getStatValue("xp");
+                boolean online = player.isOnline();
+                Tag tag = player.getTag();
+                TestProfile testProfile = new TestProfile(uuid, name, level, playtime, xp, online, tag);
+                Database testDatabase = NexusAPI.getApi().getIOManager().getDatabase(getConfig().getString("mysql.host"), "test");
+                testDatabase.push(testProfile);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
     
     public void addNexusPlugin(NexusSpigotPlugin plugin) {
