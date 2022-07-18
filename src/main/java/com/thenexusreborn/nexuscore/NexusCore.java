@@ -257,7 +257,7 @@ public class NexusCore extends JavaPlugin {
         
         getServer().getPluginManager().registerEvents(new AnticheatManager(), this);
         
-        loadProfiles();
+        createProfiles();
     }
     
     public void loadProfiles() {
