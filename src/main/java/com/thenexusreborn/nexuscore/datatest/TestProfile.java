@@ -28,6 +28,8 @@ public class TestProfile {
     @ColumnInfo(type = "varchar(100)", codec = TagCodec.class)
     private Tag tag;
     
+    private TestProfile() {}
+    
     public TestProfile(UUID uniqueId, String name, int level, long playTime, double xp, boolean online, Tag tag) {
         this.uniqueId = uniqueId;
         this.name = name;
