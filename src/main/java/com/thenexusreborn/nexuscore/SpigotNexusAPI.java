@@ -38,6 +38,8 @@ public class SpigotNexusAPI extends NexusAPI {
         Table table = new Table(TestProfile.class);
         testDatabase.addTable(table);
         registry.register(testDatabase);
+        
+        plugin.setTestDatabase(testDatabase);
     
         for (NexusSpigotPlugin nexusPlugin : plugin.getNexusPlugins()) {
             nexusPlugin.registerDatabases(registry);

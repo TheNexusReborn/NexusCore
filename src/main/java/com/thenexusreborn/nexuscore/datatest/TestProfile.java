@@ -103,4 +103,18 @@ public class TestProfile {
     public void setTag(Tag tag) {
         this.tag = tag;
     }
+    
+    @Override
+    public String toString() {
+        return "TestProfile{" +
+                "id=" + id +
+                ", uniqueId=" + uniqueId +
+                ", name='" + name + '\'' +
+                ", level=" + level +
+                ", playTime=" + playTime +
+                ", xp=" + xp +
+                ", online=" + online +
+                ", tag=" + tag +
+                '}';
+    }
 }

@@ -31,6 +31,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.sql.*;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.logging.Level;
 
 public class NexusCore extends JavaPlugin {
     
@@ -41,6 +42,7 @@ public class NexusCore extends JavaPlugin {
     private ChatManager chatManager;
     
     private Map<UUID, TestProfile> testProfiles = new HashMap<>();
+    private Database testDatabase;
     
     @Override
     public void onEnable() {
@@ -257,11 +259,37 @@ public class NexusCore extends JavaPlugin {
         
         getServer().getPluginManager().registerEvents(new AnticheatManager(), this);
         
-        createProfiles();
+        loadProfiles();
     }
     
     public void loadProfiles() {
-        
+        if (this.testDatabase == null) {
+            return;
+        }
+    
+        try {
+            List<TestProfile> profiles = this.testDatabase.get(TestProfile.class);
+            if (profiles.size() == 0) {
+                NexusAPI.logMessage(Level.WARNING, "No profiles found, initiating creation from existing data.");
+                createProfiles();
+                profiles = this.testDatabase.get(TestProfile.class);
+                if (profiles.size() == 0) {
+                    NexusAPI.logMessage(Level.WARNING, "No existing data has profiles, or there was a problem importing profile data.");
+                    return;
+                }
+            }
+    
+            for (TestProfile profile : profiles) {
+                this.testProfiles.put(profile.getUniqueId(), profile);
+                getLogger().info("Loaded Test Profile " + profile.getUniqueId() + ": " + profile);
+            }
+        } catch (SQLException e) {
+            NexusAPI.logMessage(Level.SEVERE, "SQL Exception while trying to get test profiles", "Exception Message: " + e.getMessage());
+        }
+    }
+    
+    public Map<UUID, TestProfile> getTestProfiles() {
+        return testProfiles;
     }
     
     public void createProfiles() {
@@ -334,5 +362,9 @@ public class NexusCore extends JavaPlugin {
     
     public List<NexusSpigotPlugin> getNexusPlugins() {
         return new ArrayList<>(this.nexusPlugins);
+    }
+    
+    public void setTestDatabase(Database testDatabase) {
+        this.testDatabase = testDatabase;
     }
 }
