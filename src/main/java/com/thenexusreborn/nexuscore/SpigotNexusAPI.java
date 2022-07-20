@@ -9,7 +9,6 @@ import com.thenexusreborn.api.punishment.*;
 import com.thenexusreborn.api.registry.*;
 import com.thenexusreborn.api.tournament.Tournament;
 import com.thenexusreborn.nexuscore.api.NexusSpigotPlugin;
-import com.thenexusreborn.nexuscore.datatest.TestProfile;
 import com.thenexusreborn.nexuscore.player.*;
 import com.thenexusreborn.nexuscore.server.SpigotServerManager;
 import com.thenexusreborn.nexuscore.thread.SpigotThreadFactory;
@@ -33,14 +32,6 @@ public class SpigotNexusAPI extends NexusAPI {
     
     @Override
     public void registerDatabases(DatabaseRegistry registry) {
-        FileConfiguration config = plugin.getConfig();
-        Database testDatabase = new Database("test", config.getString("mysql.host"), config.getString("mysql.user"), config.getString("mysql.password"));
-        Table table = new Table(TestProfile.class);
-        testDatabase.addTable(table);
-        registry.register(testDatabase);
-        
-        plugin.setTestDatabase(testDatabase);
-    
         for (NexusSpigotPlugin nexusPlugin : plugin.getNexusPlugins()) {
             nexusPlugin.registerDatabases(registry);
         }

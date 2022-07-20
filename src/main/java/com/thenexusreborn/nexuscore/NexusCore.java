@@ -6,7 +6,6 @@ import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.player.Preference.Info;
 import com.thenexusreborn.api.scoreboard.TablistHandler;
 import com.thenexusreborn.api.server.*;
-import com.thenexusreborn.api.tags.Tag;
 import com.thenexusreborn.api.tournament.Tournament;
 import com.thenexusreborn.api.tournament.Tournament.ScoreInfo;
 import com.thenexusreborn.nexuscore.anticheat.AnticheatManager;
@@ -14,7 +13,6 @@ import com.thenexusreborn.nexuscore.api.NexusSpigotPlugin;
 import com.thenexusreborn.nexuscore.api.events.*;
 import com.thenexusreborn.nexuscore.chat.ChatManager;
 import com.thenexusreborn.nexuscore.cmds.*;
-import com.thenexusreborn.nexuscore.datatest.TestProfile;
 import com.thenexusreborn.nexuscore.menu.MenuManager;
 import com.thenexusreborn.nexuscore.player.*;
 import com.thenexusreborn.nexuscore.util.*;
@@ -31,7 +29,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.sql.*;
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.logging.Level;
 
 public class NexusCore extends JavaPlugin {
     
@@ -40,9 +37,6 @@ public class NexusCore extends JavaPlugin {
     private List<NexusSpigotPlugin> nexusPlugins = new ArrayList<>();
     
     private ChatManager chatManager;
-    
-    private Map<UUID, TestProfile> testProfiles = new HashMap<>();
-    private Database testDatabase;
     
     @Override
     public void onEnable() {
@@ -258,68 +252,6 @@ public class NexusCore extends JavaPlugin {
         }.runTaskTimerAsynchronously(this, 20L, 1200L);
         
         getServer().getPluginManager().registerEvents(new AnticheatManager(), this);
-        
-        loadProfiles();
-    }
-    
-    public void loadProfiles() {
-        if (this.testDatabase == null) {
-            return;
-        }
-    
-        try {
-            List<TestProfile> profiles = this.testDatabase.get(TestProfile.class);
-            if (profiles.size() == 0) {
-                NexusAPI.logMessage(Level.WARNING, "No profiles found, initiating creation from existing data.");
-                createProfiles();
-                profiles = this.testDatabase.get(TestProfile.class);
-                if (profiles.size() == 0) {
-                    NexusAPI.logMessage(Level.WARNING, "No existing data has profiles, or there was a problem importing profile data.");
-                    return;
-                }
-            }
-    
-            for (TestProfile profile : profiles) {
-                this.testProfiles.put(profile.getUniqueId(), profile);
-                getLogger().info("Loaded Test Profile " + profile.getUniqueId() + ": " + profile);
-            }
-        } catch (SQLException e) {
-            NexusAPI.logMessage(Level.SEVERE, "SQL Exception while trying to get test profiles", "Exception Message: " + e.getMessage());
-        }
-    }
-    
-    public Map<UUID, TestProfile> getTestProfiles() {
-        return testProfiles;
-    }
-    
-    public void createProfiles() {
-        try (Connection connection = NexusAPI.getApi().getConnection(); Statement statement = connection.createStatement()) {
-            ResultSet resultSet = statement.executeQuery("select uuid from players;");
-            while (resultSet.next()) {
-                UUID uuid = UUID.fromString(resultSet.getString("uuid"));
-                NexusPlayer player = NexusAPI.getApi().getPlayerManager().getNexusPlayer(uuid);
-                if (player == null) {
-                    player = NexusAPI.getApi().getDataManager().loadPlayer(uuid);
-                }
-            
-                if (player == null) {
-                    getLogger().severe("Could not find player " + uuid);
-                    continue;
-                }
-            
-                String name = player.getName();
-                int level = player.getLevel();
-                long playtime = (long) player.getStatValue("playtime");
-                double xp = (double) player.getStatValue("xp");
-                boolean online = player.isOnline();
-                Tag tag = player.getTag();
-                TestProfile testProfile = new TestProfile(uuid, name, level, playtime, xp, online, tag);
-                Database testDatabase = NexusAPI.getApi().getIOManager().getDatabase(getConfig().getString("mysql.host"), "test");
-                testDatabase.push(testProfile);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
     
     public void addNexusPlugin(NexusSpigotPlugin plugin) {
@@ -362,9 +294,5 @@ public class NexusCore extends JavaPlugin {
     
     public List<NexusSpigotPlugin> getNexusPlugins() {
         return new ArrayList<>(this.nexusPlugins);
-    }
-    
-    public void setTestDatabase(Database testDatabase) {
-        this.testDatabase = testDatabase;
     }
 }
