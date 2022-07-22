@@ -9,7 +9,6 @@ import org.bukkit.command.*;
 
 import java.sql.*;
 import java.util.*;
-import java.util.Map.Entry;
 
 public class AltsCommand implements CommandExecutor {
     
@@ -52,10 +51,10 @@ public class AltsCommand implements CommandExecutor {
         }
     
         List<String> ips = new ArrayList<>();
-        Map<String, Set<UUID>> ipHistory = NexusAPI.getApi().getPlayerManager().getIpHistory();
-        for (Entry<String, Set<UUID>> entry : ipHistory.entrySet()) {
-            if (entry.getValue().contains(target.getUniqueId())) {
-                ips.add(entry.getKey());
+        Set<IPEntry> ipHistory = NexusAPI.getApi().getPlayerManager().getIpHistory();
+        for (IPEntry entry : ipHistory) {
+            if (entry.getUuid().equals(target.getUniqueId())) {
+                ips.add(entry.getIp()); //TODO Need to use the CachedPlayer.getIpHistory method
             }
         }
         
@@ -66,12 +65,12 @@ public class AltsCommand implements CommandExecutor {
         
         Set<UUID> alts = new HashSet<>();
     
-        for (String ip : ips) {
-            Set<UUID> uuids = ipHistory.get(ip);
-            if (uuids != null && uuids.size() > 0) {
-                alts.addAll(uuids); //TODO recursive search for additional alts on additional ips
-            }
-        }
+//        for (String ip : ips) {
+//            Set<UUID> uuids = ipHistory.get(ip);
+//            if (uuids != null && uuids.size() > 0) {
+//                alts.addAll(uuids); //TODO recursive search for additional alts on additional ips
+//            }
+//        } //TODO
         
         Set<String> altNames = new HashSet<>();
         try (Connection connection = NexusAPI.getApi().getConnection(); Statement statement = connection.createStatement()) {
