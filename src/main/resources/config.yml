@@ -1,8 +1,10 @@
-mysql:
-  host: localhost
-  user: user
-  database: database
-  password: password
+databases:
+  database: 
+    host: localhost
+    username: username
+    password: password
+    database: database
+    primary: true
 serverInfo: 
   serverName: Server
   type: Default

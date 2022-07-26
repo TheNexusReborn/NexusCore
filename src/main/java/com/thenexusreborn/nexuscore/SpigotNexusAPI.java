@@ -1,8 +1,7 @@
 package com.thenexusreborn.nexuscore;
 
-import com.sun.org.apache.bcel.internal.generic.IFNONNULL;
 import com.thenexusreborn.api.*;
-import com.thenexusreborn.api.data.objects.*;
+import com.thenexusreborn.api.data.objects.Database;
 import com.thenexusreborn.api.network.NetworkContext;
 import com.thenexusreborn.api.network.cmd.NetworkCommand;
 import com.thenexusreborn.api.player.NexusPlayer;
@@ -17,7 +16,7 @@ import com.thenexusreborn.nexuscore.server.SpigotServerManager;
 import com.thenexusreborn.nexuscore.thread.SpigotThreadFactory;
 import com.thenexusreborn.nexuscore.util.*;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -36,6 +35,29 @@ public class SpigotNexusAPI extends NexusAPI {
     
     @Override
     public void registerDatabases(DatabaseRegistry registry) {
+        ConfigurationSection databasesSection = plugin.getConfig().getConfigurationSection("databases");
+        if (databasesSection != null) {
+            for (String db : databasesSection.getKeys(false)) {
+                String name;
+                String dbName = databasesSection.getString(db + ".name");
+                if (dbName != null && !dbName.equals("")) {
+                    name = dbName;
+                } else {
+                    name = db;
+                }
+                
+                String host = databasesSection.getString(db + ".host");
+                String user = databasesSection.getString(db + ".user");
+                String password = databasesSection.getString(db + ".password");
+                boolean primary = false;
+                if (databasesSection.contains(db + ".primary")) {
+                    primary = databasesSection.getBoolean(db + ".primary");
+                }
+                Database database = new Database(name, host, user, password, primary);
+                registry.register(database);
+             }
+        }
+    
         for (NexusSpigotPlugin nexusPlugin : plugin.getNexusPlugins()) {
             nexusPlugin.registerDatabases(registry);
         }
