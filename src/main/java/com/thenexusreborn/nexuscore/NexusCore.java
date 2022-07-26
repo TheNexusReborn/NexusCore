@@ -2,14 +2,12 @@ package com.thenexusreborn.nexuscore;
 
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.*;
-import com.thenexusreborn.api.player.Preference.Info;
 import com.thenexusreborn.api.scoreboard.TablistHandler;
 import com.thenexusreborn.api.server.*;
 import com.thenexusreborn.api.tournament.Tournament;
 import com.thenexusreborn.api.tournament.Tournament.ScoreInfo;
 import com.thenexusreborn.nexuscore.anticheat.AnticheatManager;
 import com.thenexusreborn.nexuscore.api.NexusSpigotPlugin;
-import com.thenexusreborn.nexuscore.api.events.*;
 import com.thenexusreborn.nexuscore.chat.ChatManager;
 import com.thenexusreborn.nexuscore.cmds.*;
 import com.thenexusreborn.nexuscore.menu.MenuManager;
@@ -57,13 +55,6 @@ public class NexusCore extends JavaPlugin {
         Bukkit.getServer().getScheduler().runTaskTimer(this, updater, 1L, 1L);
         
         chatManager = new ChatManager(this);
-        
-        Info vanishInfo = new Info("vanish", "Vanish", "A staff only thing where you can be completely invisible", false);
-        vanishInfo.setHandler((preference, player, oldValue, newValue) -> Bukkit.getPluginManager().callEvent(new VanishToggleEvent(player, oldValue, newValue)));
-        NexusAPI.getApi().getDataManager().registerPreference(vanishInfo);
-        Info incognitoInfo = new Info("incognito", "Incognito", "A media+ thing where you can be hidden from others", false);
-        incognitoInfo.setHandler((preference, player, oldValue, newValue) -> Bukkit.getPluginManager().callEvent(new IncognitoToggleEvent(player, oldValue, newValue)));
-        NexusAPI.getApi().getDataManager().registerPreference(incognitoInfo);
         
         this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         this.getServer().getMessenger().registerOutgoingPluginChannel(this, "nexus");

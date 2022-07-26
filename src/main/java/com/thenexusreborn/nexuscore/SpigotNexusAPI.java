@@ -1,14 +1,17 @@
 package com.thenexusreborn.nexuscore;
 
+import com.sun.org.apache.bcel.internal.generic.IFNONNULL;
 import com.thenexusreborn.api.*;
 import com.thenexusreborn.api.data.objects.*;
 import com.thenexusreborn.api.network.NetworkContext;
 import com.thenexusreborn.api.network.cmd.NetworkCommand;
 import com.thenexusreborn.api.player.NexusPlayer;
+import com.thenexusreborn.api.player.Preference.Info;
 import com.thenexusreborn.api.punishment.*;
 import com.thenexusreborn.api.registry.*;
 import com.thenexusreborn.api.tournament.Tournament;
 import com.thenexusreborn.nexuscore.api.NexusSpigotPlugin;
+import com.thenexusreborn.nexuscore.api.events.*;
 import com.thenexusreborn.nexuscore.player.*;
 import com.thenexusreborn.nexuscore.server.SpigotServerManager;
 import com.thenexusreborn.nexuscore.thread.SpigotThreadFactory;
@@ -18,6 +21,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.io.File;
 import java.sql.*;
 import java.util.UUID;
 
@@ -101,7 +105,23 @@ public class SpigotNexusAPI extends NexusAPI {
     }
     
     @Override
+    public void registerPreferences(PreferenceRegistry registry) {
+        for (Info info : registry.getObjects()) {
+            if (info.getName().equalsIgnoreCase("vanish")) {
+                info.setHandler((preference, player, oldValue, newValue) -> Bukkit.getPluginManager().callEvent(new VanishToggleEvent(player, oldValue, newValue)));
+            } else if (info.getName().equalsIgnoreCase("incognito")) {
+                info.setHandler((preference, player, oldValue, newValue) -> Bukkit.getPluginManager().callEvent(new IncognitoToggleEvent(player, oldValue, newValue)));
+            }
+        }
+    }
+    
+    @Override
     public Connection getConnection() throws SQLException {
         return plugin.getConnection();
+    }
+    
+    @Override
+    public File getFolder() {
+        return plugin.getDataFolder();
     }
 }
