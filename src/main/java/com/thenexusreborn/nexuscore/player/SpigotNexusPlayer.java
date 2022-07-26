@@ -16,12 +16,6 @@ public final class SpigotNexusPlayer extends NexusPlayer {
     
     //TODO Make proxy methods for Player methods that has a Player null check to prevent issues and change all interactions with Bukkit Player to use these methods
     
-    public SpigotNexusPlayer(SpigotNexusPlayer cachedPlayer) {
-        super(cachedPlayer);
-        this.actionBar = cachedPlayer.actionBar;
-        this.spokenInChat = cachedPlayer.spokenInChat;
-    }
-    
     public SpigotNexusPlayer(UUID uniqueId) {
         super(uniqueId);
     }

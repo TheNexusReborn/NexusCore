@@ -1,7 +1,6 @@
 package com.thenexusreborn.nexuscore;
 
 import com.thenexusreborn.api.NexusAPI;
-import com.thenexusreborn.api.data.objects.Database;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.player.Preference.Info;
 import com.thenexusreborn.api.scoreboard.TablistHandler;
