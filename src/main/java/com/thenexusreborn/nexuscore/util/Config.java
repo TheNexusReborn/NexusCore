@@ -117,7 +117,7 @@ public class Config {
     }
     
     public Location getLocation(String path) {
-        //TODO
+        //TODO Impement location deserialization
         //return yamlConfiguration.getLocation(path);
         return null;
     }
