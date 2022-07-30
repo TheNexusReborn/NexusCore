@@ -13,7 +13,7 @@ import java.util.*;
 
 /**
  * A class to make creating items better
- * 
+ * <p> 
  * This does check to see if the settings and values are valid for the item type and is safe to use.
  */
 public class ItemBuilder {

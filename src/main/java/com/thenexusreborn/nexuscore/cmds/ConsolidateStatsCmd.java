@@ -9,10 +9,9 @@ import org.bukkit.command.*;
 
 import java.util.*;
 
-@SuppressWarnings("DuplicatedCode")
 public class ConsolidateStatsCmd implements TabExecutor {
     
-    private NexusCore plugin;
+    private final NexusCore plugin;
     
     public ConsolidateStatsCmd(NexusCore plugin) {
         this.plugin = plugin;

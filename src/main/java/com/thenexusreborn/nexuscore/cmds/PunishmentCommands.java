@@ -4,7 +4,7 @@ import com.thenexusreborn.api.*;
 import com.thenexusreborn.api.helper.TimeHelper;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.punishment.*;
-import com.thenexusreborn.api.util.Utils;
+import com.thenexusreborn.api.util.*;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.util.*;
 import org.bukkit.command.*;
@@ -14,7 +14,7 @@ import java.util.*;
 
 public class PunishmentCommands implements CommandExecutor {
     
-    private NexusCore plugin;
+    private final NexusCore plugin;
     
     public PunishmentCommands(NexusCore plugin) {
         this.plugin = plugin;

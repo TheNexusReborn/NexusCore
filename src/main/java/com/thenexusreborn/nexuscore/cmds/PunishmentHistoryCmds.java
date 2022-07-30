@@ -1,7 +1,7 @@
 package com.thenexusreborn.nexuscore.cmds;
 
 import com.thenexusreborn.api.NexusAPI;
-import com.thenexusreborn.api.player.Rank;
+import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.punishment.Punishment;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.util.*;
@@ -9,12 +9,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
-import java.sql.*;
 import java.util.*;
 
 public class PunishmentHistoryCmds implements CommandExecutor {
     
-    private NexusCore plugin;
+    private final NexusCore plugin;
     
     public PunishmentHistoryCmds(NexusCore plugin) {
         this.plugin = plugin;
@@ -42,37 +41,17 @@ public class PunishmentHistoryCmds implements CommandExecutor {
                 if (player != null) {
                     commandTargetName = player.getName();
                 } else {
-                    try (Connection connection = NexusAPI.getApi().getConnection(); Statement statement = connection.createStatement()) {
-                        ResultSet resultSet = statement.executeQuery("select lastKnownName from players where uuid='" + uuid + "'");
-                        if (resultSet.next()) {
-                            commandTargetName = resultSet.getString("lastKnownName");
-                        } else {
-                            sender.sendMessage(MCUtils.color(MsgType.WARN + "Could not find a name for that UUID. Have they joined before?"));
-                            return true;
-                        }
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                        sender.sendMessage(MCUtils.color(MsgType.WARN + "SQL Error while proccessing your request. Please report this as a bug."));
-                        return true;
-                    }
+                    commandTargetName = NexusAPI.getApi().getPlayerManager().getCachedPlayers().get(uuid).getName();
                 } 
             } catch (Exception e) {
                 commandTargetName = args[0];
                 if (commandTargetName.equalsIgnoreCase("PowerMoveRegulator") || commandTargetName.equalsIgnoreCase("Console")) {
                     commandTarget = commandTargetName;
                 } else {
-                    try (Connection connection = NexusAPI.getApi().getConnection(); Statement statement = connection.createStatement()) {
-                        ResultSet resultSet = statement.executeQuery("select uuid from players where lastKnownName='" + commandTargetName + "';");
-                        if (resultSet.next()) {
-                            commandTarget = resultSet.getString("uuid");
-                        } else {
-                            sender.sendMessage(MCUtils.color(MsgType.WARN + "Could not find a UUID for that player name. Have they joined before?"));
-                            return true; 
+                    for (CachedPlayer cachedPlayer : NexusAPI.getApi().getPlayerManager().getCachedPlayers().values()) {
+                        if (cachedPlayer.getName().equalsIgnoreCase(commandTargetName)) {
+                            commandTarget = cachedPlayer.getUniqueId().toString();
                         }
-                    } catch (SQLException se) {
-                        se.printStackTrace();
-                        sender.sendMessage(MCUtils.color(MsgType.WARN + "SQL Error while proccessing your request. Please report this as a bug."));
-                        return true;
                     }
                 }
             }

@@ -4,8 +4,8 @@ import com.thenexusreborn.api.levels.LevelManager;
 import com.thenexusreborn.nexuscore.util.*;
 
 public class XPActionBar extends ActionBar {
-    private SpigotNexusPlayer player;
-    private ActionBar previous;
+    private final SpigotNexusPlayer player;
+    private final ActionBar previous;
     private long time;
     
     public XPActionBar(SpigotNexusPlayer player, ActionBar previous, long time) {

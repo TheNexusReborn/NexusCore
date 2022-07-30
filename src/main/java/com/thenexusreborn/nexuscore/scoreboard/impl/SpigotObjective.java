@@ -5,7 +5,7 @@ import org.bukkit.scoreboard.Objective;
 
 public class SpigotObjective implements IObjective {
     
-    private Objective objective;
+    private final Objective objective;
     
     public SpigotObjective(Objective objective) {
         this.objective = objective;

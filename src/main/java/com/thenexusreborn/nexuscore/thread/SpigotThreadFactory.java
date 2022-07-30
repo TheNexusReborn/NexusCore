@@ -6,7 +6,7 @@ import org.bukkit.Bukkit;
 
 public class SpigotThreadFactory extends ThreadFactory {
     
-    private NexusCore plugin;
+    private final NexusCore plugin;
     
     public SpigotThreadFactory(NexusCore plugin) {
         this.plugin = plugin;

@@ -15,12 +15,12 @@ import java.util.*;
  * A class that represents a GUI or a menu, can be extended or instantiated directly
  */
 public class Menu implements InventoryHolder {
-    protected JavaPlugin plugin;
-    protected String name;
-    protected String title;
-    protected int rows;
-    protected IncrementalMap<Element> elements = new IncrementalMap<>();
-    protected Map<Integer, Slot> slots = new TreeMap<>();
+    protected final JavaPlugin plugin;
+    protected final String name;
+    protected final String title;
+    protected final int rows;
+    protected final IncrementalMap<Element> elements = new IncrementalMap<>();
+    protected final Map<Integer, Slot> slots = new TreeMap<>();
     protected int currentPage = 1;
     
     /**
@@ -250,7 +250,7 @@ public class Menu implements InventoryHolder {
     }
     
     protected static class ElementFilter implements Iterable<Element> {
-        IncrementalMap<Element> elements = new IncrementalMap<>();
+        final IncrementalMap<Element> elements = new IncrementalMap<>();
         public void add(Element element) {
             elements.add(element);
         }

@@ -5,7 +5,7 @@ import org.bukkit.scoreboard.Score;
 
 public class SpigotScore implements IScore {
     
-    private Score score;
+    private final Score score;
     
     public SpigotScore(Score score) {
         this.score = score;

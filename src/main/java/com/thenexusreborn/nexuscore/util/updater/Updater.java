@@ -9,7 +9,7 @@ import com.thenexusreborn.nexuscore.NexusCore;
  */
 public class Updater implements Runnable {
     
-    private NexusCore plugin;
+    private final NexusCore plugin;
 
     public Updater(NexusCore plugin) {
         this.plugin = plugin;

@@ -7,8 +7,8 @@ import com.thenexusreborn.nexuscore.util.updater.UpdateType;
 import java.util.*;
 
 public class Timer {
-    public Map<UpdateType, Long> lastUpdates = new HashMap<>();
-    private ReturnableCallback<TimerSnapshot, Boolean> callback;
+    public final Map<UpdateType, Long> lastUpdates = new HashMap<>();
+    private final ReturnableCallback<TimerSnapshot, Boolean> callback;
     private boolean cancelled = false;
     private long length = -1;
     private long paused = -1;

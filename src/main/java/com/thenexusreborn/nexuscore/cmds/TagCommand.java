@@ -2,19 +2,18 @@ package com.thenexusreborn.nexuscore.cmds;
 
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.*;
-import com.thenexusreborn.api.tags.*;
+import com.thenexusreborn.api.tags.Tag;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.util.MCUtils;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
-import java.sql.*;
 import java.util.*;
 import java.util.function.Consumer;
 
 public class TagCommand implements CommandExecutor {
     
-    private NexusCore plugin;
+    private final NexusCore plugin;
     
     public TagCommand(NexusCore plugin) {
         this.plugin = plugin;
@@ -58,15 +57,7 @@ public class TagCommand implements CommandExecutor {
                     verb = "from";
                 }
                 
-                NexusAPI.getApi().getThreadFactory().runAsync(() -> {
-                    try (Connection connection = NexusAPI.getApi().getConnection(); Statement statement = connection.createStatement()) {
-                        String unlockedTags = NexusAPI.getApi().getDataManager().convertTags(nexusPlayer);
-                        statement.executeUpdate("update players set unlockedTags='{tags}' where uuid='{uuid}';".replace("{tags}", unlockedTags).replace("{uuid}", nexusPlayer.getUniqueId().toString()));
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                });
-                
+                NexusAPI.getApi().getThreadFactory().runAsync(() -> NexusAPI.getApi().getPrimaryDatabase().push(nexusPlayer.getStat("unlockedtags")));
                 sender.sendMessage(MCUtils.color("&eYou " + cmdAction + " the tag " + new Tag(tagName).getDisplayName() + " &e" + verb + " the player &b" + nexusPlayer.getName()));
             };
     
@@ -140,18 +131,6 @@ public class TagCommand implements CommandExecutor {
     }
     
     private void pushTagChange(NexusPlayer player) {
-        NexusAPI.getApi().getThreadFactory().runAsync(() -> {
-            try (Connection connection = NexusAPI.getApi().getConnection(); Statement statement = connection.createStatement()) {
-                String tag;
-                if (player.getTag() == null) {
-                    tag = "NULL";
-                } else {
-                    tag = player.getTag().getName();
-                }
-                statement.executeUpdate("update players set tag='{tag}' where uuid='{uuid}'".replace("{tag}", tag).replace("{uuid}", player.getUniqueId().toString()));
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        });
+        NexusAPI.getApi().getThreadFactory().runAsync(() -> NexusAPI.getApi().getPrimaryDatabase().push(player.getStat("tag")));
     }
 }

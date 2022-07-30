@@ -8,7 +8,7 @@ import org.bukkit.Bukkit;
 
 public class SpigotServerManager extends ServerManager {
     
-    private NexusCore plugin;
+    private final NexusCore plugin;
     
     public SpigotServerManager(NexusCore plugin) {
         this.plugin = plugin;

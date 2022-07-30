@@ -9,6 +9,7 @@ import com.thenexusreborn.api.player.Preference.Info;
 import com.thenexusreborn.api.punishment.*;
 import com.thenexusreborn.api.registry.*;
 import com.thenexusreborn.api.tournament.Tournament;
+import com.thenexusreborn.api.util.*;
 import com.thenexusreborn.nexuscore.api.NexusSpigotPlugin;
 import com.thenexusreborn.nexuscore.api.events.*;
 import com.thenexusreborn.nexuscore.player.*;
@@ -26,7 +27,7 @@ import java.util.UUID;
 
 public class SpigotNexusAPI extends NexusAPI {
     
-    private NexusCore plugin;
+    private final NexusCore plugin;
     
     public SpigotNexusAPI(NexusCore plugin) {
         super(Environment.valueOf(plugin.getConfig().getString("environment").toUpperCase()), NetworkContext.CLIENT, plugin.getLogger(), new SpigotPlayerManager(plugin), new SpigotThreadFactory(plugin), new SpigotPlayerFactory(), new SpigotServerManager(plugin));

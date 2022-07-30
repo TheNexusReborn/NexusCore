@@ -31,7 +31,7 @@ public class NexusCore extends JavaPlugin {
     
     private NMS nms;
     
-    private List<NexusSpigotPlugin> nexusPlugins = new ArrayList<>();
+    private final List<NexusSpigotPlugin> nexusPlugins = new ArrayList<>();
     
     private ChatManager chatManager;
     
@@ -168,7 +168,7 @@ public class NexusCore extends JavaPlugin {
         }.runTaskTimerAsynchronously(this, 1L, 20L);
         
         new BukkitRunnable() {
-            private Map<UUID, Integer> scores = new HashMap<>();
+            private final Map<UUID, Integer> scores = new HashMap<>();
             
             @Override
             public void run() {

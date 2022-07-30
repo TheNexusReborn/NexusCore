@@ -9,7 +9,7 @@ import java.util.*;
  * A utility to map the entitytype enum to formatted names
  */
 public class EntityNames {
-    public Map<EntityType, String> entityNames = new HashMap<>();
+    public final Map<EntityType, String> entityNames = new HashMap<>();
     private static final EntityNames instance = new EntityNames() {
         @Override
         public void setName(EntityType entityType, String name) {

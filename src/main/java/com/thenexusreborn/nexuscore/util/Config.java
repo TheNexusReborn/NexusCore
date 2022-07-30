@@ -19,10 +19,11 @@ public class Config {
     private File file;
     private YamlConfiguration yamlConfiguration;
     
-    private JavaPlugin plugin;
-    private String name, folder = "";
+    private final JavaPlugin plugin;
+    private final String name;
+    private String folder = "";
     
-    private Map<String, Object> defaultValues = new HashMap<>();
+    private final Map<String, Object> defaultValues = new HashMap<>();
     
     public Config(JavaPlugin plugin, String name) {
         this.plugin = plugin;

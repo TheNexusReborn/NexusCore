@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.player;
 
-import com.thenexusreborn.api.StaffChat;
+import com.thenexusreborn.api.util.StaffChat;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.scoreboard.NexusScoreboard;
 import com.thenexusreborn.nexuscore.NexusCore;
@@ -22,7 +22,7 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
     
     private final NexusCore plugin;
     
-    private Map<UUID, Integer> clicksPerSecond = Collections.synchronizedMap(new HashMap<>());
+    private final Map<UUID, Integer> clicksPerSecond = Collections.synchronizedMap(new HashMap<>());
     
     public SpigotPlayerManager(NexusCore plugin) {
         this.plugin = plugin;

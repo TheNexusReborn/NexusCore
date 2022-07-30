@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 
 public class ToggleCmds implements CommandExecutor {
     
-    private NexusCore plugin;
+    private final NexusCore plugin;
     
     public ToggleCmds(NexusCore plugin) {
         this.plugin = plugin;

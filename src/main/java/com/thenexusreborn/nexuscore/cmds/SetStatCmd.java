@@ -10,10 +10,9 @@ import org.bukkit.command.*;
 import java.util.*;
 import java.util.function.Consumer;
 
-@SuppressWarnings("DuplicatedCode")
 public class SetStatCmd implements TabExecutor {
     
-    private NexusCore plugin;
+    private final NexusCore plugin;
     
     public SetStatCmd(NexusCore plugin) {
         this.plugin = plugin;

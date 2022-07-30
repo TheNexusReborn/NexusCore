@@ -3,6 +3,7 @@ package com.thenexusreborn.nexuscore.chat;
 import com.thenexusreborn.api.*;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.punishment.*;
+import com.thenexusreborn.api.util.StaffChat;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.player.SpigotNexusPlayer;
 import com.thenexusreborn.nexuscore.util.*;
@@ -15,7 +16,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.List;
 
 public class ChatManager implements Listener {
-    private NexusCore plugin;
+    private final NexusCore plugin;
     
     private ChatHandler handler;
     

@@ -3,6 +3,7 @@ package com.thenexusreborn.nexuscore.cmds;
 import com.thenexusreborn.api.*;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.punishment.*;
+import com.thenexusreborn.api.util.StaffChat;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.util.*;
 import org.bukkit.command.*;
@@ -12,7 +13,7 @@ import java.util.*;
 
 public class PunishRemoveCommands implements CommandExecutor {
     
-    private NexusCore plugin;
+    private final NexusCore plugin;
     
     public PunishRemoveCommands(NexusCore plugin) {
         this.plugin = plugin;

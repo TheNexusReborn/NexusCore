@@ -7,7 +7,7 @@ import com.thenexusreborn.nexuscore.menu.element.Element;
  */
 public class Slot {
     
-    protected int index;
+    protected final int index;
     protected Element element;
 
     public Slot(int index) {

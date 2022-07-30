@@ -18,7 +18,7 @@ public class RankCommand implements TabExecutor {
     
     // /rank <name/uuid> <add/set/remove> <rankName> [time]
     
-    private NexusCore plugin;
+    private final NexusCore plugin;
     
     public RankCommand(NexusCore plugin) {
         this.plugin = plugin;

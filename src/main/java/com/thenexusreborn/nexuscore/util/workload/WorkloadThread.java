@@ -10,7 +10,7 @@ import java.util.ArrayDeque;
 public class WorkloadThread extends BukkitRunnable {
     
     private final ArrayDeque<Workload> workloadDeque;
-    private NMS nms;
+    private final NMS nms;
     
     public WorkloadThread(NMS nms) {
         workloadDeque = Queues.newArrayDeque();
