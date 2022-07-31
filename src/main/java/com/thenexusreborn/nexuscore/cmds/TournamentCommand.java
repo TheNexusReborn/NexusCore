@@ -89,7 +89,6 @@ public class TournamentCommand implements TabExecutor {
             NexusAPI.getApi().setTournament(null);
             
             sender.sendMessage(MCUtils.color(MsgType.VERBOSE + "Removing existing stats from that tournament..."));
-            //TODO Need to reimplement this. Will most likely need to add a method in Database to support these operations, or just use IDs 
             Tournament finalTournament = tournament;
             NexusAPI.getApi().getThreadFactory().runAsync(() -> {
                 try {
