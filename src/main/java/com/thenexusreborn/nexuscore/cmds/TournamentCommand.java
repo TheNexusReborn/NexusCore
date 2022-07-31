@@ -12,6 +12,7 @@ import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.sql.SQLException;
 import java.util.*;
 
 public class TournamentCommand implements TabExecutor {
@@ -88,27 +89,17 @@ public class TournamentCommand implements TabExecutor {
             NexusAPI.getApi().setTournament(null);
             
             sender.sendMessage(MCUtils.color(MsgType.VERBOSE + "Removing existing stats from that tournament..."));
-            //TODO Need to reimplement this. Will most likely need to add a method in Database to support these operations, or just use IDs
-//            Tournament finalTournament1 = tournament;
-//            NexusAPI.getApi().getThreadFactory().runAsync(() -> {
-//                try (Connection connection = NexusAPI.getApi().getConnection(); Statement statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE)) {
-//                    ResultSet resultSet = statement.executeQuery("select * from stats where name like concat('%', 'tournament', '%');");
-//                    while (resultSet.next()) {
-//                        resultSet.deleteRow();
-//                    }
-//                    
-//                    resultSet = statement.executeQuery("select * from statchanges where statName like concat('%', 'tournament', '%');");
-//                    while (resultSet.next()) {
-//                        resultSet.deleteRow();
-//                    }
-//                    
-//                    statement.execute("delete from tournaments where id='" + finalTournament1.getId() + "';");
-//                    NexusAPI.getApi().getNetworkManager().send("tournament", "delete", finalTournament1.getId() + "");
-//                } catch (Exception e) {
-//                    sender.sendMessage(MCUtils.color(MsgType.WARN + "There was an error processing stat purge"));
-//                    e.printStackTrace();
-//                }
-//            });
+            //TODO Need to reimplement this. Will most likely need to add a method in Database to support these operations, or just use IDs 
+            Tournament finalTournament = tournament;
+            NexusAPI.getApi().getThreadFactory().runAsync(() -> {
+                try {
+                    NexusAPI.getApi().getPrimaryDatabase().execute("delete from stats where name like concat('%', 'tournament', '%');");
+                    NexusAPI.getApi().getPrimaryDatabase().execute("delete from statchanges where name like concat('%', 'tournament', '%');");
+                    NexusAPI.getApi().getPrimaryDatabase().delete(Tournament.class, finalTournament.getId());
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            });
             
             sender.sendMessage(MCUtils.color("&eYou successfully deleted the tournament"));
             return true;
