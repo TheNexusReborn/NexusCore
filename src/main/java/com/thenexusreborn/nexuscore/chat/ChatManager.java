@@ -5,7 +5,6 @@ import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.punishment.*;
 import com.thenexusreborn.api.util.StaffChat;
 import com.thenexusreborn.nexuscore.NexusCore;
-import com.thenexusreborn.nexuscore.player.SpigotNexusPlayer;
 import com.thenexusreborn.nexuscore.util.*;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -26,7 +25,7 @@ public class ChatManager implements Listener {
     
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent e) {
-        SpigotNexusPlayer nexusPlayer = (SpigotNexusPlayer) NexusAPI.getApi().getPlayerManager().getNexusPlayer(e.getPlayer().getUniqueId());
+        NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(e.getPlayer().getUniqueId());
         String chatColor;
         
         if (e.isCancelled()) {
@@ -76,8 +75,7 @@ public class ChatManager implements Listener {
                 public void run() {
                     if (nexusPlayer.getPreferences().get("incognito").getValue()) {
                         for (Player player : Bukkit.getOnlinePlayers()) {
-                            player.showPlayer(nexusPlayer.getPlayer());
-                            
+                            player.showPlayer(Bukkit.getPlayer(nexusPlayer.getUniqueId()));
                         }
                     }
                 }

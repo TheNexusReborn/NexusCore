@@ -117,8 +117,10 @@ public class NexusCore extends JavaPlugin {
                         if (nexusPlayer.getScoreboard() != null) {
                             nexusPlayer.getScoreboard().update();
                         }
-                        ActionBar actionBar = ((SpigotNexusPlayer) nexusPlayer).getActionBar();
-                        actionBar.send(player);
+                        IActionBar actionBar = nexusPlayer.getActionBar();
+                        if (actionBar != null) {
+                            SpigotUtils.sendActionBar(player, actionBar.getText());
+                        }
                     }
                 }
             }

@@ -79,12 +79,12 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
         String originalJoinMessage = e.getJoinMessage();
         e.setJoinMessage(null);
         if (!players.containsKey(e.getPlayer().getUniqueId())) {
-            ActionBar actionBar = new ActionBar("&cPlease wait while your data is loaded.");
-            actionBar.send(e.getPlayer());
+            IActionBar actionBar = () -> "&cPlease wait while your data is being loaded.";
+            SpigotUtils.sendActionBar(e.getPlayer(), actionBar.getText());
             BukkitRunnable abr = new BukkitRunnable() {
                 @Override
                 public void run() {
-                    actionBar.send(e.getPlayer());
+                    SpigotUtils.sendActionBar(e.getPlayer(), actionBar.getText());
                 }
             };
             abr.runTaskTimer(plugin, 20L, 20L);
@@ -92,6 +92,7 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                 if (Bukkit.getPlayer(e.getPlayer().getUniqueId()) == null) {
                     return;
                 }
+                abr.cancel();
                 NexusScoreboard nexusScoreboard = new SpigotNexusScoreboard(nexusPlayer);
                 nexusScoreboard.init();
                 nexusPlayer.setScoreboard(nexusScoreboard);
@@ -120,11 +121,12 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                 
                 this.clicksPerSecond.put(e.getPlayer().getUniqueId(), 0);
                 
-                actionBar.setText("&aYour data has been loaded.");
+                nexusPlayer.setActionBar(() -> "&aYour data has been loaded...");
+                
                 new BukkitRunnable() {
                     @Override
                     public void run() {
-                        abr.cancel();
+                        nexusPlayer.setActionBar(null);
                     }
                 }.runTaskLater(plugin, 40L);
                 
