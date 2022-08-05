@@ -29,9 +29,13 @@ public class SpigotServerManager extends ServerManager {
         String type = plugin.getConfig().getString("serverInfo.type");
         String status = "loading";
         String state = "none";
+        long id = plugin.getConfig().getLong("serverInfo.id");
         this.currentServer = new ServerInfo(multicraftId, ip, name, port, players, maxPlayers, hiddenPlayers, type, status, state);
+        this.currentServer.setId(id);
         if (multicraftId != 0) {
             NexusAPI.getApi().getDataManager().pushServerInfoAsync(this.currentServer);
+            plugin.getConfig().set("serverInfo.id", this.currentServer.getId());
+            plugin.saveConfig();
         }
     }
 }
