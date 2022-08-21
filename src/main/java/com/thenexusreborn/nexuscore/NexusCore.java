@@ -57,7 +57,6 @@ public class NexusCore extends JavaPlugin {
         chatManager = new ChatManager(this);
         
         this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-        this.getServer().getMessenger().registerOutgoingPluginChannel(this, "nexus");
         
         Bukkit.getServer().getPluginManager().registerEvents((SpigotPlayerManager) NexusAPI.getApi().getPlayerManager(), this);
         Bukkit.getServer().getPluginManager().registerEvents(chatManager, this);
