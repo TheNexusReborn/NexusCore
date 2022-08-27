@@ -33,25 +33,23 @@ public class PunishmentHistoryCmds implements CommandExecutor {
         }
         
         String commandTarget = "", commandTargetName = "";
-        if (cmd.getName().equalsIgnoreCase("history")) {
-            try {
-                UUID uuid = UUID.fromString(args[0]);
-                commandTarget = uuid.toString();
-                Player player = Bukkit.getPlayer(uuid);
-                if (player != null) {
-                    commandTargetName = player.getName();
-                } else {
-                    commandTargetName = NexusAPI.getApi().getPlayerManager().getCachedPlayers().get(uuid).getName();
-                } 
-            } catch (Exception e) {
-                commandTargetName = args[0];
-                if (commandTargetName.equalsIgnoreCase("PowerMoveRegulator") || commandTargetName.equalsIgnoreCase("Console")) {
-                    commandTarget = commandTargetName;
-                } else {
-                    for (CachedPlayer cachedPlayer : NexusAPI.getApi().getPlayerManager().getCachedPlayers().values()) {
-                        if (cachedPlayer.getName().equalsIgnoreCase(commandTargetName)) {
-                            commandTarget = cachedPlayer.getUniqueId().toString();
-                        }
+        try {
+            UUID uuid = UUID.fromString(args[0]);
+            commandTarget = uuid.toString();
+            Player player = Bukkit.getPlayer(uuid);
+            if (player != null) {
+                commandTargetName = player.getName();
+            } else {
+                commandTargetName = NexusAPI.getApi().getPlayerManager().getCachedPlayers().get(uuid).getName();
+            }
+        } catch (Exception e) {
+            commandTargetName = args[0];
+            if (commandTargetName.equalsIgnoreCase("PowerMoveRegulator") || commandTargetName.equalsIgnoreCase("Console")) {
+                commandTarget = commandTargetName;
+            } else {
+                for (CachedPlayer cachedPlayer : NexusAPI.getApi().getPlayerManager().getCachedPlayers().values()) {
+                    if (cachedPlayer.getName().equalsIgnoreCase(commandTargetName)) {
+                        commandTarget = cachedPlayer.getUniqueId().toString();
                     }
                 }
             }
@@ -121,11 +119,11 @@ public class PunishmentHistoryCmds implements CommandExecutor {
             if (isStaff) {
                 message = actorName + " " + pType + " " + targetName + " &ffor " + reason + timeLeft + pardoned;
             } else {
-                message = targetName + " &fwas " + pType + " &fby " + actorName + " &ffor " + reason + timeLeft + pardoned; 
+                message = targetName + " &fwas " + pType + " &fby " + actorName + " &ffor " + reason + timeLeft + pardoned;
             }
             sender.sendMessage(MCUtils.color("&6&l> &f" + message));
         }
-    
+        
         return true;
     }
 }
