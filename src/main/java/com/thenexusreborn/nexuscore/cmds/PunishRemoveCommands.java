@@ -101,7 +101,7 @@ public class PunishRemoveCommands implements CommandExecutor {
         PardonInfo info = new PardonInfo(System.currentTimeMillis(), actor, reason);
         for (Punishment punishment : activePunishments) {
             punishment.setPardonInfo(info);
-            NexusAPI.getApi().getDataManager().pushPunishment(punishment);
+            NexusAPI.getApi().getPrimaryDatabase().push(punishment);
             NexusAPI.getApi().getNetworkManager().send("removepunishment", punishment.getId() + "");
             StaffChat.sendPunishmentRemoval(punishment);
         }

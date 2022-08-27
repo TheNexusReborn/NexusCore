@@ -112,10 +112,14 @@ public class SpigotNexusAPI extends NexusAPI {
         }.runTaskAsynchronously(plugin)));
         
         registry.register(new NetworkCommand("removepunishment", (cmd, origin, args) -> {
-            int id = Integer.parseInt(args[0]);
+            long id = Long.parseLong(args[0]);
             Punishment punishment = NexusAPI.getApi().getPunishmentManager().getPunishment(id);
             if (punishment != null) {
-                punishment = NexusAPI.getApi().getDataManager().getPunishment(id);
+                try {
+                    punishment = NexusAPI.getApi().getPrimaryDatabase().get(Punishment.class, "id", id).get(0);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
                 NexusAPI.getApi().getPunishmentManager().addPunishment(punishment);
             }
         }));
