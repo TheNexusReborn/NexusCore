@@ -52,14 +52,9 @@ public final class MCUtils {
         try {
             UUID uuid = UUID.fromString(input);
             player = NexusAPI.getApi().getPlayerManager().getNexusPlayer(uuid);
-            if (player == null) {
-                player = NexusAPI.getApi().getDataManager().loadPlayer(uuid);
-            }
+            //TODO Need to return a cached profile, this system kind of needs to be reworked
         } catch (Exception e) {
             player = NexusAPI.getApi().getPlayerManager().getNexusPlayer(input);
-            if (player == null) {
-                player = NexusAPI.getApi().getDataManager().loadPlayer(input);
-            }
         }
         
         return player;

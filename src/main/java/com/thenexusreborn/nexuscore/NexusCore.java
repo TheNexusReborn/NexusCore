@@ -149,22 +149,13 @@ public class NexusCore extends JavaPlugin {
                         }
                     }
                 }
-                
-                List<ServerInfo> allServers = NexusAPI.getApi().getDataManager().getAllServers();
+    
                 ServerManager serverManager = NexusAPI.getApi().getServerManager();
-                for (ServerInfo server : new ArrayList<>(serverManager.getServers())) {
-                    NexusAPI.getApi().getDataManager().updateServerInfo(server);
-                }
-                
-                for (ServerInfo server : allServers) {
-                    if (!serverManager.getServers().contains(server)) {
-                        serverManager.addServer(server);
-                    }
-                }
+                serverManager.updateStoredData();
                 
                 currentServer.setStatus("online");
                 currentServer.setPlayers(Bukkit.getOnlinePlayers().size());
-                NexusAPI.getApi().getDataManager().pushServerInfo(currentServer);
+                NexusAPI.getApi().getPrimaryDatabase().push(currentServer);
             }
         }.runTaskTimerAsynchronously(this, 1L, 20L);
         
@@ -256,7 +247,7 @@ public class NexusCore extends JavaPlugin {
         serverInfo.setStatus("offline");
         serverInfo.setState("none");
         serverInfo.setPlayers(0);
-        NexusAPI.getApi().getDataManager().pushServerInfo(serverInfo);
+        NexusAPI.getApi().getPrimaryDatabase().push(serverInfo);
         NexusAPI.getApi().getNetworkManager().close();
     }
     

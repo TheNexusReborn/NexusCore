@@ -54,7 +54,7 @@ public class AltsCommand implements CommandExecutor {
         
         Set<UUID> players = new HashSet<>();
         for (String ip : ips) {
-            players.addAll(NexusAPI.getApi().getDataManager().getPlayersByIp(ip));
+            players.addAll(NexusAPI.getApi().getPlayerManager().getPlayersByIp(ip));
         }
         
         Set<String> altNames = new HashSet<>();

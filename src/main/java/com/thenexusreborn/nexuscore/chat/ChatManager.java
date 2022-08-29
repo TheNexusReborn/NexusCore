@@ -50,7 +50,7 @@ public class ChatManager implements Listener {
                     if (e.getMessage().equals(punishment.getAcknowledgeInfo().getCode())) {
                         punishment.getAcknowledgeInfo().setTime(System.currentTimeMillis());
                         nexusPlayer.sendMessage(MsgType.INFO + "You have confirmed your warning. You can speak now.");
-                        NexusAPI.getApi().getDataManager().pushPunishment(punishment);
+                        NexusAPI.getApi().getPrimaryDatabase().push(punishment);
                         NexusAPI.getApi().getNetworkManager().send("punishment", punishment.getId() + "");
                     } else {
                         nexusPlayer.sendMessage(MsgType.WARN + "You have an unconfirmed warning, please type the code " + punishment.getAcknowledgeInfo().getCode() + " to confirm.");
@@ -61,7 +61,7 @@ public class ChatManager implements Listener {
             }
         }
         
-        if (nexusPlayer.getPreferences().get("vanish").getValue()) {
+        if (nexusPlayer.getPreferenceValue("vanish")) {
             e.setCancelled(true);
             nexusPlayer.sendMessage(MsgType.WARN + "You are not allowed to speak in vanish mode.");
             return;
@@ -73,7 +73,7 @@ public class ChatManager implements Listener {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    if (nexusPlayer.getPreferences().get("incognito").getValue()) {
+                    if (nexusPlayer.getPreferenceValue("incognito")) {
                         for (Player player : Bukkit.getOnlinePlayers()) {
                             player.showPlayer(Bukkit.getPlayer(nexusPlayer.getUniqueId()));
                         }

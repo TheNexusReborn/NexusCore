@@ -50,12 +50,12 @@ public class PunishRemoveCommands implements CommandExecutor {
             UUID uuid = UUID.fromString(args[0]);
             target = NexusAPI.getApi().getPlayerManager().getNexusPlayer(uuid);
             if (target == null) {
-                target = NexusAPI.getApi().getDataManager().loadPlayer(uuid);
+                target = NexusAPI.getApi().getPlayerManager().getCachedPlayer(uuid).loadFully();
             }
         } catch (Exception e) {
             target = NexusAPI.getApi().getPlayerManager().getNexusPlayer(args[0]);
             if (target == null) {
-                target = NexusAPI.getApi().getDataManager().loadPlayer(args[0]);
+                target = NexusAPI.getApi().getPlayerManager().getCachedPlayer(args[0]).loadFully();
             }
         }
         

@@ -35,8 +35,13 @@ public class ToggleCmds implements CommandExecutor {
         }
         
         if (preference == null) {
-            player.sendMessage(MsgType.WARN + "Could not find a valid preference. This is a bug, please report to Firestar311.");
-            return true;
+            Preference.Info info = NexusAPI.getApi().getPreferenceRegistry().get(cmd.getName().toLowerCase());
+            if (info == null) {
+                player.sendMessage(MsgType.WARN + "No preference with that type exists.");
+                return true;
+            }
+            
+            preference = new Preference(info, player.getUniqueId(), info.getDefaultValue());
         }
         
         if (player.getRank().ordinal() > minRank.ordinal()) {
@@ -45,10 +50,10 @@ public class ToggleCmds implements CommandExecutor {
         }
         
         preference.setValue(!preference.getValue());
+        NexusAPI.getApi().getPrimaryDatabase().push(preference);
         String vc = MsgType.INFO.getVariableColor();
         String bc = MsgType.INFO.getBaseColor();
         player.sendMessage(MsgType.INFO + "Toggled " + vc + preference.getInfo().getName() + bc + " to " + vc + preference.getValue());
-        NexusAPI.getApi().getThreadFactory().runAsync(() -> NexusAPI.getApi().getDataManager().pushPlayerPreferences(player));
         return true;
     }
 }

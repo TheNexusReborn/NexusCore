@@ -82,19 +82,26 @@ public class SpigotNexusAPI extends NexusAPI {
                     player.getStatChanges().removeIf(statChange -> statChange.getStatName().contains("tournament"));
                 }
             } else {
-                System.out.println("Received request to update in memory tournament info");
                 int id = Integer.parseInt(args[0]);
-                System.out.println("Tournament id is " + id);
-                Tournament tournament = NexusAPI.getApi().getDataManager().getTournament(id);
-                System.out.println("Tournament Info: " + tournament);
+                Tournament tournament = null;
+                try {
+                    tournament = NexusAPI.getApi().getPrimaryDatabase().get(Tournament.class).get(0);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 setTournament(tournament);
             }
         }));
     
         registry.register(new NetworkCommand("punishment", (cmd, origin, args) -> new BukkitRunnable() {
             public void run() {
-                int id = Integer.parseInt(args[0]);
-                Punishment punishment = NexusAPI.getApi().getDataManager().getPunishment(id);
+                long id = Long.parseLong(args[0]);
+                Punishment punishment = null;
+                try {
+                    punishment = NexusAPI.getApi().getPrimaryDatabase().get(Punishment.class, "id", id).get(0);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 if (punishment.getType() == PunishmentType.MUTE || punishment.getType() == PunishmentType.WARN || punishment.getType() == PunishmentType.BAN || punishment.getType() == PunishmentType.BLACKLIST) {
                     NexusAPI.getApi().getPunishmentManager().addPunishment(punishment);
         

@@ -32,7 +32,7 @@ public class PunishmentHistoryCmds implements CommandExecutor {
             return true;
         }
         
-        String commandTarget = "", commandTargetName = "";
+        String commandTarget = "", commandTargetName;
         try {
             UUID uuid = UUID.fromString(args[0]);
             commandTarget = uuid.toString();

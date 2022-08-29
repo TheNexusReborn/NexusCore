@@ -67,7 +67,7 @@ public class TournamentCommand implements TabExecutor {
             }
             
             tournament = new Tournament(host.getUniqueId(), nameBuilder.substring(0, nameBuilder.length() - 1));
-            NexusAPI.getApi().getDataManager().pushTournament(tournament);
+            NexusAPI.getApi().getPrimaryDatabase().push(tournament);
             if (tournament.getId() == 0) {
                 sender.sendMessage(MCUtils.color(MsgType.WARN + "Error while creating a tournament."));
                 return true;
@@ -235,7 +235,7 @@ public class TournamentCommand implements TabExecutor {
                     sender.sendMessage(MCUtils.color("&eYou set the host of the tournament to &e" + name));
                 }
             }
-            NexusAPI.getApi().getDataManager().pushTournament(tournament);
+            NexusAPI.getApi().getPrimaryDatabase().push(tournament);
             NexusAPI.getApi().getNetworkManager().send("tournament", tournament.getId() + "");
         }
         
