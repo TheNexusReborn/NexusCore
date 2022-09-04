@@ -155,12 +155,9 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent e) {
         NexusPlayer nexusPlayer = this.players.get(e.getPlayer().getUniqueId());
-        if (nexusPlayer != null) {
-            this.players.remove(e.getPlayer().getUniqueId());
-        } else {
-            e.setQuitMessage(null);
-        }
-        
+        this.handlePlayerLeave(nexusPlayer);
+        this.players.remove(e.getPlayer().getUniqueId());
+        e.setQuitMessage(null);
         this.clicksPerSecond.remove(e.getPlayer().getUniqueId());
     }
     

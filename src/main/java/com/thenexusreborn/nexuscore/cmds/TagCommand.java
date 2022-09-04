@@ -7,9 +7,9 @@ import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.util.MCUtils;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.*;
-import java.util.function.Consumer;
 
 public class TagCommand implements CommandExecutor {
     
@@ -25,7 +25,6 @@ public class TagCommand implements CommandExecutor {
             sender.sendMessage(MCUtils.color("&cUsage: /tag <list|set|reset> [tagname]"));
             return true;
         }
-    
     
         if (args[0].equalsIgnoreCase("unlock") || args[0].equalsIgnoreCase("remove")) {
             Rank senderRank = MCUtils.getSenderRank(plugin, sender);
@@ -45,29 +44,38 @@ public class TagCommand implements CommandExecutor {
             }
             String tagName = sb.substring(0, sb.length() - 1);
             
-            Consumer<NexusPlayer> action = nexusPlayer -> {
-                String cmdAction, verb;
-                if (args[0].equalsIgnoreCase("unlock")) {
-                    nexusPlayer.unlockTag(tagName);
-                    cmdAction = "unlocked";
-                    verb = "for";
-                } else {
-                    nexusPlayer.unlockTag(tagName);
-                    cmdAction = "removed";
-                    verb = "from";
-                }
-                
-                NexusAPI.getApi().getThreadFactory().runAsync(() -> NexusAPI.getApi().getPrimaryDatabase().push(nexusPlayer.getStat("unlockedtags")));
-                sender.sendMessage(MCUtils.color("&eYou " + cmdAction + " the tag " + new Tag(tagName).getDisplayName() + " &e" + verb + " the player &b" + nexusPlayer.getName()));
-            };
-    
+            NexusPlayer player;
             try {
                 UUID uuid = UUID.fromString(args[1]);
-                NexusAPI.getApi().getPlayerManager().getNexusPlayerAsync(uuid, action);
+                player = NexusAPI.getApi().getPlayerManager().getNexusPlayer(uuid);
             } catch (Exception e) {
-                NexusAPI.getApi().getPlayerManager().getNexusPlayerAsync(args[1], action);
+                player = NexusAPI.getApi().getPlayerManager().getNexusPlayer(args[1]);
             }
             
+            if (player == null) {
+                try {
+                    UUID uuid = UUID.fromString(args[1]);
+                    player = NexusAPI.getApi().getPlayerManager().getCachedPlayer(uuid).loadFully();
+                } catch (Exception e) {
+                    player = NexusAPI.getApi().getPlayerManager().getCachedPlayer(args[1]).loadFully();
+                }
+            }
+    
+            String cmdAction, verb;
+            if (args[0].equalsIgnoreCase("unlock")) {
+                player.unlockTag(tagName);
+                cmdAction = "unlocked";
+                verb = "for";
+            } else {
+                player.lockTag(tagName);
+                cmdAction = "removed";
+                verb = "from";
+            }
+            
+            NexusAPI.getApi().getNetworkManager().send("updatetag", player.getUniqueId().toString(), args[0], tagName);
+    
+            NexusAPI.getApi().getPrimaryDatabase().push(player.getStat("unlockedtags"));
+            sender.sendMessage(MCUtils.color("&eYou " + cmdAction + " the tag " + new Tag(tagName).getDisplayName() + " &e" + verb + " the player &b" + player.getName()));
             return true;
         }
         
@@ -120,10 +128,12 @@ public class TagCommand implements CommandExecutor {
             
             nexusPlayer.setTag(tag);
             nexusPlayer.sendMessage("&eYou set your tag to " + tag.getDisplayName());
+            NexusAPI.getApi().getNetworkManager().send("updatetag", nexusPlayer.getUniqueId().toString(), "set", tag.getName());
             pushTagChange(nexusPlayer);
         } else if (args[0].equalsIgnoreCase("reset")) {
             nexusPlayer.setTag(null);
             nexusPlayer.sendMessage("&eYou reset your tag.");
+            NexusAPI.getApi().getNetworkManager().send("updatetag", nexusPlayer.getUniqueId().toString(), "reset");
             pushTagChange(nexusPlayer);
         } 
         

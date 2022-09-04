@@ -16,8 +16,6 @@ import java.util.function.Consumer;
 
 public class RankCommand implements TabExecutor {
     
-    // /rank <name/uuid> <add/set/remove> <rankName> [time]
-    
     private final NexusCore plugin;
     
     public RankCommand(NexusCore plugin) {
@@ -116,13 +114,15 @@ public class RankCommand implements TabExecutor {
                 sender.sendMessage(MCUtils.color(message));
             } else if (args[1].equalsIgnoreCase("remove")) {
                 try {
-                    nexusPlayer.setRank(rank, expire);
+                    nexusPlayer.removeRank(rank);
                 } catch (Exception e) {
                     sender.sendMessage(MCUtils.color(MsgType.WARN + "There was a problem removing the rank: " + e.getMessage()));
                     return;
                 }
                 sender.sendMessage(MCUtils.color("&eYou removed the rank " + rankName + " &efrom &b" + nexusPlayer.getName()));
             }
+            
+            NexusAPI.getApi().getNetworkManager().send("updaterank", nexusPlayer.getUniqueId().toString(), args[1], rank.name(), expire + "");
     
             StringBuilder sb = new StringBuilder();
             for (Entry<Rank, Long> entry : nexusPlayer.getRanks().entrySet()) {
@@ -137,13 +137,13 @@ public class RankCommand implements TabExecutor {
             }
             
             NexusAPI.getApi().getThreadFactory().runAsync(() -> {
-                try (Connection connection = plugin.getConnection(); Statement statement = connection.createStatement()) {
-                    statement.executeUpdate("update players set ranks='" + ranks + "' where uuid='" + nexusPlayer.getUniqueId() +  "';");
-                    if (!nexusPlayer.isOnline()) {
-                        NexusAPI.getApi().getPlayerManager().getPlayers().remove(nexusPlayer.getUniqueId());
-                    }
+                try {
+                    NexusAPI.getApi().getPrimaryDatabase().execute("update players set `ranks`='" + ranks + "' where `uniqueId`='" + nexusPlayer.getUniqueId().toString() + "';");
                 } catch (SQLException e) {
                     e.printStackTrace();
+                }
+                if (!nexusPlayer.isOnline()) {
+                    NexusAPI.getApi().getPlayerManager().getPlayers().remove(nexusPlayer.getUniqueId());
                 }
             });
         };
