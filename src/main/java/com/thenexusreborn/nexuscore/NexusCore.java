@@ -37,6 +37,7 @@ public class NexusCore extends JavaPlugin {
     
     @Override
     public void onEnable() {
+        getLogger().info("Loading NexusCore v" + getDescription().getVersion());
         this.saveDefaultConfig();
         
         NexusAPI.setApi(new SpigotNexusAPI(this));
@@ -50,17 +51,22 @@ public class NexusCore extends JavaPlugin {
         }
         
         nms = NMS.getNMS(Version.MC_1_8_R3);
+        getLogger().info("Registered NMS Version");
         
         Updater updater = new Updater(this);
         Bukkit.getServer().getScheduler().runTaskTimer(this, updater, 1L, 1L);
+        getLogger().info("Registered Updater Utility");
         
         chatManager = new ChatManager(this);
+        getLogger().info("Registered Chat Manager");
         
         this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+        getLogger().info("Registered BungeeCore Plugin Channel");
         
         Bukkit.getServer().getPluginManager().registerEvents((SpigotPlayerManager) NexusAPI.getApi().getPlayerManager(), this);
         Bukkit.getServer().getPluginManager().registerEvents(chatManager, this);
         Bukkit.getServer().getPluginManager().registerEvents(new MenuManager(), this);
+        getLogger().info("Registered Event Listeners");
         
         registerCommand("rank", new RankCommand(this));
         registerCommand("setstat", new SetStatCmd(this));
@@ -106,6 +112,8 @@ public class NexusCore extends JavaPlugin {
         getCommand("vanish").setExecutor(toggleCmds);
         
         getCommand("tournament").setExecutor(new TournamentCommand(this));
+        
+        getLogger().info("Registered Commands");
         
         new BukkitRunnable() {
             @Override
@@ -232,6 +240,7 @@ public class NexusCore extends JavaPlugin {
                 scores.clear();
             }
         }.runTaskTimerAsynchronously(this, 20L, 1200L);
+        getLogger().info("Registered Tasks");
         
         if (getServer().getPluginManager().getPlugin("Spartan") != null) {
             getServer().getPluginManager().registerEvents(new AnticheatManager(), this);
