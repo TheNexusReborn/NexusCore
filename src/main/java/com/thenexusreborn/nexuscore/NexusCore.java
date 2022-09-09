@@ -233,7 +233,10 @@ public class NexusCore extends JavaPlugin {
             }
         }.runTaskTimerAsynchronously(this, 20L, 1200L);
         
-        getServer().getPluginManager().registerEvents(new AnticheatManager(), this);
+        if (getServer().getPluginManager().getPlugin("Spartan") != null) {
+            getServer().getPluginManager().registerEvents(new AnticheatManager(), this);
+            getLogger().info("Registered Anticheat Manager");
+        }
     }
     
     public void addNexusPlugin(NexusSpigotPlugin plugin) {
