@@ -121,14 +121,7 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                 
                 this.clicksPerSecond.put(e.getPlayer().getUniqueId(), 0);
                 
-                nexusPlayer.setActionBar(() -> "&aYour data has been loaded...");
-                
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        nexusPlayer.setActionBar(null);
-                    }
-                }.runTaskLater(plugin, 40L);
+                SpigotUtils.sendActionBar(e.getPlayer(), "&aYour data has been loaded...");
                 
                 if (nexusPlayer.getRank().ordinal() <= Rank.MEDIA.ordinal()) {
                     StaffChat.sendJoin(nexusPlayer);
