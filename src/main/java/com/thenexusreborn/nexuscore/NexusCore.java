@@ -1,8 +1,6 @@
 package com.thenexusreborn.nexuscore;
 
 import com.thenexusreborn.api.NexusAPI;
-import com.thenexusreborn.api.player.*;
-import com.thenexusreborn.api.scoreboard.TablistHandler;
 import com.thenexusreborn.api.server.*;
 import com.thenexusreborn.api.tournament.Tournament;
 import com.thenexusreborn.api.tournament.Tournament.ScoreInfo;
@@ -11,7 +9,8 @@ import com.thenexusreborn.nexuscore.api.NexusSpigotPlugin;
 import com.thenexusreborn.nexuscore.chat.ChatManager;
 import com.thenexusreborn.nexuscore.cmds.*;
 import com.thenexusreborn.nexuscore.menu.MenuManager;
-import com.thenexusreborn.nexuscore.player.*;
+import com.thenexusreborn.nexuscore.player.SpigotPlayerManager;
+import com.thenexusreborn.nexuscore.task.*;
 import com.thenexusreborn.nexuscore.util.*;
 import com.thenexusreborn.nexuscore.util.nms.NMS;
 import com.thenexusreborn.nexuscore.util.nms.NMS.Version;
@@ -19,7 +18,6 @@ import com.thenexusreborn.nexuscore.util.updater.Updater;
 import org.bukkit.Bukkit;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
-import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -115,131 +113,11 @@ public class NexusCore extends JavaPlugin {
         
         getLogger().info("Registered Commands");
         
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(player.getUniqueId());
-                    if (nexusPlayer != null) {
-                        if (nexusPlayer.getScoreboard() != null) {
-                            nexusPlayer.getScoreboard().update();
-                        }
-                        IActionBar actionBar = nexusPlayer.getActionBar();
-                        if (actionBar != null) {
-                            SpigotUtils.sendActionBar(player, actionBar.getText());
-                        }
-                    }
-                }
-            }
-        }.runTaskTimer(this, 1L, 1L);
-        
-        ServerInfo currentServer = NexusAPI.getApi().getServerManager().getCurrentServer();
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(player.getUniqueId());
-                    if (nexusPlayer != null) {
-                        if (nexusPlayer.getScoreboard() != null) {
-                            TablistHandler tablistHandler = nexusPlayer.getScoreboard().getTablistHandler();
-                            if (tablistHandler != null) {
-                                tablistHandler.update();
-                            }
-                        }
-                        
-                        if (nexusPlayer.getRank().ordinal() > Rank.HELPER.ordinal()) {
-                            Set<PermissionAttachmentInfo> effectivePermissions = player.getEffectivePermissions();
-                            for (PermissionAttachmentInfo perm : effectivePermissions) {
-                                if (perm.getPermission().equalsIgnoreCase("spartan.info") || perm.getPermission().equals("spartan.notifications")) {
-                                    player.removeAttachment(perm.getAttachment());
-                                }
-                            }
-                        }
-                    }
-                }
-    
-                ServerManager serverManager = NexusAPI.getApi().getServerManager();
-                serverManager.updateStoredData();
-                
-                currentServer.setStatus("online");
-                currentServer.setPlayers(Bukkit.getOnlinePlayers().size());
-                NexusAPI.getApi().getPrimaryDatabase().push(currentServer);
-            }
-        }.runTaskTimerAsynchronously(this, 1L, 20L);
-        
-        new BukkitRunnable() {
-            private final Map<UUID, Integer> scores = new HashMap<>();
-            
-            @Override
-            public void run() {
-                Tournament tournament = NexusAPI.getApi().getTournament();
-                if (tournament == null) {
-                    return;
-                }
-                
-                try (Connection connection = getConnection(); Statement statement = connection.createStatement()) {
-                    ResultSet resultSet = statement.executeQuery("select * from stats where name='sg_tournament_points';");
-                    while (resultSet.next()) {
-                        UUID uuid = UUID.fromString(resultSet.getString("uuid"));
-                        int value = Integer.parseInt(resultSet.getString("value"));
-                        if (value != 0) {
-                            scores.put(uuid, value);
-                        }
-                    }
-                    
-                    resultSet = statement.executeQuery("select * from statchanges where statName='sg_tournament_points';");
-                    while (resultSet.next()) {
-                        UUID uuid = UUID.fromString(resultSet.getString("uuid"));
-                        int value = Integer.parseInt(resultSet.getString("value"));
-                        if (value != 0) {
-                            if (scores.containsKey(uuid)) {
-                                scores.put(uuid, scores.get(uuid) + value);
-                            } else {
-                                scores.put(uuid, value);
-                            }
-                        }
-                    }
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                
-                Iterator<Entry<UUID, Integer>> iterator = scores.entrySet().iterator();
-                while (iterator.hasNext()) {
-                    Entry<UUID, Integer> entry = iterator.next();
-                    ScoreInfo scoreInfo = tournament.getScoreCache().get(entry.getKey());
-                    if (scoreInfo != null) {
-                        scoreInfo.setScore(entry.getValue());
-                        scoreInfo.setLastUpdated(System.currentTimeMillis());
-                        iterator.remove();
-                    }
-                }
-                
-                try (Connection connection = getConnection(); Statement statement = connection.createStatement()) {
-                    for (Entry<UUID, Integer> entry : scores.entrySet()) {
-                        String name = null;
-                        Player player = Bukkit.getPlayer(entry.getKey());
-                        if (player != null) {
-                            name = player.getName();
-                        } else {
-                            ResultSet resultSet = statement.executeQuery("select lastKnownName from players where uuid='" + entry.getKey().toString() + "';");
-                            if (resultSet.next()) {
-                                name = resultSet.getString("lastKnownName");
-                            }
-                        }
-                        
-                        if (name != null) {
-                            ScoreInfo scoreInfo = new ScoreInfo(entry.getKey(), name, entry.getValue());
-                            scoreInfo.setLastUpdated(System.currentTimeMillis());
-                            tournament.getScoreCache().put(scoreInfo.getUuid(), scoreInfo);
-                        }
-                    }
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                
-                scores.clear();
-            }
-        }.runTaskTimerAsynchronously(this, 20L, 1200L);
+        new PlayerHUDTask(this).start();
+        new PlayerTablistTask(this).start();
+        new PlayerPermTask(this).start();
+        new ServerUpdateTask(this).start();
+        new TournamentScoreTask(this).start();
         getLogger().info("Registered Tasks");
         
         if (getServer().getPluginManager().getPlugin("Spartan") != null) {
