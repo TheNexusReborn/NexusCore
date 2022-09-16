@@ -107,7 +107,7 @@ public class ItemBuilder {
             itemMeta.addItemFlags(itemFlags.toArray(new ItemFlag[0]));
         }
         
-        //TODO itemMeta.setUnbreakable(unbreakable);
+        itemMeta.spigot().setUnbreakable(unbreakable);
         
 //        if (itemMeta instanceof BannerMeta bannerMeta) {
 ////            if (bannerColor != null)
