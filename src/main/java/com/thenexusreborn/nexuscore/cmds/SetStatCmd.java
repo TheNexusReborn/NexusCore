@@ -35,8 +35,12 @@ public class SetStatCmd implements TabExecutor {
         Consumer<NexusPlayer> consumer = player -> {
             Stat stat = player.getStat(args[1]);
             if (stat == null) {
-                sender.sendMessage(MCUtils.color(MsgType.WARN + "That player does not have a stat with the name: " + args[1]));
-                return;
+                Stat.Info info = StatHelper.getInfo(args[1]);
+                if (info == null) {
+                    sender.sendMessage(MCUtils.color(MsgType.WARN + "A stat by that name does not exist: " + args[1]));
+                    return;
+                }
+                stat = new Stat(info, player.getUniqueId(), System.currentTimeMillis());
             }
             
             StatOperator operator;
