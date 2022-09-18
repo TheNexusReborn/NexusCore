@@ -6,7 +6,7 @@
 
     <groupId>com.thenexusreborn</groupId>
     <artifactId>NexusCore</artifactId>
-    <version>1.4-ALPHA</version>
+    <version>1.5-ALPHA</version>
 
     <properties>
         <java.version>1.8</java.version>
@@ -84,7 +84,7 @@
         <dependency>
             <groupId>com.thenexusreborn</groupId>
             <artifactId>NexusAPI</artifactId>
-            <version>1.4-ALPHA</version>
+            <version>1.5-ALPHA</version>
             <scope>compile</scope>
             <exclusions>
                 <exclusion>

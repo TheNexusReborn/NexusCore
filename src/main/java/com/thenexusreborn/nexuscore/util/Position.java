@@ -71,7 +71,12 @@ public class Position {
     public Location toLocation(World world) {
         return new Location(world, x, y, z, yaw, pitch);
     }
-
+    
+    @Override
+    public String toString() {
+        return "(" + x + "," + y + "," + z + "," + yaw + "," + pitch + ')';
+    }
+    
     public boolean equals(Object o) {
         if (this == o)
             return true;

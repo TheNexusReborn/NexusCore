@@ -11,7 +11,7 @@ import java.util.UUID;
 
 public class MessageCommand implements CommandExecutor {
     
-    private NexusCore plugin;
+    private final NexusCore plugin;
     
     public MessageCommand(NexusCore plugin) {
         this.plugin = plugin;

@@ -2,19 +2,18 @@ package com.thenexusreborn.nexuscore.cmds;
 
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.*;
-import com.thenexusreborn.api.tags.*;
+import com.thenexusreborn.api.tags.Tag;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.util.MCUtils;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.sql.*;
 import java.util.*;
-import java.util.function.Consumer;
 
 public class TagCommand implements CommandExecutor {
     
-    private NexusCore plugin;
+    private final NexusCore plugin;
     
     public TagCommand(NexusCore plugin) {
         this.plugin = plugin;
@@ -26,7 +25,6 @@ public class TagCommand implements CommandExecutor {
             sender.sendMessage(MCUtils.color("&cUsage: /tag <list|set|reset> [tagname]"));
             return true;
         }
-    
     
         if (args[0].equalsIgnoreCase("unlock") || args[0].equalsIgnoreCase("remove")) {
             Rank senderRank = MCUtils.getSenderRank(plugin, sender);
@@ -45,39 +43,39 @@ public class TagCommand implements CommandExecutor {
                 sb.append(args[i]).append(" ");
             }
             String tagName = sb.substring(0, sb.length() - 1);
-            Tag tag = new Tag(tagName);
             
-            Consumer<NexusPlayer> action = nexusPlayer -> {
-                String cmdAction, verb;
-                if (args[0].equalsIgnoreCase("unlock")) {
-                    nexusPlayer.unlockTag(tag);
-                    cmdAction = "unlocked";
-                    verb = "for";
-                } else {
-                    nexusPlayer.removeTag(tag);
-                    cmdAction = "removed";
-                    verb = "from";
-                }
-                
-                NexusAPI.getApi().getThreadFactory().runAsync(() -> {
-                    try (Connection connection = NexusAPI.getApi().getConnection(); Statement statement = connection.createStatement()) {
-                        String unlockedTags = NexusAPI.getApi().getDataManager().convertTags(nexusPlayer);
-                        statement.executeUpdate("update players set unlockedTags='{tags}' where uuid='{uuid}';".replace("{tags}", unlockedTags).replace("{uuid}", nexusPlayer.getUniqueId().toString()));
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                });
-                
-                sender.sendMessage(MCUtils.color("&eYou " + cmdAction + " the tag " + tag.getDisplayName() + " &e" + verb + " the player &b" + nexusPlayer.getName()));
-            };
-    
+            NexusPlayer player;
             try {
                 UUID uuid = UUID.fromString(args[1]);
-                NexusAPI.getApi().getPlayerManager().getNexusPlayerAsync(uuid, action);
+                player = NexusAPI.getApi().getPlayerManager().getNexusPlayer(uuid);
             } catch (Exception e) {
-                NexusAPI.getApi().getPlayerManager().getNexusPlayerAsync(args[1], action);
+                player = NexusAPI.getApi().getPlayerManager().getNexusPlayer(args[1]);
             }
             
+            if (player == null) {
+                try {
+                    UUID uuid = UUID.fromString(args[1]);
+                    player = NexusAPI.getApi().getPlayerManager().getCachedPlayer(uuid).loadFully();
+                } catch (Exception e) {
+                    player = NexusAPI.getApi().getPlayerManager().getCachedPlayer(args[1]).loadFully();
+                }
+            }
+    
+            String cmdAction, verb;
+            if (args[0].equalsIgnoreCase("unlock")) {
+                player.unlockTag(tagName);
+                cmdAction = "unlocked";
+                verb = "for";
+            } else {
+                player.lockTag(tagName);
+                cmdAction = "removed";
+                verb = "from";
+            }
+            
+            NexusAPI.getApi().getNetworkManager().send("updatetag", player.getUniqueId().toString(), args[0], tagName);
+    
+            NexusAPI.getApi().getPrimaryDatabase().push(player.getStat("unlockedtags"));
+            sender.sendMessage(MCUtils.color("&eYou " + cmdAction + " the tag " + new Tag(tagName).getDisplayName() + " &e" + verb + " the player &b" + player.getName()));
             return true;
         }
         
@@ -93,11 +91,12 @@ public class TagCommand implements CommandExecutor {
             return true;
         }
     
-        Set<Tag> unlockedTags = nexusPlayer.getUnlockedTags();
+        Set<String> unlockedTags = nexusPlayer.getUnlockedTags();
         if (args[0].equalsIgnoreCase("list")) {
             if (unlockedTags.size() > 0) {
                 nexusPlayer.sendMessage("&eList of available tags...");
-                for (Tag tag : unlockedTags) {
+                for (String rawTag : unlockedTags) {
+                    Tag tag = new Tag(rawTag);
                     nexusPlayer.sendMessage(" &8- &e" + tag.getName() + " " + tag.getDisplayName());
                 }
             } else {
@@ -116,9 +115,9 @@ public class TagCommand implements CommandExecutor {
             String tagName = sb.substring(0, sb.length() - 1);
              
             Tag tag = null;
-            for (Tag unlocked : unlockedTags) {
-                if (unlocked.getName().equalsIgnoreCase(tagName)) {
-                    tag = unlocked;
+            for (String unlocked : unlockedTags) {
+                if (unlocked.equalsIgnoreCase(tagName)) {
+                    tag = new Tag(unlocked);
                 }
             }
             
@@ -129,10 +128,12 @@ public class TagCommand implements CommandExecutor {
             
             nexusPlayer.setTag(tag);
             nexusPlayer.sendMessage("&eYou set your tag to " + tag.getDisplayName());
+            NexusAPI.getApi().getNetworkManager().send("updatetag", nexusPlayer.getUniqueId().toString(), "set", tag.getName());
             pushTagChange(nexusPlayer);
         } else if (args[0].equalsIgnoreCase("reset")) {
             nexusPlayer.setTag(null);
             nexusPlayer.sendMessage("&eYou reset your tag.");
+            NexusAPI.getApi().getNetworkManager().send("updatetag", nexusPlayer.getUniqueId().toString(), "reset");
             pushTagChange(nexusPlayer);
         } 
         
@@ -140,18 +141,6 @@ public class TagCommand implements CommandExecutor {
     }
     
     private void pushTagChange(NexusPlayer player) {
-        NexusAPI.getApi().getThreadFactory().runAsync(() -> {
-            try (Connection connection = NexusAPI.getApi().getConnection(); Statement statement = connection.createStatement()) {
-                String tag;
-                if (player.getTag() == null) {
-                    tag = "NULL";
-                } else {
-                    tag = player.getTag().getName();
-                }
-                statement.executeUpdate("update players set tag='{tag}' where uuid='{uuid}'".replace("{tag}", tag).replace("{uuid}", player.getUniqueId().toString()));
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        });
+        NexusAPI.getApi().getThreadFactory().runAsync(() -> NexusAPI.getApi().getPrimaryDatabase().push(player.getStat("tag")));
     }
 }

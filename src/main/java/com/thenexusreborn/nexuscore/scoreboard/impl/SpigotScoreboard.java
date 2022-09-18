@@ -8,7 +8,7 @@ import java.util.*;
 public class SpigotScoreboard implements IScoreboard {
     
     
-    private Scoreboard scoreboard;
+    private final Scoreboard scoreboard;
     
     public SpigotScoreboard(Scoreboard scoreboard) {
         this.scoreboard = scoreboard;

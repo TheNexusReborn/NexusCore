@@ -8,9 +8,9 @@ import java.util.UUID;
 
 /**
  * Abstract class for interacting with this API
- * 
+ * <p> 
  * Must be instantiated with the NMS.getNMS() static method while providing the Version 
- * 
+ * <p> 
  * The methods should be pretty self explanitory
  */
 public abstract class NMS {

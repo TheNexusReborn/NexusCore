@@ -1,8 +1,8 @@
 package com.thenexusreborn.nexuscore.util.timer;
 
 public class TimerSnapshot {
-    private long time;
-    private Timer timer;
+    private final long time;
+    private final Timer timer;
 
     public TimerSnapshot(Timer timer, long time) {
         this.timer = timer;

@@ -1,7 +1,6 @@
 package com.thenexusreborn.nexuscore.api.events;
 
 import com.thenexusreborn.api.player.NexusPlayer;
-import com.thenexusreborn.nexuscore.player.SpigotNexusPlayer;
 import org.bukkit.event.HandlerList;
 
 public class NexusPlayerLoadEvent extends NexusPlayerEvent {

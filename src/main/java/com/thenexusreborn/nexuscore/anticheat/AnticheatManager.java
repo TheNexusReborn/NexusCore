@@ -2,6 +2,7 @@ package com.thenexusreborn.nexuscore.anticheat;
 
 import com.thenexusreborn.api.*;
 import com.thenexusreborn.api.punishment.*;
+import com.thenexusreborn.api.util.StaffChat;
 import com.thenexusreborn.nexuscore.util.MCUtils;
 import me.vagdedes.spartan.api.*;
 import me.vagdedes.spartan.objects.system.Check;
@@ -26,7 +27,7 @@ public class AnticheatManager implements Listener {
                     Punishment punishment = new Punishment(System.currentTimeMillis(), 2592000000L, "PowerMoveRegulator", e.getPlayer().getUniqueId().toString(),
                             NexusAPI.getApi().getServerManager().getCurrentServer().getName(), "Cheating", PunishmentType.BAN, Visibility.SILENT);
         
-                    NexusAPI.getApi().getDataManager().pushPunishment(punishment);
+                    NexusAPI.getApi().getPrimaryDatabase().push(punishment);
                     e.getPlayer().kickPlayer(MCUtils.color(punishment.formatKick()));
                 }
             }

@@ -3,8 +3,8 @@ package com.thenexusreborn.nexuscore.chat;
 import com.thenexusreborn.api.*;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.punishment.*;
+import com.thenexusreborn.api.util.StaffChat;
 import com.thenexusreborn.nexuscore.NexusCore;
-import com.thenexusreborn.nexuscore.player.SpigotNexusPlayer;
 import com.thenexusreborn.nexuscore.util.*;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -15,7 +15,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.List;
 
 public class ChatManager implements Listener {
-    private NexusCore plugin;
+    private final NexusCore plugin;
     
     private ChatHandler handler;
     
@@ -25,7 +25,7 @@ public class ChatManager implements Listener {
     
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent e) {
-        SpigotNexusPlayer nexusPlayer = (SpigotNexusPlayer) NexusAPI.getApi().getPlayerManager().getNexusPlayer(e.getPlayer().getUniqueId());
+        NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(e.getPlayer().getUniqueId());
         String chatColor;
         
         if (e.isCancelled()) {
@@ -50,7 +50,7 @@ public class ChatManager implements Listener {
                     if (e.getMessage().equals(punishment.getAcknowledgeInfo().getCode())) {
                         punishment.getAcknowledgeInfo().setTime(System.currentTimeMillis());
                         nexusPlayer.sendMessage(MsgType.INFO + "You have confirmed your warning. You can speak now.");
-                        NexusAPI.getApi().getDataManager().pushPunishment(punishment);
+                        NexusAPI.getApi().getPrimaryDatabase().push(punishment);
                         NexusAPI.getApi().getNetworkManager().send("punishment", punishment.getId() + "");
                     } else {
                         nexusPlayer.sendMessage(MsgType.WARN + "You have an unconfirmed warning, please type the code " + punishment.getAcknowledgeInfo().getCode() + " to confirm.");
@@ -61,7 +61,7 @@ public class ChatManager implements Listener {
             }
         }
         
-        if (nexusPlayer.getPreferences().get("vanish").getValue()) {
+        if (nexusPlayer.getPreferenceValue("vanish")) {
             e.setCancelled(true);
             nexusPlayer.sendMessage(MsgType.WARN + "You are not allowed to speak in vanish mode.");
             return;
@@ -73,10 +73,9 @@ public class ChatManager implements Listener {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    if (nexusPlayer.getPreferences().get("incognito").getValue()) {
+                    if (nexusPlayer.getPreferenceValue("incognito")) {
                         for (Player player : Bukkit.getOnlinePlayers()) {
-                            player.showPlayer(nexusPlayer.getPlayer());
-                            
+                            player.showPlayer(Bukkit.getPlayer(nexusPlayer.getUniqueId()));
                         }
                     }
                 }

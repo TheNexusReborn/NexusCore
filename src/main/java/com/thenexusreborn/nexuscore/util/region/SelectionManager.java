@@ -11,7 +11,7 @@ import java.util.*;
  */
 public class SelectionManager {
 
-    private Map<UUID, Selection> selections = new HashMap<>();
+    private final Map<UUID, Selection> selections = new HashMap<>();
 
     public void setPointA(UUID player, Location pointA) {
         if (this.selections.containsKey(player)) {

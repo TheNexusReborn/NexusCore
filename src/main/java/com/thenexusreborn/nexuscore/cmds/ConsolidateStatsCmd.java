@@ -2,18 +2,18 @@ package com.thenexusreborn.nexuscore.cmds;
 
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.*;
+import com.thenexusreborn.api.stats.StatHelper;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.util.MCUtils;
 import org.bukkit.command.*;
 
 import java.util.*;
 
-@SuppressWarnings("DuplicatedCode")
-public class ConsolodateStatsCmd implements TabExecutor {
+public class ConsolidateStatsCmd implements TabExecutor {
     
-    private NexusCore plugin;
+    private final NexusCore plugin;
     
-    public ConsolodateStatsCmd(NexusCore plugin) {
+    public ConsolidateStatsCmd(NexusCore plugin) {
         this.plugin = plugin;
     }
     
@@ -43,9 +43,9 @@ public class ConsolodateStatsCmd implements TabExecutor {
             sender.sendMessage(MCUtils.color("&cCould not find a player with that identifier"));
             return true;
         }
-        
-        player.consolodateStats();
-        sender.sendMessage(MCUtils.color("&eYou consolodated stats for &b" + player.getName()));
+    
+        StatHelper.consolidateStats(player);
+        sender.sendMessage(MCUtils.color("&eYou consolidated stats for &b" + player.getName()));
         return true;
     }
     

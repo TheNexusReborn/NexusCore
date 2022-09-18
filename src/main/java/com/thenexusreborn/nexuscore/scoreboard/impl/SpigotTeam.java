@@ -7,7 +7,7 @@ import java.util.Set;
 
 public class SpigotTeam implements ITeam {
     
-    private Team team;
+    private final Team team;
     
     public SpigotTeam(Team team) {
         this.team = team;

@@ -4,7 +4,7 @@ import com.thenexusreborn.api.*;
 import com.thenexusreborn.api.helper.TimeHelper;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.punishment.*;
-import com.thenexusreborn.api.util.Utils;
+import com.thenexusreborn.api.util.*;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.util.*;
 import org.bukkit.command.*;
@@ -14,7 +14,7 @@ import java.util.*;
 
 public class PunishmentCommands implements CommandExecutor {
     
-    private NexusCore plugin;
+    private final NexusCore plugin;
     
     public PunishmentCommands(NexusCore plugin) {
         this.plugin = plugin;
@@ -87,12 +87,12 @@ public class PunishmentCommands implements CommandExecutor {
             UUID uuid = UUID.fromString(args[0]);
             target = NexusAPI.getApi().getPlayerManager().getNexusPlayer(uuid);
             if (target == null) {
-                target = NexusAPI.getApi().getDataManager().loadPlayer(uuid);
+                target = NexusAPI.getApi().getPlayerManager().getCachedPlayers().get(uuid).loadFully();
             }
         } catch (Exception e) {
             target = NexusAPI.getApi().getPlayerManager().getNexusPlayer(args[0]);
             if (target == null) {
-                target = NexusAPI.getApi().getDataManager().loadPlayer(args[0]);
+                target = NexusAPI.getApi().getPlayerManager().getCachedPlayer(args[0]).loadFully();
             }
         }
         
@@ -132,7 +132,7 @@ public class PunishmentCommands implements CommandExecutor {
             punishment.setAcknowledgeInfo(new AcknowledgeInfo(Utils.generateCode(8, true, true, true)));
         }
         
-        NexusAPI.getApi().getDataManager().pushPunishment(punishment);
+        NexusAPI.getApi().getPrimaryDatabase().push(punishment);
         if (punishment.getId() < 1) {
             sender.sendMessage(MCUtils.color(MsgType.WARN + "Could not create the punishment. Please report to Firestar311."));
             return true;

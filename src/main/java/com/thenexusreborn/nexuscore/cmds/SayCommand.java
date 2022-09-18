@@ -8,7 +8,7 @@ import org.bukkit.command.*;
 
 public class SayCommand implements CommandExecutor {
     
-    private NexusCore plugin;
+    private final NexusCore plugin;
     
     public SayCommand(NexusCore plugin) {
         this.plugin = plugin;

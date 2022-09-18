@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 
 public class ReplyCommand implements CommandExecutor {
     
-    private NexusCore plugin;
+    private final NexusCore plugin;
     
     public ReplyCommand(NexusCore plugin) {
         this.plugin = plugin;

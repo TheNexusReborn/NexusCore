@@ -2,8 +2,7 @@ package com.thenexusreborn.nexuscore.cmds;
 
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.*;
-import com.thenexusreborn.api.stats.StatRegistry;
-import com.thenexusreborn.api.util.Operator;
+import com.thenexusreborn.api.stats.*;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.util.*;
 import org.bukkit.command.*;
@@ -11,10 +10,9 @@ import org.bukkit.command.*;
 import java.util.*;
 import java.util.function.Consumer;
 
-@SuppressWarnings("DuplicatedCode")
 public class SetStatCmd implements TabExecutor {
     
-    private NexusCore plugin;
+    private final NexusCore plugin;
     
     public SetStatCmd(NexusCore plugin) {
         this.plugin = plugin;
@@ -33,62 +31,56 @@ public class SetStatCmd implements TabExecutor {
             sender.sendMessage(MCUtils.color("&cUsage: /" + label + " <player> <statName> <value>"));
             return true;
         }
-    
+        
         Consumer<NexusPlayer> consumer = player -> {
-            if (!StatRegistry.isValidStat(args[1])) {
-                sender.sendMessage(MCUtils.color("&cCould not find a stat with that name."));
+            Stat stat = player.getStat(args[1]);
+            if (stat == null) {
+                sender.sendMessage(MCUtils.color(MsgType.WARN + "That player does not have a stat with the name: " + args[1]));
                 return;
             }
-    
-            Number value;
-            if (StatRegistry.isIntegerStat(args[1])) {
-                try {
-                    value = Math.abs(Integer.parseInt(args[2]));
-                } catch (NumberFormatException e) {
-                    sender.sendMessage(MCUtils.color("&cYou provided an invalid integer value for that stat type."));
-                    return;
-                }
-            } else if (StatRegistry.isDoubleStat(args[1])) {
-                try {
-                    value = Math.abs(Double.parseDouble(args[2]));
-                } catch (NumberFormatException e) {
-                    sender.sendMessage(MCUtils.color("&cYou provided an invalid decimal value for that stat type."));
-                    return;
-                }
-            } else {
-                sender.sendMessage(MCUtils.color("&cUnhandled stat value type. This is a bug, please report"));
-                return;
-            }
-    
-            boolean clear = false;
-            Operator operator;
+            
+            StatOperator operator;
+            String rawValue;
             if (args[2].startsWith("+")) {
-                operator = Operator.ADD;
+                operator = StatOperator.ADD;
+                rawValue = args[2].substring(1);
             } else if (args[2].startsWith("-")) {
-                operator = Operator.SUBTRACT;
+                rawValue = args[2].substring(1);
+                operator = StatOperator.SUBTRACT;
             } else if (args[2].startsWith("*")) {
-                operator = Operator.MULTIPLY;
+                operator = StatOperator.MULTIPLY;
+                rawValue = args[2].substring(1);
             } else if (args[2].startsWith("/")) {
-                operator = Operator.DIVIDE;
+                operator = StatOperator.DIVIDE;
+                rawValue = args[2].substring(1);
+            } else if (args[2].equalsIgnoreCase("reset")) {
+                operator = StatOperator.RESET;
+                rawValue = null;
+            } else if (args[2].equalsIgnoreCase("invert")) {
+                operator = StatOperator.INVERT;
+                rawValue = null;
             } else {
-                Number oldValue = value;
-                operator = Operator.MULTIPLY;
-                value = 0;
-                player.changeStat(args[1], value, operator);
-                operator = Operator.ADD;
-                value = oldValue;
+                operator = StatOperator.SET;
+                rawValue = args[2];
             }
-    
-            double currentValue = player.getStatValue(args[1]);
-            if (operator.calculate(currentValue, value).doubleValue() < 0) {
-                sender.sendMessage(MCUtils.color(MsgType.WARN + "You cannot modify a stat below 0"));
+            
+            if (!stat.getType().isAllowedOperator(operator)) {
+                sender.sendMessage(MCUtils.color(MsgType.WARN + "You have an invalid operation for stat " + stat.getName()));
                 return;
             }
-    
-            player.changeStat(args[1], value, operator);
-            sender.sendMessage(MCUtils.color("&eYou modified the stat &b" + args[1] + " &ewith the value &b" + value + " &eand the operation &b" + operator.name().toLowerCase()));
+            
+            Object value = StatHelper.parseValue(stat.getType(), rawValue);
+            if (value == null && !(operator == StatOperator.RESET || operator == StatOperator.INVERT)) {
+                sender.sendMessage(MCUtils.color(MsgType.WARN + "Could not parse the value for the stat."));
+                return;
+            }
+            
+            StatChange statChange = new StatChange(StatHelper.getInfo(stat.getName()), stat.getUuid(), value, operator, System.currentTimeMillis());
+            StatHelper.changeStat(stat, operator, value);
+            NexusAPI.getApi().getPrimaryDatabase().push(statChange);
+            sender.sendMessage(MCUtils.color(MsgType.INFO + "You changed the stat with the operation " + operator.name()));
         };
-    
+        
         try {
             UUID uuid = UUID.fromString(args[0]);
             NexusAPI.getApi().getPlayerManager().getNexusPlayerAsync(uuid, consumer);

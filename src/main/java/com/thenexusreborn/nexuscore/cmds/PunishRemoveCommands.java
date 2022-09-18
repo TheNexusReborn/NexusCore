@@ -3,6 +3,7 @@ package com.thenexusreborn.nexuscore.cmds;
 import com.thenexusreborn.api.*;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.punishment.*;
+import com.thenexusreborn.api.util.StaffChat;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.util.*;
 import org.bukkit.command.*;
@@ -12,7 +13,7 @@ import java.util.*;
 
 public class PunishRemoveCommands implements CommandExecutor {
     
-    private NexusCore plugin;
+    private final NexusCore plugin;
     
     public PunishRemoveCommands(NexusCore plugin) {
         this.plugin = plugin;
@@ -49,12 +50,12 @@ public class PunishRemoveCommands implements CommandExecutor {
             UUID uuid = UUID.fromString(args[0]);
             target = NexusAPI.getApi().getPlayerManager().getNexusPlayer(uuid);
             if (target == null) {
-                target = NexusAPI.getApi().getDataManager().loadPlayer(uuid);
+                target = NexusAPI.getApi().getPlayerManager().getCachedPlayer(uuid).loadFully();
             }
         } catch (Exception e) {
             target = NexusAPI.getApi().getPlayerManager().getNexusPlayer(args[0]);
             if (target == null) {
-                target = NexusAPI.getApi().getDataManager().loadPlayer(args[0]);
+                target = NexusAPI.getApi().getPlayerManager().getCachedPlayer(args[0]).loadFully();
             }
         }
         
@@ -100,7 +101,7 @@ public class PunishRemoveCommands implements CommandExecutor {
         PardonInfo info = new PardonInfo(System.currentTimeMillis(), actor, reason);
         for (Punishment punishment : activePunishments) {
             punishment.setPardonInfo(info);
-            NexusAPI.getApi().getDataManager().pushPunishment(punishment);
+            NexusAPI.getApi().getPrimaryDatabase().push(punishment);
             NexusAPI.getApi().getNetworkManager().send("removepunishment", punishment.getId() + "");
             StaffChat.sendPunishmentRemoval(punishment);
         }

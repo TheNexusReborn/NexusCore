@@ -8,7 +8,7 @@ import org.bukkit.Bukkit;
 
 public class SpigotServerManager extends ServerManager {
     
-    private NexusCore plugin;
+    private final NexusCore plugin;
     
     public SpigotServerManager(NexusCore plugin) {
         this.plugin = plugin;
@@ -29,9 +29,11 @@ public class SpigotServerManager extends ServerManager {
         String type = plugin.getConfig().getString("serverInfo.type");
         String status = "loading";
         String state = "none";
+        long id = plugin.getConfig().getLong("serverInfo.id");
         this.currentServer = new ServerInfo(multicraftId, ip, name, port, players, maxPlayers, hiddenPlayers, type, status, state);
-        if (multicraftId != 0) {
-            NexusAPI.getApi().getDataManager().pushServerInfoAsync(this.currentServer);
-        }
+        this.currentServer.setId(id);
+        NexusAPI.getApi().getPrimaryDatabase().push(this.currentServer);
+        plugin.getConfig().set("serverInfo.id", this.currentServer.getId());
+        plugin.saveConfig();
     }
 }

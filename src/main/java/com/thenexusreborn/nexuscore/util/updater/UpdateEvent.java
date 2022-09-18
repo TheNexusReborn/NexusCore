@@ -5,8 +5,9 @@ import org.bukkit.event.*;
 public class UpdateEvent extends Event {
 	private static final HandlerList handlerList = new HandlerList();
 
-	private UpdateType type;
-	private long lastRun, currentRun;
+	private final UpdateType type;
+	private final long lastRun;
+    private final long currentRun;
 
 	public UpdateEvent(UpdateType type, long lastRun, long currentRun){
 		this.type = type;

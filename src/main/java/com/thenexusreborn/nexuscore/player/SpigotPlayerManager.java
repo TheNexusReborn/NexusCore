@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.player;
 
-import com.thenexusreborn.api.StaffChat;
+import com.thenexusreborn.api.util.StaffChat;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.scoreboard.NexusScoreboard;
 import com.thenexusreborn.nexuscore.NexusCore;
@@ -11,14 +11,18 @@ import com.thenexusreborn.nexuscore.util.*;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.*;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.*;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 public class SpigotPlayerManager extends PlayerManager implements Listener {
     
     private final NexusCore plugin;
+    
+    private final Map<UUID, Integer> clicksPerSecond = Collections.synchronizedMap(new HashMap<>());
     
     public SpigotPlayerManager(NexusCore plugin) {
         this.plugin = plugin;
@@ -34,6 +38,40 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                 }
             }
         }.runTaskTimer(plugin, 1L, 12000);
+        
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (Entry<UUID, Integer> entry : new HashMap<>(clicksPerSecond).entrySet()) {
+                    UUID uuid = entry.getKey();
+                    int cps = entry.getValue();
+                    Player player = Bukkit.getPlayer(uuid);
+                    if (player == null) {
+                        clicksPerSecond.remove(uuid);
+                        continue;
+                    }
+                    
+                    if (cps > 16) {
+                        player.sendMessage(MCUtils.color(MsgType.WARN + "You are clicking at " + cps + " and the server limit is 16. If you do this too long, you may get auto-banned by the anti-cheat."));
+                    }
+                    
+                    clicksPerSecond.put(uuid, 0);
+                }
+            }
+        }.runTaskTimer(plugin, 0L, 20L);
+    }
+    
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onPlayerInteract(PlayerInteractEvent e) {
+        if (e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK) {
+            if (clicksPerSecond.containsKey(e.getPlayer().getUniqueId())) {
+                int clicks = clicksPerSecond.get(e.getPlayer().getUniqueId()) + 1;
+                this.clicksPerSecond.put(e.getPlayer().getUniqueId(), clicks);
+                if (clicks > 16) {
+                    e.setCancelled(true);
+                }
+            }
+        }
     }
     
     @EventHandler
@@ -41,12 +79,12 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
         String originalJoinMessage = e.getJoinMessage();
         e.setJoinMessage(null);
         if (!players.containsKey(e.getPlayer().getUniqueId())) {
-            ActionBar actionBar = new ActionBar("&cPlease wait while your data is loaded.");
-            actionBar.send(e.getPlayer());
+            IActionBar actionBar = () -> "&cPlease wait while your data is being loaded.";
+            SpigotUtils.sendActionBar(e.getPlayer(), actionBar.getText());
             BukkitRunnable abr = new BukkitRunnable() {
                 @Override
                 public void run() {
-                    actionBar.send(e.getPlayer());
+                    SpigotUtils.sendActionBar(e.getPlayer(), actionBar.getText());
                 }
             };
             abr.runTaskTimer(plugin, 20L, 20L);
@@ -54,6 +92,7 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                 if (Bukkit.getPlayer(e.getPlayer().getUniqueId()) == null) {
                     return;
                 }
+                abr.cancel();
                 NexusScoreboard nexusScoreboard = new SpigotNexusScoreboard(nexusPlayer);
                 nexusScoreboard.init();
                 nexusPlayer.setScoreboard(nexusScoreboard);
@@ -80,13 +119,9 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                     player.addAttachment(plugin, "spartan.notifications", true);
                 }
                 
-                actionBar.setText("&aYour data has been loaded.");
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        abr.cancel();
-                    }
-                }.runTaskLater(plugin, 40L);
+                this.clicksPerSecond.put(e.getPlayer().getUniqueId(), 0);
+                
+                SpigotUtils.sendActionBar(e.getPlayer(), "&aYour data has been loaded...");
                 
                 if (nexusPlayer.getRank().ordinal() <= Rank.MEDIA.ordinal()) {
                     StaffChat.sendJoin(nexusPlayer);
@@ -113,11 +148,10 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent e) {
         NexusPlayer nexusPlayer = this.players.get(e.getPlayer().getUniqueId());
-        if (nexusPlayer != null) {
-            this.players.remove(e.getPlayer().getUniqueId());
-        } else {
-            e.setQuitMessage(null);
-        }
+        this.handlePlayerLeave(nexusPlayer);
+        this.players.remove(e.getPlayer().getUniqueId());
+        e.setQuitMessage(null);
+        this.clicksPerSecond.remove(e.getPlayer().getUniqueId());
     }
     
     @Override
