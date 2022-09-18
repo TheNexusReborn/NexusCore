@@ -27,4 +27,9 @@ public class SpigotPlayerProxy implements PlayerProxy {
     public boolean isOnline() {
         return Bukkit.getPlayer(uuid) != null;
     }
+    
+    @Override
+    public String getName() {
+        return Bukkit.getPlayer(uuid).getName();
+    }
 }
