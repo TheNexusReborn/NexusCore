@@ -32,6 +32,9 @@ public class ToggleCmds implements CommandExecutor {
         } else if (cmd.getName().equalsIgnoreCase("incognito")) {
             minRank = Rank.MEDIA;
             preference = player.getPreferences().get("incognito");
+        } else if (cmd.getName().equalsIgnoreCase("fly")) {
+            minRank = Rank.DIAMOND;
+            preference = player.getPreferences().get("fly");
         }
         
         if (preference == null) {

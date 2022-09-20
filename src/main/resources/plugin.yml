@@ -43,3 +43,4 @@ commands:
     aliases: [i]
   tournament:
     aliases: [tt]
+  fly:

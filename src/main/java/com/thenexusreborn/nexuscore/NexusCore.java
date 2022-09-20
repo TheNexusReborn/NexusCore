@@ -108,6 +108,7 @@ public class NexusCore extends JavaPlugin {
         ToggleCmds toggleCmds = new ToggleCmds(this);
         getCommand("incognito").setExecutor(toggleCmds);
         getCommand("vanish").setExecutor(toggleCmds);
+        getCommand("fly").setExecutor(toggleCmds);
         
         getCommand("tournament").setExecutor(new TournamentCommand(this));
         
