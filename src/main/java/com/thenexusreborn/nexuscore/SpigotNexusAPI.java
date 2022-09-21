@@ -8,6 +8,7 @@ import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Preference.Info;
 import com.thenexusreborn.api.punishment.*;
 import com.thenexusreborn.api.registry.*;
+import com.thenexusreborn.api.server.Environment;
 import com.thenexusreborn.api.tournament.Tournament;
 import com.thenexusreborn.api.util.*;
 import com.thenexusreborn.nexuscore.api.NexusSpigotPlugin;
