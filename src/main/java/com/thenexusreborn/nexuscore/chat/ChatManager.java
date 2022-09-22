@@ -87,7 +87,11 @@ public class ChatManager implements Listener {
             chatColor = "&6";
         } else if (rank.ordinal() >= Rank.ADMIN.ordinal() && rank.ordinal() <= Rank.HELPER.ordinal()) {
             chatColor = "&b";
-        } else if (rank.ordinal() >= Rank.VIP.ordinal() && rank.ordinal() <= Rank.IRON.ordinal()) {
+        } else if (rank.ordinal() >= Rank.VIP.ordinal() && rank.ordinal() <= Rank.MEDIA.ordinal()) {
+            chatColor = "&d";
+        } else if (rank.ordinal() >= Rank.DIAMOND_PA.ordinal() && rank.ordinal() <= Rank.DIAMOND.ordinal()) {
+            chatColor = "&a";
+        } else if (rank.ordinal() >= Rank.GOLD_PA.ordinal() && rank.ordinal() <= Rank.IRON.ordinal()) {
             chatColor = "&f";
         } else {
             chatColor = "&7";
