@@ -15,11 +15,11 @@ public class RankTablistHandler extends TablistHandler {
     public static final Map<Rank, String> BEGIN_CHARS = new HashMap<>();
     
     static {
-        BEGIN_CHARS.put(Rank.DIAMOND_PA, "a");
+        BEGIN_CHARS.put(Rank.PLATINUM, "a");
         BEGIN_CHARS.put(Rank.DIAMOND, "b");
-        BEGIN_CHARS.put(Rank.GOLD_PA, "c");
+        BEGIN_CHARS.put(Rank.BRASS, "c");
         BEGIN_CHARS.put(Rank.GOLD, "d");
-        BEGIN_CHARS.put(Rank.IRON_PA, "e");
+        BEGIN_CHARS.put(Rank.INVAR, "e");
         BEGIN_CHARS.put(Rank.IRON, "f");
         BEGIN_CHARS.put(Rank.MEMBER, "g");
         BEGIN_CHARS.put(Rank.MEDIA, "h");
@@ -27,8 +27,10 @@ public class RankTablistHandler extends TablistHandler {
         BEGIN_CHARS.put(Rank.VIP, "j");
         BEGIN_CHARS.put(Rank.NEXUS, "k");
         BEGIN_CHARS.put(Rank.ADMIN, "l");
-        BEGIN_CHARS.put(Rank.MOD, "n");
-        BEGIN_CHARS.put(Rank.HELPER, "o");
+        BEGIN_CHARS.put(Rank.HEAD_MOD, "m");
+        BEGIN_CHARS.put(Rank.SR_MOD, "n");
+        BEGIN_CHARS.put(Rank.MOD, "o");
+        BEGIN_CHARS.put(Rank.HELPER, "p");
     }
     
     public RankTablistHandler(NexusScoreboard scoreboard) {
