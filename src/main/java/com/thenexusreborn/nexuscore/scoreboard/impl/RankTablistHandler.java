@@ -15,22 +15,22 @@ public class RankTablistHandler extends TablistHandler {
     public static final Map<Rank, String> BEGIN_CHARS = new HashMap<>();
     
     static {
-        BEGIN_CHARS.put(Rank.PLATINUM, "a");
-        BEGIN_CHARS.put(Rank.DIAMOND, "b");
-        BEGIN_CHARS.put(Rank.BRASS, "c");
-        BEGIN_CHARS.put(Rank.GOLD, "d");
-        BEGIN_CHARS.put(Rank.INVAR, "e");
-        BEGIN_CHARS.put(Rank.IRON, "f");
-        BEGIN_CHARS.put(Rank.MEMBER, "g");
-        BEGIN_CHARS.put(Rank.MEDIA, "h");
-        BEGIN_CHARS.put(Rank.ARCHITECT, "i");
-        BEGIN_CHARS.put(Rank.VIP, "j");
-        BEGIN_CHARS.put(Rank.NEXUS, "k");
-        BEGIN_CHARS.put(Rank.ADMIN, "l");
-        BEGIN_CHARS.put(Rank.HEAD_MOD, "m");
-        BEGIN_CHARS.put(Rank.SR_MOD, "n");
-        BEGIN_CHARS.put(Rank.MOD, "o");
-        BEGIN_CHARS.put(Rank.HELPER, "p");
+        BEGIN_CHARS.put(Rank.NEXUS, "a");
+        BEGIN_CHARS.put(Rank.ADMIN, "b");
+        BEGIN_CHARS.put(Rank.HEAD_MOD, "c");
+        BEGIN_CHARS.put(Rank.SR_MOD, "d");
+        BEGIN_CHARS.put(Rank.MOD, "e");
+        BEGIN_CHARS.put(Rank.HELPER, "f");
+        BEGIN_CHARS.put(Rank.VIP, "g");
+        BEGIN_CHARS.put(Rank.ARCHITECT, "h");
+        BEGIN_CHARS.put(Rank.MEDIA, "i");
+        BEGIN_CHARS.put(Rank.PLATINUM, "j");
+        BEGIN_CHARS.put(Rank.DIAMOND, "k");
+        BEGIN_CHARS.put(Rank.BRASS, "l");
+        BEGIN_CHARS.put(Rank.GOLD, "m");
+        BEGIN_CHARS.put(Rank.INVAR, "n");
+        BEGIN_CHARS.put(Rank.IRON, "o");
+        BEGIN_CHARS.put(Rank.MEMBER, "p");
     }
     
     public RankTablistHandler(NexusScoreboard scoreboard) {
