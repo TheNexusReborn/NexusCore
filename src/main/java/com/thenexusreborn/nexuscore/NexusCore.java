@@ -1,9 +1,7 @@
 package com.thenexusreborn.nexuscore;
 
 import com.thenexusreborn.api.NexusAPI;
-import com.thenexusreborn.api.server.*;
-import com.thenexusreborn.api.tournament.Tournament;
-import com.thenexusreborn.api.tournament.Tournament.ScoreInfo;
+import com.thenexusreborn.api.server.ServerInfo;
 import com.thenexusreborn.nexuscore.anticheat.AnticheatManager;
 import com.thenexusreborn.nexuscore.api.NexusSpigotPlugin;
 import com.thenexusreborn.nexuscore.chat.ChatManager;
@@ -11,19 +9,21 @@ import com.thenexusreborn.nexuscore.cmds.*;
 import com.thenexusreborn.nexuscore.menu.MenuManager;
 import com.thenexusreborn.nexuscore.player.SpigotPlayerManager;
 import com.thenexusreborn.nexuscore.task.*;
-import com.thenexusreborn.nexuscore.util.*;
+import com.thenexusreborn.nexuscore.util.MCUtils;
+import com.thenexusreborn.nexuscore.util.MsgType;
 import com.thenexusreborn.nexuscore.util.nms.NMS;
 import com.thenexusreborn.nexuscore.util.nms.NMS.Version;
 import com.thenexusreborn.nexuscore.util.updater.Updater;
 import org.bukkit.Bukkit;
-import org.bukkit.command.*;
-import org.bukkit.entity.Player;
+import org.bukkit.command.PluginCommand;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
-import java.sql.*;
-import java.util.*;
-import java.util.Map.Entry;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class NexusCore extends JavaPlugin {
     
@@ -119,6 +119,8 @@ public class NexusCore extends JavaPlugin {
         new PlayerPermTask(this).start();
         new ServerUpdateTask(this).start();
         new TournamentScoreTask(this).start();
+        new ClickCheckerTask(this).start();
+        new PlayerLoadActionBarTask(this).start();
         getLogger().info("Registered Tasks");
         
         if (getServer().getPluginManager().getPlugin("Spartan") != null) {
