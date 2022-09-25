@@ -1,19 +1,17 @@
 package com.thenexusreborn.nexuscore.cmds;
 
 import com.thenexusreborn.api.NexusAPI;
-import com.thenexusreborn.api.player.*;
-import com.thenexusreborn.nexuscore.NexusCore;
-import com.thenexusreborn.nexuscore.util.*;
-import org.bukkit.command.*;
+import com.thenexusreborn.api.player.NexusPlayer;
+import com.thenexusreborn.api.player.Preference;
+import com.thenexusreborn.api.player.Rank;
+import com.thenexusreborn.nexuscore.util.MCUtils;
+import com.thenexusreborn.nexuscore.util.MsgType;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class ToggleCmds implements CommandExecutor {
-    
-    private final NexusCore plugin;
-    
-    public ToggleCmds(NexusCore plugin) {
-        this.plugin = plugin;
-    }
     
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {

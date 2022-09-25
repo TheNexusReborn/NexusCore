@@ -68,11 +68,10 @@ public class NexusCore extends JavaPlugin {
         
         registerCommand("rank", new RankCommand(this));
         registerCommand("setstat", new SetStatCmd(this));
-        registerCommand("consolidatestats", new ConsolidateStatsCmd(this));
         getCommand("tag").setExecutor(new TagCommand(this));
         getCommand("say").setExecutor(new SayCommand(this));
-        getCommand("message").setExecutor(new MessageCommand(this));
-        getCommand("reply").setExecutor(new ReplyCommand(this));
+        getCommand("message").setExecutor(new MessageCommand());
+        getCommand("reply").setExecutor(new ReplyCommand());
         getCommand("me").setExecutor(new MeCommand());
         getCommand("discord").setExecutor((sender, cmd, label, args) -> {
             sender.sendMessage(MCUtils.color(MsgType.INFO + "Discord: &bhttps://discord.gg/bawZKSWEpT"));
@@ -93,7 +92,7 @@ public class NexusCore extends JavaPlugin {
         getCommand("warn").setExecutor(puCmds);
         getCommand("blacklist").setExecutor(puCmds);
         
-        PunishRemoveCommands prCmds = new PunishRemoveCommands(this);
+        PunishRemoveCommands prCmds = new PunishRemoveCommands();
         getCommand("unban").setExecutor(prCmds);
         getCommand("unmute").setExecutor(prCmds);
         getCommand("pardon").setExecutor(prCmds);
@@ -105,7 +104,7 @@ public class NexusCore extends JavaPlugin {
         
         getCommand("alts").setExecutor(new AltsCommand(this));
         
-        ToggleCmds toggleCmds = new ToggleCmds(this);
+        ToggleCmds toggleCmds = new ToggleCmds();
         getCommand("incognito").setExecutor(toggleCmds);
         getCommand("vanish").setExecutor(toggleCmds);
         getCommand("fly").setExecutor(toggleCmds);

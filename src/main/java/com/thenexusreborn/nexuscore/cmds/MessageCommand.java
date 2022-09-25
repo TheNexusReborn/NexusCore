@@ -11,12 +11,6 @@ import java.util.UUID;
 
 public class MessageCommand implements CommandExecutor {
     
-    private final NexusCore plugin;
-    
-    public MessageCommand(NexusCore plugin) {
-        this.plugin = plugin;
-    }
-    
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (!(sender instanceof Player)) {

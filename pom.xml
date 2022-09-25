@@ -97,7 +97,7 @@
             <groupId>me.vagdedes</groupId>
             <artifactId>Spartan</artifactId>
             <scope>system</scope>
-            <version>472</version>
+            <version>484.1</version>
             <systemPath>${basedir}/../lib/Spartan.jar</systemPath>
         </dependency>
     </dependencies>

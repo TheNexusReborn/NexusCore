@@ -1,15 +1,19 @@
 package com.thenexusreborn.nexuscore.cmds;
 
 import com.thenexusreborn.api.NexusAPI;
-import com.thenexusreborn.api.player.*;
+import com.thenexusreborn.api.player.NexusPlayer;
+import com.thenexusreborn.api.player.NexusProfile;
+import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.api.tags.Tag;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.util.MCUtils;
-import org.bukkit.command.*;
+import com.thenexusreborn.nexuscore.util.SpigotUtils;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.util.*;
+import java.util.Set;
 
 public class TagCommand implements CommandExecutor {
     
@@ -44,38 +48,23 @@ public class TagCommand implements CommandExecutor {
             }
             String tagName = sb.substring(0, sb.length() - 1);
             
-            NexusPlayer player;
-            try {
-                UUID uuid = UUID.fromString(args[1]);
-                player = NexusAPI.getApi().getPlayerManager().getNexusPlayer(uuid);
-            } catch (Exception e) {
-                player = NexusAPI.getApi().getPlayerManager().getNexusPlayer(args[1]);
-            }
-            
-            if (player == null) {
-                try {
-                    UUID uuid = UUID.fromString(args[1]);
-                    player = NexusAPI.getApi().getPlayerManager().getCachedPlayer(uuid).loadFully();
-                } catch (Exception e) {
-                    player = NexusAPI.getApi().getPlayerManager().getCachedPlayer(args[1]).loadFully();
-                }
-            }
+            NexusProfile profile = SpigotUtils.getProfileFromCommand(sender, args[1]);
+            if (profile == null) return true;
     
             String cmdAction, verb;
             if (args[0].equalsIgnoreCase("unlock")) {
-                player.unlockTag(tagName);
+                profile.unlockTag(tagName);
                 cmdAction = "unlocked";
                 verb = "for";
             } else {
-                player.lockTag(tagName);
+                profile.lockTag(tagName);
                 cmdAction = "removed";
                 verb = "from";
             }
             
-            NexusAPI.getApi().getNetworkManager().send("updatetag", player.getUniqueId().toString(), args[0], tagName);
+            NexusAPI.getApi().getNetworkManager().send("updatetag", profile.getUniqueId().toString(), args[0], tagName);
     
-            NexusAPI.getApi().getPrimaryDatabase().push(player.getStat("unlockedtags"));
-            sender.sendMessage(MCUtils.color("&eYou " + cmdAction + " the tag " + new Tag(tagName).getDisplayName() + " &e" + verb + " the player &b" + player.getName()));
+            sender.sendMessage(MCUtils.color("&eYou " + cmdAction + " the tag " + new Tag(tagName).getDisplayName() + " &e" + verb + " the player &b" + profile.getName()));
             return true;
         }
         
