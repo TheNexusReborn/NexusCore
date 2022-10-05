@@ -109,15 +109,12 @@ public class NexusCore extends JavaPlugin {
         getCommand("vanish").setExecutor(toggleCmds);
         getCommand("fly").setExecutor(toggleCmds);
         
-        getCommand("tournament").setExecutor(new TournamentCommand(this));
-        
         getLogger().info("Registered Commands");
         
         new PlayerHUDTask(this).start();
         new PlayerTablistTask(this).start();
         new PlayerPermTask(this).start();
         new ServerUpdateTask(this).start();
-        new TournamentScoreTask(this).start();
         new ClickCheckerTask(this).start();
         new PlayerLoadActionBarTask(this).start();
         getLogger().info("Registered Tasks");

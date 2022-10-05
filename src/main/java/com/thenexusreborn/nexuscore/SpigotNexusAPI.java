@@ -1,16 +1,14 @@
 package com.thenexusreborn.nexuscore;
 
-import com.thenexusreborn.api.*;
+import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.data.objects.Database;
 import com.thenexusreborn.api.network.NetworkContext;
 import com.thenexusreborn.api.network.cmd.NetworkCommand;
-import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Preference.Info;
 import com.thenexusreborn.api.punishment.*;
 import com.thenexusreborn.api.registry.*;
 import com.thenexusreborn.api.server.Environment;
-import com.thenexusreborn.api.tournament.Tournament;
-import com.thenexusreborn.api.util.*;
+import com.thenexusreborn.api.util.StaffChat;
 import com.thenexusreborn.nexuscore.api.NexusSpigotPlugin;
 import com.thenexusreborn.nexuscore.api.events.*;
 import com.thenexusreborn.nexuscore.player.*;
@@ -74,26 +72,6 @@ public class SpigotNexusAPI extends NexusAPI {
     
     @Override
     public void registerNetworkCommands(NetworkCommandRegistry registry) {
-        registry.register(new NetworkCommand("tournament", (cmd, origin, args) -> {
-            if (args[0].equalsIgnoreCase("delete")) {
-                setTournament(null);
-
-                for (NexusPlayer player : NexusAPI.getApi().getPlayerManager().getPlayers().values()) {
-                    player.getStats().values().removeIf(stat -> stat.getName().contains("tournament"));
-                    player.getStatChanges().removeIf(statChange -> statChange.getStatName().contains("tournament"));
-                }
-            } else {
-                int id = Integer.parseInt(args[0]);
-                Tournament tournament = null;
-                try {
-                    tournament = NexusAPI.getApi().getPrimaryDatabase().get(Tournament.class).get(0);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                setTournament(tournament);
-            }
-        }));
-    
         registry.register(new NetworkCommand("punishment", (cmd, origin, args) -> new BukkitRunnable() {
             public void run() {
                 long id = Long.parseLong(args[0]);
