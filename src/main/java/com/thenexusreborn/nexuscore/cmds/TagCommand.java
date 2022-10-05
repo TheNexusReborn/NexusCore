@@ -130,6 +130,6 @@ public class TagCommand implements CommandExecutor {
     }
     
     private void pushTagChange(NexusPlayer player) {
-        NexusAPI.getApi().getThreadFactory().runAsync(() -> NexusAPI.getApi().getPrimaryDatabase().push(player.getStat("tag")));
+        NexusAPI.getApi().getThreadFactory().runAsync(() -> NexusAPI.getApi().getPrimaryDatabase().push(player.getStats().get("tag")));
     }
 }

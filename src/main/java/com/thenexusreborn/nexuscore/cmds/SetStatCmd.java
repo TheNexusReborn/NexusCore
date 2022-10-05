@@ -86,7 +86,7 @@ public class SetStatCmd implements TabExecutor {
 
         StatChange statChange = new StatChange(StatHelper.getInfo(statInfo.getName()), profile.getUniqueId(), value, operator, System.currentTimeMillis());
         if (profile instanceof NexusPlayer) {
-            ((NexusPlayer) profile).changeStat(statInfo.getName(), value, operator);
+            profile.getStats().change(statInfo.getName(), value, operator);
         } else {
             NexusAPI.getApi().getPrimaryDatabase().push(statChange);
         }

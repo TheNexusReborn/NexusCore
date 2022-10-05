@@ -2,7 +2,7 @@ package com.thenexusreborn.nexuscore.cmds;
 
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.NexusPlayer;
-import com.thenexusreborn.api.player.Preference;
+import com.thenexusreborn.api.player.Toggle;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.nexuscore.util.MCUtils;
 import com.thenexusreborn.nexuscore.util.MsgType;
@@ -22,7 +22,7 @@ public class ToggleCmds implements CommandExecutor {
     
         NexusPlayer player = NexusAPI.getApi().getPlayerManager().getNexusPlayer(((Player) sender).getUniqueId());
         Rank minRank = null;
-        Preference preference = null;
+        Toggle preference = null;
         
         if (cmd.getName().equalsIgnoreCase("vanish")) {
             minRank = Rank.HELPER;
@@ -36,13 +36,13 @@ public class ToggleCmds implements CommandExecutor {
         }
         
         if (preference == null) {
-            Preference.Info info = NexusAPI.getApi().getPreferenceRegistry().get(cmd.getName().toLowerCase());
+            Toggle.Info info = NexusAPI.getApi().getPreferenceRegistry().get(cmd.getName().toLowerCase());
             if (info == null) {
                 player.sendMessage(MsgType.WARN + "No preference with that type exists.");
                 return true;
             }
             
-            preference = new Preference(info, player.getUniqueId(), info.getDefaultValue());
+            preference = new Toggle(info, player.getUniqueId(), info.getDefaultValue());
         }
         
         if (player.getRank().ordinal() > minRank.ordinal()) {

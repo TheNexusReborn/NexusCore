@@ -4,7 +4,7 @@ import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.data.objects.Database;
 import com.thenexusreborn.api.network.NetworkContext;
 import com.thenexusreborn.api.network.cmd.NetworkCommand;
-import com.thenexusreborn.api.player.Preference.Info;
+import com.thenexusreborn.api.player.Toggle.Info;
 import com.thenexusreborn.api.punishment.*;
 import com.thenexusreborn.api.registry.*;
 import com.thenexusreborn.api.server.Environment;

@@ -40,3 +40,4 @@ commands:
   incognito:
     aliases: [i]
   fly:
+  nexusversion: 

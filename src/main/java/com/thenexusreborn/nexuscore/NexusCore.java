@@ -109,6 +109,8 @@ public class NexusCore extends JavaPlugin {
         getCommand("vanish").setExecutor(toggleCmds);
         getCommand("fly").setExecutor(toggleCmds);
         
+        getCommand("nexusversion").setExecutor(new NexusVersionCmd(this));
+        
         getLogger().info("Registered Commands");
         
         new PlayerHUDTask(this).start();

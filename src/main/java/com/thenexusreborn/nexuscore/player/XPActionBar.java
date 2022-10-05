@@ -27,7 +27,7 @@ public class XPActionBar implements IActionBar {
         }
         
         int level = player.getLevel();
-        int currentXp = (int) player.getStatValue("xp");
+        int currentXp = (int) player.getStats().getValue("xp");
         int levelXp = currentXp - LevelManager.levels.get(level);
         int nextLevelXp = LevelManager.levels.get(level + 1) - LevelManager.levels.get(level);
         int xpToNextLevel = nextLevelXp - levelXp;
