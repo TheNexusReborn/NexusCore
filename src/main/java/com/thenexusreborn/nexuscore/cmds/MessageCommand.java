@@ -2,7 +2,6 @@ package com.thenexusreborn.nexuscore.cmds;
 
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.NexusPlayer;
-import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.util.MCUtils;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
@@ -43,8 +42,8 @@ public class MessageCommand implements CommandExecutor {
             sb.append(args[i]).append(" ");
         }
         
-        player.sendMessage("&6&l>> &d&lPRIVATE &dto " + target.getRank().getColor() + target.getName() + "&8: &5" + sb);
-        target.sendMessage("&6&l>> &d&lPRIVATE &dfrom " + player.getRank().getColor() + player.getName() + "&8: &5" + sb);
+        player.sendMessage("&6&l>> &d&lPRIVATE &dto " + target.getRanks().get().getColor() + target.getName() + "&8: &5" + sb);
+        target.sendMessage("&6&l>> &d&lPRIVATE &dfrom " + player.getRanks().get().getColor() + player.getName() + "&8: &5" + sb);
         player.setLastMessage(target);
         target.setLastMessage(player);
         return true;

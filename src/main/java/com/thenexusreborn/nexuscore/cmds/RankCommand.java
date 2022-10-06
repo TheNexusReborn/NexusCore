@@ -53,7 +53,7 @@ public class RankCommand implements TabExecutor {
             sender.sendMessage(MCUtils.color("&cThe Nexus Team rank cannot be set with a command."));
             for (Player player : Bukkit.getOnlinePlayers()) {
                 NexusPlayer onlineNexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(player.getUniqueId());
-                if (onlineNexusPlayer.getRank() == Rank.NEXUS) {
+                if (onlineNexusPlayer.getRanks().get() == Rank.NEXUS) {
                     player.sendMessage(MCUtils.color("&c" + sender.getName() + " tried to set " + args[0] + "'s rank to Nexus Team"));
                 }
             }
@@ -73,9 +73,9 @@ public class RankCommand implements TabExecutor {
         NexusProfile nexusProfile = SpigotUtils.getProfileFromCommand(sender, args[0]);
         if (nexusProfile == null) return true;
 
-        if (senderRank.ordinal() >= nexusProfile.getRank().ordinal()) {
+        if (senderRank.ordinal() >= nexusProfile.getRanks().get().ordinal()) {
             if (!(sender instanceof ConsoleCommandSender)) {
-                sender.sendMessage(MCUtils.color("&cYou cannot modify " + nexusProfile.getName() + "'s rank as they have " + nexusProfile.getRank().name() + " and you have " + senderRank.name()));
+                sender.sendMessage(MCUtils.color("&cYou cannot modify " + nexusProfile.getName() + "'s rank as they have " + nexusProfile.getRanks().get().name() + " and you have " + senderRank.name()));
                 return true;
             }
         }
@@ -83,8 +83,8 @@ public class RankCommand implements TabExecutor {
         String rankName = rank.getColor() + "&l" + rank.name();
 
         long expire = -1;
-        if (nexusProfile.getRanks().containsKey(rank)) {
-            long existingTime = System.currentTimeMillis() - nexusProfile.getRanks().get(rank);
+        if (nexusProfile.getRanks().contains(rank)) {
+            long existingTime = System.currentTimeMillis() - nexusProfile.getRanks().getExpire(rank);
             if (existingTime > 0) {
                 expire = System.currentTimeMillis() + time + existingTime;
             }
@@ -95,13 +95,7 @@ public class RankCommand implements TabExecutor {
         }
 
         if (args[1].equalsIgnoreCase("set")) {
-            nexusProfile.getRanks().clear();
-            try {
-                nexusProfile.setRank(rank, expire);
-            } catch (Exception e) {
-                sender.sendMessage(MCUtils.color(MsgType.WARN + "There was a problem setting the rank: " + e.getMessage()));
-                return true;
-            }
+            nexusProfile.getRanks().set(rank, expire);
             String message = "&eYou set &b" + nexusProfile.getName() + "'s &erank to " + rankName;
             if (time > -1) {
                 message += " &efor &b" + TimeHelper.formatTime(time);
@@ -109,7 +103,7 @@ public class RankCommand implements TabExecutor {
             sender.sendMessage(MCUtils.color(message));
         } else if (args[1].equalsIgnoreCase("add")) {
             try {
-                nexusProfile.setRank(rank, expire);
+                nexusProfile.getRanks().set(rank, expire);
             } catch (Exception e) {
                 sender.sendMessage(MCUtils.color(MsgType.WARN + "There was a problem setting the rank: " + e.getMessage()));
                 return true;
@@ -121,7 +115,7 @@ public class RankCommand implements TabExecutor {
             sender.sendMessage(MCUtils.color(message));
         } else if (args[1].equalsIgnoreCase("remove")) {
             try {
-                nexusProfile.removeRank(rank);
+                nexusProfile.getRanks().remove(rank);
             } catch (Exception e) {
                 sender.sendMessage(MCUtils.color(MsgType.WARN + "There was a problem removing the rank: " + e.getMessage()));
                 return true;
@@ -132,7 +126,7 @@ public class RankCommand implements TabExecutor {
         NexusAPI.getApi().getNetworkManager().send("updaterank", nexusProfile.getUniqueId().toString(), args[1], rank.name(), expire + "");
 
         StringBuilder sb = new StringBuilder();
-        for (Entry<Rank, Long> entry : nexusProfile.getRanks().entrySet()) {
+        for (Entry<Rank, Long> entry : nexusProfile.getRanks().findAll().entrySet()) {
             sb.append(entry.getKey().name()).append("=").append(entry.getValue()).append(",");
         }
 

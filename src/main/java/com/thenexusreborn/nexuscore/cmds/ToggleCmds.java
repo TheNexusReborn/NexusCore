@@ -26,13 +26,13 @@ public class ToggleCmds implements CommandExecutor {
         
         if (cmd.getName().equalsIgnoreCase("vanish")) {
             minRank = Rank.HELPER;
-            preference = player.getPreferences().get("vanish");
+            preference = player.getToggles().get("vanish");
         } else if (cmd.getName().equalsIgnoreCase("incognito")) {
             minRank = Rank.MEDIA;
-            preference = player.getPreferences().get("incognito");
+            preference = player.getToggles().get("incognito");
         } else if (cmd.getName().equalsIgnoreCase("fly")) {
             minRank = Rank.DIAMOND;
-            preference = player.getPreferences().get("fly");
+            preference = player.getToggles().get("fly");
         }
         
         if (preference == null) {
@@ -45,7 +45,7 @@ public class ToggleCmds implements CommandExecutor {
             preference = new Toggle(info, player.getUniqueId(), info.getDefaultValue());
         }
         
-        if (player.getRank().ordinal() > minRank.ordinal()) {
+        if (player.getRanks().get().ordinal() > minRank.ordinal()) {
             player.sendMessage(MsgType.WARN + "You do not have enough permission to use that command.");
             return true;
         }

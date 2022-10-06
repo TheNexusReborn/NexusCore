@@ -44,7 +44,7 @@ public class RankTablistHandler extends TablistHandler {
             if (otherNexusPlayer != null) {
                 NexusPlayer player = scoreboard.getPlayer();
                 ITeam otherTeam = getPlayerTeams().get(otherNexusPlayer.getUniqueId());
-                String correctChar = BEGIN_CHARS.get(otherNexusPlayer.getRank());
+                String correctChar = BEGIN_CHARS.get(otherNexusPlayer.getRanks().get());
                 if (otherTeam == null) {
                     createPlayerTeam(otherNexusPlayer);
                 } else {
@@ -68,7 +68,7 @@ public class RankTablistHandler extends TablistHandler {
     @Override
     public String getPlayerTeamName(NexusPlayer player) {
         String pName = player.getName();
-        String name = BEGIN_CHARS.get(player.getRank()) + "_";
+        String name = BEGIN_CHARS.get(player.getRanks().get()) + "_";
         if (pName.length() > 13) {
             name += pName.substring(0, 14);
         } else {
@@ -79,10 +79,10 @@ public class RankTablistHandler extends TablistHandler {
     
     @Override
     public void setDisplayOptions(NexusPlayer nexusPlayer, ITeam team) {
-        if (nexusPlayer.getRank() == Rank.MEMBER) {
-            team.setPrefix(MCUtils.color(nexusPlayer.getRank().getColor()));
+        if (nexusPlayer.getRanks().get() == Rank.MEMBER) {
+            team.setPrefix(MCUtils.color(nexusPlayer.getRanks().get().getColor()));
         } else {
-            team.setPrefix(MCUtils.color(nexusPlayer.getRank().getPrefix() + " &r"));
+            team.setPrefix(MCUtils.color(nexusPlayer.getRanks().get().getPrefix() + " &r"));
         }
         if (nexusPlayer.getTag() != null) {
             team.setSuffix(MCUtils.color(" " + nexusPlayer.getTag().getDisplayName()));

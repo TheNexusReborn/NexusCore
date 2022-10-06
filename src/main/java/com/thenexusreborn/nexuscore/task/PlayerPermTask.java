@@ -2,7 +2,6 @@ package com.thenexusreborn.nexuscore.task;
 
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.*;
-import com.thenexusreborn.api.scoreboard.TablistHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachmentInfo;
@@ -23,7 +22,7 @@ public class PlayerPermTask extends BukkitRunnable {
         for (Player player : Bukkit.getOnlinePlayers()) {
             NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(player.getUniqueId());
             if (nexusPlayer != null) {
-                if (nexusPlayer.getRank().ordinal() > Rank.HELPER.ordinal()) {
+                if (nexusPlayer.getRanks().get().ordinal() > Rank.HELPER.ordinal()) {
                     Set<PermissionAttachmentInfo> effectivePermissions = player.getEffectivePermissions();
                     for (PermissionAttachmentInfo perm : effectivePermissions) {
                         if (perm.getPermission().equalsIgnoreCase("spartan.info") || perm.getPermission().equals("spartan.notifications")) {

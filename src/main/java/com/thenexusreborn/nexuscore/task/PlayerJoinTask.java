@@ -92,7 +92,7 @@ public class PlayerJoinTask extends BukkitRunnable {
                     Bukkit.broadcastMessage(MCUtils.color(joinMessage));
                 }
 
-                if (nexusPlayer.getRank().ordinal() <= Rank.HELPER.ordinal()) {
+                if (nexusPlayer.getRanks().get().ordinal() <= Rank.HELPER.ordinal()) {
                     player.addAttachment(plugin, "spartan.info", true);
                     player.addAttachment(plugin, "spartan.notifications", true);
                 }
@@ -101,7 +101,7 @@ public class PlayerJoinTask extends BukkitRunnable {
 
                 SpigotUtils.sendActionBar(player, "&aYour data has been loaded");
 
-                if (nexusPlayer.getRank().ordinal() <= Rank.MEDIA.ordinal()) {
+                if (nexusPlayer.getRanks().get().ordinal() <= Rank.MEDIA.ordinal()) {
                     StaffChat.sendJoin(nexusPlayer);
                 }
 

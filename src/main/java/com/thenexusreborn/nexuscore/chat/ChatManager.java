@@ -33,7 +33,7 @@ public class ChatManager implements Listener {
         }
         
         if (e.getMessage().startsWith("@")) {
-            if (nexusPlayer.getRank().ordinal() <= Rank.HELPER.ordinal()) {
+            if (nexusPlayer.getRanks().get().ordinal() <= Rank.HELPER.ordinal()) {
                 StaffChat.sendChat(nexusPlayer, e.getMessage().substring(1));
                 e.setCancelled(true);
                 return;
@@ -61,7 +61,7 @@ public class ChatManager implements Listener {
             }
         }
         
-        if (nexusPlayer.getPreferenceValue("vanish")) {
+        if (nexusPlayer.getToggles().getValue("vanish")) {
             e.setCancelled(true);
             nexusPlayer.sendMessage(MsgType.WARN + "You are not allowed to speak in vanish mode.");
             return;
@@ -73,7 +73,7 @@ public class ChatManager implements Listener {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    if (nexusPlayer.getPreferenceValue("incognito")) {
+                    if (nexusPlayer.getToggles().getValue("incognito")) {
                         for (Player player : Bukkit.getOnlinePlayers()) {
                             player.showPlayer(Bukkit.getPlayer(nexusPlayer.getUniqueId()));
                         }
@@ -82,7 +82,7 @@ public class ChatManager implements Listener {
             }.runTask(plugin);
         }
         
-        Rank rank = nexusPlayer.getRank();
+        Rank rank = nexusPlayer.getRanks().get();
         if (rank == Rank.NEXUS) {
             chatColor = "&6";
         } else if (rank.ordinal() >= Rank.ADMIN.ordinal() && rank.ordinal() <= Rank.HELPER.ordinal()) {
