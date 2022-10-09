@@ -40,7 +40,7 @@ public class SetStatCmd implements TabExecutor {
         }
 
         NexusProfile profile = SpigotUtils.getProfileFromCommand(sender, args[0]);
-        if (profile != null) return true;
+        if (profile == null) return true;
 
         Stat.Info statInfo = StatHelper.getInfo(args[1]);
         if (statInfo == null) {
