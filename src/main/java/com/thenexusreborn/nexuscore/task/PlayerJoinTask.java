@@ -35,16 +35,13 @@ public class PlayerJoinTask extends BukkitRunnable {
         Response<NexusPlayer> response = null;
 
         while (response == null && tries <= 10) {
-            plugin.getLogger().info("Getting Player Data for " + player.getName() + " Try " + tries + "/10");
             try {
                 List<NexusPlayer> players = NexusAPI.getApi().getPrimaryDatabase().get(NexusPlayer.class, "uniqueId", player.getUniqueId().toString());
-                plugin.getLogger().info("Got a total of " + players.size() + " results from the database.");
                 if (players.size() == 0) {
                     tries++;
                     continue;
                 }
                 
-                plugin.getLogger().info("Successfully got a profile result, ending tries");
                 response = new Response<>(players.get(0), Response.Type.SUCCESS);
             } catch (SQLException e) {
                 response = new Response<>(Response.Type.FAILURE, e);
@@ -64,7 +61,6 @@ public class PlayerJoinTask extends BukkitRunnable {
         NexusPlayer nexusPlayer = response.get();
 
         if (!nexusPlayer.isOnline()) {
-            plugin.getLogger().info("Player is no longer online.");
             return;
         }
 
