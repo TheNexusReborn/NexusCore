@@ -1,20 +1,11 @@
 package com.thenexusreborn.nexuscore.cmds;
 
 import com.thenexusreborn.api.NexusAPI;
-import com.thenexusreborn.api.player.NexusPlayer;
-import com.thenexusreborn.api.player.NexusProfile;
-import com.thenexusreborn.api.player.Rank;
-import com.thenexusreborn.api.stats.Stat;
-import com.thenexusreborn.api.stats.StatChange;
-import com.thenexusreborn.api.stats.StatHelper;
-import com.thenexusreborn.api.stats.StatOperator;
+import com.thenexusreborn.api.player.*;
+import com.thenexusreborn.api.stats.*;
 import com.thenexusreborn.nexuscore.NexusCore;
-import com.thenexusreborn.nexuscore.util.MCUtils;
-import com.thenexusreborn.nexuscore.util.MsgType;
-import com.thenexusreborn.nexuscore.util.SpigotUtils;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabExecutor;
+import com.thenexusreborn.nexuscore.util.*;
+import org.bukkit.command.*;
 
 import java.util.List;
 
@@ -85,11 +76,11 @@ public class SetStatCmd implements TabExecutor {
         }
 
         StatChange statChange = new StatChange(StatHelper.getInfo(statInfo.getName()), profile.getUniqueId(), value, operator, System.currentTimeMillis());
-        if (profile instanceof NexusPlayer) {
-            profile.getStats().change(statInfo.getName(), value, operator);
-        } else {
-            NexusAPI.getApi().getPrimaryDatabase().push(statChange);
-        }
+        
+        profile.getStats().change(statInfo.getName(), value, operator);
+    
+        NexusAPI.getApi().getNetworkManager().send("updatestat", profile.getUniqueId().toString(), statInfo.getName(), operator.name(), value.toString());
+        
         sender.sendMessage(MCUtils.color(MsgType.INFO + "You changed the stat with the operation " + operator.name()));
         return true;
     }
