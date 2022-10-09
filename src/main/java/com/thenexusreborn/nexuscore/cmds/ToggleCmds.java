@@ -43,6 +43,7 @@ public class ToggleCmds implements CommandExecutor {
             }
             
             preference = new Toggle(info, player.getUniqueId(), info.getDefaultValue());
+            player.getToggles().add(preference);
         }
         
         if (player.getRanks().get().ordinal() > minRank.ordinal()) {

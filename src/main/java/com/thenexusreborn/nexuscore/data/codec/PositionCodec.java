@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.data.codec;
 
-import com.thenexusreborn.api.data.objects.SqlCodec;
+import com.thenexusreborn.api.storage.objects.SqlCodec;
 import com.thenexusreborn.nexuscore.util.Position;
 
 public class PositionCodec extends SqlCodec<Position> {
