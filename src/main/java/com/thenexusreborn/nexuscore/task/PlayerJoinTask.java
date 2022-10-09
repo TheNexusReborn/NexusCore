@@ -10,6 +10,7 @@ import com.thenexusreborn.api.util.StaffChat;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.api.events.NexusPlayerLoadEvent;
 import com.thenexusreborn.nexuscore.scoreboard.SpigotNexusScoreboard;
+import com.thenexusreborn.nexuscore.scoreboard.impl.RankTablistHandler;
 import com.thenexusreborn.nexuscore.util.MCUtils;
 import com.thenexusreborn.nexuscore.util.MsgType;
 import com.thenexusreborn.nexuscore.util.SpigotUtils;
@@ -82,6 +83,8 @@ public class PlayerJoinTask extends BukkitRunnable {
                 if (scoreboard.getTablistHandler() == null) {
                     if (loadEvent.getTablistHandler() != null) {
                         scoreboard.setTablistHandler(loadEvent.getTablistHandler());
+                    } else {
+                        scoreboard.setTablistHandler(new RankTablistHandler(scoreboard));
                     }
                 }
 
