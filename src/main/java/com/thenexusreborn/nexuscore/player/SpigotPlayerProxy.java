@@ -7,17 +7,15 @@ import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
-public class SpigotPlayerProxy implements PlayerProxy {
-    
-    private UUID uuid;
+public class SpigotPlayerProxy extends PlayerProxy {
     
     public SpigotPlayerProxy(UUID uuid) {
-        this.uuid = uuid;
+        super(uuid);
     }
     
     @Override
     public void sendMessage(String message) {
-        Player player = Bukkit.getPlayer(uuid);
+        Player player = Bukkit.getPlayer(uniqueId);
         if (player != null) {
             player.sendMessage(MCUtils.color(message));
         }
@@ -25,11 +23,11 @@ public class SpigotPlayerProxy implements PlayerProxy {
     
     @Override
     public boolean isOnline() {
-        return Bukkit.getPlayer(uuid) != null;
+        return Bukkit.getPlayer(uniqueId) != null;
     }
     
     @Override
     public String getName() {
-        return Bukkit.getPlayer(uuid).getName();
+        return Bukkit.getPlayer(uniqueId).getName();
     }
 }

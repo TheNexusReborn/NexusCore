@@ -1,6 +1,7 @@
 package com.thenexusreborn.nexuscore;
 
 import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.player.PlayerProxy;
 import com.thenexusreborn.api.storage.objects.Database;
 import com.thenexusreborn.api.network.NetworkContext;
 import com.thenexusreborn.api.network.cmd.NetworkCommand;
@@ -29,8 +30,9 @@ public class SpigotNexusAPI extends NexusAPI {
     private final NexusCore plugin;
     
     public SpigotNexusAPI(NexusCore plugin) {
-        super(Environment.valueOf(plugin.getConfig().getString("environment").toUpperCase()), NetworkContext.CLIENT, plugin.getLogger(), new SpigotPlayerManager(plugin), new SpigotThreadFactory(plugin), new SpigotPlayerFactory(), new SpigotServerManager(plugin));
+        super(Environment.valueOf(plugin.getConfig().getString("environment").toUpperCase()), NetworkContext.CLIENT, plugin.getLogger(), new SpigotPlayerManager(plugin), new SpigotThreadFactory(plugin), new SpigotServerManager(plugin));
         this.plugin = plugin;
+        PlayerProxy.setProxyClass(SpigotPlayerProxy.class);
     }
     
     @Override
