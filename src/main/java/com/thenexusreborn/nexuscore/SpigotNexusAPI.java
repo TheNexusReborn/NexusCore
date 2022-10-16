@@ -1,17 +1,15 @@
 package com.thenexusreborn.nexuscore;
 
 import com.thenexusreborn.api.NexusAPI;
-import com.thenexusreborn.api.player.PlayerProxy;
-import com.thenexusreborn.api.storage.objects.Database;
 import com.thenexusreborn.api.network.NetworkContext;
 import com.thenexusreborn.api.network.cmd.NetworkCommand;
-import com.thenexusreborn.api.player.Toggle.Info;
+import com.thenexusreborn.api.player.PlayerProxy;
 import com.thenexusreborn.api.punishment.*;
 import com.thenexusreborn.api.registry.*;
 import com.thenexusreborn.api.server.Environment;
+import com.thenexusreborn.api.storage.objects.Database;
 import com.thenexusreborn.api.util.StaffChat;
 import com.thenexusreborn.nexuscore.api.NexusSpigotPlugin;
-import com.thenexusreborn.nexuscore.api.events.*;
 import com.thenexusreborn.nexuscore.player.*;
 import com.thenexusreborn.nexuscore.server.SpigotServerManager;
 import com.thenexusreborn.nexuscore.thread.SpigotThreadFactory;
@@ -120,14 +118,8 @@ public class SpigotNexusAPI extends NexusAPI {
     }
     
     @Override
-    public void registerPreferences(PreferenceRegistry registry) {
-        for (Info info : registry.getObjects()) {
-            if (info.getName().equalsIgnoreCase("vanish")) {
-                info.setHandler((preference, player, oldValue, newValue) -> Bukkit.getPluginManager().callEvent(new VanishToggleEvent(player, oldValue, newValue)));
-            } else if (info.getName().equalsIgnoreCase("incognito")) {
-                info.setHandler((preference, player, oldValue, newValue) -> Bukkit.getPluginManager().callEvent(new IncognitoToggleEvent(player, oldValue, newValue)));
-            }
-        }
+    public void registerToggles(ToggleRegistry registry) {
+        
     }
     
     @Override
