@@ -4,6 +4,7 @@ import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.scoreboard.*;
 import com.thenexusreborn.api.scoreboard.wrapper.ITeam;
+import com.thenexusreborn.api.tags.Tag;
 import com.thenexusreborn.nexuscore.util.MCUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -39,19 +40,18 @@ public class RankTablistHandler extends TablistHandler {
     
     @Override
     public void update() {
-        for (Player other : Bukkit.getOnlinePlayers()) {
-            NexusPlayer otherNexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(other.getUniqueId());
-            if (otherNexusPlayer != null) {
-                NexusPlayer player = scoreboard.getPlayer();
-                ITeam otherTeam = getPlayerTeams().get(otherNexusPlayer.getUniqueId());
-                String correctChar = BEGIN_CHARS.get(otherNexusPlayer.getRanks().get());
-                if (otherTeam == null) {
-                    createPlayerTeam(otherNexusPlayer);
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(player.getUniqueId());
+            if (nexusPlayer != null) {
+                ITeam team = getPlayerTeams().get(nexusPlayer.getUniqueId());
+                String correctChar = BEGIN_CHARS.get(nexusPlayer.getRanks().get());
+                if (team == null) {
+                    createPlayerTeam(nexusPlayer);
                 } else {
-                    if (otherTeam.getName().startsWith(correctChar)) {
-                        updatePlayerTeam(otherNexusPlayer);
+                    if (team.getName().startsWith(correctChar)) {
+                        updatePlayerTeam(nexusPlayer);
                     } else {
-                        refreshPlayerTeam(otherNexusPlayer);
+                        refreshPlayerTeam(nexusPlayer);
                     }
                 }
             }
@@ -84,8 +84,9 @@ public class RankTablistHandler extends TablistHandler {
         } else {
             team.setPrefix(MCUtils.color(nexusPlayer.getRanks().get().getPrefix() + " &r"));
         }
-        if (nexusPlayer.getTag() != null) {
-            team.setSuffix(MCUtils.color(" " + nexusPlayer.getTag().getDisplayName()));
+        Tag tag = nexusPlayer.getTag();
+        if (tag != null && !(tag.getName().equals("") || tag.getName().equalsIgnoreCase("null"))) {
+            team.setSuffix(MCUtils.color(" " + tag.getDisplayName()));
         } else {
             team.setSuffix("");
         }
