@@ -9,8 +9,6 @@ commands:
     description: Set player ranks
   setstat:
     description: Set stats
-  consolidateStats:
-    description: Consolidates stats
   tag:
   message:
     aliases: [msg, whisper, tell]
@@ -41,5 +39,5 @@ commands:
     aliases: [v]
   incognito:
     aliases: [i]
-  tournament:
-    aliases: [tt]
+  fly:
+  nexusversion: 

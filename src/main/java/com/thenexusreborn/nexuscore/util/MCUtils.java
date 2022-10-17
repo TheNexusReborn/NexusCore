@@ -65,7 +65,7 @@ public final class MCUtils {
             return Rank.ADMIN;
         } else if (sender instanceof Player) {
             Player player = (Player) sender;
-            return NexusAPI.getApi().getPlayerManager().getNexusPlayer(player.getUniqueId()).getRank();
+            return NexusAPI.getApi().getPlayerManager().getNexusPlayer(player.getUniqueId()).getRanks().get();
         }
         return Rank.MEMBER;
     }

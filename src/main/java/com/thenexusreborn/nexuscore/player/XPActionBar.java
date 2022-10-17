@@ -1,8 +1,11 @@
 package com.thenexusreborn.nexuscore.player;
 
-import com.thenexusreborn.api.levels.LevelManager;
+import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.levels.PlayerLevel;
 import com.thenexusreborn.api.player.*;
-import com.thenexusreborn.nexuscore.util.*;
+import com.thenexusreborn.nexuscore.util.ProgressBar;
+
+import java.util.Map;
 
 public class XPActionBar implements IActionBar {
     private final NexusPlayer player;
@@ -26,12 +29,17 @@ public class XPActionBar implements IActionBar {
             return "";
         }
         
-        int level = player.getLevel();
-        int currentXp = (int) player.getStatValue("xp");
-        int levelXp = currentXp - LevelManager.levels.get(level);
-        int nextLevelXp = LevelManager.levels.get(level + 1) - LevelManager.levels.get(level);
-        int xpToNextLevel = nextLevelXp - levelXp;
-        ProgressBar progressBar = new ProgressBar(levelXp, nextLevelXp, 100, "|", "&a", "&c");
-        return "&aLVL " + level + "&8[" + progressBar.display() + "&8] &7" + levelXp + " XP&8/&7" + nextLevelXp + "XP";
+        int level = player.getStats().getValue("level").getAsInt();
+        int currentXp = (int) Math.round(player.getStats().getValue("xp").getAsDouble());
+        int nextLevelXp;
+        Map<Integer, PlayerLevel> playerLevels = NexusAPI.getApi().getLevelManager().getPlayerLevels();
+        if (playerLevels.containsKey(level + 1)) {
+            nextLevelXp = playerLevels.get(level + 1).getXpRequired();
+        } else {
+            return "";
+        }
+        
+        ProgressBar progressBar = new ProgressBar(currentXp, nextLevelXp, 100, "|", "&a", "&c");
+        return "&aLVL " + level + "&8[" + progressBar.display() + "&8] &7" + currentXp + " XP&8/&7" + nextLevelXp + " XP";
     }
 }

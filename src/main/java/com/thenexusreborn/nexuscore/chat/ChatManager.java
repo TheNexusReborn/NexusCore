@@ -33,7 +33,7 @@ public class ChatManager implements Listener {
         }
         
         if (e.getMessage().startsWith("@")) {
-            if (nexusPlayer.getRank().ordinal() <= Rank.HELPER.ordinal()) {
+            if (nexusPlayer.getRanks().get().ordinal() <= Rank.HELPER.ordinal()) {
                 StaffChat.sendChat(nexusPlayer, e.getMessage().substring(1));
                 e.setCancelled(true);
                 return;
@@ -61,7 +61,7 @@ public class ChatManager implements Listener {
             }
         }
         
-        if (nexusPlayer.getPreferenceValue("vanish")) {
+        if (nexusPlayer.getToggles().getValue("vanish")) {
             e.setCancelled(true);
             nexusPlayer.sendMessage(MsgType.WARN + "You are not allowed to speak in vanish mode.");
             return;
@@ -73,7 +73,7 @@ public class ChatManager implements Listener {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    if (nexusPlayer.getPreferenceValue("incognito")) {
+                    if (nexusPlayer.getToggles().getValue("incognito")) {
                         for (Player player : Bukkit.getOnlinePlayers()) {
                             player.showPlayer(Bukkit.getPlayer(nexusPlayer.getUniqueId()));
                         }
@@ -82,12 +82,16 @@ public class ChatManager implements Listener {
             }.runTask(plugin);
         }
         
-        Rank rank = nexusPlayer.getRank();
+        Rank rank = nexusPlayer.getRanks().get();
         if (rank == Rank.NEXUS) {
             chatColor = "&6";
         } else if (rank.ordinal() >= Rank.ADMIN.ordinal() && rank.ordinal() <= Rank.HELPER.ordinal()) {
             chatColor = "&b";
-        } else if (rank.ordinal() >= Rank.VIP.ordinal() && rank.ordinal() <= Rank.IRON.ordinal()) {
+        } else if (rank.ordinal() >= Rank.VIP.ordinal() && rank.ordinal() <= Rank.MEDIA.ordinal()) {
+            chatColor = "&d";
+        } else if (rank.ordinal() >= Rank.PLATINUM.ordinal() && rank.ordinal() <= Rank.DIAMOND.ordinal()) {
+            chatColor = "&3";
+        } else if (rank.ordinal() >= Rank.BRASS.ordinal() && rank.ordinal() <= Rank.IRON.ordinal()) {
             chatColor = "&f";
         } else {
             chatColor = "&7";
@@ -101,8 +105,8 @@ public class ChatManager implements Listener {
         }
         
         String format = "&8(&2&l{level}&8) &r" + nexusPlayer.getDisplayName() + "{tag}&8: " + chatColor + ChatColor.stripColor(MCUtils.color(e.getMessage()));
-        format = format.replace("{level}", nexusPlayer.getLevel() + "");
-        if (nexusPlayer.getTag() != null) {
+        format = format.replace("{level}", nexusPlayer.getStats().getValue("level").getAsInt() + "");
+        if (nexusPlayer.getTag() != null && !(nexusPlayer.getTag().getName().equals("") || nexusPlayer.getTag().getName().equalsIgnoreCase("null"))) {
             format = format.replace("{tag}", " " + nexusPlayer.getTag().getDisplayName());
         } else {
             format = format.replace("{tag}", "");

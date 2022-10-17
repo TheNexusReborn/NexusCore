@@ -1,17 +1,15 @@
 package com.thenexusreborn.nexuscore;
 
-import com.thenexusreborn.api.*;
-import com.thenexusreborn.api.data.objects.Database;
+import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.network.NetworkContext;
 import com.thenexusreborn.api.network.cmd.NetworkCommand;
-import com.thenexusreborn.api.player.NexusPlayer;
-import com.thenexusreborn.api.player.Preference.Info;
+import com.thenexusreborn.api.player.PlayerProxy;
 import com.thenexusreborn.api.punishment.*;
 import com.thenexusreborn.api.registry.*;
-import com.thenexusreborn.api.tournament.Tournament;
-import com.thenexusreborn.api.util.*;
+import com.thenexusreborn.api.server.Environment;
+import com.thenexusreborn.api.storage.objects.Database;
+import com.thenexusreborn.api.util.StaffChat;
 import com.thenexusreborn.nexuscore.api.NexusSpigotPlugin;
-import com.thenexusreborn.nexuscore.api.events.*;
 import com.thenexusreborn.nexuscore.player.*;
 import com.thenexusreborn.nexuscore.server.SpigotServerManager;
 import com.thenexusreborn.nexuscore.thread.SpigotThreadFactory;
@@ -30,8 +28,9 @@ public class SpigotNexusAPI extends NexusAPI {
     private final NexusCore plugin;
     
     public SpigotNexusAPI(NexusCore plugin) {
-        super(Environment.valueOf(plugin.getConfig().getString("environment").toUpperCase()), NetworkContext.CLIENT, plugin.getLogger(), new SpigotPlayerManager(plugin), new SpigotThreadFactory(plugin), new SpigotPlayerFactory(), new SpigotServerManager(plugin));
+        super(Environment.valueOf(plugin.getConfig().getString("environment").toUpperCase()), NetworkContext.CLIENT, plugin.getLogger(), new SpigotPlayerManager(plugin), new SpigotThreadFactory(plugin), new SpigotServerManager(plugin));
         this.plugin = plugin;
+        PlayerProxy.setProxyClass(SpigotPlayerProxy.class);
     }
     
     @Override
@@ -73,26 +72,6 @@ public class SpigotNexusAPI extends NexusAPI {
     
     @Override
     public void registerNetworkCommands(NetworkCommandRegistry registry) {
-        registry.register(new NetworkCommand("tournament", (cmd, origin, args) -> {
-            if (args[0].equalsIgnoreCase("delete")) {
-                setTournament(null);
-
-                for (NexusPlayer player : NexusAPI.getApi().getPlayerManager().getPlayers().values()) {
-                    player.getStats().values().removeIf(stat -> stat.getName().contains("tournament"));
-                    player.getStatChanges().removeIf(statChange -> statChange.getStatName().contains("tournament"));
-                }
-            } else {
-                int id = Integer.parseInt(args[0]);
-                Tournament tournament = null;
-                try {
-                    tournament = NexusAPI.getApi().getPrimaryDatabase().get(Tournament.class).get(0);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                setTournament(tournament);
-            }
-        }));
-    
         registry.register(new NetworkCommand("punishment", (cmd, origin, args) -> new BukkitRunnable() {
             public void run() {
                 long id = Long.parseLong(args[0]);
@@ -139,14 +118,8 @@ public class SpigotNexusAPI extends NexusAPI {
     }
     
     @Override
-    public void registerPreferences(PreferenceRegistry registry) {
-        for (Info info : registry.getObjects()) {
-            if (info.getName().equalsIgnoreCase("vanish")) {
-                info.setHandler((preference, player, oldValue, newValue) -> Bukkit.getPluginManager().callEvent(new VanishToggleEvent(player, oldValue, newValue)));
-            } else if (info.getName().equalsIgnoreCase("incognito")) {
-                info.setHandler((preference, player, oldValue, newValue) -> Bukkit.getPluginManager().callEvent(new IncognitoToggleEvent(player, oldValue, newValue)));
-            }
-        }
+    public void registerToggles(ToggleRegistry registry) {
+        
     }
     
     @Override

@@ -30,22 +30,8 @@ public class AltsCommand implements CommandExecutor {
             return true;
         }
     
-        CachedPlayer target = null;
-        try {
-            UUID targetUUID = UUID.fromString(args[0]);
-            target = NexusAPI.getApi().getPlayerManager().getCachedPlayers().get(targetUUID);
-        } catch (Exception e) {
-            for (CachedPlayer cachedPlayer : NexusAPI.getApi().getPlayerManager().getCachedPlayers().values()) {
-                if (cachedPlayer.getName().equalsIgnoreCase(args[0])) {
-                    target = cachedPlayer;
-                }
-            }
-        }
-    
-        if (target == null) {
-            sender.sendMessage(MCUtils.color(MsgType.WARN + "Invalid target. Have they joined before?"));
-            return true;
-        }
+        NexusProfile target = SpigotUtils.getProfileFromCommand(sender, args[0]);
+        if (target == null) return true;
     
         Set<String> ips = new HashSet<>();
         for (IPEntry ipEntry : target.getIpHistory()) {

@@ -6,7 +6,7 @@
 
     <groupId>com.thenexusreborn</groupId>
     <artifactId>NexusCore</artifactId>
-    <version>1.5.1-ALPHA</version>
+    <version>1.6-ALPHA</version>
 
     <properties>
         <java.version>1.8</java.version>
@@ -35,17 +35,6 @@
                         </goals>
                         <configuration>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
-                            
-                            <relocations>
-                                <relocation>
-                                    <pattern>com.mysql</pattern>
-                                    <shadedPattern>com.thenexusreborn.mysql</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>com.google.gson</pattern>
-                                    <shadedPattern>com.thenexusreborn.gson</shadedPattern>
-                                </relocation>
-                            </relocations>
                         </configuration>
                     </execution>
                 </executions>
@@ -84,7 +73,7 @@
         <dependency>
             <groupId>com.thenexusreborn</groupId>
             <artifactId>NexusAPI</artifactId>
-            <version>1.5.2-ALPHA</version>
+            <version>1.6-ALPHA</version>
             <scope>compile</scope>
             <exclusions>
                 <exclusion>
@@ -97,7 +86,7 @@
             <groupId>me.vagdedes</groupId>
             <artifactId>Spartan</artifactId>
             <scope>system</scope>
-            <version>472</version>
+            <version>484.1</version>
             <systemPath>${basedir}/../lib/Spartan.jar</systemPath>
         </dependency>
     </dependencies>

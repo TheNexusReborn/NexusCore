@@ -1,16 +1,23 @@
 package com.thenexusreborn.nexuscore.cmds;
 
-import com.thenexusreborn.api.*;
+import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.helper.TimeHelper;
-import com.thenexusreborn.api.player.*;
-import com.thenexusreborn.api.punishment.*;
-import com.thenexusreborn.api.util.*;
+import com.thenexusreborn.api.player.NexusProfile;
+import com.thenexusreborn.api.player.Rank;
+import com.thenexusreborn.api.punishment.AcknowledgeInfo;
+import com.thenexusreborn.api.punishment.Punishment;
+import com.thenexusreborn.api.punishment.PunishmentType;
+import com.thenexusreborn.api.punishment.Visibility;
+import com.thenexusreborn.api.util.StaffChat;
+import com.thenexusreborn.api.util.Utils;
 import com.thenexusreborn.nexuscore.NexusCore;
-import com.thenexusreborn.nexuscore.util.*;
-import org.bukkit.command.*;
+import com.thenexusreborn.nexuscore.util.MCUtils;
+import com.thenexusreborn.nexuscore.util.MsgType;
+import com.thenexusreborn.nexuscore.util.SpigotUtils;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import java.util.*;
 
 public class PunishmentCommands implements CommandExecutor {
     
@@ -22,8 +29,6 @@ public class PunishmentCommands implements CommandExecutor {
     
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        // /<type> <target> [length] <reason>    
-        
         PunishmentType type = null;
         if (cmd.getName().equalsIgnoreCase("ban") || cmd.getName().equalsIgnoreCase("tempban") || cmd.getName().equalsIgnoreCase("tb")) {
             type = PunishmentType.BAN;
@@ -82,26 +87,10 @@ public class PunishmentCommands implements CommandExecutor {
             return true;
         }
     
-        NexusPlayer target;
-        try {
-            UUID uuid = UUID.fromString(args[0]);
-            target = NexusAPI.getApi().getPlayerManager().getNexusPlayer(uuid);
-            if (target == null) {
-                target = NexusAPI.getApi().getPlayerManager().getCachedPlayers().get(uuid).loadFully();
-            }
-        } catch (Exception e) {
-            target = NexusAPI.getApi().getPlayerManager().getNexusPlayer(args[0]);
-            if (target == null) {
-                target = NexusAPI.getApi().getPlayerManager().getCachedPlayer(args[0]).loadFully();
-            }
-        }
+        NexusProfile target = SpigotUtils.getProfileFromCommand(sender, args[0]);
+        if (target == null) return true;
         
-        if (target == null) {
-            sender.sendMessage(MCUtils.color(MsgType.WARN + "Invalid target. Have they joined before?"));
-            return true;
-        }
-        
-        if (target.getRank().ordinal() < actorRank.ordinal()) {
+        if (target.getRanks().get().ordinal() < actorRank.ordinal()) {
             sender.sendMessage(MCUtils.color(MsgType.WARN + "You cannot " + type.name().toLowerCase() + " that player because their rank is higher than your own."));
             return true;
         }
