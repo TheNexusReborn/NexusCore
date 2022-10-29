@@ -1,15 +1,17 @@
 package com.thenexusreborn.nexuscore.scoreboard.impl;
 
 import com.thenexusreborn.api.NexusAPI;
-import com.thenexusreborn.api.player.*;
-import com.thenexusreborn.api.scoreboard.*;
+import com.thenexusreborn.api.player.NexusPlayer;
+import com.thenexusreborn.api.player.Rank;
+import com.thenexusreborn.api.scoreboard.NexusScoreboard;
+import com.thenexusreborn.api.scoreboard.TablistHandler;
 import com.thenexusreborn.api.scoreboard.wrapper.ITeam;
-import com.thenexusreborn.api.tags.Tag;
 import com.thenexusreborn.nexuscore.util.MCUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RankTablistHandler extends TablistHandler {
     
@@ -84,9 +86,8 @@ public class RankTablistHandler extends TablistHandler {
         } else {
             team.setPrefix(MCUtils.color(nexusPlayer.getRanks().get().getPrefix() + " &r"));
         }
-        Tag tag = nexusPlayer.getTag();
-        if (tag != null && !(tag.getName().equals("") || tag.getName().equalsIgnoreCase("null"))) {
-            team.setSuffix(MCUtils.color(" " + tag.getDisplayName()));
+        if (nexusPlayer.getTags().hasActiveTag()) {
+            team.setSuffix(MCUtils.color(" " + nexusPlayer.getTags().getActive().getDisplayName()));
         } else {
             team.setSuffix("");
         }

@@ -51,20 +51,22 @@ public class TagCommand implements CommandExecutor {
             NexusProfile profile = SpigotUtils.getProfileFromCommand(sender, args[1]);
             if (profile == null) return true;
     
-            String cmdAction, verb;
+            String cmdAction, verb, timestamp;
             if (args[0].equalsIgnoreCase("unlock")) {
-                profile.unlockTag(tagName);
+                profile.getTags().add(new Tag(profile.getUniqueId(), tagName, System.currentTimeMillis()));
                 cmdAction = "unlocked";
                 verb = "for";
+                timestamp = System.currentTimeMillis() + "";
             } else {
-                profile.lockTag(tagName);
+                profile.getTags().remove(tagName);
                 cmdAction = "removed";
                 verb = "from";
+                timestamp = "";
             }
             
-            NexusAPI.getApi().getNetworkManager().send("updatetag", profile.getUniqueId().toString(), args[0], tagName);
+            NexusAPI.getApi().getNetworkManager().send("updatetag", profile.getUniqueId().toString(), args[0], tagName, timestamp);
     
-            sender.sendMessage(MCUtils.color("&eYou " + cmdAction + " the tag " + new Tag(tagName).getDisplayName() + " &e" + verb + " the player &b" + profile.getName()));
+            sender.sendMessage(MCUtils.color("&eYou " + cmdAction + " the tag " + new Tag(null, tagName, 0).getDisplayName() + " &e" + verb + " the player &b" + profile.getName()));
             return true;
         }
         
@@ -80,12 +82,12 @@ public class TagCommand implements CommandExecutor {
             return true;
         }
     
-        Set<String> unlockedTags = nexusPlayer.getUnlockedTags();
+        Set<String> unlockedTags = nexusPlayer.getTags().findAll();
         if (args[0].equalsIgnoreCase("list")) {
             if (unlockedTags.size() > 0) {
                 nexusPlayer.sendMessage("&eList of available tags...");
                 for (String rawTag : unlockedTags) {
-                    Tag tag = new Tag(rawTag);
+                    Tag tag = new Tag(null, rawTag, 0);
                     nexusPlayer.sendMessage(" &8- &e" + tag.getName() + " " + tag.getDisplayName());
                 }
             } else {
@@ -102,25 +104,18 @@ public class TagCommand implements CommandExecutor {
                 sb.append(args[i]).append(" ");
             }
             String tagName = sb.substring(0, sb.length() - 1);
-             
-            Tag tag = null;
-            for (String unlocked : unlockedTags) {
-                if (unlocked.equalsIgnoreCase(tagName)) {
-                    tag = new Tag(unlocked);
-                }
-            }
             
-            if (tag == null) {
+            if (!nexusPlayer.getTags().isUnlocked(tagName)) {
                 nexusPlayer.sendMessage("&cYou do not have a tag with that name.");
                 return true;
             }
             
-            nexusPlayer.setTag(tag);
-            nexusPlayer.sendMessage("&eYou set your tag to " + tag.getDisplayName());
-            NexusAPI.getApi().getNetworkManager().send("updatetag", nexusPlayer.getUniqueId().toString(), "set", tag.getName());
+            nexusPlayer.getTags().setActive(tagName);
+            nexusPlayer.sendMessage("&eYou set your tag to " + nexusPlayer.getTags().getActive().getDisplayName());
+            NexusAPI.getApi().getNetworkManager().send("updatetag", nexusPlayer.getUniqueId().toString(), "set", tagName);
             pushTagChange(nexusPlayer);
         } else if (args[0].equalsIgnoreCase("reset")) {
-            nexusPlayer.setTag(null);
+            nexusPlayer.getTags().setActive(null);
             nexusPlayer.sendMessage("&eYou reset your tag.");
             NexusAPI.getApi().getNetworkManager().send("updatetag", nexusPlayer.getUniqueId().toString(), "reset");
             pushTagChange(nexusPlayer);
