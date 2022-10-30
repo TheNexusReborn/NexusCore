@@ -42,14 +42,14 @@ public class PlayerJoinTask extends BukkitRunnable {
                     tries++;
                     continue;
                 }
-                
+
                 response = new Response<>(players.get(0), Response.Type.SUCCESS);
             } catch (SQLException e) {
                 response = new Response<>(Response.Type.FAILURE, e);
             }
         }
 
-        if (response == null && tries == 10) {
+        if (response == null || tries == 10) {
             player.sendMessage(MCUtils.color(MsgType.WARN + "Please leave a rejoin. Could not find your player data after 10 tries."));
             return;
         }
