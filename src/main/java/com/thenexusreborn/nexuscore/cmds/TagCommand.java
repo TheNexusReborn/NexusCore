@@ -4,6 +4,7 @@ import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.NexusProfile;
 import com.thenexusreborn.api.player.Rank;
+import com.thenexusreborn.api.stats.StatOperator;
 import com.thenexusreborn.api.tags.Tag;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.util.MCUtils;
@@ -64,6 +65,14 @@ public class TagCommand implements CommandExecutor {
                 timestamp = "";
             }
             
+            NexusAPI.getApi().getThreadFactory().runAsync(() -> {
+                if (cmdAction.equals("unlocked")) {
+                    NexusAPI.getApi().getPrimaryDatabase().push(profile.getTags().get(tagName));
+                } else {
+                    NexusAPI.getApi().getPrimaryDatabase().delete(Tag.class, profile.getTags().get(tagName).getId());
+                }
+            });
+
             NexusAPI.getApi().getNetworkManager().send("updatetag", profile.getUniqueId().toString(), args[0], tagName, timestamp);
     
             sender.sendMessage(MCUtils.color("&eYou " + cmdAction + " the tag " + new Tag(null, tagName, 0).getDisplayName() + " &e" + verb + " the player &b" + profile.getName()));
@@ -111,10 +120,12 @@ public class TagCommand implements CommandExecutor {
             }
             
             nexusPlayer.getTags().setActive(tagName);
+            nexusPlayer.getStats().change("tag", tagName, StatOperator.SET);
             nexusPlayer.sendMessage("&eYou set your tag to " + nexusPlayer.getTags().getActive().getDisplayName());
             NexusAPI.getApi().getNetworkManager().send("updatetag", nexusPlayer.getUniqueId().toString(), "set", tagName);
             pushTagChange(nexusPlayer);
         } else if (args[0].equalsIgnoreCase("reset")) {
+            nexusPlayer.getStats().change("tag", "null", StatOperator.SET);
             nexusPlayer.getTags().setActive(null);
             nexusPlayer.sendMessage("&eYou reset your tag.");
             NexusAPI.getApi().getNetworkManager().send("updatetag", nexusPlayer.getUniqueId().toString(), "reset");
