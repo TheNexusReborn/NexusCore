@@ -43,9 +43,10 @@ public class ChatManager implements Listener {
         List<Punishment> punishments = NexusAPI.getApi().getPunishmentManager().getPunishmentsByTarget(e.getPlayer().getUniqueId());
         for (Punishment punishment : punishments) {
             if (punishment != null && punishment.isActive()) {
-                e.setCancelled(true);
                 if (punishment.getType() == PunishmentType.MUTE) {
+                    e.setCancelled(true);
                     nexusPlayer.sendMessage(MsgType.WARN + "You are muted, you cannot speak now. (" + punishment.formatTimeLeft() + ")");
+                    return;
                 } else if (punishment.getType() == PunishmentType.WARN) {
                     if (e.getMessage().equals(punishment.getAcknowledgeInfo().getCode())) {
                         punishment.getAcknowledgeInfo().setTime(System.currentTimeMillis());
@@ -53,11 +54,12 @@ public class ChatManager implements Listener {
                         NexusAPI.getApi().getPrimaryDatabase().push(punishment);
                         NexusAPI.getApi().getNetworkManager().send("punishment", punishment.getId() + "");
                     } else {
+                        e.setCancelled(true);
                         nexusPlayer.sendMessage(MsgType.WARN + "You have an unconfirmed warning, please type the code " + punishment.getAcknowledgeInfo().getCode() + " to confirm.");
                     }
+                    e.setCancelled(true);
+                    return;
                 }
-                
-                return;
             }
         }
         
