@@ -73,7 +73,12 @@ public class PlayerJoinTask extends BukkitRunnable {
                 nexusPlayer.setScoreboard(scoreboard);
 
                 NexusPlayerLoadEvent loadEvent = new NexusPlayerLoadEvent(nexusPlayer);
-                Bukkit.getServer().getPluginManager().callEvent(loadEvent);
+                try {
+                    Bukkit.getServer().getPluginManager().callEvent(loadEvent);
+                } catch (Exception e) {
+                    plugin.getLogger().severe("There was an error handling the NexusPlayerLoadEvent. This was caught to prevent other issues. Stack Trace Below");
+                    e.printStackTrace();
+                }
 
                 ScoreboardView scoreboardView = loadEvent.getScoreboardView();
                 if (scoreboardView != null) {
