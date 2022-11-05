@@ -106,8 +106,8 @@ public class ChatManager implements Listener {
         
         String format = "&8(&2&l{level}&8) &r" + nexusPlayer.getDisplayName() + "{tag}&8: " + chatColor + ChatColor.stripColor(MCUtils.color(e.getMessage()));
         format = format.replace("{level}", nexusPlayer.getStats().getValue("level").getAsInt() + "");
-        if (nexusPlayer.getTag() != null && !(nexusPlayer.getTag().getName().equals("") || nexusPlayer.getTag().getName().equalsIgnoreCase("null"))) {
-            format = format.replace("{tag}", " " + nexusPlayer.getTag().getDisplayName());
+        if (nexusPlayer.getTags().hasActiveTag()) {
+            format = format.replace("{tag}", " " + nexusPlayer.getTags().getActive().getDisplayName());
         } else {
             format = format.replace("{tag}", "");
         }

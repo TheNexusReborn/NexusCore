@@ -1,0 +1,13 @@
+{
+  "configurations": [
+    {
+      "type": "maven",
+      "name": "NexusCore build",
+      "tasks": [
+        "clean",
+        "package",
+        "install"
+      ]
+    }
+  ]
+}
