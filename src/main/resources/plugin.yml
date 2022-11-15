@@ -41,3 +41,5 @@ commands:
     aliases: [i]
   fly:
   nexusversion: 
+  nexusadmin:
+    aliases: [na]
