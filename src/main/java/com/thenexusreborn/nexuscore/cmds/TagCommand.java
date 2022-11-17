@@ -79,12 +79,11 @@ public class TagCommand implements CommandExecutor {
             return true;
         }
         
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player player)) {
             sender.sendMessage(MCUtils.color("&cOnly players can use that command."));
             return true;
         }
-        
-        Player player = (Player) sender;
+    
         NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(player.getUniqueId());
         if (nexusPlayer == null) {
             player.sendMessage(MCUtils.color("&cPlease wait for your data to load before using this command."));

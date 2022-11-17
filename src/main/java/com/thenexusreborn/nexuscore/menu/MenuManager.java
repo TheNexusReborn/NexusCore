@@ -18,9 +18,8 @@ public class MenuManager implements Listener {
     public void onInventoryClick(InventoryClickEvent e) {
         Player player = (Player) e.getWhoClicked();
         if (e.getClickedInventory() == null) return;
-        if (!(e.getClickedInventory().getHolder() instanceof Menu))
+        if (!(e.getClickedInventory().getHolder() instanceof Menu menu))
             return;
-        Menu menu = (Menu) e.getClickedInventory().getHolder();
         if (e.getSlot() != e.getRawSlot())
             return;
         Slot slot = menu.getSlot(e.getSlot());
@@ -31,8 +30,7 @@ public class MenuManager implements Listener {
             e.setCancelled(true);
         }
         
-        if (element instanceof Button) {
-            Button button = (Button) element; 
+        if (element instanceof Button button) {
             button.playSound(player);
             if (e.isLeftClick()) {
                 if (button.getLeftClickAction() != null) {
@@ -43,8 +41,7 @@ public class MenuManager implements Listener {
                     button.getRightClickAction().onClick(player, menu, e.getClick());
                 }
             }
-        } else if (element instanceof InsertElement) {
-            InsertElement insertElement = (InsertElement) element;
+        } else if (element instanceof InsertElement insertElement) {
             if (e.getAction().name().toLowerCase().contains("pickup_")) {
                 insertElement.onRemove(player, menu);
             } else if (e.getAction().name().toLowerCase().contains("place_")) {

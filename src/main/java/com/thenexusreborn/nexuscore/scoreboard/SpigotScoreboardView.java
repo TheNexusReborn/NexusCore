@@ -15,7 +15,7 @@ public abstract class SpigotScoreboardView extends ScoreboardView {
     public void registerObjective() {
         this.objective = scoreboard.getScoreboard().registerNewObjective(name);
         this.objective.setDisplayName(displayName);
-        ((SpigotObjective) objective).getObjective().setDisplaySlot(DisplaySlot.SIDEBAR);
+        ((SpigotObjective) objective).objective().setDisplaySlot(DisplaySlot.SIDEBAR);
     }
     
     @Override

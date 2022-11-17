@@ -46,17 +46,8 @@ public class ProgressBar {
         float percent = (float) progress / max;
         int progressBars = (int) (totalBars * percent);
         int leftOver = (totalBars - progressBars);
-        
-        StringBuilder completedBuilder = new StringBuilder(), notCompletedBuilder = new StringBuilder();
-        for (int i = 0; i < leftOver; i++) {
-            notCompletedBuilder.append(symbol);
-        }
     
-        for (int i = 0; i < progressBars; i++) {
-            completedBuilder.append(symbol);
-        }
-        
-        return MCUtils.color(completedColor + completedBuilder + notCompletedColor + notCompletedBuilder);
+        return MCUtils.color(completedColor + String.valueOf(symbol).repeat(Math.max(0, progressBars)) + notCompletedColor + String.valueOf(symbol).repeat(Math.max(0, leftOver)));
     }
     
     /**

@@ -12,7 +12,7 @@ public class ReplyCommand implements CommandExecutor {
     
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player senderPlayer)) {
             sender.sendMessage(MCUtils.color("&cOnly players may use that command."));
             return true;
         }
@@ -22,7 +22,6 @@ public class ReplyCommand implements CommandExecutor {
             return true;
         }
     
-        Player senderPlayer = (Player) sender;
         NexusPlayer player = NexusAPI.getApi().getPlayerManager().getNexusPlayer(senderPlayer.getUniqueId());
         NexusPlayer target = player.getLastMessage();
         if (target == null) {

@@ -2,12 +2,10 @@ package com.thenexusreborn.nexuscore.util;
 
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.*;
-import com.thenexusreborn.api.util.Utils;
 import com.thenexusreborn.nexuscore.NexusCore;
 import org.bukkit.*;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import java.text.DecimalFormat;
 import java.util.*;
@@ -61,8 +59,7 @@ public final class MCUtils {
     public static Rank getSenderRank(NexusCore plugin, CommandSender sender) {
         if (sender instanceof ConsoleCommandSender) {
             return Rank.ADMIN;
-        } else if (sender instanceof Player) {
-            Player player = (Player) sender;
+        } else if (sender instanceof Player player) {
             return NexusAPI.getApi().getPlayerManager().getNexusPlayer(player.getUniqueId()).getRanks().get();
         }
         return Rank.MEMBER;

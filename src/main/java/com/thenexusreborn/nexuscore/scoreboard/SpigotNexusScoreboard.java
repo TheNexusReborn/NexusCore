@@ -20,7 +20,7 @@ public class SpigotNexusScoreboard extends NexusScoreboard {
     public void apply() {
         Player bukkitPlayer = Bukkit.getPlayer(this.player.getUniqueId());
         if (bukkitPlayer != null) {
-            bukkitPlayer.setScoreboard(((SpigotScoreboard) this.scoreboard).getScoreboard());
+            bukkitPlayer.setScoreboard(((SpigotScoreboard) this.scoreboard).scoreboard());
         }
     }
 }

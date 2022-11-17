@@ -5,14 +5,7 @@ import org.bukkit.scoreboard.*;
 
 import java.util.*;
 
-public class SpigotScoreboard implements IScoreboard {
-    
-    
-    private final Scoreboard scoreboard;
-    
-    public SpigotScoreboard(Scoreboard scoreboard) {
-        this.scoreboard = scoreboard;
-    }
+public record SpigotScoreboard(Scoreboard scoreboard) implements IScoreboard {
     
     @Override
     public ITeam getTeam(String team) {
@@ -45,9 +38,5 @@ public class SpigotScoreboard implements IScoreboard {
     @Override
     public IObjective registerNewObjective(String name) {
         return new SpigotObjective(this.scoreboard.registerNewObjective(name, "dummy"));
-    }
-    
-    public Scoreboard getScoreboard() {
-        return this.scoreboard;
     }
 }

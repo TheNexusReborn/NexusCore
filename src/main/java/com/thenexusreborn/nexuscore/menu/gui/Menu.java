@@ -94,8 +94,8 @@ public class Menu implements InventoryHolder {
         Inventory inv = Bukkit.createInventory(this, invSize, MCUtils.color(title));
     
         Pair<NormalElements, StaticElements> filtered = filterElements();
-        StaticElements staticElements = filtered.getSecondValue();
-        NormalElements nonStaticElements = filtered.getFirstValue();
+        StaticElements staticElements = filtered.secondValue();
+        NormalElements nonStaticElements = filtered.firstValue();
     
         IncrementalMap<Element> fillerElements = new IncrementalMap<>();
         IncrementalMap<Element> normalStaticElements = new IncrementalMap<>();
@@ -159,8 +159,8 @@ public class Menu implements InventoryHolder {
     public int getTotalPages() {
         int invSize = rows * 9;
         Pair<NormalElements, StaticElements> filtered = filterElements();
-        StaticElements staticElements = filtered.getSecondValue();
-        NormalElements nonStaticElements = filtered.getFirstValue();
+        StaticElements staticElements = filtered.secondValue();
+        NormalElements nonStaticElements = filtered.firstValue();
         
         int pageSize = invSize - staticElements.size();
         return (int) Math.ceil(nonStaticElements.size() / (pageSize * 1.0));
