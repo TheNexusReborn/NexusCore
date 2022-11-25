@@ -29,7 +29,11 @@ public abstract class NexusTask<T extends JavaPlugin> extends BukkitRunnable {
         this.async = async;
         TASKS.add(this);
     }
-    
+
+    public NexusTask(T plugin, long period, boolean async) {
+        this(plugin, period, 0L, async);
+    }
+
     public void run() {
         long start = System.currentTimeMillis();
         this.onRun();
