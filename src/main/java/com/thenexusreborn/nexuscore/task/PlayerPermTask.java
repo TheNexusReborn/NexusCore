@@ -1,24 +1,23 @@
 package com.thenexusreborn.nexuscore.task;
 
 import com.thenexusreborn.api.NexusAPI;
-import com.thenexusreborn.api.player.*;
+import com.thenexusreborn.api.player.NexusPlayer;
+import com.thenexusreborn.api.player.Rank;
+import com.thenexusreborn.nexuscore.NexusCore;
+import com.thenexusreborn.nexuscore.api.NexusTask;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachmentInfo;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Set;
 
-public class PlayerPermTask extends BukkitRunnable {
+public class PlayerPermTask extends NexusTask<NexusCore> {
     
-    private JavaPlugin plugin;
-    
-    public PlayerPermTask(JavaPlugin plugin) {
-        this.plugin = plugin;
+    public PlayerPermTask(NexusCore plugin) {
+        super(plugin, 20L, 0L, true);
     }
     
-    public void run() {
+    public void onRun() {
         for (Player player : Bukkit.getOnlinePlayers()) {
             NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(player.getUniqueId());
             if (nexusPlayer != null) {
@@ -32,9 +31,5 @@ public class PlayerPermTask extends BukkitRunnable {
                 }
             }
         }
-    }
-    
-    public void start() {
-        runTaskTimerAsynchronously(plugin, 1L, 20L);
     }
 }

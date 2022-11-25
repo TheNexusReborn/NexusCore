@@ -3,21 +3,19 @@ package com.thenexusreborn.nexuscore.task;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.nexuscore.NexusCore;
+import com.thenexusreborn.nexuscore.api.NexusTask;
 import com.thenexusreborn.nexuscore.util.MCUtils;
 import com.thenexusreborn.nexuscore.util.MsgType;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashSet;
 
-public class ClickCheckerTask extends BukkitRunnable {
-
-    private NexusCore plugin;
+public class ClickCheckerTask extends NexusTask<NexusCore> {
 
     public ClickCheckerTask(NexusCore plugin) {
-        this.plugin = plugin;
+        super(plugin, 20L, 0L, false);
     }
 
-    public void run() {
+    public void onRun() {
         for (NexusPlayer player : new HashSet<>(NexusAPI.getApi().getPlayerManager().getPlayers().values())) {
             if (!player.isOnline()) {
                 continue;
@@ -29,9 +27,5 @@ public class ClickCheckerTask extends BukkitRunnable {
 
             player.resetCPS();
         }
-    }
-
-    public void start() {
-        runTaskTimer(plugin, 0L, 20L);
     }
 }

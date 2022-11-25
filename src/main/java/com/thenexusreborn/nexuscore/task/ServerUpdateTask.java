@@ -1,29 +1,23 @@
 package com.thenexusreborn.nexuscore.task;
 
 import com.thenexusreborn.api.NexusAPI;
-import com.thenexusreborn.api.server.*;
+import com.thenexusreborn.api.server.ServerInfo;
+import com.thenexusreborn.nexuscore.NexusCore;
+import com.thenexusreborn.nexuscore.api.NexusTask;
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
-public class ServerUpdateTask extends BukkitRunnable {
+public class ServerUpdateTask extends NexusTask<NexusCore> {
     
-    private JavaPlugin plugin;
-    
-    public ServerUpdateTask(JavaPlugin plugin) {
-        this.plugin = plugin;
+    public ServerUpdateTask(NexusCore plugin) {
+        super(plugin, 20L, 0L, true);
     }
     
-    public void run() {
+    public void onRun() {
         NexusAPI.getApi().getServerManager().updateStoredData();
     
         ServerInfo currentServer = NexusAPI.getApi().getServerManager().getCurrentServer();
         currentServer.setStatus("online");
         currentServer.setPlayers(Bukkit.getOnlinePlayers().size());
         NexusAPI.getApi().getPrimaryDatabase().push(currentServer);
-    }
-    
-    public void start() {
-        runTaskTimerAsynchronously(plugin, 1L, 20L);
     }
 }

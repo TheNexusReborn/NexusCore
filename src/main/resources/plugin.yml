@@ -43,3 +43,5 @@ commands:
   nexusversion: 
   nexusadmin:
     aliases: [na]
+  tps:
+    aliases: [performance, memory, mem, perf]

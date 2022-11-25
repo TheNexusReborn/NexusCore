@@ -3,8 +3,13 @@ package com.thenexusreborn.nexuscore.api;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class NexusTask<T extends JavaPlugin> extends BukkitRunnable {
-    
+
+    private static final List<NexusTask<?>> TASKS = new ArrayList<>();
+
     protected T plugin;
     
     protected long period;
@@ -22,6 +27,7 @@ public abstract class NexusTask<T extends JavaPlugin> extends BukkitRunnable {
         this.period = period;
         this.delay = delay;
         this.async = async;
+        TASKS.add(this);
     }
     
     public void run() {
@@ -33,7 +39,7 @@ public abstract class NexusTask<T extends JavaPlugin> extends BukkitRunnable {
         
         long runTime = end - start;
         
-        if (this.minTime != 0 && runTime < this.minTime) {
+        if (this.minTime == 0 || runTime < this.minTime) {
             this.minTime = runTime;
         }
         
@@ -54,12 +60,13 @@ public abstract class NexusTask<T extends JavaPlugin> extends BukkitRunnable {
     //TODO Maybe find a better name?
     public abstract void onRun();
     
-    public void start() {
+    public NexusTask<T> start() {
         if (async) {
             runTaskTimerAsynchronously(plugin, delay, period);
         } else {
             runTaskTimer(plugin, delay, period);
         }
+        return this;
     }
     
     public T getPlugin() {
@@ -99,7 +106,23 @@ public abstract class NexusTask<T extends JavaPlugin> extends BukkitRunnable {
                 total++;
             }
         }
+
+        if (total == 0) {
+            return 0;
+        }
         
         return totalTime / total;
+    }
+
+    public boolean isAsync() {
+        return async;
+    }
+
+    public static List<NexusTask<?>> getTasks() {
+        return new ArrayList<>(TASKS);
+    }
+
+    public long getPeriod() {
+        return this.period;
     }
 }

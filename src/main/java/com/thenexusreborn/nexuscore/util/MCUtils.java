@@ -1,14 +1,21 @@
 package com.thenexusreborn.nexuscore.util;
 
 import com.thenexusreborn.api.NexusAPI;
-import com.thenexusreborn.api.player.*;
+import com.thenexusreborn.api.player.NexusPlayer;
+import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.nexuscore.NexusCore;
-import org.bukkit.*;
-import org.bukkit.command.*;
+import net.minecraft.server.v1_8_R3.MinecraftServer;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.World;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public final class MCUtils {
     
@@ -41,6 +48,10 @@ public final class MCUtils {
         nameToTicks.put("night", 14000);
     
         nameToTicks.put("midnight", 18000);
+    }
+
+    public static double getRecentTps() {
+        return Math.min((double)Math.round(MinecraftServer.getServer().recentTps[0] * 100.0) / 100.0, 20.0);
     }
     
     public static NexusPlayer getPlayerFromInput(String input) {
