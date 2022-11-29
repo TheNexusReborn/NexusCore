@@ -61,7 +61,6 @@ public abstract class NexusTask<T extends JavaPlugin> extends BukkitRunnable {
         }
     }
     
-    //TODO Maybe find a better name?
     public abstract void onRun();
     
     public NexusTask<T> start() {
