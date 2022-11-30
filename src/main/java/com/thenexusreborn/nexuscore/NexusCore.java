@@ -121,6 +121,7 @@ public class NexusCore extends JavaPlugin {
         new ServerUpdateTask(this).start();
         new ClickCheckerTask(this).start();
         new PlayerLoadActionBarTask(this).start();
+        new ClockTask(this).start();
         getLogger().info("Registered Tasks");
         
         if (getServer().getPluginManager().getPlugin("Spartan") != null) {
