@@ -9,8 +9,7 @@ import com.thenexusreborn.nexuscore.cmds.*;
 import com.thenexusreborn.nexuscore.menu.MenuManager;
 import com.thenexusreborn.nexuscore.player.SpigotPlayerManager;
 import com.thenexusreborn.nexuscore.task.*;
-import com.thenexusreborn.nexuscore.util.MCUtils;
-import com.thenexusreborn.nexuscore.util.MsgType;
+import com.thenexusreborn.nexuscore.util.*;
 import com.thenexusreborn.nexuscore.util.nms.NMS;
 import com.thenexusreborn.nexuscore.util.nms.NMS.Version;
 import com.thenexusreborn.nexuscore.util.updater.Updater;
@@ -24,6 +23,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class NexusCore extends JavaPlugin {
     
@@ -128,6 +128,12 @@ public class NexusCore extends JavaPlugin {
             getServer().getPluginManager().registerEvents(new AnticheatManager(), this);
             getLogger().info("Registered Anticheat Manager");
         }
+        
+        //TODO Testing a Time Format - Need to test colors now
+        long time = TimeUnit.DAYS.toMillis(5) + TimeUnit.HOURS.toMillis(2) + TimeUnit.MINUTES.toMillis(10) + TimeUnit.SECONDS.toMillis(45);
+        TimeFormat timeFormat = new TimeFormat("&e%00d%d &a%00h%h &d%00m%m &b%00s%s");
+        String format = timeFormat.format(time);
+        System.out.println(MCUtils.color(format));
     }
     
     public void addNexusPlugin(NexusSpigotPlugin plugin) {
