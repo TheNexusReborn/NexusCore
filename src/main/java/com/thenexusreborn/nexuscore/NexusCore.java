@@ -128,12 +128,6 @@ public class NexusCore extends JavaPlugin {
             getServer().getPluginManager().registerEvents(new AnticheatManager(), this);
             getLogger().info("Registered Anticheat Manager");
         }
-        
-        //TODO Testing a Time Format - Need to test colors now
-        long time = TimeUnit.DAYS.toMillis(5) + TimeUnit.HOURS.toMillis(2) + TimeUnit.MINUTES.toMillis(10) + TimeUnit.SECONDS.toMillis(45);
-        TimeFormat timeFormat = new TimeFormat("&e%00d%d &a%00h%h &d%00m%m &b%00s%s");
-        String format = timeFormat.format(time);
-        System.out.println(MCUtils.color(format));
     }
     
     public void addNexusPlugin(NexusSpigotPlugin plugin) {
