@@ -3,13 +3,13 @@ package com.thenexusreborn.nexuscore.task;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.nexuscore.NexusCore;
-import com.thenexusreborn.nexuscore.api.NexusTask;
+import com.thenexusreborn.nexuscore.api.NexusThread;
 import com.thenexusreborn.nexuscore.util.MCUtils;
 import com.thenexusreborn.nexuscore.util.MsgType;
 
 import java.util.HashSet;
 
-public class ClickCheckerTask extends NexusTask<NexusCore> {
+public class ClickCheckerTask extends NexusThread<NexusCore> {
 
     public ClickCheckerTask(NexusCore plugin) {
         super(plugin, 20L, 0L, false);

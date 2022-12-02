@@ -2,7 +2,7 @@ package com.thenexusreborn.nexuscore.cmds;
 
 import com.thenexusreborn.api.helper.MemoryHelper;
 import com.thenexusreborn.nexuscore.NexusCore;
-import com.thenexusreborn.nexuscore.api.NexusTask;
+import com.thenexusreborn.nexuscore.api.NexusThread;
 import com.thenexusreborn.nexuscore.util.MCUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -31,7 +31,7 @@ public class PerformanceCmd implements CommandExecutor {
         int totalMemoryMB = (int) MemoryHelper.toMegabytes(totalMemory);
 
         sender.sendMessage(MCUtils.color("&6&l> &eMemory Used: &b" + memoryUsedMB + "MB / " + totalMemoryMB + "MB &7(" + formattedPercentUsed + "%)"));
-        sender.sendMessage(MCUtils.color("&6&l> &eTotal Tasks: &b" + NexusTask.getTasks().size()));
+        sender.sendMessage(MCUtils.color("&6&l> &eTotal Tasks: &b" + NexusThread.getNexusThreads().size()));
         if (!(args.length > 0) || !args[0].equals("-t")) {
             sender.sendMessage(MCUtils.color("&6&l> &7Run with the -t flag to see task metrics."));
             return true;
@@ -39,7 +39,7 @@ public class PerformanceCmd implements CommandExecutor {
 
         sender.sendMessage("");
         sender.sendMessage(MCUtils.color("&6&l>> &d&lRunning Nexus Task Metrics."));
-        for (NexusTask<?> task : NexusTask.getTasks()) {
+        for (NexusThread<?> task : NexusThread.getNexusThreads()) {
             sender.sendMessage(MCUtils.color("&6&l> &eName: &b" + task.getClass().getSimpleName() + " &ePlugin: &b" + task.getPlugin().getName()));
             sender.sendMessage(MCUtils.color("      &ePeriod: &b" + task.getPeriod() + " ticks  &eAsync: &b" + task.isAsync()));
             sender.sendMessage(MCUtils.color("      &eLowest: &b" + task.getMinTime() + "ms   &eHighest: &b" + task.getMaxTime() + "ms   &eRecent Average: &b" + task.getRecentAverage() + "ms"));

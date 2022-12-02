@@ -4,14 +4,14 @@ import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.nexuscore.NexusCore;
-import com.thenexusreborn.nexuscore.api.NexusTask;
+import com.thenexusreborn.nexuscore.api.NexusThread;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 
 import java.util.Set;
 
-public class PlayerPermTask extends NexusTask<NexusCore> {
+public class PlayerPermTask extends NexusThread<NexusCore> {
     
     public PlayerPermTask(NexusCore plugin) {
         super(plugin, 20L, 0L, true);
