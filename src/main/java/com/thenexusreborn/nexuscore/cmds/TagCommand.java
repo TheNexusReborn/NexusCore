@@ -119,12 +119,12 @@ public class TagCommand implements CommandExecutor {
             }
             
             nexusPlayer.getTags().setActive(tagName);
-            nexusPlayer.getStats().change("tag", tagName, StatOperator.SET);
+            nexusPlayer.changeStat("tag", tagName, StatOperator.SET);
             nexusPlayer.sendMessage("&eYou set your tag to " + nexusPlayer.getTags().getActive().getDisplayName());
             NexusAPI.getApi().getNetworkManager().send("updatetag", nexusPlayer.getUniqueId().toString(), "set", tagName);
             pushTagChange(nexusPlayer);
         } else if (args[0].equalsIgnoreCase("reset")) {
-            nexusPlayer.getStats().change("tag", "null", StatOperator.SET);
+            nexusPlayer.changeStat("tag", "null", StatOperator.SET);
             nexusPlayer.getTags().setActive(null);
             nexusPlayer.sendMessage("&eYou reset your tag.");
             NexusAPI.getApi().getNetworkManager().send("updatetag", nexusPlayer.getUniqueId().toString(), "reset");
@@ -135,6 +135,6 @@ public class TagCommand implements CommandExecutor {
     }
     
     private void pushTagChange(NexusPlayer player) {
-        NexusAPI.getApi().getThreadFactory().runAsync(() -> NexusAPI.getApi().getPrimaryDatabase().push(player.getStats().get("tag")));
+        NexusAPI.getApi().getThreadFactory().runAsync(() -> NexusAPI.getApi().getPrimaryDatabase().push(player.getStatValue("tag").getAsString()));
     }
 }

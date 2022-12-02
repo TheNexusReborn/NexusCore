@@ -71,7 +71,7 @@ public final class MCUtils {
         if (sender instanceof ConsoleCommandSender) {
             return Rank.ADMIN;
         } else if (sender instanceof Player player) {
-            return NexusAPI.getApi().getPlayerManager().getNexusPlayer(player.getUniqueId()).getRanks().get();
+            return NexusAPI.getApi().getPlayerManager().getNexusPlayer(player.getUniqueId()).getRank();
         }
         return Rank.MEMBER;
     }

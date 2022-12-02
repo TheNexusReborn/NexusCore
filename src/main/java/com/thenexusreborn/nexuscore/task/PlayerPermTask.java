@@ -21,7 +21,7 @@ public class PlayerPermTask extends NexusThread<NexusCore> {
         for (Player player : Bukkit.getOnlinePlayers()) {
             NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(player.getUniqueId());
             if (nexusPlayer != null) {
-                if (nexusPlayer.getRanks().get().ordinal() > Rank.HELPER.ordinal()) {
+                if (nexusPlayer.getRank().ordinal() > Rank.HELPER.ordinal()) {
                     Set<PermissionAttachmentInfo> effectivePermissions = player.getEffectivePermissions();
                     for (PermissionAttachmentInfo perm : effectivePermissions) {
                         if (perm.getPermission().equalsIgnoreCase("spartan.info") || perm.getPermission().equals("spartan.notifications")) {
