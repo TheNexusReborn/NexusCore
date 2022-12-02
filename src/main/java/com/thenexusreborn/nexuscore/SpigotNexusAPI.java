@@ -119,7 +119,9 @@ public class SpigotNexusAPI extends NexusAPI {
     
     @Override
     public void registerToggles(ToggleRegistry registry) {
-        
+        for (NexusSpigotPlugin nexusPlugin : plugin.getNexusPlugins()) {
+            nexusPlugin.registerToggles(registry);
+        }
     }
     
     @Override

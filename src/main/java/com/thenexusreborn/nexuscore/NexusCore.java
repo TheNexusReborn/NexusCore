@@ -31,6 +31,8 @@ public class NexusCore extends JavaPlugin {
     private final List<NexusSpigotPlugin> nexusPlugins = new ArrayList<>();
     
     private ChatManager chatManager;
+    
+    private ToggleCmds toggleCmdExecutor;
 
     @Override
     public void onEnable() {
@@ -103,11 +105,11 @@ public class NexusCore extends JavaPlugin {
         getCommand("staffhistory").setExecutor(phCmds);
         
         getCommand("alts").setExecutor(new AltsCommand(this));
-        
-        ToggleCmds toggleCmds = new ToggleCmds();
-        getCommand("incognito").setExecutor(toggleCmds);
-        getCommand("vanish").setExecutor(toggleCmds);
-        getCommand("fly").setExecutor(toggleCmds);
+    
+        toggleCmdExecutor = new ToggleCmds();
+        getCommand("incognito").setExecutor(toggleCmdExecutor);
+        getCommand("vanish").setExecutor(toggleCmdExecutor);
+        getCommand("fly").setExecutor(toggleCmdExecutor);
         
         getCommand("nexusversion").setExecutor(new NexusVersionCmd(this));
         getCommand("tps").setExecutor(new PerformanceCmd(this));
@@ -169,5 +171,9 @@ public class NexusCore extends JavaPlugin {
     
     public List<NexusSpigotPlugin> getNexusPlugins() {
         return new ArrayList<>(this.nexusPlugins);
+    }
+    
+    public ToggleCmds getToggleCmdExecutor() {
+        return toggleCmdExecutor;
     }
 }

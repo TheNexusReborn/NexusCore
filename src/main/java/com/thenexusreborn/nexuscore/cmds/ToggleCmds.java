@@ -37,7 +37,7 @@ public class ToggleCmds implements CommandExecutor {
         }
         
         if (player.getRank().ordinal() > toggle.getInfo().getMinRank().ordinal()) {
-            player.sendMessage(MsgType.WARN + "You do not have enough permission to use that command.");
+            player.sendMessage(MsgType.WARN + "You do not have enough permission to use that toggle.");
             return true;
         }
     
