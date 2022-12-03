@@ -1,11 +1,11 @@
 package com.thenexusreborn.nexuscore.task;
 
+import com.starmediadev.starlib.Response;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.api.scoreboard.NexusScoreboard;
 import com.thenexusreborn.api.scoreboard.ScoreboardView;
-import com.thenexusreborn.api.util.Response;
 import com.thenexusreborn.api.util.StaffChat;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.api.events.NexusPlayerLoadEvent;
@@ -43,9 +43,9 @@ public class PlayerJoinTask extends BukkitRunnable {
                     continue;
                 }
 
-                response = new Response<>(players.get(0), Response.Type.SUCCESS);
+                response = new Response<>(players.get(0), Response.Status.SUCCESS);
             } catch (SQLException e) {
-                response = new Response<>(Response.Type.FAILURE, e);
+                response = new Response<>(Response.Status.FAILURE, e);
             }
         }
 
