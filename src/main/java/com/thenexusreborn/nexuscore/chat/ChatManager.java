@@ -33,7 +33,7 @@ public class ChatManager implements Listener {
         }
         
         if (e.getMessage().startsWith("@")) {
-            if (nexusPlayer.getRanks().get().ordinal() <= Rank.HELPER.ordinal()) {
+            if (nexusPlayer.getRank().ordinal() <= Rank.HELPER.ordinal()) {
                 StaffChat.sendChat(nexusPlayer, e.getMessage().substring(1));
                 e.setCancelled(true);
                 return;
@@ -63,7 +63,7 @@ public class ChatManager implements Listener {
             }
         }
         
-        if (nexusPlayer.getToggles().getValue("vanish")) {
+        if (nexusPlayer.getToggleValue("vanish")) {
             e.setCancelled(true);
             nexusPlayer.sendMessage(MsgType.WARN + "You are not allowed to speak in vanish mode.");
             return;
@@ -75,7 +75,7 @@ public class ChatManager implements Listener {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    if (nexusPlayer.getToggles().getValue("incognito")) {
+                    if (nexusPlayer.getToggleValue("incognito")) {
                         for (Player player : Bukkit.getOnlinePlayers()) {
                             player.showPlayer(Bukkit.getPlayer(nexusPlayer.getUniqueId()));
                         }
@@ -84,7 +84,7 @@ public class ChatManager implements Listener {
             }.runTask(plugin);
         }
         
-        Rank rank = nexusPlayer.getRanks().get();
+        Rank rank = nexusPlayer.getRank();
         if (rank == Rank.NEXUS) {
             chatColor = "&6";
         } else if (rank.ordinal() >= Rank.ADMIN.ordinal() && rank.ordinal() <= Rank.HELPER.ordinal()) {
@@ -107,7 +107,7 @@ public class ChatManager implements Listener {
         }
         
         String format = "&8(&2&l{level}&8) &r" + nexusPlayer.getDisplayName() + "{tag}&8: " + chatColor + ChatColor.stripColor(MCUtils.color(e.getMessage()));
-        format = format.replace("{level}", nexusPlayer.getStats().getValue("level").getAsInt() + "");
+        format = format.replace("{level}", nexusPlayer.getStatValue("level").getAsInt() + "");
         if (nexusPlayer.getTags().hasActiveTag()) {
             format = format.replace("{tag}", " " + nexusPlayer.getTags().getActive().getDisplayName());
         } else {

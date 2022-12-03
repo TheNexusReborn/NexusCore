@@ -16,4 +16,8 @@ public class NexusSpigotPlugin extends JavaPlugin {
     public void registerNetworkCommands(NetworkCommandRegistry registry) {
         
     }
+    
+    public void registerToggles(ToggleRegistry registry) {
+        
+    }
 }

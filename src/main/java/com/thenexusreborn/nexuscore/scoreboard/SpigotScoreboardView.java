@@ -12,6 +12,26 @@ public abstract class SpigotScoreboardView extends ScoreboardView {
     }
     
     @Override
+    public ITeam createTeam(TeamBuilder teamBuilder) {
+        ITeam team = this.scoreboard.getScoreboard().registerNewTeam(teamBuilder.getName());
+        if (teamBuilder.getPrefix() != null) {
+            team.setPrefix(teamBuilder.getPrefix());
+        }
+        
+        if (teamBuilder.getSuffix() != null) {
+            team.setSuffix(teamBuilder.getSuffix());
+        }
+        
+        if (teamBuilder.getValueUpdater() != null) {
+            team.setValueUpdater(teamBuilder.getValueUpdater());
+        }
+        
+        addEntry(objective, team, MCUtils.color(teamBuilder.getEntry()), teamBuilder.getScore());
+        this.teams.add(team);
+        return team;
+    }
+    
+    @Override
     public void registerObjective() {
         this.objective = scoreboard.getScoreboard().registerNewObjective(name);
         this.objective.setDisplayName(displayName);
@@ -19,25 +39,12 @@ public abstract class SpigotScoreboardView extends ScoreboardView {
     }
     
     @Override
-    public ITeam createTeam(String teamName, String entry, int score) {
-        return createTeam(teamName, entry, null, null, score);
-    }
-    
-    @Override
-    public ITeam createTeam(String teamName, String entry, String prefix, int score) {
-        return createTeam(teamName, entry, prefix, null, score);
-    }
-    
-    @Override
-    public ITeam createTeam(String teamName, String entry, String prefix, String suffix, int score) {
-        ITeam team = this.scoreboard.getScoreboard().registerNewTeam(teamName);
-        if (prefix != null) {
-            team.setPrefix(MCUtils.color(prefix));
+    public void unregisterTeams() {
+        for (ITeam team : this.getTeams()) {
+            for (String entry : team.getEntries()) {
+                this.scoreboard.getScoreboard().resetScores(entry);
+            }
+            team.unregister();
         }
-        if (suffix != null) {
-            team.setSuffix(MCUtils.color(suffix));
-        }
-        addEntry(objective, team, MCUtils.color(entry), score);
-        return team;
     }
 }

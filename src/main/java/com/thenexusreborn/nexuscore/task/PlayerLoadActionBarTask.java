@@ -3,29 +3,23 @@ package com.thenexusreborn.nexuscore.task;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.nexuscore.NexusCore;
+import com.thenexusreborn.nexuscore.api.NexusThread;
 import com.thenexusreborn.nexuscore.util.SpigotUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
-public class PlayerLoadActionBarTask extends BukkitRunnable {
-
-    private NexusCore plugin;
+public class PlayerLoadActionBarTask extends NexusThread<NexusCore> {
 
     public PlayerLoadActionBarTask(NexusCore plugin) {
-        this.plugin = plugin;
+        super(plugin, 20L, 0L, false);
     }
 
-    public void run() {
+    public void onRun() {
         for (Player player : Bukkit.getOnlinePlayers()) {
             NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(player.getUniqueId());
             if (nexusPlayer == null) {
                 SpigotUtils.sendActionBar(player, "&cPlease wait while your data is being loaded");
             }
         }
-    }
-
-    public void start() {
-        runTaskTimer(plugin, 0L, 20L);
     }
 }

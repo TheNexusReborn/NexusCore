@@ -23,33 +23,21 @@ public class ToggleCmds implements CommandExecutor {
         }
     
         NexusPlayer player = NexusAPI.getApi().getPlayerManager().getNexusPlayer(((Player) sender).getUniqueId());
-        Rank minRank = null;
-        Toggle toggle = null;
-        
-        if (cmd.getName().equalsIgnoreCase("vanish")) {
-            minRank = Rank.HELPER;
-            toggle = player.getToggles().get("vanish");
-        } else if (cmd.getName().equalsIgnoreCase("incognito")) {
-            minRank = Rank.MEDIA;
-            toggle = player.getToggles().get("incognito");
-        } else if (cmd.getName().equalsIgnoreCase("fly")) {
-            minRank = Rank.DIAMOND;
-            toggle = player.getToggles().get("fly");
-        }
+        Toggle toggle = player.getToggle(cmd.getName().toLowerCase());
         
         if (toggle == null) {
             Toggle.Info info = NexusAPI.getApi().getToggleRegistry().get(cmd.getName().toLowerCase());
             if (info == null) {
-                player.sendMessage(MsgType.WARN + "No toggle with that type exists.");
+                player.sendMessage(MsgType.WARN + "No toggle with that name exists.");
                 return true;
             }
-            
+    
             toggle = new Toggle(info, player.getUniqueId(), info.getDefaultValue());
-            player.getToggles().add(toggle);
+            player.addToggle(toggle);
         }
         
-        if (player.getRanks().get().ordinal() > minRank.ordinal()) {
-            player.sendMessage(MsgType.WARN + "You do not have enough permission to use that command.");
+        if (player.getRank().ordinal() > toggle.getInfo().getMinRank().ordinal()) {
+            player.sendMessage(MsgType.WARN + "You do not have enough permission to use that toggle.");
             return true;
         }
     

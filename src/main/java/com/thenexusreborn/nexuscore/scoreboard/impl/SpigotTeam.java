@@ -1,6 +1,8 @@
 package com.thenexusreborn.nexuscore.scoreboard.impl;
 
+import com.thenexusreborn.api.scoreboard.ValueUpdater;
 import com.thenexusreborn.api.scoreboard.wrapper.ITeam;
+import com.thenexusreborn.nexuscore.util.MCUtils;
 import org.bukkit.scoreboard.Team;
 
 import java.util.Set;
@@ -8,6 +10,7 @@ import java.util.Set;
 public class SpigotTeam implements ITeam {
     
     private final Team team;
+    private ValueUpdater valueUpdater;
     
     public SpigotTeam(Team team) {
         this.team = team;
@@ -35,11 +38,21 @@ public class SpigotTeam implements ITeam {
     
     @Override
     public void setPrefix(String prefix) {
-        team.setPrefix(prefix);
+        team.setPrefix(MCUtils.color(prefix));
     }
     
     @Override
     public void setSuffix(String suffix) {
-        team.setSuffix(suffix);
+        team.setSuffix(MCUtils.color(suffix));
+    }
+    
+    @Override
+    public ValueUpdater getValueUpdater() {
+        return valueUpdater;
+    }
+    
+    @Override
+    public void setValueUpdater(ValueUpdater valueUpdater) {
+        this.valueUpdater = valueUpdater;
     }
 }

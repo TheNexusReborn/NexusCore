@@ -90,7 +90,7 @@ public class PunishmentCommands implements CommandExecutor {
         NexusProfile target = SpigotUtils.getProfileFromCommand(sender, args[0]);
         if (target == null) return true;
         
-        if (target.getRanks().get().ordinal() < actorRank.ordinal()) {
+        if (target.getRank().ordinal() < actorRank.ordinal()) {
             sender.sendMessage(MCUtils.color(MsgType.WARN + "You cannot " + type.name().toLowerCase() + " that player because their rank is higher than your own."));
             return true;
         }
