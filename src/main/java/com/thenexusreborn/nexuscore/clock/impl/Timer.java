@@ -1,5 +1,6 @@
 package com.thenexusreborn.nexuscore.clock.impl;
 
+import com.starmediadev.starlib.TimeUnit;
 import com.thenexusreborn.nexuscore.clock.Clock;
 import com.thenexusreborn.nexuscore.clock.snapshot.*;
 
@@ -10,6 +11,10 @@ public class Timer extends Clock<TimerSnapshot> {
     public Timer(long length) {
         this.length = length;
         this.time = length;
+    }
+    
+    public Timer(long length, TimeUnit timeUnit) {
+        this(timeUnit.toMilliseconds(length));
     }
     
     public long getLength() {
@@ -36,6 +41,11 @@ public class Timer extends Clock<TimerSnapshot> {
         }
         
         setLength(this.length - length);
+    }
+    
+    @Override
+    public Timer start() {
+        return (Timer) super.start();
     }
     
     @Override

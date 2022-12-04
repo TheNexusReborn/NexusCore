@@ -8,7 +8,7 @@ public abstract class Clock<T extends ClockSnapshot> {
     private static final List<Clock<? extends ClockSnapshot>> CLOCKS = new ArrayList<>();
     
     protected long time;
-    protected boolean paused, cancelled;
+    protected boolean paused = true, cancelled;
     
     protected ClockCallback<T> callback;
     
@@ -25,6 +25,11 @@ public abstract class Clock<T extends ClockSnapshot> {
         }
         
         return callback.callback(createSnapshot());
+    }
+    
+    public Clock<T> start() {
+        unpause();
+        return this;
     }
     
     public void pause() {
