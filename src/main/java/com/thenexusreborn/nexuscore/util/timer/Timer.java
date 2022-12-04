@@ -9,52 +9,14 @@ import java.util.*;
 public class Timer {
     public final Map<UpdateType, Long> lastUpdates = new HashMap<>();
     private final ReturnableCallback<TimerSnapshot, Boolean> callback;
-    private boolean cancelled = false;
+    private boolean cancelled;
     private long length = -1;
     private long paused = -1;
-    private boolean running = false;
+    private boolean running;
     private long time;
     
     public Timer(ReturnableCallback<TimerSnapshot, Boolean> callback) {
         this.callback = callback;
-    }
-    
-    public static String formatTime(int time) {
-        final int minutes = time / 60;
-        time -= minutes * 60;
-        String s = "";
-        if (minutes < 10) {
-            s = s + "0" + minutes + "m";
-        } else if (minutes >= 10) {
-            s = s + minutes + "m";
-        }
-        if (time < 10 && time >= 0) {
-            s = s + "0" + time + "s";
-        } else if (time >= 10) {
-            s = s + time + "s";
-        }
-        return s;
-    }
-    
-    public static String formatLongerTime(int time) {
-        int minutes = (time / 60);
-        time -= minutes * 60;
-        int hours = (minutes / 60);
-        minutes -= hours * 60;
-        return (hours > 0 ? (hours < 10 ? "0" : "") + hours + "h" : "") + (minutes < 10 ? "0" : "") + minutes + "m" + (time < 10 ? "0" : "") + time + "s";
-    }
-    
-    public static String formatTimeShort(long seconds) {
-        long mins = seconds / 60L;
-        long secs = seconds % 60L;
-        String text = "";
-        if (mins > 0L) {
-            text = text + mins + "m";
-        }
-        if (secs > 0L) {
-            text = text + secs + "s";
-        }
-        return text;
     }
     
     public boolean isCancelled() {
@@ -183,7 +145,7 @@ public class Timer {
     public String toString() {
         return "Timer{" +
                 "lastUpdates=" + lastUpdates +
-                ", callback=" + ((callback == null) ? null : callback.getClass().getName()) +
+                ", callback=" + (callback == null ? null : callback.getClass().getName()) +
                 ", cancelled=" + cancelled +
                 ", length=" + length +
                 ", paused=" + paused +

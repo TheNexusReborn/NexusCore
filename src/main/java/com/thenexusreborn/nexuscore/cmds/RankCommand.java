@@ -1,19 +1,13 @@
 package com.thenexusreborn.nexuscore.cmds;
 
+import com.starmediadev.starlib.TimeParser;
 import com.thenexusreborn.api.NexusAPI;
-import com.thenexusreborn.api.helper.TimeHelper;
-import com.thenexusreborn.api.player.NexusPlayer;
-import com.thenexusreborn.api.player.NexusProfile;
-import com.thenexusreborn.api.player.Rank;
+import com.thenexusreborn.api.player.*;
+import com.thenexusreborn.api.util.Constants;
 import com.thenexusreborn.nexuscore.NexusCore;
-import com.thenexusreborn.nexuscore.util.MCUtils;
-import com.thenexusreborn.nexuscore.util.MsgType;
-import com.thenexusreborn.nexuscore.util.SpigotUtils;
+import com.thenexusreborn.nexuscore.util.*;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.command.TabExecutor;
+import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
@@ -67,11 +61,13 @@ public class RankCommand implements TabExecutor {
 
         long time = -1;
         if (args.length > 3) {
-            time = TimeHelper.parseTime(args[3]);
+            time = new TimeParser().parseTime(args[3]);
         }
 
         NexusProfile nexusProfile = SpigotUtils.getProfileFromCommand(sender, args[0]);
-        if (nexusProfile == null) return true;
+        if (nexusProfile == null) {
+            return true;
+        }
 
         if (senderRank.ordinal() >= nexusProfile.getRank().ordinal()) {
             if (!(sender instanceof ConsoleCommandSender)) {
@@ -98,7 +94,7 @@ public class RankCommand implements TabExecutor {
             nexusProfile.setRank(rank, expire);
             String message = "&eYou set &b" + nexusProfile.getName() + "'s &erank to " + rankName;
             if (time > -1) {
-                message += " &efor &b" + TimeHelper.formatTime(time);
+                message += " &efor &b" + Constants.PUNISHMENT_TIME_FORMAT.format(time);
             }
             sender.sendMessage(MCUtils.color(message));
         } else if (args[1].equalsIgnoreCase("add")) {
@@ -110,7 +106,7 @@ public class RankCommand implements TabExecutor {
             }
             String message = "&eYou added the rank " + rankName + " &eto the player &b" + nexusProfile.getName();
             if (time > -1) {
-                message += " &efor &b" + TimeHelper.formatTime(time);
+                message += " &efor &b" + Constants.PUNISHMENT_TIME_FORMAT.format(time);
             }
             sender.sendMessage(MCUtils.color(message));
         } else if (args[1].equalsIgnoreCase("remove")) {

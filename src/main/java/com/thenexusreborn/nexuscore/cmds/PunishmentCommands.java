@@ -1,22 +1,13 @@
 package com.thenexusreborn.nexuscore.cmds;
 
+import com.starmediadev.starlib.TimeParser;
 import com.thenexusreborn.api.NexusAPI;
-import com.thenexusreborn.api.helper.TimeHelper;
-import com.thenexusreborn.api.player.NexusProfile;
-import com.thenexusreborn.api.player.Rank;
-import com.thenexusreborn.api.punishment.AcknowledgeInfo;
-import com.thenexusreborn.api.punishment.Punishment;
-import com.thenexusreborn.api.punishment.PunishmentType;
-import com.thenexusreborn.api.punishment.Visibility;
-import com.thenexusreborn.api.util.StaffChat;
-import com.thenexusreborn.api.util.Utils;
+import com.thenexusreborn.api.player.*;
+import com.thenexusreborn.api.punishment.*;
+import com.thenexusreborn.api.util.*;
 import com.thenexusreborn.nexuscore.NexusCore;
-import com.thenexusreborn.nexuscore.util.MCUtils;
-import com.thenexusreborn.nexuscore.util.MsgType;
-import com.thenexusreborn.nexuscore.util.SpigotUtils;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
+import com.thenexusreborn.nexuscore.util.*;
+import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
 public class PunishmentCommands implements CommandExecutor {
@@ -55,7 +46,7 @@ public class PunishmentCommands implements CommandExecutor {
             }
             
             try {
-                length = TimeHelper.parseTime(args[1]);
+                length = new TimeParser().parseTime(args[1]);
             } catch (Exception e) {
                 sender.sendMessage(MCUtils.color(MsgType.WARN + "Invalid length argument."));
                 return true;
