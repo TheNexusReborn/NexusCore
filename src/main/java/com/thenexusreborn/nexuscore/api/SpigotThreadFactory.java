@@ -1,4 +1,4 @@
-package com.thenexusreborn.nexuscore.thread;
+package com.thenexusreborn.nexuscore.api;
 
 import com.thenexusreborn.api.thread.ThreadFactory;
 import com.thenexusreborn.nexuscore.NexusCore;

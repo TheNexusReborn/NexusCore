@@ -8,7 +8,7 @@ import com.thenexusreborn.nexuscore.chat.ChatManager;
 import com.thenexusreborn.nexuscore.cmds.*;
 import com.thenexusreborn.nexuscore.menu.MenuManager;
 import com.thenexusreborn.nexuscore.player.SpigotPlayerManager;
-import com.thenexusreborn.nexuscore.task.*;
+import com.thenexusreborn.nexuscore.thread.*;
 import com.thenexusreborn.nexuscore.util.*;
 import com.thenexusreborn.nexuscore.util.nms.NMS;
 import com.thenexusreborn.nexuscore.util.nms.NMS.Version;
@@ -112,13 +112,13 @@ public class NexusCore extends JavaPlugin {
         
         getLogger().info("Registered Commands");
         
-        new PlayerHUDTask(this).start();
-        new PlayerTablistTask(this).start();
-        new PlayerPermTask(this).start();
-        new ServerUpdateTask(this).start();
-        new ClickCheckerTask(this).start();
-        new PlayerLoadActionBarTask(this).start();
-        new ClockTask(this).start();
+        new PlayerHUDThread(this).start();
+        new PlayerTablistThread(this).start();
+        new PlayerPermThread(this).start();
+        new ServerUpdateThread(this).start();
+        new ClickCheckerThread(this).start();
+        new PlayerLoadActionBarThread(this).start();
+        new ClockThread(this).start();
         getLogger().info("Registered Tasks");
         
         if (getServer().getPluginManager().getPlugin("Spartan") != null) {

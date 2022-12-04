@@ -1,31 +1,28 @@
-package com.thenexusreborn.nexuscore.task;
+package com.thenexusreborn.nexuscore.thread;
 
 import com.thenexusreborn.api.NexusAPI;
-import com.thenexusreborn.api.player.IActionBar;
 import com.thenexusreborn.api.player.NexusPlayer;
+import com.thenexusreborn.api.scoreboard.TablistHandler;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.api.NexusThread;
-import com.thenexusreborn.nexuscore.util.SpigotUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-public class PlayerHUDTask extends NexusThread<NexusCore> {
+public class PlayerTablistThread extends NexusThread<NexusCore> {
     
-    public PlayerHUDTask(NexusCore plugin) {
-        super(plugin, 1L, 0L, false);
+    public PlayerTablistThread(NexusCore plugin) {
+        super(plugin, 20L, 0L, true);
     }
     
-    @Override
     public void onRun() {
         for (Player player : Bukkit.getOnlinePlayers()) {
             NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(player.getUniqueId());
             if (nexusPlayer != null) {
                 if (nexusPlayer.getScoreboard() != null) {
-                    nexusPlayer.getScoreboard().update();
-                }
-                IActionBar actionBar = nexusPlayer.getActionBar();
-                if (actionBar != null) {
-                    SpigotUtils.sendActionBar(player, actionBar.getText());
+                    TablistHandler tablistHandler = nexusPlayer.getScoreboard().getTablistHandler();
+                    if (tablistHandler != null) {
+                        tablistHandler.update();
+                    }
                 }
             }
         }

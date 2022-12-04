@@ -1,4 +1,4 @@
-package com.thenexusreborn.nexuscore.task;
+package com.thenexusreborn.nexuscore.thread;
 
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.NexusPlayer;
@@ -11,9 +11,9 @@ import org.bukkit.permissions.PermissionAttachmentInfo;
 
 import java.util.Set;
 
-public class PlayerPermTask extends NexusThread<NexusCore> {
+public class PlayerPermThread extends NexusThread<NexusCore> {
     
-    public PlayerPermTask(NexusCore plugin) {
+    public PlayerPermThread(NexusCore plugin) {
         super(plugin, 20L, 0L, true);
     }
     

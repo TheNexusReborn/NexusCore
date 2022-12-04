@@ -1,4 +1,4 @@
-package com.thenexusreborn.nexuscore.task;
+package com.thenexusreborn.nexuscore.thread;
 
 import com.starmediadev.starlib.Response;
 import com.thenexusreborn.api.NexusAPI;
@@ -21,12 +21,12 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.sql.SQLException;
 import java.util.List;
 
-public class PlayerJoinTask extends BukkitRunnable {
+public class PlayerJoinThread extends BukkitRunnable {
 
     private NexusCore plugin;
     private Player player;
 
-    public PlayerJoinTask(NexusCore plugin, Player player) {
+    public PlayerJoinThread(NexusCore plugin, Player player) {
         this.plugin = plugin;
         this.player = player;
     }

@@ -12,7 +12,7 @@ import com.thenexusreborn.api.util.StaffChat;
 import com.thenexusreborn.nexuscore.api.NexusSpigotPlugin;
 import com.thenexusreborn.nexuscore.player.*;
 import com.thenexusreborn.nexuscore.server.SpigotServerManager;
-import com.thenexusreborn.nexuscore.thread.SpigotThreadFactory;
+import com.thenexusreborn.nexuscore.api.SpigotThreadFactory;
 import com.thenexusreborn.nexuscore.util.*;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;

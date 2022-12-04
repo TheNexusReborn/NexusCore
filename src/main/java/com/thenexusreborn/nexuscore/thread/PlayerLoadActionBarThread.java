@@ -1,4 +1,4 @@
-package com.thenexusreborn.nexuscore.task;
+package com.thenexusreborn.nexuscore.thread;
 
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.NexusPlayer;
@@ -8,9 +8,9 @@ import com.thenexusreborn.nexuscore.util.SpigotUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-public class PlayerLoadActionBarTask extends NexusThread<NexusCore> {
+public class PlayerLoadActionBarThread extends NexusThread<NexusCore> {
 
-    public PlayerLoadActionBarTask(NexusCore plugin) {
+    public PlayerLoadActionBarThread(NexusCore plugin) {
         super(plugin, 20L, 0L, false);
     }
 

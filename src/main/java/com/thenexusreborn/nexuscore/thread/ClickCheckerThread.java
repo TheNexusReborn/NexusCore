@@ -1,4 +1,4 @@
-package com.thenexusreborn.nexuscore.task;
+package com.thenexusreborn.nexuscore.thread;
 
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.NexusPlayer;
@@ -9,9 +9,9 @@ import com.thenexusreborn.nexuscore.util.MsgType;
 
 import java.util.HashSet;
 
-public class ClickCheckerTask extends NexusThread<NexusCore> {
+public class ClickCheckerThread extends NexusThread<NexusCore> {
 
-    public ClickCheckerTask(NexusCore plugin) {
+    public ClickCheckerThread(NexusCore plugin) {
         super(plugin, 20L, 0L, false);
     }
 

@@ -3,7 +3,7 @@ package com.thenexusreborn.nexuscore.player;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.PlayerManager;
 import com.thenexusreborn.nexuscore.NexusCore;
-import com.thenexusreborn.nexuscore.task.PlayerJoinTask;
+import com.thenexusreborn.nexuscore.thread.PlayerJoinThread;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -51,7 +51,7 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
             }
         }
 
-        new PlayerJoinTask(plugin, player).start();
+        new PlayerJoinThread(plugin, player).start();
     }
 
     @EventHandler
