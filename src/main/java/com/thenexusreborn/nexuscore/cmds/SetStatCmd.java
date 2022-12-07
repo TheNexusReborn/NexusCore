@@ -1,6 +1,7 @@
 package com.thenexusreborn.nexuscore.cmds;
 
 import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.frameworks.value.ValueCodec;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.stats.*;
 import com.thenexusreborn.nexuscore.NexusCore;
@@ -31,7 +32,9 @@ public class SetStatCmd implements TabExecutor {
         }
 
         NexusProfile profile = SpigotUtils.getProfileFromCommand(sender, args[0]);
-        if (profile == null) return true;
+        if (profile == null) {
+            return true;
+        }
 
         Stat.Info statInfo = StatHelper.getInfo(args[1]);
         if (statInfo == null) {
@@ -69,7 +72,7 @@ public class SetStatCmd implements TabExecutor {
             return true;
         }
 
-        Object value = StatHelper.parseValue(statInfo.getType(), rawValue);
+        Object value = new ValueCodec().decode(rawValue);
         if (value == null && !(operator == StatOperator.RESET || operator == StatOperator.INVERT)) {
             sender.sendMessage(MCUtils.color(MsgType.WARN + "Could not parse the value for the stat."));
             return true;
