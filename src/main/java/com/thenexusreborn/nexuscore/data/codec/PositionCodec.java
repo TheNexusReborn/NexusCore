@@ -3,7 +3,7 @@ package com.thenexusreborn.nexuscore.data.codec;
 import com.thenexusreborn.api.storage.objects.SqlCodec;
 import com.thenexusreborn.nexuscore.util.Position;
 
-public class PositionCodec extends SqlCodec<Position> {
+public class PositionCodec implements SqlCodec<Position> {
     @Override
     public String encode(Object object) {
         Position position = (Position) object;
