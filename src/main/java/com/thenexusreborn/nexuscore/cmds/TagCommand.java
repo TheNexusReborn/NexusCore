@@ -119,12 +119,12 @@ public class TagCommand implements CommandExecutor {
             }
             
             nexusPlayer.getTags().setActive(tagName);
-            nexusPlayer.changeStat("tag", tagName, StatOperator.SET);
+            nexusPlayer.changeStat("tag", tagName, StatOperator.SET).push();
             nexusPlayer.sendMessage("&eYou set your tag to " + nexusPlayer.getTags().getActive().getDisplayName());
             NexusAPI.getApi().getNetworkManager().send("updatetag", nexusPlayer.getUniqueId().toString(), "set", tagName);
             pushTagChange(nexusPlayer);
         } else if (args[0].equalsIgnoreCase("reset")) {
-            nexusPlayer.changeStat("tag", "null", StatOperator.SET);
+            nexusPlayer.changeStat("tag", "null", StatOperator.SET).push();
             nexusPlayer.getTags().setActive(null);
             nexusPlayer.sendMessage("&eYou reset your tag.");
             NexusAPI.getApi().getNetworkManager().send("updatetag", nexusPlayer.getUniqueId().toString(), "reset");
