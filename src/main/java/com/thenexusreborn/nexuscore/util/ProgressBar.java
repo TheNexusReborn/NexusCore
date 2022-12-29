@@ -44,8 +44,8 @@ public class ProgressBar {
      */
     public String display() {
         float percent = (float) progress / max;
-        int progressBars = (int) (totalBars * percent);
-        int leftOver = (totalBars - progressBars);
+        int progressBars = Math.round(totalBars * percent);
+        int leftOver = totalBars - progressBars;
     
         return MCUtils.color(completedColor + String.valueOf(symbol).repeat(Math.max(0, progressBars)) + notCompletedColor + String.valueOf(symbol).repeat(Math.max(0, leftOver)));
     }
