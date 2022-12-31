@@ -18,6 +18,6 @@ public class ServerUpdateThread extends NexusThread<NexusCore> {
         ServerInfo currentServer = NexusAPI.getApi().getServerManager().getCurrentServer();
         currentServer.setStatus("online");
         currentServer.setPlayers(Bukkit.getOnlinePlayers().size());
-        NexusAPI.getApi().getPrimaryDatabase().push(currentServer);
+        NexusAPI.getApi().getPrimaryDatabase().pushSilent(currentServer);
     }
 }

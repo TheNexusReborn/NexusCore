@@ -112,7 +112,7 @@ public class PunishmentCommands implements CommandExecutor {
             punishment.setAcknowledgeInfo(new AcknowledgeInfo(Utils.generateCode(8, true, true, true)));
         }
         
-        NexusAPI.getApi().getPrimaryDatabase().push(punishment);
+        NexusAPI.getApi().getPrimaryDatabase().pushSilent(punishment);
         if (punishment.getId() < 1) {
             sender.sendMessage(MCUtils.color(MsgType.WARN + "Could not create the punishment. Please report to Firestar311."));
             return true;

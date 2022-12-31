@@ -1,5 +1,6 @@
 package com.thenexusreborn.nexuscore;
 
+import com.starmediadev.starsql.objects.Database;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.network.NetworkContext;
 import com.thenexusreborn.api.network.cmd.NetworkCommand;
@@ -7,7 +8,6 @@ import com.thenexusreborn.api.player.PlayerProxy;
 import com.thenexusreborn.api.punishment.*;
 import com.thenexusreborn.api.registry.*;
 import com.thenexusreborn.api.server.Environment;
-import com.thenexusreborn.api.storage.objects.Database;
 import com.thenexusreborn.api.util.StaffChat;
 import com.thenexusreborn.nexuscore.api.NexusSpigotPlugin;
 import com.thenexusreborn.nexuscore.player.*;
@@ -53,7 +53,7 @@ public class SpigotNexusAPI extends NexusAPI {
                 if (databasesSection.contains(db + ".primary")) {
                     primary = databasesSection.getBoolean(db + ".primary");
                 }
-                Database database = new Database(name, host, user, password, primary);
+                Database database = new Database("mysql", name, host, user, password, primary);
                 registry.register(database);
              }
         }

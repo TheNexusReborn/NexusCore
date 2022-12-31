@@ -69,7 +69,7 @@ public class NexusAdminCmd implements CommandExecutor {
                         return true;
                     }
                     PrivateAlphaUser pau = new PrivateAlphaUser(uuid, name, System.currentTimeMillis());
-                    nexusAPI.getPrimaryDatabase().push(pau);
+                    nexusAPI.getPrimaryDatabase().pushSilent(pau);
                     if (pau.getId() <= 0) {
                         sender.sendMessage(MCUtils.color(MsgType.WARN + "There was a problem saving your changes to the database."));
                         return true;
@@ -84,7 +84,7 @@ public class NexusAdminCmd implements CommandExecutor {
                         return true;
                     }
                     
-                    nexusAPI.getPrimaryDatabase().delete(PrivateAlphaUser.class, pau.getId());
+                    nexusAPI.getPrimaryDatabase().deleteSilent(PrivateAlphaUser.class, pau.getId());
                     nexusAPI.getNetworkManager().send("updateprivatealpha", "remove", pau.getUuid().toString());
                     sender.sendMessage(MCUtils.color(MsgType.INFO + "You removed &b" + name + " &efrom the private alpha list."));
                 }

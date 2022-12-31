@@ -51,7 +51,7 @@ public class ChatManager implements Listener {
                     if (e.getMessage().equals(punishment.getAcknowledgeInfo().getCode())) {
                         punishment.getAcknowledgeInfo().setTime(System.currentTimeMillis());
                         nexusPlayer.sendMessage(MsgType.INFO + "You have confirmed your warning. You can speak now.");
-                        NexusAPI.getApi().getPrimaryDatabase().push(punishment);
+                        NexusAPI.getApi().getPrimaryDatabase().pushSilent(punishment);
                         NexusAPI.getApi().getNetworkManager().send("punishment", punishment.getId() + "");
                     } else {
                         e.setCancelled(true);
