@@ -15,7 +15,7 @@ public class PotionNames {
     private static final PotionNames instance = new PotionNames() {
         @Override
         public void setName(PotionEffectType potionEffectType, String name) {
-            throw new RuntimeException("Cannot set the entity name using the default instance");
+            throw new RuntimeException("Cannot set the potion name using the default instance");
         }
     };
     
@@ -37,18 +37,20 @@ public class PotionNames {
 
     private PotionNames() {
         for (PotionEffectType effectType : values()) {
-            effectNames.put(effectType, StringHelper.capitalizeEveryWord(effectType.getName()));
+            if (effectType != null) {
+                effectNames.put(effectType, StringHelper.capitalizeEveryWord(effectType.getName()));
+            } 
         }
         
-        setName(SLOW, "Slowness");
-        setName(FAST_DIGGING, "Haste");
-        setName(SLOW_DIGGING, "Miner's Fatigue");
-        setName(INCREASE_DAMAGE, "Strength");
-        setName(HEAL, "Instant Health");
-        setName(HARM, "Instant Damage");
-        setName(JUMP, "Jump Boost");
-        setName(CONFUSION, "Nausia");
-        setName(DAMAGE_RESISTANCE, "Resistance");
+        effectNames.put(SLOW, "Slowness");
+        effectNames.put(FAST_DIGGING, "Haste");
+        effectNames.put(SLOW_DIGGING, "Miner's Fatigue");
+        effectNames.put(INCREASE_DAMAGE, "Strength");
+        effectNames.put(HEAL, "Instant Health");
+        effectNames.put(HARM, "Instant Damage");
+        effectNames.put(JUMP, "Jump Boost");
+        effectNames.put(CONFUSION, "Nausia");
+        effectNames.put(DAMAGE_RESISTANCE, "Resistance");
     }
     
     /**
