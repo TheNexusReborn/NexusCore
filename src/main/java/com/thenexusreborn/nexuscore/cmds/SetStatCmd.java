@@ -78,7 +78,7 @@ public class SetStatCmd implements TabExecutor {
             return true;
         }
 
-        StatChange statChange = new StatChange(StatHelper.getInfo(statInfo.getName()), profile.getUniqueId(), value.get(), operator, System.currentTimeMillis());
+        StatChange statChange = new StatChange(StatHelper.getInfo(statInfo.getName()), profile.getUniqueId(), new ValueCodec().encode(value), operator, System.currentTimeMillis());
         
         profile.changeStat(statInfo.getName(), value.get(), operator).push();
     
