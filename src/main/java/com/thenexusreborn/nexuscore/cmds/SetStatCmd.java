@@ -78,11 +78,11 @@ public class SetStatCmd implements TabExecutor {
             return true;
         }
 
-        StatChange statChange = new StatChange(StatHelper.getInfo(statInfo.getName()), profile.getUniqueId(), new ValueCodec().encode(value), operator, System.currentTimeMillis());
+        StatChange statChange = new StatChange(StatHelper.getInfo(statInfo.getName()), profile.getUniqueId(), value.get(), operator, System.currentTimeMillis());
         
         profile.changeStat(statInfo.getName(), value.get(), operator).push();
     
-        NexusAPI.getApi().getNetworkManager().send("updatestat", profile.getUniqueId().toString(), statInfo.getName(), operator.name(), value.get().toString());
+        NexusAPI.getApi().getNetworkManager().send("updatestat", profile.getUniqueId().toString(), statInfo.getName(), operator.name(), new ValueCodec().encode(value));
         
         sender.sendMessage(MCUtils.color(MsgType.INFO + "You changed the stat with the operation " + operator.name()));
         return true;
