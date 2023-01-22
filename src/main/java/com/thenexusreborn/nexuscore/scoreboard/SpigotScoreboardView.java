@@ -12,6 +12,11 @@ public abstract class SpigotScoreboardView extends ScoreboardView {
     }
     
     @Override
+    public void createTeam(ITeam team) {
+        
+    }
+    
+    @Override
     public ITeam createTeam(TeamBuilder teamBuilder) {
         ITeam team = this.scoreboard.getScoreboard().registerNewTeam(teamBuilder.getName());
         if (teamBuilder.getPrefix() != null) {
@@ -25,6 +30,8 @@ public abstract class SpigotScoreboardView extends ScoreboardView {
         if (teamBuilder.getValueUpdater() != null) {
             team.setValueUpdater(teamBuilder.getValueUpdater());
         }
+        
+        team.setScore(teamBuilder.getScore());
         
         addEntry(objective, team, MCUtils.color(teamBuilder.getEntry()), teamBuilder.getScore());
         this.teams.add(team);
