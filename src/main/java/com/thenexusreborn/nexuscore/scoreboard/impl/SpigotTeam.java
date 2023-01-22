@@ -11,8 +11,6 @@ public class SpigotTeam implements ITeam {
     
     private final Team team;
     private ValueUpdater valueUpdater;
-    private boolean visible;
-    private int score;
     
     public SpigotTeam(Team team) {
         this.team = team;
@@ -56,25 +54,5 @@ public class SpigotTeam implements ITeam {
     @Override
     public void setValueUpdater(ValueUpdater valueUpdater) {
         this.valueUpdater = valueUpdater;
-    }
-    
-    @Override
-    public boolean isVisible() {
-        return visible;
-    }
-    
-    @Override
-    public void setVisible(boolean visible) {
-        this.visible = visible;
-    }
-    
-    @Override
-    public int getScore() {
-        return score;
-    }
-    
-    @Override
-    public void setScore(int score) {
-        this.score = score;
     }
 }

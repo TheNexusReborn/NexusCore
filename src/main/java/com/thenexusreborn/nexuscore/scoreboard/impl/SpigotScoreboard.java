@@ -17,11 +17,6 @@ public record SpigotScoreboard(Scoreboard scoreboard) implements IScoreboard {
     }
     
     @Override
-    public boolean isRegistered(ITeam team) {
-        return scoreboard.getTeam(team.getName()) != null;
-    }
-    
-    @Override
     public void resetScores(String entry) {
         scoreboard.resetScores(entry);
     }
@@ -29,11 +24,6 @@ public record SpigotScoreboard(Scoreboard scoreboard) implements IScoreboard {
     @Override
     public ITeam registerNewTeam(String name) {
         return new SpigotTeam(scoreboard.registerNewTeam(name));
-    }
-    
-    @Override
-    public void registerTeam(ITeam team) {
-        scoreboard.registerNewTeam(team.getName());
     }
     
     @Override
