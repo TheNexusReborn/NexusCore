@@ -69,7 +69,7 @@ public class NexusAdminCmd implements CommandExecutor {
                         return true;
                     }
                     PrivateAlphaUser pau = new PrivateAlphaUser(uuid, name, System.currentTimeMillis());
-                    nexusAPI.getPrimaryDatabase().pushSilent(pau);
+                    nexusAPI.getPrimaryDatabase().saveSilent(pau);
                     if (pau.getId() <= 0) {
                         sender.sendMessage(MCUtils.color(MsgType.WARN + "There was a problem saving your changes to the database."));
                         return true;

@@ -54,7 +54,7 @@ public class ToggleCmds implements CommandExecutor {
         }
         
         toggle.setValue(!toggle.getValue());
-        NexusAPI.getApi().getPrimaryDatabase().pushSilent(toggle);
+        NexusAPI.getApi().getPrimaryDatabase().saveSilent(toggle);
         String vc = MsgType.INFO.getVariableColor();
         String bc = MsgType.INFO.getBaseColor();
         player.sendMessage(MsgType.INFO + "Toggled " + vc + toggle.getInfo().getName() + bc + " to " + vc + toggle.getValue());

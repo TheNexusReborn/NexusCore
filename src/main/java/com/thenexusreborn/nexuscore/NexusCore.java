@@ -138,7 +138,7 @@ public class NexusCore extends JavaPlugin {
         serverInfo.setStatus("offline");
         serverInfo.setState("none");
         serverInfo.setPlayers(0);
-        NexusAPI.getApi().getPrimaryDatabase().pushSilent(serverInfo);
+        NexusAPI.getApi().getPrimaryDatabase().saveSilent(serverInfo);
         NexusAPI.getApi().getNetworkManager().close();
     }
     
