@@ -7,7 +7,9 @@ import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.util.*;
 import org.bukkit.command.*;
 
+import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.Stream;
 
 public class NexusAdminCmd implements CommandExecutor {
     
@@ -37,7 +39,7 @@ public class NexusAdminCmd implements CommandExecutor {
                 return true;
             }
             
-            if (args[1].equalsIgnoreCase("add") || args[1].equalsIgnoreCase("a") || args[1].equalsIgnoreCase("remove") || args[1].equalsIgnoreCase("r")) {
+            if (Stream.of("add", "a", "remove", "r").anyMatch(s -> args[1].equalsIgnoreCase(s))) {
                 UUID uuid;
                 String name;
                 try {
@@ -69,7 +71,11 @@ public class NexusAdminCmd implements CommandExecutor {
                         return true;
                     }
                     PrivateAlphaUser pau = new PrivateAlphaUser(uuid, name, System.currentTimeMillis());
-                    nexusAPI.getPrimaryDatabase().saveSilent(pau);
+                    try {
+                        nexusAPI.getPrimaryDatabase().save(pau);
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
                     if (pau.getId() <= 0) {
                         sender.sendMessage(MCUtils.color(MsgType.WARN + "There was a problem saving your changes to the database."));
                         return true;
