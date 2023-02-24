@@ -1,7 +1,7 @@
 package com.thenexusreborn.nexuscore.clock.impl;
 
-import com.starmediadev.starlib.TimeUnit;
 import com.thenexusreborn.nexuscore.clock.*;
+import com.thenexusreborn.nexuscore.clock.callback.*;
 import com.thenexusreborn.nexuscore.clock.snapshot.TimerSnapshot;
 
 public class Timer extends Clock<TimerSnapshot> {
@@ -9,16 +9,13 @@ public class Timer extends Clock<TimerSnapshot> {
     protected long length;
     
     public Timer(long length) {
+        super(length);
         this.length = length;
-        this.time = length;
     }
     
-    public Timer(long length, TimeUnit timeUnit) {
-        this(timeUnit.toMilliseconds(length));
-    }
-    
-    public Timer(Options options) {
-        super(options);
+    public Timer(long length, ClockCallback<TimerSnapshot> callback, long interval) {
+        super(length, callback, interval);
+        this.length = length;
     }
     
     public long getLength() {
@@ -48,11 +45,6 @@ public class Timer extends Clock<TimerSnapshot> {
     }
     
     @Override
-    public Timer start() {
-        return (Timer) super.start();
-    }
-    
-    @Override
     public void count() {
         if (time >= 50) {
             this.time -= 50;
@@ -65,47 +57,11 @@ public class Timer extends Clock<TimerSnapshot> {
     }
     
     @Override
-    protected boolean shouldCallback() {
-        if (lastCallback == 0) {
+    protected boolean shouldCallback(CallbackHolder<TimerSnapshot> holder) {
+        if (holder.getLastRun() == 0) {
             return true;
         }
         
-        return this.time <= lastCallback - callbackInterval;
-    }
-    
-    public static class Options extends Clock.Options<TimerSnapshot> {
-        private long length;
-        
-        public Options length(long length) {
-            this.length = length;
-            this.time(length);
-            return this;
-        }
-    
-        public Options length(long length, TimeUnit unit) {
-            return length(unit.toMilliseconds(length));
-        }
-    
-        @Override
-        public Options interval(long callbackInterval) {
-            return (Options) super.interval(callbackInterval);
-        }
-    
-        @Override
-        public Options interval(long interval, TimeUnit unit) {
-            return (Options) super.interval(interval, unit);
-        }
-    
-        @Override
-        public Options callback(ClockCallback<TimerSnapshot> callback) {
-            return (Options) super.callback(callback);
-        }
-    
-        @Override
-        public Options time(long time) {
-            super.time(time);
-            this.length = time;
-            return this;
-        }
+        return this.time <= holder.getLastRun() - holder.getInterval();
     }
 }

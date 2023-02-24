@@ -1,4 +1,4 @@
-package com.thenexusreborn.nexuscore.clock;
+package com.thenexusreborn.nexuscore.clock.callback;
 
 import com.thenexusreborn.nexuscore.clock.snapshot.ClockSnapshot;
 

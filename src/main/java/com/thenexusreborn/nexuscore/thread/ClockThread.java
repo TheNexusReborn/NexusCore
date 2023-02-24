@@ -15,11 +15,11 @@ public class ClockThread extends NexusThread<NexusCore> {
                 continue;
             }
     
-            clock.count();
             boolean result = clock.callback();
             if (!result) {
                 clock.cancel();
             }
+            clock.count();
         }
     }
 }
