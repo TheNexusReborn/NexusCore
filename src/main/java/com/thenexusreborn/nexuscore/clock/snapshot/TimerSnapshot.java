@@ -9,6 +9,9 @@ public class TimerSnapshot extends ClockSnapshot {
         this.length = length;
     }
     
+    /**
+     * @return The length of the clock at the snapshot
+     */
     public long getLength() {
         return length;
     }
