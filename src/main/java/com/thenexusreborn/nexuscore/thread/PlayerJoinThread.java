@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.thread;
 
-import com.starmediadev.starlib.Response;
+import com.starmediadev.starlib.util.Response;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Rank;

@@ -1,7 +1,8 @@
 package com.thenexusreborn.nexuscore.cmds;
 
+import com.starmediadev.starlib.util.Value;
+import com.starmediadev.starsql.objects.typehandlers.ValueHandler;
 import com.thenexusreborn.api.NexusAPI;
-import com.thenexusreborn.api.frameworks.value.*;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.stats.*;
 import com.thenexusreborn.nexuscore.NexusCore;
@@ -71,8 +72,9 @@ public class SetStatCmd implements TabExecutor {
             sender.sendMessage(MCUtils.color(MsgType.WARN + "You have an invalid operation for stat " + statInfo.getName()));
             return true;
         }
-
-        Value value = new ValueCodec().decode(statInfo.getType().getValueType().name() + ":" + rawValue);
+        
+        ValueHandler handler = new ValueHandler();
+        Value value = (Value) handler.getDeserializer().deserialize(null, statInfo.getType().getValueType().name() + ":" + rawValue);
         if (value == null && !(operator == StatOperator.RESET || operator == StatOperator.INVERT)) {
             sender.sendMessage(MCUtils.color(MsgType.WARN + "Could not parse the value for the stat."));
             return true;
@@ -82,7 +84,7 @@ public class SetStatCmd implements TabExecutor {
         
         profile.changeStat(statInfo.getName(), value.get(), operator).push();
     
-        NexusAPI.getApi().getNetworkManager().send("updatestat", profile.getUniqueId().toString(), statInfo.getName(), operator.name(), new ValueCodec().encode(value));
+        NexusAPI.getApi().getNetworkManager().send("updatestat", profile.getUniqueId().toString(), statInfo.getName(), operator.name(), (String) handler.getSerializer().serialize(null, value));
         
         sender.sendMessage(MCUtils.color(MsgType.INFO + "You changed the stat with the operation " + operator.name()));
         return true;

@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.menu.gui;
 
-import com.starmediadev.starlib.Pair;
+import com.starmediadev.starlib.util.Pair;
 import com.starmediadev.starlib.collection.IncrementalMap;
 import com.thenexusreborn.nexuscore.menu.element.*;
 import com.thenexusreborn.nexuscore.menu.slot.Slot;

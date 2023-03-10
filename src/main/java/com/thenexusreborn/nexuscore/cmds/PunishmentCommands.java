@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.cmds;
 
-import com.starmediadev.starlib.TimeParser;
+import com.starmediadev.starlib.util.TimeParser;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.punishment.*;
