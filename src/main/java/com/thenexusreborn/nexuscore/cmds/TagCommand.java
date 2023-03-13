@@ -65,7 +65,7 @@ public class TagCommand implements CommandExecutor {
                 timestamp = "";
             }
             
-            NexusAPI.getApi().getThreadFactory().runAsync(() -> {
+            NexusAPI.getApi().getScheduler().runTaskAsynchronously(() -> {
                 if (cmdAction.equals("unlocked")) {
                     NexusAPI.getApi().getPrimaryDatabase().saveSilent(profile.getTags().get(tagName));
                 } else {
@@ -135,6 +135,6 @@ public class TagCommand implements CommandExecutor {
     }
     
     private void pushTagChange(NexusPlayer player) {
-        NexusAPI.getApi().getThreadFactory().runAsync(() -> NexusAPI.getApi().getPrimaryDatabase().saveSilent(player.getStatValue("tag").getAsString()));
+        NexusAPI.getApi().getScheduler().runTaskAsynchronously(() -> NexusAPI.getApi().getPrimaryDatabase().saveSilent(player.getStatValue("tag").getAsString()));
     }
 }

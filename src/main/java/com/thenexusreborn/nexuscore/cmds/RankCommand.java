@@ -133,7 +133,7 @@ public class RankCommand implements TabExecutor {
             ranks = "";
         }
 
-        NexusAPI.getApi().getThreadFactory().runAsync(() -> {
+        NexusAPI.getApi().getScheduler().runTaskAsynchronously(() -> {
             try {
                 NexusAPI.getApi().getPrimaryDatabase().execute("update players set `ranks`='" + ranks + "' where `uniqueId`='" + nexusProfile.getUniqueId().toString() + "';");
             } catch (SQLException e) {
