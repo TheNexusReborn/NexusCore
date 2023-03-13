@@ -1,5 +1,6 @@
 package com.thenexusreborn.nexuscore;
 
+import com.starmediadev.plugins.starcore.scheduler.SpigotScheduler;
 import com.starmediadev.starsql.objects.Database;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.network.NetworkContext;
@@ -12,7 +13,6 @@ import com.thenexusreborn.api.util.StaffChat;
 import com.thenexusreborn.nexuscore.api.NexusSpigotPlugin;
 import com.thenexusreborn.nexuscore.player.*;
 import com.thenexusreborn.nexuscore.server.SpigotServerManager;
-import com.thenexusreborn.nexuscore.api.SpigotThreadFactory;
 import com.thenexusreborn.nexuscore.util.*;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
@@ -28,7 +28,7 @@ public class SpigotNexusAPI extends NexusAPI {
     private final NexusCore plugin;
     
     public SpigotNexusAPI(NexusCore plugin) {
-        super(Environment.valueOf(plugin.getConfig().getString("environment").toUpperCase()), NetworkContext.CLIENT, plugin.getLogger(), new SpigotPlayerManager(plugin), new SpigotThreadFactory(plugin), new SpigotServerManager(plugin));
+        super(Environment.valueOf(plugin.getConfig().getString("environment").toUpperCase()), NetworkContext.CLIENT, plugin.getLogger(), new SpigotPlayerManager(plugin), new SpigotScheduler(plugin), new SpigotServerManager(plugin));
         this.plugin = plugin;
         PlayerProxy.setProxyClass(SpigotPlayerProxy.class);
     }
