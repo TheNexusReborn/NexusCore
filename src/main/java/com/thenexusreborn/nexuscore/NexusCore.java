@@ -2,7 +2,6 @@ package com.thenexusreborn.nexuscore;
 
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.server.ServerInfo;
-import com.thenexusreborn.nexuscore.anticheat.AnticheatManager;
 import com.thenexusreborn.nexuscore.api.NexusSpigotPlugin;
 import com.thenexusreborn.nexuscore.chat.ChatManager;
 import com.thenexusreborn.nexuscore.cmds.*;
@@ -119,11 +118,6 @@ public class NexusCore extends JavaPlugin {
         new ClickCheckerThread(this).start();
         new PlayerLoadActionBarThread(this).start();
         getLogger().info("Registered Tasks");
-        
-        if (getServer().getPluginManager().getPlugin("Spartan") != null) {
-            getServer().getPluginManager().registerEvents(new AnticheatManager(), this);
-            getLogger().info("Registered Anticheat Manager");
-        }
     }
     
     public void addNexusPlugin(NexusSpigotPlugin plugin) {
