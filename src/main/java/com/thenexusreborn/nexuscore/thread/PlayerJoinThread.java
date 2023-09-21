@@ -38,7 +38,7 @@ public class PlayerJoinThread extends BukkitRunnable {
         while (response == null && tries <= 10) {
             try {
                 List<NexusPlayer> players = NexusAPI.getApi().getPrimaryDatabase().get(NexusPlayer.class, "uniqueId", player.getUniqueId().toString());
-                if (players.size() == 0) {
+                if (players.isEmpty()) {
                     tries++;
                     continue;
                 }
