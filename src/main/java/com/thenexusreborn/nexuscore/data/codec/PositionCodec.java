@@ -1,7 +1,7 @@
 package com.thenexusreborn.nexuscore.data.codec;
 
-import com.starmediadev.starsql.objects.SqlCodec;
 import com.thenexusreborn.nexuscore.util.Position;
+import me.firestar311.starsql.api.objects.SqlCodec;
 
 public class PositionCodec implements SqlCodec<Position> {
     @Override

@@ -1,12 +1,12 @@
 package com.thenexusreborn.nexuscore.cmds;
 
-import com.starmediadev.starlib.util.TimeParser;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.punishment.*;
 import com.thenexusreborn.api.util.*;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.util.*;
+import me.firestar311.starlib.api.time.TimeParser;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 

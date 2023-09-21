@@ -1,7 +1,5 @@
 package com.thenexusreborn.nexuscore;
 
-import com.starmediadev.plugins.starcore.scheduler.SpigotScheduler;
-import com.starmediadev.starsql.objects.Database;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.network.NetworkContext;
 import com.thenexusreborn.api.network.cmd.NetworkCommand;
@@ -14,6 +12,10 @@ import com.thenexusreborn.nexuscore.api.NexusSpigotPlugin;
 import com.thenexusreborn.nexuscore.player.*;
 import com.thenexusreborn.nexuscore.server.SpigotServerManager;
 import com.thenexusreborn.nexuscore.util.*;
+import me.firestar311.starlib.spigot.scheduler.SpigotScheduler;
+import me.firestar311.starsql.api.objects.SQLDatabase;
+import me.firestar311.starsql.mysql.MySQLDatabase;
+import me.firestar311.starsql.mysql.MySQLProperties;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -53,7 +55,8 @@ public class SpigotNexusAPI extends NexusAPI {
                 if (databasesSection.contains(db + ".primary")) {
                     primary = databasesSection.getBoolean(db + ".primary");
                 }
-                Database database = new Database(plugin.getLogger(), "mysql", name, host, user, password, primary);
+                SQLDatabase database = new MySQLDatabase(plugin.getLogger(), new MySQLProperties().setDatabaseName(name).setHost(host).setUsername(user).setPassword(password));
+                
                 registry.register(database);
              }
         }
@@ -72,7 +75,7 @@ public class SpigotNexusAPI extends NexusAPI {
     
     @Override
     public void registerNetworkCommands(NetworkCommandRegistry registry) {
-        registry.register(new NetworkCommand("punishment", (cmd, origin, args) -> new BukkitRunnable() {
+        registry.register("punishment", new NetworkCommand("punishment", (cmd, origin, args) -> new BukkitRunnable() {
             public void run() {
                 long id = Long.parseLong(args[0]);
                 Punishment punishment = null;
@@ -97,7 +100,7 @@ public class SpigotNexusAPI extends NexusAPI {
             }
         }.runTaskAsynchronously(plugin)));
         
-        registry.register(new NetworkCommand("removepunishment", (cmd, origin, args) -> {
+        registry.register("punishment", new NetworkCommand("removepunishment", (cmd, origin, args) -> {
             long id = Long.parseLong(args[0]);
             Punishment punishment = NexusAPI.getApi().getPunishmentManager().getPunishment(id);
             if (punishment != null) {
@@ -110,7 +113,7 @@ public class SpigotNexusAPI extends NexusAPI {
             }
         }));
         
-        registry.register(new NetworkCommand("staffchat", StaffChat::handleIncoming));
+        registry.register("staffchat", new NetworkCommand("staffchat", StaffChat::handleIncoming));
     
         for (NexusSpigotPlugin nexusPlugin : plugin.getNexusPlugins()) {
             nexusPlugin.registerNetworkCommands(registry);

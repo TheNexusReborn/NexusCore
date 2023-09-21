@@ -1,10 +1,10 @@
 package com.thenexusreborn.nexuscore.cmds;
 
-import com.starmediadev.plugins.starcore.lib.StarThread;
 import com.thenexusreborn.api.helper.MemoryHelper;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.api.NexusThread;
 import com.thenexusreborn.nexuscore.util.MCUtils;
+import me.firestar311.starlib.spigot.utils.StarThread;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

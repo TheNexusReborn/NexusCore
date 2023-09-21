@@ -1,6 +1,5 @@
 package com.thenexusreborn.nexuscore.thread;
 
-import com.starmediadev.starlib.util.Response;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Rank;
@@ -13,6 +12,7 @@ import com.thenexusreborn.nexuscore.scoreboard.SpigotNexusScoreboard;
 import com.thenexusreborn.nexuscore.scoreboard.impl.RankTablistHandler;
 import com.thenexusreborn.nexuscore.util.MCUtils;
 import com.thenexusreborn.nexuscore.util.MsgType;
+import com.thenexusreborn.nexuscore.util.Response;
 import com.thenexusreborn.nexuscore.util.SpigotUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
