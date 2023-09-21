@@ -86,10 +86,6 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
             }
         }
         
-        if (plugin.getSpawnpoint() != null) {
-            player.teleport(plugin.getSpawnpoint());
-        }
-
         Session session = new Session(player.getUniqueId());
         session.start();
         this.sessions.put(player.getUniqueId(), session);
