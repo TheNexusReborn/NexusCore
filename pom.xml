@@ -93,9 +93,9 @@
         </dependency>
         <dependency>
             <groupId>me.firestar311.starsql</groupId>
-            <artifactId>starsql-mysql</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>provided</scope>
+            <artifactId>starsql-h2</artifactId>
+            <version>1.0.2-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>me.firestar311.starclock</groupId>
