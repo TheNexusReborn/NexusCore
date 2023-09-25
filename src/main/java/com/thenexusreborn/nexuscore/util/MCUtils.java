@@ -81,6 +81,9 @@ public final class MCUtils {
     }
     
     public static String color(String uncolored) {
+        if (uncolored == null) {
+            return "";
+        }
         return ChatColor.translateAlternateColorCodes('&', uncolored);
     }
     
