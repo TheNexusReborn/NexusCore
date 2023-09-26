@@ -7,13 +7,16 @@ public class PositionCodec implements SqlCodec<Position> {
     @Override
     public String encode(Object object) {
         Position position = (Position) object;
+        if (position == null) {
+            return "0,0,0,0.0,0.0";
+        }
         return position.getX() + "," + position.getY() + "," + position.getZ() + "," + position.getYaw() + "," + position.getPitch();
     }
     
     @Override
     public Position decode(String encoded) {
         String[] split = encoded.split(",");
-        if (split == null || split.length != 5) {
+        if (split.length != 5) {
             return null;
         }
         
