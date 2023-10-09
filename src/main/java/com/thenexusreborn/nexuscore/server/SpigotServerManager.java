@@ -18,10 +18,7 @@ public class SpigotServerManager extends ServerManager {
     public void setupCurrentServer() {
         int multicraftId = plugin.getConfig().getInt("serverInfo.multicraftid");
         String ip = ServerProperties.getServerIp();
-        String name = plugin.getConfig().getString("serverInfo.name");
-        if (name == null || name.equals("")) {
-            name = plugin.getConfig().getString("serverName");
-        }
+        String name = plugin.getConfig().getString("serverInfo.serverName");
         int port = ServerProperties.getServerPort();
         int players = Bukkit.getOnlinePlayers().size();
         int maxPlayers = Bukkit.getMaxPlayers();
