@@ -42,8 +42,6 @@ commands:
     aliases: [i]
   fly:
   nexusversion: 
-  nexusadmin:
-    aliases: [na]
   tps:
     aliases: [performance, memory, mem, perf]
   playtime:
