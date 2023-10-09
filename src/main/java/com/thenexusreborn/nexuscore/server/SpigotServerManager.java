@@ -3,15 +3,27 @@ package com.thenexusreborn.nexuscore.server;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.server.*;
 import com.thenexusreborn.nexuscore.NexusCore;
+import com.thenexusreborn.nexuscore.util.MCUtils;
 import com.thenexusreborn.nexuscore.util.ServerProperties;
 import org.bukkit.Bukkit;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.server.ServerListPingEvent;
 
-public class SpigotServerManager extends ServerManager {
-    
+public class SpigotServerManager extends ServerManager implements Listener {
     private final NexusCore plugin;
     
     public SpigotServerManager(NexusCore plugin) {
         this.plugin = plugin;
+    }
+    
+    @EventHandler
+    public void onServerPing(ServerListPingEvent e) {
+        if (plugin.getMotdSupplier() == null) {
+            return;
+        }
+        
+        e.setMotd(MCUtils.color(plugin.getMotdSupplier().get()));
     }
     
     @Override

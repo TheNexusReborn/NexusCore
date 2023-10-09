@@ -18,16 +18,15 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.*;
 import java.util.*;
+import java.util.function.Supplier;
 
 public class NexusCore extends JavaPlugin {
     
     private NMS nms;
-    
     private final List<NexusSpigotPlugin> nexusPlugins = new ArrayList<>();
-    
     private ChatManager chatManager;
-    
     private ToggleCmds toggleCmdExecutor;
+    private Supplier<String> motdSupplier;
 
     @Override
     public void onEnable() {
@@ -165,5 +164,13 @@ public class NexusCore extends JavaPlugin {
     
     public ToggleCmds getToggleCmdExecutor() {
         return toggleCmdExecutor;
+    }
+
+    public Supplier<String> getMotdSupplier() {
+        return motdSupplier;
+    }
+
+    public void setMotdSupplier(Supplier<String> motdSupplier) {
+        this.motdSupplier = motdSupplier;
     }
 }
