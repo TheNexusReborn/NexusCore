@@ -46,3 +46,4 @@ commands:
     aliases: [na]
   tps:
     aliases: [performance, memory, mem, perf]
+  playtime:

@@ -108,6 +108,7 @@ public class NexusCore extends JavaPlugin {
         
         getCommand("nexusversion").setExecutor(new NexusVersionCmd(this));
         getCommand("tps").setExecutor(new PerformanceCmd(this));
+        getCommand("playtime").setExecutor(new PlaytimeCommand(this));
         
         getLogger().info("Registered Commands");
         

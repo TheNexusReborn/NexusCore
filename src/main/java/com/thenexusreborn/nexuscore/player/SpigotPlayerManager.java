@@ -12,7 +12,6 @@ import com.thenexusreborn.api.util.StaffChat;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.thread.PlayerJoinThread;
 import me.firestar311.starlib.api.time.TimeUnit;
-import me.firestar311.starsql.api.interfaces.Database;
 import me.firestar311.starsql.api.objects.Row;
 import me.firestar311.starsql.api.objects.SQLDatabase;
 import me.firestar311.starsql.api.objects.Table;
