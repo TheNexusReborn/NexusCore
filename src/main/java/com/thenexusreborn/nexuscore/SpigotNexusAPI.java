@@ -66,7 +66,7 @@ public class SpigotNexusAPI extends NexusAPI {
 //                registry.register(database);
 //             }
 //        }
-        SQLDatabase database = new H2Database(plugin.getLogger(), new H2Properties().setDatabaseName("./nexus").setType("file").setUsername("sa").setCloseOnExit(false));
+        SQLDatabase database = new H2Database(plugin.getLogger(), new H2Properties().setDatabaseName("./" + plugin.getDataFolder() + "/database/nexus").setType("file").setUsername("sa").setCloseOnExit(false));
         registry.register(database);
     
         for (NexusSpigotPlugin nexusPlugin : plugin.getNexusPlugins()) {
