@@ -6,6 +6,7 @@ import com.thenexusreborn.nexuscore.api.NexusSpigotPlugin;
 import com.thenexusreborn.nexuscore.chat.ChatManager;
 import com.thenexusreborn.nexuscore.cmds.*;
 import com.thenexusreborn.nexuscore.player.SpigotPlayerManager;
+import com.thenexusreborn.nexuscore.server.SpigotServerManager;
 import com.thenexusreborn.nexuscore.thread.*;
 import com.thenexusreborn.nexuscore.util.*;
 import com.thenexusreborn.nexuscore.util.nms.NMS;
@@ -60,6 +61,7 @@ public class NexusCore extends JavaPlugin {
         
         Bukkit.getServer().getPluginManager().registerEvents((SpigotPlayerManager) NexusAPI.getApi().getPlayerManager(), this);
         Bukkit.getServer().getPluginManager().registerEvents(chatManager, this);
+        Bukkit.getServer().getPluginManager().registerEvents((SpigotServerManager) NexusAPI.getApi().getServerManager(), this);
         getLogger().info("Registered Event Listeners");
         
         registerCommand("rank", new RankCommand(this));
