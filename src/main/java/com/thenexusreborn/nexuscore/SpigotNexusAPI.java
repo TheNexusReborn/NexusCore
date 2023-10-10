@@ -20,9 +20,10 @@ import com.thenexusreborn.nexuscore.util.MCUtils;
 import com.thenexusreborn.nexuscore.util.MsgType;
 import me.firestar311.starlib.spigot.scheduler.SpigotScheduler;
 import me.firestar311.starsql.api.objects.SQLDatabase;
-import me.firestar311.starsql.h2.H2Database;
-import me.firestar311.starsql.h2.H2Properties;
+import me.firestar311.starsql.mysql.MySQLDatabase;
+import me.firestar311.starsql.mysql.MySQLProperties;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -43,30 +44,8 @@ public class SpigotNexusAPI extends NexusAPI {
     
     @Override
     public void registerDatabases(DatabaseRegistry registry) {
-//        ConfigurationSection databasesSection = plugin.getConfig().getConfigurationSection("databases");
-//        if (databasesSection != null) {
-//            for (String db : databasesSection.getKeys(false)) {
-//                String name;
-//                String dbName = databasesSection.getString(db + ".name");
-//                if (dbName != null && !dbName.equals("")) {
-//                    name = dbName;
-//                } else {
-//                    name = db;
-//                }
-//                
-//                String host = databasesSection.getString(db + ".host");
-//                String user = databasesSection.getString(db + ".user");
-//                String password = databasesSection.getString(db + ".password");
-//                boolean primary = false;
-//                if (databasesSection.contains(db + ".primary")) {
-//                    primary = databasesSection.getBoolean(db + ".primary");
-//                }
-//                SQLDatabase database = new MySQLDatabase(plugin.getLogger(), new MySQLProperties().setDatabaseName(name).setHost(host).setUsername(user).setPassword(password));
-//                
-//                registry.register(database);
-//             }
-//        }
-        SQLDatabase database = new H2Database(plugin.getLogger(), new H2Properties().setDatabaseName("./" + plugin.getDataFolder() + "/database/nexus").setType("file").setUsername("sa").setCloseOnExit(false));
+        FileConfiguration config = plugin.getConfig();
+        SQLDatabase database = new MySQLDatabase(plugin.getLogger(), new MySQLProperties().setDatabaseName(config.getString("databases.database.database")).setHost(config.getString("databases.database.host")).setUsername(config.getString("databases.database.username")).setPassword(config.getString("databases.database.password")));
         registry.register(database);
     
         for (NexusSpigotPlugin nexusPlugin : plugin.getNexusPlugins()) {

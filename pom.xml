@@ -93,8 +93,8 @@
         </dependency>
         <dependency>
             <groupId>me.firestar311.starsql</groupId>
-            <artifactId>starsql-h2</artifactId>
-            <version>1.0.2-SNAPSHOT</version>
+            <artifactId>starsql-mysql</artifactId>
+            <version>1.0.5-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
