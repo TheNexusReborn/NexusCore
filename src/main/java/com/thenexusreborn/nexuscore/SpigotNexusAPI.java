@@ -13,6 +13,7 @@ import com.thenexusreborn.api.registry.ToggleRegistry;
 import com.thenexusreborn.api.server.Environment;
 import com.thenexusreborn.api.util.StaffChat;
 import com.thenexusreborn.nexuscore.api.NexusSpigotPlugin;
+import com.thenexusreborn.nexuscore.data.handlers.PositionHandler;
 import com.thenexusreborn.nexuscore.player.SpigotPlayerManager;
 import com.thenexusreborn.nexuscore.player.SpigotPlayerProxy;
 import com.thenexusreborn.nexuscore.server.SpigotServerManager;
@@ -44,6 +45,7 @@ public class SpigotNexusAPI extends NexusAPI {
     
     @Override
     public void registerDatabases(DatabaseRegistry registry) {
+        registry.addTypeHandler(new PositionHandler());
         FileConfiguration config = plugin.getConfig();
         SQLDatabase database = new MySQLDatabase(plugin.getLogger(), new MySQLProperties().setDatabaseName(config.getString("databases.database.database")).setHost(config.getString("databases.database.host")).setUsername(config.getString("databases.database.username")).setPassword(config.getString("databases.database.password")));
         registry.register(database);
