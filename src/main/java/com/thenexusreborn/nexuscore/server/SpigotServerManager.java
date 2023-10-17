@@ -2,7 +2,8 @@ package com.thenexusreborn.nexuscore.server;
 
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.NexusPlayer;
-import com.thenexusreborn.api.server.*;
+import com.thenexusreborn.api.server.ServerInfo;
+import com.thenexusreborn.api.server.ServerManager;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.util.MCUtils;
 import com.thenexusreborn.nexuscore.util.ServerProperties;
@@ -12,7 +13,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.ServerListPingEvent;
 
-import java.lang.reflect.Field;
+import java.util.Iterator;
 
 public class SpigotServerManager extends ServerManager implements Listener {
     private final NexusCore plugin;
@@ -28,29 +29,17 @@ public class SpigotServerManager extends ServerManager implements Listener {
         }
         
         e.setMotd(MCUtils.color(plugin.getMotdSupplier().get()));
-        
-        int numPlayers = 0;
-        for (Player player : Bukkit.getOnlinePlayers()) {
+
+        Iterator<Player> iterator = e.iterator();
+        while(iterator.hasNext()) {
+            Player player = iterator.next();
             NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(player.getUniqueId());
             if (nexusPlayer == null) {
                 continue;
             }
-            if (!nexusPlayer.getToggleValue("vanish") && !nexusPlayer.getToggleValue("incognito")) {
-                numPlayers++;
+            if (nexusPlayer.getToggleValue("vanish") || nexusPlayer.getToggleValue("incognito")) {
+                iterator.remove();
             }
-        }
-        
-        if (numPlayers == e.getNumPlayers()) {
-            return;
-        }
-
-        try {
-            Field numPlayersField = ServerListPingEvent.class.getDeclaredField("numPlayers");
-            numPlayersField.setAccessible(true);
-            numPlayersField.set(e, numPlayers);
-        } catch (Exception ex) {
-            plugin.getLogger().severe("Could not modify the numPlayers field: " + ex.getClass().getSimpleName());
-            ex.printStackTrace();
         }
     }
     
