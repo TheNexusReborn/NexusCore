@@ -12,11 +12,19 @@ public record SpigotObjective(Objective objective) implements IObjective {
     
     @Override
     public void unregister() {
-        objective.unregister();
+        try {
+            objective.unregister();
+        } catch (Exception e) {
+        
+        }
     }
     
     @Override
     public void setDisplayName(String displayName) {
-        this.objective.setDisplayName(displayName);
+        try {
+            this.objective.setDisplayName(displayName);
+        } catch (Exception e) {
+            
+        }
     }
 }

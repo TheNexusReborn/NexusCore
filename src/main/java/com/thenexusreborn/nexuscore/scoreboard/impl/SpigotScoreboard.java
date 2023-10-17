@@ -23,7 +23,13 @@ public record SpigotScoreboard(Scoreboard scoreboard) implements IScoreboard {
     
     @Override
     public ITeam registerNewTeam(String name) {
-        return new SpigotTeam(scoreboard.registerNewTeam(name));
+        Team team;
+        try {
+            team = scoreboard.registerNewTeam(name);
+        } catch (Exception e) {
+            team = scoreboard.getTeam(name);
+        }
+        return new SpigotTeam(team);
     }
     
     @Override
@@ -37,6 +43,12 @@ public record SpigotScoreboard(Scoreboard scoreboard) implements IScoreboard {
     
     @Override
     public IObjective registerNewObjective(String name) {
-        return new SpigotObjective(this.scoreboard.registerNewObjective(name, "dummy"));
+        Objective objective;
+        try {
+            objective = this.scoreboard.registerNewObjective(name, "dummy");
+        } catch (Exception e) {
+            objective = this.scoreboard.getObjective(name);
+        }
+        return new SpigotObjective(objective);
     }
 }
