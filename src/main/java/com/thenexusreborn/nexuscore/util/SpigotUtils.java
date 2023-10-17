@@ -39,14 +39,16 @@ public final class SpigotUtils {
     
     public static ItemStack getPlayerSkull(Player player) {
         ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
-        SkullMeta skullMeta = ((SkullMeta) skull.getItemMeta());
+        SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
         String playerName = Bukkit.getPlayer(player.getUniqueId()).getName();
         GameProfile mcProfile = ((CraftPlayer) player).getProfile();
         try {
             Field field = skullMeta.getClass().getDeclaredField("profile");
             field.setAccessible(true);
             field.set(skullMeta, mcProfile);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         skull.setItemMeta(skullMeta);
         return skull;
     }
