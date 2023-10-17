@@ -94,7 +94,7 @@
         <dependency>
             <groupId>me.firestar311.starsql</groupId>
             <artifactId>starsql-mysql</artifactId>
-            <version>1.0.6-SNAPSHOT</version>
+            <version>1.0.8-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
