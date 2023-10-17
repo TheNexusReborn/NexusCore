@@ -32,7 +32,10 @@ public class SpigotServerManager extends ServerManager implements Listener {
         int numPlayers = 0;
         for (Player player : Bukkit.getOnlinePlayers()) {
             NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(player.getUniqueId());
-            if (!(nexusPlayer.getToggleValue("vanish") || nexusPlayer.getToggleValue("incognito"))) {
+            if (nexusPlayer == null) {
+                continue;
+            }
+            if (!nexusPlayer.getToggleValue("vanish") && !nexusPlayer.getToggleValue("incognito")) {
                 numPlayers++;
             }
         }
