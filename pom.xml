@@ -88,13 +88,13 @@
         <dependency>
             <groupId>me.firestar311.starlib</groupId>
             <artifactId>starlib-spigot</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
+            <version>1.0.2-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>me.firestar311.starsql</groupId>
             <artifactId>starsql-mysql</artifactId>
-            <version>1.0.5-SNAPSHOT</version>
+            <version>1.0.6-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
