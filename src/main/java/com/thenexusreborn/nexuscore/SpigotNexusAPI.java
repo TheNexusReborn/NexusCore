@@ -3,7 +3,9 @@ package com.thenexusreborn.nexuscore;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.network.NetworkContext;
 import com.thenexusreborn.api.network.cmd.NetworkCommand;
+import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.PlayerProxy;
+import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.api.punishment.Punishment;
 import com.thenexusreborn.api.punishment.PunishmentType;
 import com.thenexusreborn.api.registry.DatabaseRegistry;
@@ -73,7 +75,7 @@ public class SpigotNexusAPI extends NexusAPI {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                if (punishment.getType() == PunishmentType.MUTE || punishment.getType() == PunishmentType.WARN || punishment.getType() == PunishmentType.BAN || punishment.getType() == PunishmentType.BLACKLIST) {
+                if (punishment.getType() == PunishmentType.MUTE || punishment.getType() == PunishmentType.WARN) {
                     NexusAPI.getApi().getPunishmentManager().addPunishment(punishment);
         
                     Player player = Bukkit.getPlayer(UUID.fromString(punishment.getTarget()));
@@ -85,11 +87,32 @@ public class SpigotNexusAPI extends NexusAPI {
                             player.sendMessage(MCUtils.color(MsgType.WARN + "You must type the code " + punishment.getAcknowledgeInfo().getCode() + " in chat before you can speak again."));
                         }
                     }
+                } else if (punishment.getType() == PunishmentType.BAN || punishment.getType() == PunishmentType.BLACKLIST || punishment.getType() == PunishmentType.KICK) {
+                    NexusAPI.getApi().getPunishmentManager().addPunishment(punishment);
+                    UUID target = UUID.fromString(punishment.getTarget());
+                    Player player = Bukkit.getPlayer(UUID.fromString(punishment.getTarget()));
+
+                    if (player != null) {
+                        NexusPlayer punishedPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(target);
+
+                        if (punishment.isActive() || punishment.getType() == PunishmentType.KICK) {
+                            String disconnectMsg = MCUtils.color(punishment.formatKick());
+                            if (punishedPlayer.getRank() == Rank.NEXUS) {
+                                punishedPlayer.sendMessage("&6&l>> &cSomeone tried to " + punishment.getType().name().toLowerCase() + " you, but you are immune.");
+                            } else {
+                                Bukkit.getScheduler().runTask(plugin, () -> player.kickPlayer(disconnectMsg));
+
+                                if (punishment.getType() == PunishmentType.BLACKLIST) {
+                                    //TODO
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }.runTaskAsynchronously(plugin)));
         
-        registry.register("punishment", new NetworkCommand("removepunishment", (cmd, origin, args) -> {
+        registry.register("removepunishment", new NetworkCommand("removepunishment", (cmd, origin, args) -> {
             long id = Long.parseLong(args[0]);
             Punishment punishment = NexusAPI.getApi().getPunishmentManager().getPunishment(id);
             if (punishment != null) {
