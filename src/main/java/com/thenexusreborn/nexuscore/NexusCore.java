@@ -5,29 +5,35 @@ import com.thenexusreborn.api.server.ServerInfo;
 import com.thenexusreborn.nexuscore.api.NexusSpigotPlugin;
 import com.thenexusreborn.nexuscore.chat.ChatManager;
 import com.thenexusreborn.nexuscore.cmds.*;
-import com.thenexusreborn.nexuscore.menu.MenuManager;
 import com.thenexusreborn.nexuscore.player.SpigotPlayerManager;
+import com.thenexusreborn.nexuscore.server.SpigotServerManager;
 import com.thenexusreborn.nexuscore.thread.*;
-import com.thenexusreborn.nexuscore.util.*;
+import com.thenexusreborn.nexuscore.util.MCUtils;
+import com.thenexusreborn.nexuscore.util.MsgType;
 import com.thenexusreborn.nexuscore.util.nms.NMS;
 import com.thenexusreborn.nexuscore.util.nms.NMS.Version;
-import com.thenexusreborn.nexuscore.util.updater.Updater;
+import me.firestar311.starclock.api.ClockManager;
+import me.firestar311.starsql.api.objects.SQLDatabase;
 import org.bukkit.Bukkit;
-import org.bukkit.command.*;
+import org.bukkit.command.PluginCommand;
+import org.bukkit.command.TabExecutor;
+import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
 
 public class NexusCore extends JavaPlugin {
     
     private NMS nms;
-    
     private final List<NexusSpigotPlugin> nexusPlugins = new ArrayList<>();
-    
     private ChatManager chatManager;
-    
     private ToggleCmds toggleCmdExecutor;
+    private Supplier<String> motdSupplier;
 
     @Override
     public void onEnable() {
@@ -44,12 +50,12 @@ public class NexusCore extends JavaPlugin {
             return;
         }
         
+        NexusAPI.getApi().setClockManager(getServer().getServicesManager().getRegistration(ClockManager.class).getProvider());
+        
+        Bukkit.getServicesManager().register(SQLDatabase.class, NexusAPI.getApi().getPrimaryDatabase(), this, ServicePriority.Highest);
+        
         nms = NMS.getNMS(Version.MC_1_8_R3);
         getLogger().info("Registered NMS Version");
-        
-        Updater updater = new Updater(this);
-        Bukkit.getServer().getScheduler().runTaskTimer(this, updater, 1L, 1L);
-        getLogger().info("Registered Updater Utility");
         
         chatManager = new ChatManager(this);
         getLogger().info("Registered Chat Manager");
@@ -59,7 +65,7 @@ public class NexusCore extends JavaPlugin {
         
         Bukkit.getServer().getPluginManager().registerEvents((SpigotPlayerManager) NexusAPI.getApi().getPlayerManager(), this);
         Bukkit.getServer().getPluginManager().registerEvents(chatManager, this);
-        Bukkit.getServer().getPluginManager().registerEvents(new MenuManager(), this);
+        Bukkit.getServer().getPluginManager().registerEvents((SpigotServerManager) NexusAPI.getApi().getServerManager(), this);
         getLogger().info("Registered Event Listeners");
         
         registerCommand("rank", new RankCommand(this));
@@ -69,7 +75,6 @@ public class NexusCore extends JavaPlugin {
         getCommand("message").setExecutor(new MessageCommand());
         getCommand("reply").setExecutor(new ReplyCommand());
         getCommand("me").setExecutor(new MeCommand());
-        getCommand("nexusadmin").setExecutor(new NexusAdminCmd(this));
         getCommand("discord").setExecutor((sender, cmd, label, args) -> {
             sender.sendMessage(MCUtils.color(MsgType.INFO + "Discord: &bhttps://discord.gg/bawZKSWEpT"));
             return true;
@@ -108,6 +113,7 @@ public class NexusCore extends JavaPlugin {
         
         getCommand("nexusversion").setExecutor(new NexusVersionCmd(this));
         getCommand("tps").setExecutor(new PerformanceCmd(this));
+        getCommand("playtime").setExecutor(new PlaytimeCommand(this));
         
         getLogger().info("Registered Commands");
         
@@ -164,5 +170,13 @@ public class NexusCore extends JavaPlugin {
     
     public ToggleCmds getToggleCmdExecutor() {
         return toggleCmdExecutor;
+    }
+
+    public Supplier<String> getMotdSupplier() {
+        return motdSupplier;
+    }
+
+    public void setMotdSupplier(Supplier<String> motdSupplier) {
+        this.motdSupplier = motdSupplier;
     }
 }

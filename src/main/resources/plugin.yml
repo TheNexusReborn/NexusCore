@@ -3,7 +3,7 @@ version: ${project.version}
 name: NexusCore
 description: The main core of The Nexus Reborn
 author: Firestar311
-depend: [StarCore]
+depend: [StarLib, StarClock, StarUI]
 softdepend: [Spartan]
 commands:
   rank:
@@ -42,7 +42,6 @@ commands:
     aliases: [i]
   fly:
   nexusversion: 
-  nexusadmin:
-    aliases: [na]
   tps:
     aliases: [performance, memory, mem, perf]
+  playtime:

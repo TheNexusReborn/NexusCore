@@ -5,6 +5,7 @@ import com.thenexusreborn.api.scoreboard.wrapper.ITeam;
 import com.thenexusreborn.nexuscore.util.MCUtils;
 import org.bukkit.scoreboard.Team;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class SpigotTeam implements ITeam {
@@ -18,32 +19,54 @@ public class SpigotTeam implements ITeam {
     
     @Override
     public void addEntry(String text) {
-        team.addEntry(text);
+        try {
+            team.addEntry(text);
+        } catch (Exception e) {
+            
+        }
     }
     
     @Override
     public Set<String> getEntries() {
-        return team.getEntries();
+        try {
+            return team.getEntries();
+        } catch (Exception e) {
+            return new HashSet<>();
+        }
     }
     
     @Override
     public void unregister() {
-        team.unregister();
+        try {
+            team.unregister();
+        } catch (Exception e) {
+            
+        }
     }
     
     @Override
     public String getName() {
-        return team.getName();
+        try {
+            return team.getName();
+        } catch (Exception e) {
+            return "";
+        }
     }
     
     @Override
     public void setPrefix(String prefix) {
-        team.setPrefix(MCUtils.color(prefix));
+        try {
+            team.setPrefix(MCUtils.color(prefix));
+        } catch (Exception e) {}
     }
     
     @Override
     public void setSuffix(String suffix) {
-        team.setSuffix(MCUtils.color(suffix));
+        try {
+            team.setSuffix(MCUtils.color(suffix));
+        } catch (Exception e) {
+            
+        }
     }
     
     @Override

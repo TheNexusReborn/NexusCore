@@ -1,13 +1,18 @@
 package com.thenexusreborn.nexuscore.cmds;
 
-import com.starmediadev.starlib.util.TimeParser;
 import com.thenexusreborn.api.NexusAPI;
-import com.thenexusreborn.api.player.*;
+import com.thenexusreborn.api.player.NexusProfile;
+import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.api.util.Constants;
 import com.thenexusreborn.nexuscore.NexusCore;
-import com.thenexusreborn.nexuscore.util.*;
-import org.bukkit.Bukkit;
-import org.bukkit.command.*;
+import com.thenexusreborn.nexuscore.util.MCUtils;
+import com.thenexusreborn.nexuscore.util.MsgType;
+import com.thenexusreborn.nexuscore.util.SpigotUtils;
+import me.firestar311.starlib.api.time.TimeParser;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
@@ -44,17 +49,11 @@ public class RankCommand implements TabExecutor {
         }
 
         if (rank == Rank.NEXUS) {
-            sender.sendMessage(MCUtils.color("&cThe Nexus Team rank cannot be set with a command."));
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                NexusPlayer onlineNexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(player.getUniqueId());
-                if (onlineNexusPlayer.getRank() == Rank.NEXUS) {
-                    player.sendMessage(MCUtils.color("&c" + sender.getName() + " tried to set " + args[0] + "'s rank to Nexus Team"));
-                }
+            if (!(sender instanceof Player player) || !player.getUniqueId().toString().equals("3f7891ce-5a73-4d52-a2ba-299839053fdc")) {
+                sender.sendMessage(MCUtils.color("&cYou cannot set " + args[0] + "'s rank to " + Rank.NEXUS.name() + " as it is equal to or higher than your own."));
+                return true;
             }
-            return true;
-        }
-
-        if (senderRank.ordinal() >= rank.ordinal()) {
+        } else if (senderRank.ordinal() >= rank.ordinal() && !(sender instanceof ConsoleCommandSender)) {
             sender.sendMessage(MCUtils.color("&cYou cannot set " + args[0] + "'s rank to " + rank.name() + " as it is equal to or higher than your own."));
             return true;
         }
@@ -99,7 +98,7 @@ public class RankCommand implements TabExecutor {
             sender.sendMessage(MCUtils.color(message));
         } else if (args[1].equalsIgnoreCase("add")) {
             try {
-                nexusProfile.setRank(rank, expire);
+                nexusProfile.addRank(rank, expire);
             } catch (Exception e) {
                 sender.sendMessage(MCUtils.color(MsgType.WARN + "There was a problem setting the rank: " + e.getMessage()));
                 return true;
@@ -111,7 +110,7 @@ public class RankCommand implements TabExecutor {
             sender.sendMessage(MCUtils.color(message));
         } else if (args[1].equalsIgnoreCase("remove")) {
             try {
-                nexusProfile.setRank(rank, expire);
+                nexusProfile.removeRank(rank);
             } catch (Exception e) {
                 sender.sendMessage(MCUtils.color(MsgType.WARN + "There was a problem removing the rank: " + e.getMessage()));
                 return true;
@@ -127,7 +126,7 @@ public class RankCommand implements TabExecutor {
         }
 
         String ranks;
-        if (sb.length() > 0) {
+        if (!sb.isEmpty()) {
             ranks = sb.substring(0, sb.toString().length() - 1);
         } else {
             ranks = "";

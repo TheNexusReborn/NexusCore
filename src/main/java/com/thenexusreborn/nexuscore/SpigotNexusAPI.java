@@ -1,26 +1,38 @@
 package com.thenexusreborn.nexuscore;
 
-import com.starmediadev.plugins.starcore.scheduler.SpigotScheduler;
-import com.starmediadev.starsql.objects.Database;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.network.NetworkContext;
 import com.thenexusreborn.api.network.cmd.NetworkCommand;
+import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.PlayerProxy;
-import com.thenexusreborn.api.punishment.*;
-import com.thenexusreborn.api.registry.*;
+import com.thenexusreborn.api.player.Rank;
+import com.thenexusreborn.api.punishment.Punishment;
+import com.thenexusreborn.api.punishment.PunishmentType;
+import com.thenexusreborn.api.registry.DatabaseRegistry;
+import com.thenexusreborn.api.registry.NetworkCommandRegistry;
+import com.thenexusreborn.api.registry.StatRegistry;
+import com.thenexusreborn.api.registry.ToggleRegistry;
 import com.thenexusreborn.api.server.Environment;
 import com.thenexusreborn.api.util.StaffChat;
 import com.thenexusreborn.nexuscore.api.NexusSpigotPlugin;
-import com.thenexusreborn.nexuscore.player.*;
+import com.thenexusreborn.nexuscore.data.handlers.PositionHandler;
+import com.thenexusreborn.nexuscore.player.SpigotPlayerManager;
+import com.thenexusreborn.nexuscore.player.SpigotPlayerProxy;
 import com.thenexusreborn.nexuscore.server.SpigotServerManager;
-import com.thenexusreborn.nexuscore.util.*;
+import com.thenexusreborn.nexuscore.util.MCUtils;
+import com.thenexusreborn.nexuscore.util.MsgType;
+import me.firestar311.starlib.spigot.scheduler.SpigotScheduler;
+import me.firestar311.starsql.api.objects.SQLDatabase;
+import me.firestar311.starsql.mysql.MySQLDatabase;
+import me.firestar311.starsql.mysql.MySQLProperties;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.UUID;
 
 public class SpigotNexusAPI extends NexusAPI {
@@ -35,28 +47,10 @@ public class SpigotNexusAPI extends NexusAPI {
     
     @Override
     public void registerDatabases(DatabaseRegistry registry) {
-        ConfigurationSection databasesSection = plugin.getConfig().getConfigurationSection("databases");
-        if (databasesSection != null) {
-            for (String db : databasesSection.getKeys(false)) {
-                String name;
-                String dbName = databasesSection.getString(db + ".name");
-                if (dbName != null && !dbName.equals("")) {
-                    name = dbName;
-                } else {
-                    name = db;
-                }
-                
-                String host = databasesSection.getString(db + ".host");
-                String user = databasesSection.getString(db + ".user");
-                String password = databasesSection.getString(db + ".password");
-                boolean primary = false;
-                if (databasesSection.contains(db + ".primary")) {
-                    primary = databasesSection.getBoolean(db + ".primary");
-                }
-                Database database = new Database(plugin.getLogger(), "mysql", name, host, user, password, primary);
-                registry.register(database);
-             }
-        }
+        registry.addTypeHandler(new PositionHandler());
+        FileConfiguration config = plugin.getConfig();
+        SQLDatabase database = new MySQLDatabase(plugin.getLogger(), new MySQLProperties().setDatabaseName(config.getString("databases.database.database")).setHost(config.getString("databases.database.host")).setUsername(config.getString("databases.database.username")).setPassword(config.getString("databases.database.password")));
+        registry.register(database);
     
         for (NexusSpigotPlugin nexusPlugin : plugin.getNexusPlugins()) {
             nexusPlugin.registerDatabases(registry);
@@ -72,7 +66,7 @@ public class SpigotNexusAPI extends NexusAPI {
     
     @Override
     public void registerNetworkCommands(NetworkCommandRegistry registry) {
-        registry.register(new NetworkCommand("punishment", (cmd, origin, args) -> new BukkitRunnable() {
+        registry.register("punishment", new NetworkCommand("punishment", (cmd, origin, args) -> new BukkitRunnable() {
             public void run() {
                 long id = Long.parseLong(args[0]);
                 Punishment punishment = null;
@@ -81,7 +75,7 @@ public class SpigotNexusAPI extends NexusAPI {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                if (punishment.getType() == PunishmentType.MUTE || punishment.getType() == PunishmentType.WARN || punishment.getType() == PunishmentType.BAN || punishment.getType() == PunishmentType.BLACKLIST) {
+                if (punishment.getType() == PunishmentType.MUTE || punishment.getType() == PunishmentType.WARN) {
                     NexusAPI.getApi().getPunishmentManager().addPunishment(punishment);
         
                     Player player = Bukkit.getPlayer(UUID.fromString(punishment.getTarget()));
@@ -93,11 +87,32 @@ public class SpigotNexusAPI extends NexusAPI {
                             player.sendMessage(MCUtils.color(MsgType.WARN + "You must type the code " + punishment.getAcknowledgeInfo().getCode() + " in chat before you can speak again."));
                         }
                     }
+                } else if (punishment.getType() == PunishmentType.BAN || punishment.getType() == PunishmentType.BLACKLIST || punishment.getType() == PunishmentType.KICK) {
+                    NexusAPI.getApi().getPunishmentManager().addPunishment(punishment);
+                    UUID target = UUID.fromString(punishment.getTarget());
+                    Player player = Bukkit.getPlayer(UUID.fromString(punishment.getTarget()));
+
+                    if (player != null) {
+                        NexusPlayer punishedPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(target);
+
+                        if (punishment.isActive() || punishment.getType() == PunishmentType.KICK) {
+                            String disconnectMsg = MCUtils.color(punishment.formatKick());
+                            if (punishedPlayer.getRank() == Rank.NEXUS) {
+                                punishedPlayer.sendMessage("&6&l>> &cSomeone tried to " + punishment.getType().name().toLowerCase() + " you, but you are immune.");
+                            } else {
+                                Bukkit.getScheduler().runTask(plugin, () -> player.kickPlayer(disconnectMsg));
+
+                                if (punishment.getType() == PunishmentType.BLACKLIST) {
+                                    //TODO
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }.runTaskAsynchronously(plugin)));
         
-        registry.register(new NetworkCommand("removepunishment", (cmd, origin, args) -> {
+        registry.register("removepunishment", new NetworkCommand("removepunishment", (cmd, origin, args) -> {
             long id = Long.parseLong(args[0]);
             Punishment punishment = NexusAPI.getApi().getPunishmentManager().getPunishment(id);
             if (punishment != null) {
@@ -110,7 +125,7 @@ public class SpigotNexusAPI extends NexusAPI {
             }
         }));
         
-        registry.register(new NetworkCommand("staffchat", StaffChat::handleIncoming));
+        registry.register("staffchat", new NetworkCommand("staffchat", StaffChat::handleIncoming));
     
         for (NexusSpigotPlugin nexusPlugin : plugin.getNexusPlugins()) {
             nexusPlugin.registerNetworkCommands(registry);

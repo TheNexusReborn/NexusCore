@@ -1,14 +1,16 @@
 package com.thenexusreborn.nexuscore.cmds;
 
-import com.starmediadev.starlib.util.TimeParser;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.punishment.*;
 import com.thenexusreborn.api.util.*;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.util.*;
+import me.firestar311.starlib.api.time.TimeParser;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
+
+import java.sql.SQLException;
 
 public class PunishmentCommands implements CommandExecutor {
     
@@ -79,7 +81,9 @@ public class PunishmentCommands implements CommandExecutor {
         }
     
         NexusProfile target = SpigotUtils.getProfileFromCommand(sender, args[0]);
-        if (target == null) return true;
+        if (target == null) {
+            return true;
+        }
         
         if (target.getRank().ordinal() < actorRank.ordinal()) {
             sender.sendMessage(MCUtils.color(MsgType.WARN + "You cannot " + type.name().toLowerCase() + " that player because their rank is higher than your own."));
@@ -111,8 +115,14 @@ public class PunishmentCommands implements CommandExecutor {
         if (punishment.getType() == PunishmentType.WARN) {
             punishment.setAcknowledgeInfo(new AcknowledgeInfo(Utils.generateCode(8, true, true, true)));
         }
+
+        try {
+            NexusAPI.getApi().getPrimaryDatabase().save(punishment);
+        } catch (SQLException e) {
+            sender.sendMessage(MCUtils.color(MsgType.WARN + "Could not create the punishment. Please report to Firestar311."));
+            return true;
+        }
         
-        NexusAPI.getApi().getPrimaryDatabase().saveSilent(punishment);
         if (punishment.getId() < 1) {
             sender.sendMessage(MCUtils.color(MsgType.WARN + "Could not create the punishment. Please report to Firestar311."));
             return true;
