@@ -17,7 +17,6 @@ import com.thenexusreborn.nexuscore.scoreboard.impl.RankTablistHandler;
 import com.thenexusreborn.nexuscore.util.MCUtils;
 import com.thenexusreborn.nexuscore.util.MsgType;
 import com.thenexusreborn.nexuscore.util.SpigotUtils;
-import me.firestar311.starlib.api.time.TimeUnit;
 import me.firestar311.starsql.api.objects.Row;
 import me.firestar311.starsql.api.objects.SQLDatabase;
 import me.firestar311.starsql.api.objects.Table;
@@ -28,21 +27,25 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.net.InetSocketAddress;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class SpigotPlayerManager extends PlayerManager implements Listener {
-    
+
     private final NexusCore plugin;
 
     public SpigotPlayerManager(NexusCore plugin) {
         this.plugin = plugin;
     }
-    
+
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerInteract(PlayerInteractEvent e) {
         if (e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK) {
@@ -55,7 +58,7 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
             }
         }
     }
-    
+
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
         e.setJoinMessage(null);
@@ -84,7 +87,7 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                     return;
                 }
             }
-            
+
             if (!getPlayers().containsKey(player.getUniqueId())) {
                 NexusAPI.getApi().getScheduler().runTaskAsynchronously(() -> {
                     NexusPlayer nexusPlayer = null;
@@ -127,60 +130,60 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
 
                     NexusPlayer finalNexusPlayer = nexusPlayer;
                     Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                       NexusScoreboard scoreboard = new SpigotNexusScoreboard(finalNexusPlayer);
-                       scoreboard.init();
+                        NexusScoreboard scoreboard = new SpigotNexusScoreboard(finalNexusPlayer);
+                        scoreboard.init();
 
-                       finalNexusPlayer.setScoreboard(scoreboard);
+                        finalNexusPlayer.setScoreboard(scoreboard);
 
-                       NexusPlayerLoadEvent loadEvent = new NexusPlayerLoadEvent(finalNexusPlayer);
-                       try {
-                           Bukkit.getServer().getPluginManager().callEvent(loadEvent);
-                       } catch (Exception ex) {
-                           plugin.getLogger().severe("There was an error handling the NexusPlayerLoadEvent. This was caught to prevent other issues. Stack Trace Below");
-                           ex.printStackTrace();
-                       }
+                        NexusPlayerLoadEvent loadEvent = new NexusPlayerLoadEvent(finalNexusPlayer);
+                        try {
+                            Bukkit.getServer().getPluginManager().callEvent(loadEvent);
+                        } catch (Exception ex) {
+                            plugin.getLogger().severe("There was an error handling the NexusPlayerLoadEvent. This was caught to prevent other issues. Stack Trace Below");
+                            ex.printStackTrace();
+                        }
 
-                       ScoreboardView scoreboardView = loadEvent.getScoreboardView();
-                       if (scoreboardView != null) {
-                           scoreboard.setView(scoreboardView);
-                       }
+                        ScoreboardView scoreboardView = loadEvent.getScoreboardView();
+                        if (scoreboardView != null) {
+                            scoreboard.setView(scoreboardView);
+                        }
 
-                       if (scoreboard.getTablistHandler() == null) {
-                           if (loadEvent.getTablistHandler() != null) {
-                               scoreboard.setTablistHandler(loadEvent.getTablistHandler());
-                           } else {
-                               scoreboard.setTablistHandler(new RankTablistHandler(scoreboard));
-                           }
-                       }
+                        if (scoreboard.getTablistHandler() == null) {
+                            if (loadEvent.getTablistHandler() != null) {
+                                scoreboard.setTablistHandler(loadEvent.getTablistHandler());
+                            } else {
+                                scoreboard.setTablistHandler(new RankTablistHandler(scoreboard));
+                            }
+                        }
 
-                       scoreboard.apply();
+                        scoreboard.apply();
 
-                       String joinMessage = loadEvent.getJoinMessage();
-                       if (joinMessage != null && !joinMessage.equals("")) {
-                           Bukkit.broadcastMessage(MCUtils.color(joinMessage));
-                       }
+                        String joinMessage = loadEvent.getJoinMessage();
+                        if (joinMessage != null && !joinMessage.equals("")) {
+                            Bukkit.broadcastMessage(MCUtils.color(joinMessage));
+                        }
 
-                       if (finalNexusPlayer.getRank().ordinal() <= Rank.HELPER.ordinal()) {
-                           player.addAttachment(plugin, "spartan.info", true);
-                           player.addAttachment(plugin, "spartan.notifications", true);
-                       }
+                        if (finalNexusPlayer.getRank().ordinal() <= Rank.HELPER.ordinal()) {
+                            player.addAttachment(plugin, "spartan.info", true);
+                            player.addAttachment(plugin, "spartan.notifications", true);
+                        }
 
-                       NexusAPI.getApi().getPlayerManager().getPlayers().put(finalNexusPlayer.getUniqueId(), finalNexusPlayer);
+                        NexusAPI.getApi().getPlayerManager().getPlayers().put(finalNexusPlayer.getUniqueId(), finalNexusPlayer);
 
-                       SpigotUtils.sendActionBar(player, "&aYour data has been loaded");
+                        SpigotUtils.sendActionBar(player, "&aYour data has been loaded");
 
-                       if (finalNexusPlayer.getRank().ordinal() <= Rank.MEDIA.ordinal()) {
-                           StaffChat.sendJoin(finalNexusPlayer);
-                       }
+                        if (finalNexusPlayer.getRank().ordinal() <= Rank.MEDIA.ordinal()) {
+                            StaffChat.sendJoin(finalNexusPlayer);
+                        }
 
-                       if (loadEvent.getActionBar() != null) {
-                           new BukkitRunnable() {
-                               public void run() {
-                                   finalNexusPlayer.setActionBar(loadEvent.getActionBar());
-                               }
-                           }.runTaskLater(plugin, 60L);
-                       }
-                   }, 1L);
+                        if (loadEvent.getActionBar() != null) {
+                            new BukkitRunnable() {
+                                public void run() {
+                                    finalNexusPlayer.setActionBar(loadEvent.getActionBar());
+                                }
+                            }.runTaskLater(plugin, 60L);
+                        }
+                    }, 1L);
                 });
             }
         }
@@ -189,7 +192,6 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent e) {
         NexusPlayer nexusPlayer = this.players.get(e.getPlayer().getUniqueId());
-        this.handlePlayerLeave(nexusPlayer);
         this.players.remove(e.getPlayer().getUniqueId());
         e.setQuitMessage(null);
 
@@ -204,21 +206,19 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                 } else {
                     session.end();
 
-                    if (session.getTimeOnline() >= TimeUnit.MINUTES.toMilliseconds(5)) {
-                        SQLDatabase database = NexusAPI.getApi().getPrimaryDatabase();
-                        Table table = database.getTable(GameInfo.class);
-                        String query = "select * from " + table.getName() + " where `gameStart`>='" + session.getStart() + "' and `gameEnd` <= '" + session.getEnd() + "' and `players` like '%" + nexusPlayer.getName() + "%';";
-                        try {
-                            List<Row> rows = database.executeQuery(query);
-                            session.setGamesPlayed(rows.size());
-                        } catch (SQLException ex) {
-                            NexusAPI.getApi().getLogger().info(query);
-                            ex.printStackTrace();
-                        }
-
-                        if (session.getGamesPlayed() > 0) {
-                            database.saveSilent(session);
-                        }
+                    SQLDatabase database = NexusAPI.getApi().getPrimaryDatabase();
+                    Table table = database.getTable(GameInfo.class);
+                    String query = "select * from " + table.getName() + " where `gameStart`>='" + session.getStart() + "' and `gameEnd` <= '" + session.getEnd() + "' and `players` like '%" + nexusPlayer.getName() + "%';";
+                    try {
+                        List<Row> rows = database.executeQuery(query);
+                        session.setGamesPlayed(rows.size());
+                    } catch (SQLException ex) {
+                        NexusAPI.getApi().getLogger().info(query);
+                        ex.printStackTrace();
+                    }
+                    
+                    if (session.getGamesPlayed() > 0 || session.getTimeOnline() >= TimeUnit.MINUTES.toMillis(1)) {
+                        database.saveSilent(session);
                     }
                 }
                 this.sessions.remove(nexusPlayer.getUniqueId());
@@ -233,7 +233,7 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
             this.handlePlayerLeave(nexusPlayer);
         }
     }
-    
+
     @EventHandler
     public void onCommandPreProcess(PlayerCommandPreprocessEvent e) {
         if (e.getMessage().startsWith("minecraft:")) {
