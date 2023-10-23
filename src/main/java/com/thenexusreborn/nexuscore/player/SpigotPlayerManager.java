@@ -76,12 +76,6 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
 
             PlayerManager playerManager = NexusAPI.getApi().getPlayerManager();
             CachedPlayer cachedPlayer = playerManager.getCachedPlayer(e.getPlayer().getUniqueId());
-            if (cachedPlayer == null) {
-                NexusAPI.getApi().getScheduler().runTaskAsynchronously(() -> {
-                    NexusPlayer nexusPlayer = createPlayerData(e.getPlayer().getUniqueId(), e.getPlayer().getName());
-                    NexusAPI.getApi().getNetworkManager().send("playercreate", nexusPlayer.getUniqueId().toString());
-                });
-            }
 
             if (cachedPlayer != null) {
                 Punishment activePunishment = checkPunishments(cachedPlayer.getUniqueId());
