@@ -2,12 +2,8 @@ package com.thenexusreborn.nexuscore.util.timer;
 
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.util.ReturnableCallback;
-import com.thenexusreborn.nexuscore.util.updater.UpdateType;
-
-import java.util.*;
 
 public class Timer {
-    public final Map<UpdateType, Long> lastUpdates = new HashMap<>();
     private final ReturnableCallback<TimerSnapshot, Boolean> callback;
     private boolean cancelled;
     private long length = -1;
@@ -144,7 +140,6 @@ public class Timer {
     @Override
     public String toString() {
         return "Timer{" +
-                "lastUpdates=" + lastUpdates +
                 ", callback=" + (callback == null ? null : callback.getClass().getName()) +
                 ", cancelled=" + cancelled +
                 ", length=" + length +
