@@ -53,7 +53,7 @@ public class RankCommand implements TabExecutor {
                 sender.sendMessage(MCUtils.color("&cYou cannot set " + args[0] + "'s rank to " + Rank.NEXUS.name() + " as it is equal to or higher than your own."));
                 return true;
             }
-        } else if (senderRank.ordinal() >= rank.ordinal()) {
+        } else if (senderRank.ordinal() >= rank.ordinal() && !(sender instanceof ConsoleCommandSender)) {
             sender.sendMessage(MCUtils.color("&cYou cannot set " + args[0] + "'s rank to " + rank.name() + " as it is equal to or higher than your own."));
             return true;
         }
@@ -98,7 +98,7 @@ public class RankCommand implements TabExecutor {
             sender.sendMessage(MCUtils.color(message));
         } else if (args[1].equalsIgnoreCase("add")) {
             try {
-                nexusProfile.setRank(rank, expire);
+                nexusProfile.addRank(rank, expire);
             } catch (Exception e) {
                 sender.sendMessage(MCUtils.color(MsgType.WARN + "There was a problem setting the rank: " + e.getMessage()));
                 return true;
@@ -110,7 +110,7 @@ public class RankCommand implements TabExecutor {
             sender.sendMessage(MCUtils.color(message));
         } else if (args[1].equalsIgnoreCase("remove")) {
             try {
-                nexusProfile.setRank(rank, expire);
+                nexusProfile.removeRank(rank);
             } catch (Exception e) {
                 sender.sendMessage(MCUtils.color(MsgType.WARN + "There was a problem removing the rank: " + e.getMessage()));
                 return true;
