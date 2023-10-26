@@ -47,7 +47,7 @@ public class PlaytimeCommand implements CommandExecutor {
 
         long playtime = nexusPlayer.getStatValue("playtime").getAsLong();
         if (nexusPlayer.isOnline()) {
-            Session session = NexusAPI.getApi().getPlayerManager().getSession(nexusPlayer.getUniqueId());
+            Session session = nexusPlayer.getSession();
             if (session != null) {
                 playtime += System.currentTimeMillis() - session.getStart();
             }
