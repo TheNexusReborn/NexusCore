@@ -7,6 +7,7 @@ import com.thenexusreborn.api.punishment.Punishment;
 import com.thenexusreborn.api.scoreboard.NexusScoreboard;
 import com.thenexusreborn.api.scoreboard.ScoreboardView;
 import com.thenexusreborn.api.server.NetworkType;
+import com.thenexusreborn.api.stats.StatChange;
 import com.thenexusreborn.api.stats.StatHelper;
 import com.thenexusreborn.api.stats.StatOperator;
 import com.thenexusreborn.api.util.StaffChat;
@@ -75,7 +76,6 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
         if (NexusAPI.NETWORK_TYPE == NetworkType.SINGLE) {
             Session session = new Session(player.getUniqueId());
             session.start();
-            this.sessions.put(player.getUniqueId(), session);
 
             PlayerManager playerManager = NexusAPI.getApi().getPlayerManager();
             CachedPlayer cachedPlayer = playerManager.getCachedPlayer(e.getPlayer().getUniqueId());
