@@ -105,11 +105,12 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                         return;
                     }
 
+                    nexusPlayer.setSession(session);
+
                     if (nexusPlayer.getFirstJoined() == 0) {
                         nexusPlayer.setFirstJoined(System.currentTimeMillis());
                     }
                     nexusPlayer.setLastLogin(System.currentTimeMillis());
-                    this.loginTimes.put(nexusPlayer.getUniqueId(), System.currentTimeMillis());
                     if (!nexusPlayer.getName().equals(player.getName())) {
                         nexusPlayer.setName(player.getName());
                     }
@@ -197,32 +198,31 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
 
         if (NexusAPI.NETWORK_TYPE == NetworkType.SINGLE) {
             NexusAPI.getApi().getScheduler().runTaskAsynchronously(() -> {
-                nexusPlayer.setLastLogout(System.currentTimeMillis());
-                long playTime = System.currentTimeMillis() - this.loginTimes.get(nexusPlayer.getUniqueId());
-                this.loginTimes.remove(nexusPlayer.getUniqueId());
-                Session session = this.sessions.get(nexusPlayer.getUniqueId());
-                if (session == null) {
-                    plugin.getLogger().severe("There was no session for player " + nexusPlayer.getName());
-                } else {
-                    session.end();
+                Session session = nexusPlayer.getSession();
+                session.end();
+                nexusPlayer.setLastLogout(session.getEnd());
+                long playTime = session.getTimeOnline();
+                SQLDatabase database = NexusAPI.getApi().getPrimaryDatabase();
+                Table table = database.getTable(GameInfo.class);
+                String query = "select * from " + table.getName() + " where `gameStart`>='" + session.getStart() + "' and `gameEnd` <= '" + session.getEnd() + "' and `players` like '%" + nexusPlayer.getName() + "%';";
+                try {
+                    List<Row> rows = database.executeQuery(query);
+                    session.setGamesPlayed(rows.size());
+                } catch (SQLException ex) {
+                    NexusAPI.getApi().getLogger().info(query);
+                    ex.printStackTrace();
+                }
 
-                    SQLDatabase database = NexusAPI.getApi().getPrimaryDatabase();
-                    Table table = database.getTable(GameInfo.class);
-                    String query = "select * from " + table.getName() + " where `gameStart`>='" + session.getStart() + "' and `gameEnd` <= '" + session.getEnd() + "' and `players` like '%" + nexusPlayer.getName() + "%';";
-                    try {
-                        List<Row> rows = database.executeQuery(query);
-                        session.setGamesPlayed(rows.size());
-                    } catch (SQLException ex) {
-                        NexusAPI.getApi().getLogger().info(query);
-                        ex.printStackTrace();
-                    }
-                    
-                    if (session.getGamesPlayed() > 0 || session.getTimeOnline() >= TimeUnit.MINUTES.toMillis(1)) {
-                        database.saveSilent(session);
+                if (session.getGamesPlayed() > 0 || session.getTimeOnline() >= TimeUnit.MINUTES.toMillis(1)) {
+                    database.saveSilent(session);
+                }
+                nexusPlayer.setSession(null);
+                nexusPlayer.changeStat("playtime", playTime, StatOperator.ADD);
+                for (StatChange change : nexusPlayer.getStats().findAllChanges()) {
+                    if (change.getId() != 0) {
+                        change.push();
                     }
                 }
-                this.sessions.remove(nexusPlayer.getUniqueId());
-                nexusPlayer.changeStat("playtime", playTime, StatOperator.ADD).push();
                 StatHelper.consolidateStats(nexusPlayer);
                 NexusAPI.getApi().getPrimaryDatabase().saveSilent(nexusPlayer);
             });
