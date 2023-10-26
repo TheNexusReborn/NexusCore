@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 public class PlaytimeCommand implements CommandExecutor {
     
     private final NexusCore plugin;
+    private final TimeFormat timeFormat = new TimeFormat("%*00y%%*00mo%%*00w%%*00d%%*00h%%*00m%%00s%");
 
     public PlaytimeCommand(NexusCore plugin) {
         this.plugin = plugin;
@@ -49,11 +50,10 @@ public class PlaytimeCommand implements CommandExecutor {
         if (nexusPlayer.isOnline()) {
             Session session = nexusPlayer.getSession();
             if (session != null) {
-                playtime += System.currentTimeMillis() - session.getStart();
+                playtime += session.getTimeOnline();
             }
         }
 
-        TimeFormat timeFormat = new TimeFormat("%*00y%%*00mo%%*00w%%*00d%%*00h%%*00m%%00s%");
         String formattedPlaytime = timeFormat.format(playtime);
         if (self) {
             sender.sendMessage(MCUtils.color(MsgType.INFO + "Your playtime is " + MsgType.INFO.getVariableColor() + formattedPlaytime));
