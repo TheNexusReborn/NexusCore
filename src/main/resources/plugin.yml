@@ -45,3 +45,6 @@ commands:
   tps:
     aliases: [performance, memory, mem, perf]
   playtime:
+  list:
+  balance:
+    aliases: [bal]

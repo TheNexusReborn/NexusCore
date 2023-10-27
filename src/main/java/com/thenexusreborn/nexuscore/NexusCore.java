@@ -76,6 +76,7 @@ public class NexusCore extends JavaPlugin {
         getCommand("reply").setExecutor(new ReplyCommand());
         getCommand("me").setExecutor(new MeCommand());
         getCommand("list").setExecutor(new ListCommand(this));
+        getCommand("balance").setExecutor(new BalanceCommand(this));
         getCommand("discord").setExecutor((sender, cmd, label, args) -> {
             sender.sendMessage(MCUtils.color(MsgType.INFO + "Discord: &bhttps://discord.gg/bawZKSWEpT"));
             return true;
