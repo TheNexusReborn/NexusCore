@@ -7,6 +7,7 @@ import com.thenexusreborn.api.util.*;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.util.*;
 import me.firestar311.starlib.api.time.TimeParser;
+import org.bukkit.Bukkit;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
@@ -114,6 +115,11 @@ public class PunishmentCommands implements CommandExecutor {
         
         if (punishment.getType() == PunishmentType.WARN) {
             punishment.setAcknowledgeInfo(new AcknowledgeInfo(Utils.generateCode(8, true, true, true)));
+        } else if (Stream.of(PunishmentType.BAN, PunishmentType.BLACKLIST, PunishmentType.KICK).anyMatch(punishmentType -> punishment.getType() == punishmentType)) {
+            Player targetPlayer = Bukkit.getPlayer(targetUniqueID);
+            if (targetPlayer != null) {
+                targetPlayer.kickPlayer(punishment.formatKick()); //TODO this doesn't provide an id right away though
+            }
         }
 
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
