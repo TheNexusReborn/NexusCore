@@ -81,7 +81,7 @@ public class NexusCore extends JavaPlugin {
         });
         
         getCommand("shop").setExecutor((sender, cmd, label, args) -> {
-            sender.sendMessage(MCUtils.color(MsgType.INFO + "Shop: &bhttps://shop.thenexusreborn.com/"));
+            sender.sendMessage(MCUtils.color(MsgType.INFO + "Shop: &bhttps://nexusreborn.tebex.io/"));
             return true;
         });
         
