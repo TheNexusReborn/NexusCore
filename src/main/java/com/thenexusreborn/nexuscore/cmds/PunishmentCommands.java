@@ -116,20 +116,24 @@ public class PunishmentCommands implements CommandExecutor {
             punishment.setAcknowledgeInfo(new AcknowledgeInfo(Utils.generateCode(8, true, true, true)));
         }
 
-        try {
-            NexusAPI.getApi().getPrimaryDatabase().save(punishment);
-        } catch (SQLException e) {
-            sender.sendMessage(MCUtils.color(MsgType.WARN + "Could not create the punishment. Please report to Firestar311."));
-            return true;
-        }
-        
-        if (punishment.getId() < 1) {
-            sender.sendMessage(MCUtils.color(MsgType.WARN + "Could not create the punishment. Please report to Firestar311."));
-            return true;
-        }
-        
-        NexusAPI.getApi().getNetworkManager().send("punishment", punishment.getId() + "");
-        StaffChat.sendPunishment(punishment);
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            try {
+                NexusAPI.getApi().getPrimaryDatabase().save(punishment);
+            } catch (SQLException e) {
+                sender.sendMessage(MCUtils.color(MsgType.WARN + "Could not create the punishment. Please report to Firestar311."));
+                e.printStackTrace();
+                return;
+            }
+
+            if (punishment.getId() < 1) {
+                sender.sendMessage(MCUtils.color(MsgType.WARN + "Could not create the punishment. Please report to Firestar311."));
+                plugin.getLogger().severe("Had a Punishment ID that was " + punishment.getId() + " after saving to the database, with no SQL Error");
+                return;
+            }
+
+            NexusAPI.getApi().getNetworkManager().send("punishment", punishment.getId() + "");
+            StaffChat.sendPunishment(punishment); 
+        });
         return true;
     }
 }
