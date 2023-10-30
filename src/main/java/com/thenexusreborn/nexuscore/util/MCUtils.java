@@ -1,13 +1,10 @@
 package com.thenexusreborn.nexuscore.util;
 
 import com.thenexusreborn.api.NexusAPI;
-import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.nexuscore.NexusCore;
 import net.minecraft.server.v1_8_R3.MinecraftServer;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -15,7 +12,6 @@ import org.bukkit.entity.Player;
 import java.text.DecimalFormat;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.UUID;
 
 public final class MCUtils {
     
@@ -54,19 +50,6 @@ public final class MCUtils {
         return Math.min((double)Math.round(MinecraftServer.getServer().recentTps[0] * 100.0) / 100.0, 20.0);
     }
     
-    public static NexusPlayer getPlayerFromInput(String input) {
-        NexusPlayer player;
-        try {
-            UUID uuid = UUID.fromString(input);
-            player = NexusAPI.getApi().getPlayerManager().getNexusPlayer(uuid);
-            //TODO Need to return a cached profile, this system kind of needs to be reworked
-        } catch (Exception e) {
-            player = NexusAPI.getApi().getPlayerManager().getNexusPlayer(input);
-        }
-        
-        return player;
-    }
-    
     public static Rank getSenderRank(NexusCore plugin, CommandSender sender) {
         if (sender instanceof ConsoleCommandSender) {
             return Rank.ADMIN;
@@ -89,70 +72,5 @@ public final class MCUtils {
     
     public static void debugSender(CommandSender sender, String message) {
         sender.sendMessage(MCUtils.color("&7&o" + message));
-    }
-    
-    public static String getWorldTimeAs24Hr(World world) {
-        long[] worldTimeBreakdown = getWorldTimeBreakdown(world);
-        long totalHours = worldTimeBreakdown[1];
-        long totalMinutes = worldTimeBreakdown[2];
-        long totalSeconds = worldTimeBreakdown[3];
-        
-        String hours = formatTimeUnit(totalHours), minutes = formatTimeUnit(totalMinutes), seconds = formatTimeUnit(totalSeconds);
-        return hours + ":" + minutes + ":" + seconds;
-    }
-    
-    public static String getWorldTimeAs12Hr(World world) {
-        long[] worldTimeBreakdown = getWorldTimeBreakdown(world);
-        long totalHours = worldTimeBreakdown[1];
-        long totalMinutes = worldTimeBreakdown[2];
-        long totalSeconds = worldTimeBreakdown[3];
-    
-        String meridian;
-        if (totalHours < 12) {
-            meridian = "am";
-        } else if (totalHours >= 12) {
-            meridian = "pm";
-        } else {
-            throw new IllegalArgumentException("Invalid time format: Total hours is greater than 24.");
-        }
-        
-        if (totalHours > 12) {
-            totalHours = totalHours - 12;
-        }
-        
-        String hours = formatTimeUnit(totalHours), minutes = formatTimeUnit(totalMinutes), seconds = formatTimeUnit(totalSeconds) + " " + meridian;
-        return hours + ":" + minutes + ":" + seconds;
-    }
-    
-    private static long[] getWorldTimeBreakdown(World world) {
-        long worldTime = world.getTime();
-        double totalTicks = worldTime + 6000;
-        long totalDays = (long) (totalTicks / ticksPerDay);
-        totalTicks = totalTicks - (ticksPerDay * totalDays);
-        long totalHours = (long) (totalTicks / ticksPerHour);
-        totalTicks = totalTicks - (ticksPerHour * totalHours);
-        long totalMinutes = (long) (totalTicks / ticksPerMinute);
-        totalTicks = totalTicks - (ticksPerMinute * totalMinutes);
-        long totalSeconds = (long) (totalTicks / ticksPerSecond);
-        return new long[]{totalDays, totalHours, totalMinutes, totalSeconds};
-    }
-    
-    private static String formatTimeUnit(long time) {
-        if (time == 0) {
-            return "00";
-        } else if (time < 10) {
-            return "0" + time;
-        } else {
-            return time + "";
-        }
-    }
-    
-    public static World getWorld(CommandSender sender) {
-        if (sender instanceof ConsoleCommandSender) {
-            return Bukkit.getWorld(ServerProperties.getLevelName());
-        } else if (sender instanceof Player) {
-            return ((Player) sender).getWorld();
-        }
-        return null;
     }
 }

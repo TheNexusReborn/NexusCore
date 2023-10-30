@@ -32,7 +32,7 @@ public class PunishmentHistoryCmds implements CommandExecutor {
             return true;
         }
         
-        String commandTarget = "", commandTargetName;
+        String commandTarget, commandTargetName;
         try {
             UUID uuid = UUID.fromString(args[0]);
             commandTarget = uuid.toString();
@@ -40,18 +40,14 @@ public class PunishmentHistoryCmds implements CommandExecutor {
             if (player != null) {
                 commandTargetName = player.getName();
             } else {
-                commandTargetName = NexusAPI.getApi().getPlayerManager().getCachedPlayers().get(uuid).getName();
+                commandTargetName = NexusAPI.getApi().getPlayerManager().getNameFromUUID(uuid); //Can be replaced with the BiMap idea
             }
         } catch (Exception e) {
             commandTargetName = args[0];
             if (commandTargetName.equalsIgnoreCase("PowerMoveRegulator") || commandTargetName.equalsIgnoreCase("Console")) {
                 commandTarget = commandTargetName;
             } else {
-                for (CachedPlayer cachedPlayer : NexusAPI.getApi().getPlayerManager().getCachedPlayers().values()) {
-                    if (cachedPlayer.getName().equalsIgnoreCase(commandTargetName)) {
-                        commandTarget = cachedPlayer.getUniqueId().toString();
-                    }
-                }
+                commandTarget = NexusAPI.getApi().getPlayerManager().getUUIDFromName(commandTargetName).toString();
             }
         }
         
@@ -70,7 +66,7 @@ public class PunishmentHistoryCmds implements CommandExecutor {
             }
         }
         
-        if (unfilteredPunishments.size() == 0) {
+        if (unfilteredPunishments.isEmpty()) {
             sender.sendMessage(MCUtils.color(MsgType.WARN + "Could not find any punishments."));
             return true;
         }

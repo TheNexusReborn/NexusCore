@@ -6,12 +6,15 @@ import com.thenexusreborn.api.punishment.*;
 import com.thenexusreborn.api.util.*;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.util.*;
+import me.firestar311.starlib.api.Pair;
 import me.firestar311.starlib.api.time.TimeParser;
 import org.bukkit.Bukkit;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
+import java.util.UUID;
+import java.util.stream.Stream;
 
 public class PunishmentCommands implements CommandExecutor {
     
@@ -23,18 +26,14 @@ public class PunishmentCommands implements CommandExecutor {
     
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        PunishmentType type = null;
-        if (cmd.getName().equalsIgnoreCase("ban") || cmd.getName().equalsIgnoreCase("tempban") || cmd.getName().equalsIgnoreCase("tb")) {
-            type = PunishmentType.BAN;
-        } else if (cmd.getName().equalsIgnoreCase("mute") || cmd.getName().equalsIgnoreCase("tempmute") || cmd.getName().equalsIgnoreCase("tm")) {
-            type = PunishmentType.MUTE;
-        } else if (cmd.getName().equalsIgnoreCase("kick")) {
-            type = PunishmentType.KICK;
-        } else if (cmd.getName().equalsIgnoreCase("warn")) {
-            type = PunishmentType.WARN;
-        } else if (cmd.getName().equalsIgnoreCase("blacklist")) {
-            type = PunishmentType.BLACKLIST;
-        }
+        PunishmentType type = switch (cmd.getName().toLowerCase()) {
+            case "ban", "tempban", "tb" -> PunishmentType.BAN;
+            case "mute", "tempmute", "tm" -> PunishmentType.MUTE;
+            case "kick" -> PunishmentType.KICK;
+            case "warn" -> PunishmentType.WARN;
+            case "blacklist" -> PunishmentType.BLACKLIST;
+            default -> null;
+        };
         
         if (type == null) {
             sender.sendMessage(MCUtils.color(MsgType.WARN + "Invalid punishment type."));
@@ -81,12 +80,18 @@ public class PunishmentCommands implements CommandExecutor {
             return true;
         }
     
-        NexusProfile target = SpigotUtils.getProfileFromCommand(sender, args[0]);
-        if (target == null) {
+        PlayerManager playerManager = NexusAPI.getApi().getPlayerManager();
+        Pair<UUID, String> playerInfo = playerManager.getPlayerFromIdentifier(args[0]);
+        if (playerInfo == null) {
+            sender.sendMessage(MCUtils.color(MsgType.WARN + "Could not find a player with that identifier."));
             return true;
         }
         
-        if (target.getRank().ordinal() < actorRank.ordinal()) {
+        UUID targetUniqueID = playerInfo.firstValue();
+        String targetName = playerInfo.secondValue();
+        Rank targetRank = playerManager.getPlayerRank(targetUniqueID);
+
+        if (targetRank.ordinal() < actorRank.ordinal()) {
             sender.sendMessage(MCUtils.color(MsgType.WARN + "You cannot " + type.name().toLowerCase() + " that player because their rank is higher than your own."));
             return true;
         }
@@ -105,13 +110,21 @@ public class PunishmentCommands implements CommandExecutor {
         if (length > 0) {
             startIndex = 2;
         }
-        
+
+        if (args[startIndex].startsWith("[PMR]")) {
+            if (sender instanceof ConsoleCommandSender) {
+                actor = "PowerMoveRegulator";
+            } else if (actorRank == Rank.NEXUS) {
+                actor = "PowerMoveRegulator";
+            }
+            startIndex++;
+        }
         for (int i = startIndex; i < args.length; i++) {
             sb.append(args[i]).append(" ");
         }
         
         String reason = sb.toString().trim();
-        Punishment punishment = new Punishment(System.currentTimeMillis(), length, actor, target.getUniqueId().toString(), server, reason, type, Visibility.SILENT);
+        Punishment punishment = new Punishment(System.currentTimeMillis(), length, actor, targetUniqueID.toString(), server, reason, type, Visibility.SILENT);
         
         if (punishment.getType() == PunishmentType.WARN) {
             punishment.setAcknowledgeInfo(new AcknowledgeInfo(Utils.generateCode(8, true, true, true)));

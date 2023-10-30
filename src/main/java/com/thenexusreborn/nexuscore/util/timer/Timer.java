@@ -69,8 +69,6 @@ public class Timer {
         setTime(this.time + l);
     }
     
-    //TODO remove time and length
-    
     public void setTime(long l) {
         if (l > this.length) {
             throw new IllegalArgumentException("The new time cannot be greather than the length");

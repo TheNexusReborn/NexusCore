@@ -3,7 +3,6 @@ package com.thenexusreborn.nexuscore.cmds;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Toggle;
-import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.nexuscore.api.events.ToggleChangeEvent;
 import com.thenexusreborn.nexuscore.util.MCUtils;
 import com.thenexusreborn.nexuscore.util.MsgType;

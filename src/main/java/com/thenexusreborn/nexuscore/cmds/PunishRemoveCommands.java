@@ -1,14 +1,14 @@
 package com.thenexusreborn.nexuscore.cmds;
 
 import com.thenexusreborn.api.NexusAPI;
-import com.thenexusreborn.api.player.NexusProfile;
+import com.thenexusreborn.api.player.PlayerManager;
 import com.thenexusreborn.api.punishment.PardonInfo;
 import com.thenexusreborn.api.punishment.Punishment;
 import com.thenexusreborn.api.punishment.PunishmentType;
 import com.thenexusreborn.api.util.StaffChat;
 import com.thenexusreborn.nexuscore.util.MCUtils;
 import com.thenexusreborn.nexuscore.util.MsgType;
-import com.thenexusreborn.nexuscore.util.SpigotUtils;
+import me.firestar311.starlib.api.Pair;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class PunishRemoveCommands implements CommandExecutor {
     
@@ -42,12 +43,19 @@ public class PunishRemoveCommands implements CommandExecutor {
             sender.sendMessage(MCUtils.color(MsgType.WARN + "Usage: /" + label + " <target> <reason>"));
             return true;
         }
+
+        PlayerManager playerManager = NexusAPI.getApi().getPlayerManager();
+        Pair<UUID, String> playerInfo = playerManager.getPlayerFromIdentifier(args[0]);
+        if (playerInfo == null) {
+            sender.sendMessage(MCUtils.color(MsgType.WARN + "Could not find a player with that identifier."));
+            return true;
+        }
+
+        UUID targetUniqueID = playerInfo.firstValue();
+        String targetName = playerInfo.secondValue();
     
-        NexusProfile target = SpigotUtils.getProfileFromCommand(sender, args[0]);
-        if (target == null) return true;
-    
-        List<Punishment> punishments = NexusAPI.getApi().getPunishmentManager().getPunishmentsByTarget(target.getUniqueId());
-        if (punishments.size() == 0) {
+        List<Punishment> punishments = NexusAPI.getApi().getPunishmentManager().getPunishmentsByTarget(targetUniqueID);
+        if (punishments.isEmpty()) {
             sender.sendMessage(MCUtils.color(MsgType.WARN + "That player does not have any punishments"));
             return true;
         }
@@ -61,7 +69,7 @@ public class PunishRemoveCommands implements CommandExecutor {
             }
         }
         
-        if (activePunishments.size() == 0) {
+        if (activePunishments.isEmpty()) {
             sender.sendMessage(MCUtils.color(MsgType.WARN + "That player does not have any active punishmentss."));
             return true;
         }

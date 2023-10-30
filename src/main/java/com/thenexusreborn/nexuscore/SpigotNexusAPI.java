@@ -3,6 +3,7 @@ package com.thenexusreborn.nexuscore;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.network.NetworkContext;
 import com.thenexusreborn.api.network.cmd.NetworkCommand;
+import com.thenexusreborn.api.player.IPEntry;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.PlayerProxy;
 import com.thenexusreborn.api.player.Rank;
@@ -33,6 +34,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 public class SpigotNexusAPI extends NexusAPI {
@@ -92,19 +95,40 @@ public class SpigotNexusAPI extends NexusAPI {
                     UUID target = UUID.fromString(punishment.getTarget());
                     Player player = Bukkit.getPlayer(UUID.fromString(punishment.getTarget()));
 
+                    if (punishment.getType() == PunishmentType.BLACKLIST) {
+                        if (punishment.isActive()) {
+                            Set<IPEntry> playerIps = new HashSet<>();
+                            for (IPEntry ipEntry : NexusAPI.getApi().getPlayerManager().getIpHistory()) {
+                                if (ipEntry.getUuid().equals(target)) {
+                                    playerIps.add(ipEntry);
+                                }
+                            }
+
+                            Set<UUID> alts = new HashSet<>();
+                            for (IPEntry playerIp : playerIps) {
+                                alts.addAll(NexusAPI.getApi().getPlayerManager().getPlayersByIp(playerIp.getIp()));
+                            }
+
+                            String kickMessage = MCUtils.color(punishment.formatKick());
+                            Bukkit.getScheduler().runTask(plugin, () -> {
+                                for (UUID alt : alts) {
+                                    Player altPlayer = Bukkit.getPlayer(alt);
+                                    if (altPlayer != null) {
+                                        altPlayer.kickPlayer(kickMessage);
+                                    }
+                                }
+                            });
+                        }
+                    }
+                    
                     if (player != null) {
                         NexusPlayer punishedPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(target);
-
                         if (punishment.isActive() || punishment.getType() == PunishmentType.KICK) {
                             String disconnectMsg = MCUtils.color(punishment.formatKick());
                             if (punishedPlayer.getRank() == Rank.NEXUS) {
                                 punishedPlayer.sendMessage("&6&l>> &cSomeone tried to " + punishment.getType().name().toLowerCase() + " you, but you are immune.");
                             } else {
                                 Bukkit.getScheduler().runTask(plugin, () -> player.kickPlayer(disconnectMsg));
-
-                                if (punishment.getType() == PunishmentType.BLACKLIST) {
-                                    //TODO
-                                }
                             }
                         }
                     }

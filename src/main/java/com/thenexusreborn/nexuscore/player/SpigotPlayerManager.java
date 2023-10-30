@@ -78,20 +78,17 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
             session.start();
 
             PlayerManager playerManager = NexusAPI.getApi().getPlayerManager();
-            CachedPlayer cachedPlayer = playerManager.getCachedPlayer(e.getPlayer().getUniqueId());
 
-            if (cachedPlayer != null) {
-                Punishment activePunishment = checkPunishments(cachedPlayer.getUniqueId());
-                if (activePunishment != null) {
-                    e.getPlayer().kickPlayer(ChatColor.translateAlternateColorCodes('&', activePunishment.formatKick()));
-                    return;
-                }
+            Punishment activePunishment = checkPunishments(e.getPlayer().getUniqueId());
+            if (activePunishment != null) {
+                e.getPlayer().kickPlayer(ChatColor.translateAlternateColorCodes('&', activePunishment.formatKick()));
+                return;
             }
 
             if (!getPlayers().containsKey(player.getUniqueId())) {
                 NexusAPI.getApi().getScheduler().runTaskAsynchronously(() -> {
                     NexusPlayer nexusPlayer = null;
-                    if (!hasData(player.getUniqueId())) {
+                    if (!getUuidNameMap().containsKey(player.getUniqueId())) {
                         nexusPlayer = createPlayerData(player.getUniqueId(), player.getName());
                     } else {
                         try {
@@ -106,7 +103,9 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                     }
 
                     nexusPlayer.setSession(session);
-
+                    playerManager.getUuidNameMap().forcePut(nexusPlayer.getUniqueId(), new Name(nexusPlayer.getName()));
+                    playerManager.getUuidRankMap().put(nexusPlayer.getUniqueId(), nexusPlayer.getRanks());
+                    
                     if (nexusPlayer.getFirstJoined() == 0) {
                         nexusPlayer.setFirstJoined(System.currentTimeMillis());
                     }
@@ -128,7 +127,6 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                     }
 
                     getPlayers().put(nexusPlayer.getUniqueId(), nexusPlayer);
-                    cachedPlayers.put(nexusPlayer.getUniqueId(), new CachedPlayer(nexusPlayer));
                     InetSocketAddress socketAddress = player.getAddress();
                     String hostName = socketAddress.getHostString();
                     NexusAPI.getApi().getPlayerManager().addIpHistory(player.getUniqueId(), hostName);
@@ -234,7 +232,6 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
             if (nexusPlayer.getRank().ordinal() <= Rank.MEDIA.ordinal()) {
                 StaffChat.sendDisconnect(nexusPlayer);
             }
-            this.handlePlayerLeave(nexusPlayer);
         }
     }
 

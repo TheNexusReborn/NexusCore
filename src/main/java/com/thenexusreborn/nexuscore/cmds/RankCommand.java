@@ -1,13 +1,14 @@
 package com.thenexusreborn.nexuscore.cmds;
 
 import com.thenexusreborn.api.NexusAPI;
-import com.thenexusreborn.api.player.NexusProfile;
+import com.thenexusreborn.api.player.PlayerManager;
+import com.thenexusreborn.api.player.PlayerRanks;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.api.util.Constants;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.util.MCUtils;
 import com.thenexusreborn.nexuscore.util.MsgType;
-import com.thenexusreborn.nexuscore.util.SpigotUtils;
+import me.firestar311.starlib.api.Pair;
 import me.firestar311.starlib.api.time.TimeParser;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -18,6 +19,7 @@ import org.bukkit.entity.Player;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.UUID;
 
 public class RankCommand implements TabExecutor {
 
@@ -63,14 +65,20 @@ public class RankCommand implements TabExecutor {
             time = new TimeParser().parseTime(args[3]);
         }
 
-        NexusProfile nexusProfile = SpigotUtils.getProfileFromCommand(sender, args[0]);
-        if (nexusProfile == null) {
+        PlayerManager playerManager = NexusAPI.getApi().getPlayerManager();
+        Pair<UUID, String> playerInfo = playerManager.getPlayerFromIdentifier(args[0]);
+        if (playerInfo == null) {
+            sender.sendMessage(MCUtils.color(MsgType.WARN + "Could not find a player with that identifier."));
             return true;
         }
 
-        if (senderRank.ordinal() >= nexusProfile.getRank().ordinal()) {
+        UUID targetUniqueID = playerInfo.firstValue();
+        String targetName = playerInfo.secondValue();
+        PlayerRanks targetRanks = playerManager.getPlayerRanks(targetUniqueID);
+
+        if (senderRank.ordinal() >= targetRanks.get().ordinal()) {
             if (!(sender instanceof ConsoleCommandSender)) {
-                sender.sendMessage(MCUtils.color("&cYou cannot modify " + nexusProfile.getName() + "'s rank as they have " + nexusProfile.getRank().name() + " and you have " + senderRank.name()));
+                sender.sendMessage(MCUtils.color("&cYou cannot modify " + targetName + "'s rank as they have " + targetRanks.get().name() + " and you have " + senderRank.name()));
                 return true;
             }
         }
@@ -78,8 +86,8 @@ public class RankCommand implements TabExecutor {
         String rankName = rank.getColor() + "&l" + rank.name();
 
         long expire = -1;
-        if (nexusProfile.hasRank(rank)) {
-            long existingTime = System.currentTimeMillis() - nexusProfile.getRanks().getExpire(rank);
+        if (targetRanks.contains(rank)) {
+            long existingTime = System.currentTimeMillis() - targetRanks.getExpire(rank);
             if (existingTime > 0) {
                 expire = System.currentTimeMillis() + time + existingTime;
             }
@@ -90,38 +98,38 @@ public class RankCommand implements TabExecutor {
         }
 
         if (args[1].equalsIgnoreCase("set")) {
-            nexusProfile.setRank(rank, expire);
-            String message = "&eYou set &b" + nexusProfile.getName() + "'s &erank to " + rankName;
+            targetRanks.set(rank, expire);
+            String message = "&eYou set &b" + targetName + "'s &erank to " + rankName;
             if (time > -1) {
                 message += " &efor &b" + Constants.PUNISHMENT_TIME_FORMAT.format(time);
             }
             sender.sendMessage(MCUtils.color(message));
         } else if (args[1].equalsIgnoreCase("add")) {
             try {
-                nexusProfile.addRank(rank, expire);
+                targetRanks.add(rank, expire);
             } catch (Exception e) {
                 sender.sendMessage(MCUtils.color(MsgType.WARN + "There was a problem setting the rank: " + e.getMessage()));
                 return true;
             }
-            String message = "&eYou added the rank " + rankName + " &eto the player &b" + nexusProfile.getName();
+            String message = "&eYou added the rank " + rankName + " &eto the player &b" + targetName;
             if (time > -1) {
                 message += " &efor &b" + Constants.PUNISHMENT_TIME_FORMAT.format(time);
             }
             sender.sendMessage(MCUtils.color(message));
         } else if (args[1].equalsIgnoreCase("remove")) {
             try {
-                nexusProfile.removeRank(rank);
+                targetRanks.remove(rank);
             } catch (Exception e) {
                 sender.sendMessage(MCUtils.color(MsgType.WARN + "There was a problem removing the rank: " + e.getMessage()));
                 return true;
             }
-            sender.sendMessage(MCUtils.color("&eYou removed the rank " + rankName + " &efrom &b" + nexusProfile.getName()));
+            sender.sendMessage(MCUtils.color("&eYou removed the rank " + rankName + " &efrom &b" + targetName));
         }
 
-        NexusAPI.getApi().getNetworkManager().send("updaterank", nexusProfile.getUniqueId().toString(), args[1], rank.name(), expire + "");
+        NexusAPI.getApi().getNetworkManager().send("updaterank", targetUniqueID.toString(), args[1], rank.name(), expire + "");
 
         StringBuilder sb = new StringBuilder();
-        for (Entry<Rank, Long> entry : nexusProfile.getRanks().findAll().entrySet()) {
+        for (Entry<Rank, Long> entry : targetRanks.findAll().entrySet()) {
             sb.append(entry.getKey().name()).append("=").append(entry.getValue()).append(",");
         }
 
@@ -134,12 +142,9 @@ public class RankCommand implements TabExecutor {
 
         NexusAPI.getApi().getScheduler().runTaskAsynchronously(() -> {
             try {
-                NexusAPI.getApi().getPrimaryDatabase().execute("update players set `ranks`='" + ranks + "' where `uniqueId`='" + nexusProfile.getUniqueId().toString() + "';");
+                NexusAPI.getApi().getPrimaryDatabase().execute("update players set `ranks`='" + ranks + "' where `uniqueId`='" + targetUniqueID + "';");
             } catch (SQLException e) {
                 e.printStackTrace();
-            }
-            if (!nexusProfile.isOnline()) {
-                NexusAPI.getApi().getPlayerManager().getPlayers().remove(nexusProfile.getUniqueId());
             }
         });
 

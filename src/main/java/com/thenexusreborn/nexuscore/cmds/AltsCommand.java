@@ -2,12 +2,20 @@ package com.thenexusreborn.nexuscore.cmds;
 
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.helper.StringHelper;
-import com.thenexusreborn.api.player.*;
+import com.thenexusreborn.api.player.IPEntry;
+import com.thenexusreborn.api.player.PlayerManager;
+import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.nexuscore.NexusCore;
-import com.thenexusreborn.nexuscore.util.*;
-import org.bukkit.command.*;
+import com.thenexusreborn.nexuscore.util.MCUtils;
+import com.thenexusreborn.nexuscore.util.MsgType;
+import me.firestar311.starlib.api.Pair;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 public class AltsCommand implements CommandExecutor {
     
@@ -29,27 +37,33 @@ public class AltsCommand implements CommandExecutor {
             sender.sendMessage(MCUtils.color(MsgType.WARN + "Usage: /" + label + " <target>"));
             return true;
         }
-    
-        NexusProfile target = SpigotUtils.getProfileFromCommand(sender, args[0]);
-        if (target == null) return true;
+
+        PlayerManager playerManager = NexusAPI.getApi().getPlayerManager();
+        Pair<UUID, String> playerInfo = playerManager.getPlayerFromIdentifier(args[0]);
+        if (playerInfo == null) {
+            sender.sendMessage(MCUtils.color(MsgType.WARN + "Could not find a player with that information."));
+            return true;
+        }
     
         Set<String> ips = new HashSet<>();
-        for (IPEntry ipEntry : target.getIpHistory()) {
-            ips.add(ipEntry.getIp());
+        for (IPEntry ipEntry : playerManager.getIpHistory()) {
+            if (ipEntry.getUuid().equals(playerInfo.firstValue())) {
+                ips.add(ipEntry.getIp());
+            }
         }
         
         Set<UUID> players = new HashSet<>();
         for (String ip : ips) {
-            players.addAll(NexusAPI.getApi().getPlayerManager().getPlayersByIp(ip));
+            players.addAll(playerManager.getPlayersByIp(ip));
         }
         
         Set<String> altNames = new HashSet<>();
         for (UUID player : players) {
-            altNames.add(NexusAPI.getApi().getPlayerManager().getCachedPlayers().get(player).getName());
+            altNames.add(playerManager.getNameFromUUID(player));
         }
         
         String altNameList = StringHelper.join(altNames, ", ");
-        sender.sendMessage(MCUtils.color(MsgType.INFO + target.getName() + " has the following alt accounts..."));
+        sender.sendMessage(MCUtils.color(MsgType.INFO + playerInfo.secondValue() + " has the following alt accounts..."));
         sender.sendMessage(MCUtils.color("&6&l> &b" + altNameList));
         return true;
     }

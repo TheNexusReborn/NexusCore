@@ -5,11 +5,13 @@ import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.stats.*;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.util.*;
+import me.firestar311.starlib.api.Pair;
 import me.firestar311.starlib.api.Value;
 import me.firestar311.starsql.api.objects.typehandlers.ValueHandler;
 import org.bukkit.command.*;
 
 import java.util.List;
+import java.util.UUID;
 
 public class SetStatCmd implements TabExecutor {
 
@@ -32,10 +34,16 @@ public class SetStatCmd implements TabExecutor {
             return true;
         }
 
-        NexusProfile profile = SpigotUtils.getProfileFromCommand(sender, args[0]);
-        if (profile == null) {
+        PlayerManager playerManager = NexusAPI.getApi().getPlayerManager();
+        Pair<UUID, String> playerInfo = playerManager.getPlayerFromIdentifier(args[0]);
+        if (playerInfo == null) {
+            sender.sendMessage(MCUtils.color(MsgType.WARN + "Could not find a player with that identifier."));
             return true;
         }
+
+        UUID targetUniqueID = playerInfo.firstValue();
+        String targetName = playerInfo.secondValue();
+        Rank targetRank = playerManager.getPlayerRank(targetUniqueID);
 
         Stat.Info statInfo = StatHelper.getInfo(args[1]);
         if (statInfo == null) {
@@ -80,11 +88,16 @@ public class SetStatCmd implements TabExecutor {
             return true;
         }
 
-        StatChange statChange = new StatChange(StatHelper.getInfo(statInfo.getName()), profile.getUniqueId(), value.get(), operator, System.currentTimeMillis());
+        StatChange statChange = new StatChange(StatHelper.getInfo(statInfo.getName()), targetUniqueID, value.get(), operator, System.currentTimeMillis());
         
-        profile.changeStat(statInfo.getName(), value.get(), operator).push();
+        NexusPlayer player = playerManager.getNexusPlayer(targetUniqueID);
+        if (player != null) {
+            player.changeStat(statInfo.getName(), value.get(), operator).push();
+        } else {
+            statChange.push();
+        }
     
-        NexusAPI.getApi().getNetworkManager().send("updatestat", profile.getUniqueId().toString(), statInfo.getName(), operator.name(), (String) handler.getSerializer().serialize(null, value));
+        NexusAPI.getApi().getNetworkManager().send("updatestat", targetUniqueID.toString(), statInfo.getName(), operator.name(), (String) handler.getSerializer().serialize(null, value));
         
         sender.sendMessage(MCUtils.color(MsgType.INFO + "You changed the stat with the operation " + operator.name()));
         return true;
