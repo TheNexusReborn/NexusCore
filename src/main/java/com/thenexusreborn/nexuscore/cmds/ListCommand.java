@@ -3,7 +3,6 @@ package com.thenexusreborn.nexuscore.cmds;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.thenexusreborn.api.NexusAPI;
-import com.thenexusreborn.api.helper.StringHelper;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.nexuscore.NexusCore;
@@ -63,7 +62,7 @@ public class ListCommand implements CommandExecutor {
                 }
             }
             if (!sb.isEmpty()) {
-                sender.sendMessage(MCUtils.color("  &6&l> " + rank.getColor() + StringHelper.capitalizeEveryWord(rank.name().replace("_", " ")) + "&8: &f" + sb));
+                sender.sendMessage(MCUtils.color("  &6&l> " + rank.getPrefix() + "&8: &f" + sb));
             }
         }
         
