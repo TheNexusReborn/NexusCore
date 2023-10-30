@@ -40,7 +40,7 @@ public class ListCommand implements CommandExecutor {
                 continue; //Should never happen
             }
 
-            if (nexusPlayer.getStatValue("vanish").getAsBoolean() || nexusPlayer.getStatValue("incognito").getAsBoolean()) {
+            if (nexusPlayer.getToggleValue("vanish") || nexusPlayer.getToggleValue("incognito")) {
                 if (nexusPlayer.getRank().ordinal() < senderRank.ordinal()) {
                     continue;
                 }
