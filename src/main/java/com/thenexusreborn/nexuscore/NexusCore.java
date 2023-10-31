@@ -123,7 +123,6 @@ public class NexusCore extends JavaPlugin {
         new PlayerTablistThread(this).start();
         new PlayerPermThread(this).start();
         new ServerUpdateThread(this).start();
-        new ClickCheckerThread(this).start();
         new PlayerLoadActionBarThread(this).start();
         getLogger().info("Registered Tasks");
     }

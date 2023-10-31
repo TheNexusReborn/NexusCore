@@ -2,7 +2,10 @@ package com.thenexusreborn.nexuscore.player;
 
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.gamearchive.GameInfo;
-import com.thenexusreborn.api.player.*;
+import com.thenexusreborn.api.player.NexusPlayer;
+import com.thenexusreborn.api.player.PlayerManager;
+import com.thenexusreborn.api.player.Rank;
+import com.thenexusreborn.api.player.Session;
 import com.thenexusreborn.api.punishment.Punishment;
 import com.thenexusreborn.api.scoreboard.NexusScoreboard;
 import com.thenexusreborn.api.scoreboard.ScoreboardView;
@@ -25,11 +28,8 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -45,19 +45,6 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
 
     public SpigotPlayerManager(NexusCore plugin) {
         this.plugin = plugin;
-    }
-
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onPlayerInteract(PlayerInteractEvent e) {
-        if (e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK) {
-            NexusPlayer player = getNexusPlayer(e.getPlayer().getUniqueId());
-            if (player != null) {
-                player.incrementCPS();
-                if (player.getCPS() > 16) {
-                    e.setCancelled(true);
-                }
-            }
-        }
     }
 
     @EventHandler

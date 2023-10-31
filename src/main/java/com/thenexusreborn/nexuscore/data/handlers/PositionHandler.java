@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.data.handlers;
 
-import com.thenexusreborn.nexuscore.util.Position;
+import me.firestar311.starlib.spigot.utils.Position;
 import me.firestar311.starsql.api.objects.TypeHandler;
 
 public class PositionHandler extends TypeHandler {

@@ -24,7 +24,7 @@ public class PlayerPermThread extends NexusThread<NexusCore> {
                 if (nexusPlayer.getRank().ordinal() > Rank.HELPER.ordinal()) {
                     Set<PermissionAttachmentInfo> effectivePermissions = player.getEffectivePermissions();
                     for (PermissionAttachmentInfo perm : effectivePermissions) {
-                        if (perm.getPermission().equalsIgnoreCase("spartan.info") || perm.getPermission().equals("spartan.notifications")) {
+                        if (perm.getPermission().equals("vulcan.alerts")) {
                             player.removeAttachment(perm.getAttachment());
                         }
                     }
