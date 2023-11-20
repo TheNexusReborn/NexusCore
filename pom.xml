@@ -62,9 +62,8 @@
 
     <repositories>
         <repository>
-            <id>reposilite</id>
-            <name>Laptop Repo</name>
-            <url>http://localhost:8080/snapshots</url>
+            <id>jitpack.io</id>
+            <url>https://www.jitpack.io</url>
         </repository>
         <repository>
             <id>spigotmc-repo</id>
@@ -73,6 +72,12 @@
     </repositories>
 
     <dependencies>
+        <dependency>
+            <groupId>com.github.StarDevelopmentLLC</groupId>
+            <artifactId>StarLib</artifactId>
+            <version>1.0.0-alpha.1</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
