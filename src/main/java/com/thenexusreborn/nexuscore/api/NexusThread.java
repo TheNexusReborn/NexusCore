@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.api;
 
-import me.firestar311.starlib.spigot.utils.StarThread;
+import com.stardevllc.starmclib.StarThread;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public abstract class NexusThread<T extends JavaPlugin> extends StarThread<T> {

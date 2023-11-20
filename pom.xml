@@ -79,6 +79,12 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>com.github.StarDevelopmentLLC</groupId>
+            <artifactId>StarMCLib</artifactId>
+            <version>1.0.0-alpha.1</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
             <version>${minecraft.version}</version>
@@ -91,21 +97,15 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>me.firestar311.starlib</groupId>
-            <artifactId>starlib-spigot</artifactId>
-            <version>1.0.2-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>me.firestar311.starsql</groupId>
-            <artifactId>starsql-mysql</artifactId>
-            <version>1.0.8-SNAPSHOT</version>
+            <groupId>com.github.Firestar311.StarSQL</groupId>
+            <artifactId>mysql</artifactId>
+            <version>09988aece6</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>me.firestar311.starclock</groupId>
-            <artifactId>starclock-api</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <groupId>com.github.Firestar311.StarClock</groupId>
+            <artifactId>spigot</artifactId>
+            <version>ff3b94d2ce</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

@@ -1,5 +1,6 @@
 package com.thenexusreborn.nexuscore;
 
+import com.stardevllc.starmclib.task.SpigotTaskFactory;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.network.NetworkContext;
 import com.thenexusreborn.api.network.cmd.NetworkCommand;
@@ -22,7 +23,6 @@ import com.thenexusreborn.nexuscore.player.SpigotPlayerProxy;
 import com.thenexusreborn.nexuscore.server.SpigotServerManager;
 import com.thenexusreborn.nexuscore.util.MCUtils;
 import com.thenexusreborn.nexuscore.util.MsgType;
-import me.firestar311.starlib.spigot.scheduler.SpigotScheduler;
 import me.firestar311.starsql.api.objects.SQLDatabase;
 import me.firestar311.starsql.mysql.MySQLDatabase;
 import me.firestar311.starsql.mysql.MySQLProperties;
@@ -43,7 +43,7 @@ public class SpigotNexusAPI extends NexusAPI {
     private final NexusCore plugin;
     
     public SpigotNexusAPI(NexusCore plugin) {
-        super(Environment.valueOf(plugin.getConfig().getString("environment").toUpperCase()), NetworkContext.CLIENT, plugin.getLogger(), new SpigotPlayerManager(plugin), new SpigotScheduler(plugin), new SpigotServerManager(plugin));
+        super(Environment.valueOf(plugin.getConfig().getString("environment").toUpperCase()), NetworkContext.CLIENT, plugin.getLogger(), new SpigotPlayerManager(plugin), new SpigotTaskFactory(plugin), new SpigotServerManager(plugin));
         this.plugin = plugin;
         PlayerProxy.setProxyClass(SpigotPlayerProxy.class);
     }
