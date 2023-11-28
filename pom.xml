@@ -81,7 +81,7 @@
         <dependency>
             <groupId>com.github.StarDevelopmentLLC</groupId>
             <artifactId>StarMCLib</artifactId>
-            <version>1.0.0-alpha.1</version>
+            <version>1.0.0-alpha.2</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -109,9 +109,9 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.Firestar311.StarClock</groupId>
-            <artifactId>spigot</artifactId>
-            <version>ff3b94d2ce</version>
+            <groupId>com.github.StarDevelopmentLLC</groupId>
+            <artifactId>StarClock</artifactId>
+            <version>1.0.0-alpha.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
