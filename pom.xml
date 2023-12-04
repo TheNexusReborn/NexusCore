@@ -74,21 +74,9 @@
     <dependencies>
         <dependency>
             <groupId>com.github.StarDevelopmentLLC</groupId>
-            <artifactId>StarLib</artifactId>
+            <artifactId>StarCore</artifactId>
             <version>1.0.0-alpha.1</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.github.StarDevelopmentLLC</groupId>
-            <artifactId>StarMCLib</artifactId>
-            <version>1.0.0-alpha.2</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.github.cryptomorin</groupId>
-            <artifactId>XSeries</artifactId>
-            <version>9.7.0</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>
@@ -107,12 +95,6 @@
             <artifactId>mysql</artifactId>
             <version>09988aece6</version>
             <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.github.StarDevelopmentLLC</groupId>
-            <artifactId>StarClock</artifactId>
-            <version>1.0.0-alpha.1</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.thenexusreborn</groupId>
