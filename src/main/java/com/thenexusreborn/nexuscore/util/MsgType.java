@@ -1,7 +1,5 @@
 package com.thenexusreborn.nexuscore.util;
 
-import org.bukkit.command.CommandSender;
-
 public enum MsgType {
     
     // Codes to use in messages: &bc for base color and &vc for variable color
@@ -23,13 +21,25 @@ public enum MsgType {
         this.variableColor = variableColor;
     }
     
-    public String formatMsg(String message) {
-        message  = "&bc" + message;
-        return MCUtils.color(message.replaceAll("&bc", baseColor).replaceAll("&vc", variableColor));
-    }
-    
-    public void sendMessage(CommandSender sender, String message) {
-        sender.sendMessage(formatMsg(message));
+    // %v is the variable placeholder
+    public String format(String message, Object... replacements) {
+        StringBuilder sb = new StringBuilder();
+        char[] msgChars = message.toCharArray();
+        int replacementIndex = 0;
+        for (int i = 0; i < msgChars.length; i++) {
+            if (msgChars[i] != '%') {
+                sb.append(msgChars[i]);
+                continue;
+            }
+            
+            if (msgChars[i + 1] == 'v') {
+                //Should be now %v
+                sb.append(getVariableColor()).append(replacements[replacementIndex++]).append(getBaseColor());
+                i++;
+            }
+        }
+
+        return sb.toString();
     }
     
     public String getPrefixColor() {
