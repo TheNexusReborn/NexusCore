@@ -1,14 +1,20 @@
 package com.thenexusreborn.nexuscore.chat;
 
-import com.thenexusreborn.api.*;
-import com.thenexusreborn.api.player.*;
-import com.thenexusreborn.api.punishment.*;
-import com.thenexusreborn.api.util.StaffChat;
+import com.stardevllc.starchat.channels.ChatChannel;
+import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.player.NexusPlayer;
+import com.thenexusreborn.api.player.Rank;
+import com.thenexusreborn.api.punishment.Punishment;
+import com.thenexusreborn.api.punishment.PunishmentType;
 import com.thenexusreborn.nexuscore.NexusCore;
-import com.thenexusreborn.nexuscore.util.*;
-import org.bukkit.*;
+import com.thenexusreborn.nexuscore.util.MCUtils;
+import com.thenexusreborn.nexuscore.util.MsgType;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.event.*;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -33,8 +39,9 @@ public class ChatManager implements Listener {
         }
         
         if (e.getMessage().startsWith("@")) {
-            if (nexusPlayer.getRank().ordinal() <= Rank.HELPER.ordinal()) {
-                StaffChat.sendChat(nexusPlayer, e.getMessage().substring(1));
+            ChatChannel staffChannel = plugin.getStarChatPlugin().getStaffChannel();
+            if (e.getPlayer().hasPermission(staffChannel.getSendPermission())) {
+                staffChannel.sendMessage(e.getPlayer(), e.getMessage().substring(1));
                 e.setCancelled(true);
                 return;
             }
