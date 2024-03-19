@@ -111,6 +111,8 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                     
                     if (nexusPlayer.getRank().ordinal() <= Rank.HELPER.ordinal()) {
                         player.addAttachment(plugin, "vulcan.alerts", true);
+                        player.addAttachment(plugin, "nexuscore.staff.send", true);
+                        player.addAttachment(plugin, "nexuscore.staff.view", true);
                     }
 
                     getPlayers().put(nexusPlayer.getUniqueId(), nexusPlayer);
