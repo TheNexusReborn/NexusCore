@@ -24,7 +24,7 @@ public class XPActionBar implements IActionBar {
     
     @Override
     public String getText() {
-        if (System.currentTimeMillis() >= (this.time + 3000)) {
+        if (System.currentTimeMillis() >= this.time + 3000) {
             player.setActionBar(previous);
             return "";
         }

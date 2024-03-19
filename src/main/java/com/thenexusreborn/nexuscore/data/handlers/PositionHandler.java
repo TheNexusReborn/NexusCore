@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.data.handlers;
 
-import me.firestar311.starlib.spigot.utils.Position;
+import com.stardevllc.starmclib.Position;
 import me.firestar311.starsql.api.objects.TypeHandler;
 
 public class PositionHandler extends TypeHandler {
@@ -20,11 +20,11 @@ public class PositionHandler extends TypeHandler {
                 return null;
             }
 
-            int x = Integer.parseInt(split[0]);
-            int y = Integer.parseInt(split[1]);
-            int z = Integer.parseInt(split[2]);
-            float yaw = Float.parseFloat(split[3]);
-            float pitch = Float.parseFloat(split[4]);
+            int x = (int) Double.parseDouble(split[0]);
+            int y = (int) Double.parseDouble(split[1]);
+            int z = (int) Double.parseDouble(split[2]);
+            float yaw = (int) Double.parseDouble(split[3]);
+            float pitch = (int) Double.parseDouble(split[4]);
             return new Position(x, y, z, yaw, pitch);
         });
     }

@@ -21,8 +21,25 @@ public enum MsgType {
         this.variableColor = variableColor;
     }
     
-    public String formatMsg(String message) {
-        return MCUtils.color(message.replaceAll("&bc", baseColor).replaceAll("&vc", variableColor));
+    // %v is the variable placeholder
+    public String format(String message, Object... replacements) {
+        StringBuilder sb = new StringBuilder();
+        char[] msgChars = message.toCharArray();
+        int replacementIndex = 0;
+        for (int i = 0; i < msgChars.length; i++) {
+            if (msgChars[i] != '%') {
+                sb.append(msgChars[i]);
+                continue;
+            }
+            
+            if (msgChars[i + 1] == 'v') {
+                //Should be now %v
+                sb.append(getVariableColor()).append(replacements[replacementIndex++]).append(getBaseColor());
+                i++;
+            }
+        }
+
+        return sb.toString();
     }
     
     public String getPrefixColor() {

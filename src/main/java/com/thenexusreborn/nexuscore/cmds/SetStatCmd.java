@@ -1,12 +1,12 @@
 package com.thenexusreborn.nexuscore.cmds;
 
+import com.stardevllc.starlib.Pair;
+import com.stardevllc.starlib.Value;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.stats.*;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.util.*;
-import me.firestar311.starlib.api.Pair;
-import me.firestar311.starlib.api.Value;
 import me.firestar311.starsql.api.objects.typehandlers.ValueHandler;
 import org.bukkit.command.*;
 

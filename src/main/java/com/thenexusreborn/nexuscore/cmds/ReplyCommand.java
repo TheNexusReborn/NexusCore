@@ -34,8 +34,8 @@ public class ReplyCommand implements CommandExecutor {
             sb.append(arg).append(" ");
         }
     
-        player.sendMessage("&6&l>> &2&lPRIVATE &dto " + target.getRank().getColor() + target.getName() + "&8: &a" + sb);
-        target.sendMessage("&6&l>> &2&lPRIVATE &dfrom " + player.getRank().getColor() + player.getName() + "&8: &a" + sb);
+        player.sendMessage("&6&l>> &2&lPRIVATE &2to " + target.getRank().getColor() + target.getName() + "&8: &a" + sb);
+        target.sendMessage("&6&l>> &2&lPRIVATE &2from " + player.getRank().getColor() + player.getName() + "&8: &a" + sb);
         player.setLastMessage(target);
         target.setLastMessage(player);
         return true;

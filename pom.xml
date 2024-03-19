@@ -6,7 +6,7 @@
 
     <groupId>com.thenexusreborn</groupId>
     <artifactId>NexusCore</artifactId>
-    <version>1.10-ALPHA</version>
+    <version>1.10.1-ALPHA</version>
 
     <properties>
         <java.version>17</java.version>
@@ -62,9 +62,8 @@
 
     <repositories>
         <repository>
-            <id>reposilite</id>
-            <name>Laptop Repo</name>
-            <url>http://localhost:8080/snapshots</url>
+            <id>jitpack.io</id>
+            <url>https://www.jitpack.io</url>
         </repository>
         <repository>
             <id>spigotmc-repo</id>
@@ -73,6 +72,12 @@
     </repositories>
 
     <dependencies>
+        <dependency>
+            <groupId>com.github.StarDevelopmentLLC</groupId>
+            <artifactId>StarCore</artifactId>
+            <version>1.0.0-alpha.12</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
@@ -86,22 +91,10 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>me.firestar311.starlib</groupId>
-            <artifactId>starlib-spigot</artifactId>
-            <version>1.0.2-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>me.firestar311.starsql</groupId>
-            <artifactId>starsql-mysql</artifactId>
-            <version>1.0.8-SNAPSHOT</version>
+            <groupId>com.github.Firestar311.StarSQL</groupId>
+            <artifactId>mysql</artifactId>
+            <version>15dd9f0c77</version>
             <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>me.firestar311.starclock</groupId>
-            <artifactId>starclock-api</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.thenexusreborn</groupId>

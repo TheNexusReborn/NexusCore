@@ -1,5 +1,6 @@
 package com.thenexusreborn.nexuscore.cmds;
 
+import com.stardevllc.starlib.Pair;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.PlayerManager;
 import com.thenexusreborn.api.punishment.PardonInfo;
@@ -8,7 +9,6 @@ import com.thenexusreborn.api.punishment.PunishmentType;
 import com.thenexusreborn.api.util.StaffChat;
 import com.thenexusreborn.nexuscore.util.MCUtils;
 import com.thenexusreborn.nexuscore.util.MsgType;
-import me.firestar311.starlib.api.Pair;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

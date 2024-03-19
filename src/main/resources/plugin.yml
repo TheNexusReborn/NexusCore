@@ -3,8 +3,8 @@ version: ${project.version}
 name: NexusCore
 description: The main core of The Nexus Reborn
 author: Firestar311
-depend: [StarLib, StarClock, StarUI]
-softdepend: [Spartan]
+depend: [StarCore, StarUI]
+softdepend: [Vulcan]
 commands:
   rank:
     description: Set player ranks
