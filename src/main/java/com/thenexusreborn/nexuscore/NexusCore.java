@@ -1,11 +1,13 @@
 package com.thenexusreborn.nexuscore;
 
+import com.stardevllc.starchat.StarChat;
 import com.stardevllc.starclock.ClockManager;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.server.ServerInfo;
 import com.thenexusreborn.nexuscore.api.NexusSpigotPlugin;
 import com.thenexusreborn.nexuscore.chat.ChatManager;
 import com.thenexusreborn.nexuscore.cmds.*;
+import com.thenexusreborn.nexuscore.hooks.NexusPapiExpansion;
 import com.thenexusreborn.nexuscore.player.SpigotPlayerManager;
 import com.thenexusreborn.nexuscore.server.SpigotServerManager;
 import com.thenexusreborn.nexuscore.thread.*;
@@ -34,6 +36,8 @@ public class NexusCore extends JavaPlugin {
     private ChatManager chatManager;
     private ToggleCmds toggleCmdExecutor;
     private Supplier<String> motdSupplier;
+    
+    private StarChat starChatPlugin;
 
     @Override
     public void onEnable() {
@@ -53,6 +57,12 @@ public class NexusCore extends JavaPlugin {
         NexusAPI.getApi().setClockManager(getServer().getServicesManager().getRegistration(ClockManager.class).getProvider());
         
         Bukkit.getServicesManager().register(SQLDatabase.class, NexusAPI.getApi().getPrimaryDatabase(), this, ServicePriority.Highest);
+        
+        this.starChatPlugin = (StarChat) Bukkit.getPluginManager().getPlugin("StarChat");
+        getLogger().info("Hooked into StarChat");
+        
+        new NexusPapiExpansion(this).register();
+        getLogger().info("Hooked into PlaceholderAPI");
         
         nms = NMS.getNMS(Version.MC_1_8_R3);
         getLogger().info("Registered NMS Version");
@@ -179,5 +189,9 @@ public class NexusCore extends JavaPlugin {
 
     public void setMotdSupplier(Supplier<String> motdSupplier) {
         this.motdSupplier = motdSupplier;
+    }
+
+    public StarChat getStarChatPlugin() {
+        return starChatPlugin;
     }
 }

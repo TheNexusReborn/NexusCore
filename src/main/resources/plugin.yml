@@ -3,7 +3,7 @@ version: ${project.version}
 name: NexusCore
 description: The main core of The Nexus Reborn
 author: Firestar311
-depend: [StarCore, StarUI]
+depend: [StarCore, StarUI, StarChat, PlaceholderAPI]
 softdepend: [Vulcan]
 commands:
   rank:
