@@ -2,6 +2,7 @@ package com.thenexusreborn.nexuscore.hooks;
 
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.NexusPlayer;
+import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.nexuscore.NexusCore;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
@@ -16,7 +17,10 @@ public class NexusPapiExpansion extends PlaceholderExpansion {
 
     /* 
     %nexuscore_coloredname% - Colored name of the player
-    %nexuscore_displayname% - Main Displayname including rank prefix, name and tag suffix
+    %nexuscore_displayname% - Main Displayname including rank prefix and name
+    %nexuscore_level% - Player level
+    %nexuscore_tag% - Player active tag
+    %nexuscore_chatcolor% - Player's chat color based on rank
      */
     @Override
     public String onPlaceholderRequest(Player player, String params) {
@@ -29,6 +33,29 @@ public class NexusPapiExpansion extends PlaceholderExpansion {
             return nexusPlayer.getColoredName();
         } else if (params.equalsIgnoreCase("displayname")) {
             return nexusPlayer.getDisplayName();
+        } else if (params.equalsIgnoreCase("level")) {
+            return nexusPlayer.getStatValue("level").getAsInt() + "";
+        } else if (params.equalsIgnoreCase("tag")) {
+            if (nexusPlayer.getTags().hasActiveTag()) {
+                return nexusPlayer.getTags().getActive().getDisplayName();
+            } else {
+                return "";
+            }
+        } else if (params.equalsIgnoreCase("chatcolor")) {
+            Rank rank = nexusPlayer.getRank();
+            if (rank == Rank.NEXUS) {
+                return "&6";
+            } else if (rank.ordinal() >= Rank.ADMIN.ordinal() && rank.ordinal() <= Rank.HELPER.ordinal()) {
+                return "&b";
+            } else if (rank.ordinal() >= Rank.VIP.ordinal() && rank.ordinal() <= Rank.MEDIA.ordinal()) {
+                return "&d";
+            } else if (rank.ordinal() >= Rank.PLATINUM.ordinal() && rank.ordinal() <= Rank.DIAMOND.ordinal()) {
+                return "&3";
+            } else if (rank.ordinal() >= Rank.BRASS.ordinal() && rank.ordinal() <= Rank.IRON.ordinal()) {
+                return "&f";
+            } else {
+                return "&7";
+            }
         }
 
         return null;

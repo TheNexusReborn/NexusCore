@@ -57,12 +57,13 @@ public class NexusCore extends JavaPlugin {
         NexusAPI.getApi().setClockManager(getServer().getServicesManager().getRegistration(ClockManager.class).getProvider());
         
         Bukkit.getServicesManager().register(SQLDatabase.class, NexusAPI.getApi().getPrimaryDatabase(), this, ServicePriority.Highest);
-        
-        this.starChatPlugin = (StarChat) Bukkit.getPluginManager().getPlugin("StarChat");
-        getLogger().info("Hooked into StarChat");
-        
+
         new NexusPapiExpansion(this).register();
         getLogger().info("Hooked into PlaceholderAPI");
+        
+        this.starChatPlugin = (StarChat) Bukkit.getPluginManager().getPlugin("StarChat");
+        this.starChatPlugin.getGlobalChannel().setSenderFormat("&8(&2&l{%nexuscore_level%}&8) &r%nexuscore_displayname%%nexuscore_tag%&8: %nexuscore_chatcolor%{message}");
+        getLogger().info("Hooked into StarChat");
         
         nms = NMS.getNMS(Version.MC_1_8_R3);
         getLogger().info("Registered NMS Version");
