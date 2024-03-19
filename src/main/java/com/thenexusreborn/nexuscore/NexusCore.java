@@ -63,6 +63,7 @@ public class NexusCore extends JavaPlugin {
         
         this.starChatPlugin = (StarChat) Bukkit.getPluginManager().getPlugin("StarChat");
         this.starChatPlugin.getGlobalChannel().setSenderFormat("&8(&2&l{%nexuscore_level%}&8) &r%nexuscore_displayname%%nexuscore_tag%&8: %nexuscore_chatcolor%{message}");
+        this.starChatPlugin.getStaffChannel().setSenderFormat("&2&l[&aSTAFF&2&l] &r%nexuscore_coloredname%: &f{message}");
         getLogger().info("Hooked into StarChat");
         
         nms = NMS.getNMS(Version.MC_1_8_R3);
