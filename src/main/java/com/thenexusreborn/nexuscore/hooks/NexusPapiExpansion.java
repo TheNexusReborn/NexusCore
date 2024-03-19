@@ -1,5 +1,7 @@
 package com.thenexusreborn.nexuscore.hooks;
 
+import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.nexuscore.NexusCore;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
@@ -12,9 +14,24 @@ public class NexusPapiExpansion extends PlaceholderExpansion {
         this.plugin = plugin;
     }
 
+    /* 
+    %nexuscore_coloredname% - Colored name of the player
+    %nexuscore_displayname% - Main Displayname including rank prefix, name and tag suffix
+     */
     @Override
     public String onPlaceholderRequest(Player player, String params) {
-        return "";
+        if (player == null) {
+            return null;
+        }
+
+        NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(player.getUniqueId());
+        if (params.equalsIgnoreCase("coloredname")) {
+            return nexusPlayer.getColoredName();
+        } else if (params.equalsIgnoreCase("displayname")) {
+            return nexusPlayer.getDisplayName();
+        }
+
+        return null;
     }
 
     @Override
