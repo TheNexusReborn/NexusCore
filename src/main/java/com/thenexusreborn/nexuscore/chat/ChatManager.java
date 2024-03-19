@@ -3,14 +3,11 @@ package com.thenexusreborn.nexuscore.chat;
 import com.stardevllc.starchat.channels.ChatChannel;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.NexusPlayer;
-import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.api.punishment.Punishment;
 import com.thenexusreborn.api.punishment.PunishmentType;
 import com.thenexusreborn.nexuscore.NexusCore;
-import com.thenexusreborn.nexuscore.util.MCUtils;
 import com.thenexusreborn.nexuscore.util.MsgType;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -32,7 +29,6 @@ public class ChatManager implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerChat(AsyncPlayerChatEvent e) {
         NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(e.getPlayer().getUniqueId());
-        String chatColor;
         
         if (e.isCancelled()) {
             return;
@@ -90,37 +86,6 @@ public class ChatManager implements Listener {
                 }
             }.runTask(plugin);
         }
-        
-        Rank rank = nexusPlayer.getRank();
-        if (rank == Rank.NEXUS) {
-            chatColor = "&6";
-        } else if (rank.ordinal() >= Rank.ADMIN.ordinal() && rank.ordinal() <= Rank.HELPER.ordinal()) {
-            chatColor = "&b";
-        } else if (rank.ordinal() >= Rank.VIP.ordinal() && rank.ordinal() <= Rank.MEDIA.ordinal()) {
-            chatColor = "&d";
-        } else if (rank.ordinal() >= Rank.PLATINUM.ordinal() && rank.ordinal() <= Rank.DIAMOND.ordinal()) {
-            chatColor = "&3";
-        } else if (rank.ordinal() >= Rank.BRASS.ordinal() && rank.ordinal() <= Rank.IRON.ordinal()) {
-            chatColor = "&f";
-        } else {
-            chatColor = "&7";
-        }
-        
-        if (handler != null) {
-            if (handler.handleChat(nexusPlayer, chatColor, e)) {
-                e.setCancelled(true);
-                return;
-            }
-        }
-        
-        String format = "&8(&2&l{level}&8) &r" + nexusPlayer.getDisplayName() + "{tag}&8: " + chatColor + ChatColor.stripColor(MCUtils.color(e.getMessage()));
-        format = format.replace("{level}", nexusPlayer.getStatValue("level").getAsInt() + "");
-        if (nexusPlayer.getTags().hasActiveTag()) {
-            format = format.replace("{tag}", " " + nexusPlayer.getTags().getActive().getDisplayName());
-        } else {
-            format = format.replace("{tag}", "");
-        }
-        e.setFormat(MCUtils.color(format.replace("%", "%%")));
     }
     
     public void setHandler(ChatHandler handler) {
