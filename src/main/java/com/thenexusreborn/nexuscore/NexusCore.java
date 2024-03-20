@@ -7,6 +7,7 @@ import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.server.ServerInfo;
 import com.thenexusreborn.nexuscore.api.NexusSpigotPlugin;
 import com.thenexusreborn.nexuscore.chat.ChatManager;
+import com.thenexusreborn.nexuscore.chat.PunishmentChannel;
 import com.thenexusreborn.nexuscore.cmds.*;
 import com.thenexusreborn.nexuscore.hooks.NexusPapiExpansion;
 import com.thenexusreborn.nexuscore.player.SpigotPlayerManager;
@@ -39,6 +40,7 @@ public class NexusCore extends JavaPlugin {
     private Supplier<String> motdSupplier;
     
     private StarChat starChatPlugin;
+    private PunishmentChannel punishmentChannel;
 
     @Override
     public void onEnable() {
@@ -68,6 +70,7 @@ public class NexusCore extends JavaPlugin {
         this.starChatPlugin.getStaffChannel().setSendPermission("nexuscore.staff.send");
         this.starChatPlugin.getStaffChannel().setViewPermission("nexuscore.staff.view");
         this.starChatPlugin.getStaffChannel().setSystemFormat("&2&l[&aSTAFF&2&l] ");
+        this.punishmentChannel = new PunishmentChannel(this);
         getLogger().info("Hooked into StarChat");
         
         nms = NMS.getNMS(Version.MC_1_8_R3);
@@ -112,7 +115,7 @@ public class NexusCore extends JavaPlugin {
         getCommand("warn").setExecutor(puCmds);
         getCommand("blacklist").setExecutor(puCmds);
         
-        PunishRemoveCommands prCmds = new PunishRemoveCommands();
+        PunishRemoveCommands prCmds = new PunishRemoveCommands(this);
         getCommand("unban").setExecutor(prCmds);
         getCommand("unmute").setExecutor(prCmds);
         getCommand("pardon").setExecutor(prCmds);
@@ -207,5 +210,9 @@ public class NexusCore extends JavaPlugin {
     
     public ChatChannel getStaffChannel() {
         return starChatPlugin.getStaffChannel();
+    }
+
+    public PunishmentChannel getPunishmentChannel() {
+        return punishmentChannel;
     }
 }

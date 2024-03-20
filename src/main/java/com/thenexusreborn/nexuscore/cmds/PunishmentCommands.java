@@ -151,7 +151,7 @@ public class PunishmentCommands implements CommandExecutor {
             }
 
             NexusAPI.getApi().getNetworkManager().send("punishment", punishment.getId() + "");
-            StaffChat.sendPunishment(punishment); 
+            plugin.getPunishmentChannel().sendPunishment(punishment);
         });
         return true;
     }
