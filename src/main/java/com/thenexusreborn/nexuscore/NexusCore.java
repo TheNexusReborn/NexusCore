@@ -1,6 +1,7 @@
 package com.thenexusreborn.nexuscore;
 
 import com.stardevllc.starchat.StarChat;
+import com.stardevllc.starchat.channels.ChatChannel;
 import com.stardevllc.starclock.ClockManager;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.server.ServerInfo;
@@ -66,6 +67,7 @@ public class NexusCore extends JavaPlugin {
         this.starChatPlugin.getStaffChannel().setSenderFormat("&2&l[&aSTAFF&2&l] &r%nexuscore_coloredname%: &f{message}");
         this.starChatPlugin.getStaffChannel().setSendPermission("nexuscore.staff.send");
         this.starChatPlugin.getStaffChannel().setViewPermission("nexuscore.staff.view");
+        this.starChatPlugin.getStaffChannel().setSystemFormat("&2&l[&aSTAFF&2&l] ");
         getLogger().info("Hooked into StarChat");
         
         nms = NMS.getNMS(Version.MC_1_8_R3);
@@ -197,5 +199,13 @@ public class NexusCore extends JavaPlugin {
 
     public StarChat getStarChatPlugin() {
         return starChatPlugin;
+    }
+    
+    public ChatChannel getGlobalChannel() {
+        return starChatPlugin.getGlobalChannel();
+    }
+    
+    public ChatChannel getStaffChannel() {
+        return starChatPlugin.getStaffChannel();
     }
 }

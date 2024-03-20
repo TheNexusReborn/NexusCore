@@ -13,7 +13,6 @@ import com.thenexusreborn.api.server.NetworkType;
 import com.thenexusreborn.api.stats.StatChange;
 import com.thenexusreborn.api.stats.StatHelper;
 import com.thenexusreborn.api.stats.StatOperator;
-import com.thenexusreborn.api.util.StaffChat;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.api.events.NexusPlayerLoadEvent;
 import com.thenexusreborn.nexuscore.scoreboard.SpigotNexusScoreboard;
@@ -151,7 +150,7 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                         scoreboard.apply();
 
                         String joinMessage = loadEvent.getJoinMessage();
-                        if (joinMessage != null && !joinMessage.equals("")) {
+                        if (joinMessage != null && !joinMessage.isEmpty()) {
                             Bukkit.broadcastMessage(MCUtils.color(joinMessage));
                         }
 
@@ -165,7 +164,7 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                         SpigotUtils.sendActionBar(player, "&aYour data has been loaded");
 
                         if (finalNexusPlayer.getRank().ordinal() <= Rank.MEDIA.ordinal()) {
-                            StaffChat.sendJoin(finalNexusPlayer);
+                            plugin.getStaffChannel().sendMessage(finalNexusPlayer.getDisplayName() + " &7&l-> &6" + NexusAPI.getApi().getServerManager().getCurrentServer().getName());
                         }
 
                         if (loadEvent.getActionBar() != null) {
@@ -219,7 +218,7 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
             });
             this.players.remove(nexusPlayer.getUniqueId());
             if (nexusPlayer.getRank().ordinal() <= Rank.MEDIA.ordinal()) {
-                StaffChat.sendDisconnect(nexusPlayer);
+                plugin.getStaffChannel().sendMessage(nexusPlayer.getDisplayName() + " &7disconnected");
             }
         }
     }
