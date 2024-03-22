@@ -20,8 +20,6 @@ import java.util.List;
 public class ChatManager implements Listener {
     private final NexusCore plugin;
     
-    private ChatHandler handler;
-    
     public ChatManager(NexusCore plugin) {
         this.plugin = plugin;
     }
@@ -86,13 +84,5 @@ public class ChatManager implements Listener {
                 }
             }.runTask(plugin);
         }
-    }
-    
-    public void setHandler(ChatHandler handler) {
-        this.handler = handler;
-    }
-    
-    public ChatHandler getHandler() {
-        return handler;
     }
 }
