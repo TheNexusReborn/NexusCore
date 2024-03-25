@@ -207,7 +207,7 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                     database.saveSilent(session);
                 }
                 nexusPlayer.setSession(null);
-                nexusPlayer.changeStat("playtime", playTime, StatOperator.ADD);
+                nexusPlayer.getPlayerTime().setPlaytime(nexusPlayer.getPlayerTime().getPlaytime() + playTime);
                 for (StatChange change : nexusPlayer.getStats().findAllChanges()) {
                     if (change.getId() != 0) {
                         change.push();
