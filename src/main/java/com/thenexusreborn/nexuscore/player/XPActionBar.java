@@ -29,8 +29,8 @@ public class XPActionBar implements IActionBar {
             return "";
         }
         
-        int level = player.getStatValue("level").getAsInt();
-        int currentXp = (int) Math.round(player.getStatValue("xp").getAsDouble());
+        int level = player.getExperience().getLevel();
+        int currentXp = (int) Math.round(player.getExperience().getLevelXp());
         int nextLevelXp;
         Map<Integer, ExperienceLevel> playerLevels = NexusAPI.getApi().getLevelManager().getPlayerLevels();
         if (playerLevels.containsKey(level + 1)) {
