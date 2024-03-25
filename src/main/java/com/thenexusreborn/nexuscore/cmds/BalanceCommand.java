@@ -31,8 +31,8 @@ public class BalanceCommand implements CommandExecutor {
             return true;
         }
 
-        double credits = nexusPlayer.getStatValue("credits").getAsDouble();
-        double nexites = nexusPlayer.getStatValue("nexites").getAsDouble();
+        double credits = nexusPlayer.getBalance().getCredits();
+        double nexites = nexusPlayer.getBalance().getNexites();
         double xp = nexusPlayer.getExperience().getLevelXp();
 
         DecimalFormat format = new DecimalFormat("0.#");
