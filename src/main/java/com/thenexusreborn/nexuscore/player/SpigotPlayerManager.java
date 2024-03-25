@@ -12,7 +12,6 @@ import com.thenexusreborn.api.scoreboard.ScoreboardView;
 import com.thenexusreborn.api.server.NetworkType;
 import com.thenexusreborn.api.stats.StatChange;
 import com.thenexusreborn.api.stats.StatHelper;
-import com.thenexusreborn.api.stats.StatOperator;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.api.events.NexusPlayerLoadEvent;
 import com.thenexusreborn.nexuscore.scoreboard.SpigotNexusScoreboard;
@@ -207,7 +206,7 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                     database.saveSilent(session);
                 }
                 nexusPlayer.setSession(null);
-                nexusPlayer.getPlayerTime().setPlaytime(nexusPlayer.getPlayerTime().getPlaytime() + playTime);
+                nexusPlayer.getPlayerTime().addPlaytime(playTime);
                 for (StatChange change : nexusPlayer.getStats().findAllChanges()) {
                     if (change.getId() != 0) {
                         change.push();
