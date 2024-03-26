@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
+@SuppressWarnings("SameParameterValue")
 public class NexusCore extends JavaPlugin {
     
     private NMS nms;
@@ -102,7 +103,6 @@ public class NexusCore extends JavaPlugin {
         getLogger().info("Registered Event Listeners");
         
         registerCommand("rank", new RankCommand(this));
-        registerCommand("setstat", new SetStatCmd(this));
         getCommand("tag").setExecutor(new TagCommand(this));
         getCommand("say").setExecutor(new SayCommand(this));
         getCommand("message").setExecutor(new MessageCommand());

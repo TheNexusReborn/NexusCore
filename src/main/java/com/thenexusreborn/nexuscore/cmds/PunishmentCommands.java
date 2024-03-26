@@ -16,6 +16,7 @@ import java.sql.SQLException;
 import java.util.UUID;
 import java.util.stream.Stream;
 
+@SuppressWarnings("DuplicatedCode")
 public class PunishmentCommands implements CommandExecutor {
     
     private final NexusCore plugin;
@@ -88,7 +89,6 @@ public class PunishmentCommands implements CommandExecutor {
         }
         
         UUID targetUniqueID = playerInfo.firstValue();
-        String targetName = playerInfo.secondValue();
         Rank targetRank = playerManager.getPlayerRank(targetUniqueID);
 
         if (targetRank.ordinal() < actorRank.ordinal()) {

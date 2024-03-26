@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@SuppressWarnings("DuplicatedCode")
 public class PunishRemoveCommands implements CommandExecutor {
     
     private NexusCore plugin;
@@ -58,7 +59,6 @@ public class PunishRemoveCommands implements CommandExecutor {
         }
 
         UUID targetUniqueID = playerInfo.firstValue();
-        String targetName = playerInfo.secondValue();
     
         List<Punishment> punishments = NexusAPI.getApi().getPunishmentManager().getPunishmentsByTarget(targetUniqueID);
         if (punishments.isEmpty()) {

@@ -15,6 +15,7 @@ import java.util.*;
 /**
  * A class to represent a YAML config file and adds passthrough methods and easy methods to setup and save
  */
+@SuppressWarnings("SameReturnValue")
 public class Config {
     private File file;
     private YamlConfiguration yamlConfiguration;

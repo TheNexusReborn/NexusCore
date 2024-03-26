@@ -44,7 +44,7 @@ public class ToggleCmds implements CommandExecutor {
         Bukkit.getPluginManager().callEvent(changeEvent);
         
         if (changeEvent.isCancelled()) {
-            if (changeEvent.getCancelReason() != null && !changeEvent.getCancelReason().equals("")) {
+            if (changeEvent.getCancelReason() != null && !changeEvent.getCancelReason().isEmpty()) {
                 player.sendMessage(MsgType.WARN + changeEvent.getCancelReason());
             } else {
                 player.sendMessage(MsgType.WARN + "Changes were cancelled without a reason.");

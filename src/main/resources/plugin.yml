@@ -8,8 +8,6 @@ softdepend: [Vulcan]
 commands:
   rank:
     description: Set player ranks
-  setstat:
-    description: Set stats
   tag:
   message:
     aliases: [msg, whisper, tell]

@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.UUID;
 
+@SuppressWarnings("DuplicatedCode")
 public class RankCommand implements TabExecutor {
 
     private final NexusCore plugin;

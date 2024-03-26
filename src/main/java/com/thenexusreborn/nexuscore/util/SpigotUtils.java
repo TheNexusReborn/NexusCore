@@ -3,7 +3,6 @@ package com.thenexusreborn.nexuscore.util;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.server.v1_8_R3.ChatComponentText;
 import net.minecraft.server.v1_8_R3.PacketPlayOutChat;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
@@ -21,7 +20,6 @@ public final class SpigotUtils {
     public static ItemStack getPlayerSkull(Player player) {
         ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
         SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
-        String playerName = Bukkit.getPlayer(player.getUniqueId()).getName();
         GameProfile mcProfile = ((CraftPlayer) player).getProfile();
         try {
             Field field = skullMeta.getClass().getDeclaredField("profile");
