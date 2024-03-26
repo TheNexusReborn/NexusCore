@@ -21,6 +21,7 @@ import me.firestar311.starsql.api.objects.SQLDatabase;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabExecutor;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -46,6 +47,19 @@ public class NexusCore extends JavaPlugin {
     public void onEnable() {
         getLogger().info("Loading NexusCore v" + getDescription().getVersion());
         this.saveDefaultConfig();
+
+        PluginManager pluginManager = Bukkit.getPluginManager();
+        if (pluginManager.getPlugin("StarCore") == null) {
+            getLogger().severe("StarCore not found, disabling NexusCore.");
+            pluginManager.disablePlugin(this);
+            return;
+        }
+        
+        if (pluginManager.getPlugin("StarChat") == null) {
+            getLogger().severe("StarChat not found, disabling NexusCore.");
+            pluginManager.disablePlugin(this);
+            return;
+        }
         
         NexusAPI.setApi(new SpigotNexusAPI(this));
         try {
@@ -64,7 +78,7 @@ public class NexusCore extends JavaPlugin {
         new NexusPapiExpansion(this).register();
         getLogger().info("Hooked into PlaceholderAPI");
         
-        this.starChatPlugin = (StarChat) Bukkit.getPluginManager().getPlugin("StarChat");
+        this.starChatPlugin = (StarChat) pluginManager.getPlugin("StarChat");
         this.starChatPlugin.getGlobalChannel().setSenderFormat("&8(&2&l%nexuscore_level%&8) &r%nexuscore_displayname%%nexuscore_tag%&8: %nexuscore_chatcolor%{message}");
         this.starChatPlugin.getStaffChannel().setSenderFormat("&2&l[&aSTAFF&2&l] &r%nexuscore_coloredname%: &f{message}");
         this.starChatPlugin.getStaffChannel().setSystemFormat("&2&l[&aSTAFF&2&l] &f{message}");
