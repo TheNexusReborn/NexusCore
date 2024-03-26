@@ -114,7 +114,7 @@ public class TagCommand implements CommandExecutor {
             return true;
         }
 
-        Set<String> unlockedTags = nexusPlayer.getTags().findAll();
+        Set<String> unlockedTags = nexusPlayer.getTags();
         if (args[0].equalsIgnoreCase("list")) {
             if (!unlockedTags.isEmpty()) {
                 nexusPlayer.sendMessage("&eList of available tags...");
@@ -137,19 +137,19 @@ public class TagCommand implements CommandExecutor {
             }
             String tagName = sb.substring(0, sb.length() - 1);
 
-            if (!nexusPlayer.getTags().isUnlocked(tagName)) {
+            if (!nexusPlayer.isTagUnlocked(tagName)) {
                 nexusPlayer.sendMessage("&cYou do not have a tag with that name.");
                 return true;
             }
 
-            nexusPlayer.getTags().setActive(tagName);
+            nexusPlayer.setActiveTag(tagName);
             nexusPlayer.changeStat("tag", tagName, StatOperator.SET).push();
-            nexusPlayer.sendMessage("&eYou set your tag to " + nexusPlayer.getTags().getActive().getDisplayName());
+            nexusPlayer.sendMessage("&eYou set your tag to " + nexusPlayer.getActiveTag().getDisplayName());
             NexusAPI.getApi().getNetworkManager().send("updatetag", nexusPlayer.getUniqueId().toString(), "set", tagName);
             pushTagChange(nexusPlayer);
         } else if (args[0].equalsIgnoreCase("reset")) {
             nexusPlayer.changeStat("tag", "null", StatOperator.SET).push();
-            nexusPlayer.getTags().setActive(null);
+            nexusPlayer.setActiveTag(null);
             nexusPlayer.sendMessage("&eYou reset your tag.");
             NexusAPI.getApi().getNetworkManager().send("updatetag", nexusPlayer.getUniqueId().toString(), "reset");
             pushTagChange(nexusPlayer);

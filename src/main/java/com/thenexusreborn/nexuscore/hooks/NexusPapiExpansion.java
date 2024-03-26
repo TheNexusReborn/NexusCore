@@ -37,8 +37,8 @@ public class NexusPapiExpansion extends PlaceholderExpansion {
         } else if (params.equalsIgnoreCase("level")) {
             return MCUtils.formatNumber(nexusPlayer.getExperience().getLevel());
         } else if (params.equalsIgnoreCase("tag")) {
-            if (nexusPlayer.getTags().hasActiveTag()) {
-                return nexusPlayer.getTags().getActive().getDisplayName();
+            if (nexusPlayer.hasActiveTag()) {
+                return nexusPlayer.getActiveTag().getDisplayName();
             } else {
                 return "";
             }
