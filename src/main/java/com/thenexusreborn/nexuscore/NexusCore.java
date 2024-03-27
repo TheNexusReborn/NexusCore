@@ -5,6 +5,7 @@ import com.stardevllc.starchat.channels.ChatChannel;
 import com.stardevllc.starclock.ClockManager;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.server.ServerInfo;
+import com.thenexusreborn.api.sql.objects.SQLDatabase;
 import com.thenexusreborn.nexuscore.api.NexusSpigotPlugin;
 import com.thenexusreborn.nexuscore.chat.ChatManager;
 import com.thenexusreborn.nexuscore.chat.PunishmentChannel;
@@ -17,7 +18,6 @@ import com.thenexusreborn.nexuscore.util.MCUtils;
 import com.thenexusreborn.nexuscore.util.MsgType;
 import com.thenexusreborn.nexuscore.util.nms.NMS;
 import com.thenexusreborn.nexuscore.util.nms.NMS.Version;
-import me.firestar311.starsql.api.objects.SQLDatabase;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabExecutor;
@@ -172,7 +172,6 @@ public class NexusCore extends JavaPlugin {
         serverInfo.setState("none");
         serverInfo.setPlayers(0);
         NexusAPI.getApi().getPrimaryDatabase().saveSilent(serverInfo);
-        NexusAPI.getApi().getNetworkManager().close();
     }
     
     private void registerCommand(String cmd, TabExecutor tabExecutor) {

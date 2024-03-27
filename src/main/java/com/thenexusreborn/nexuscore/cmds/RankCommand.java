@@ -127,8 +127,6 @@ public class RankCommand implements TabExecutor {
             sender.sendMessage(MCUtils.color("&eYou removed the rank " + rankName + " &efrom &b" + targetName));
         }
 
-        NexusAPI.getApi().getNetworkManager().send("updaterank", targetUniqueID.toString(), args[1], rank.name(), expire + "");
-
         StringBuilder sb = new StringBuilder();
         for (Entry<Rank, Long> entry : targetRanks.findAll().entrySet()) {
             sb.append(entry.getKey().name()).append("=").append(entry.getValue()).append(",");

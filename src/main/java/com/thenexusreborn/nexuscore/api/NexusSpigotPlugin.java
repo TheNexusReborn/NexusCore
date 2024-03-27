@@ -1,6 +1,7 @@
 package com.thenexusreborn.nexuscore.api;
 
 import com.thenexusreborn.api.registry.*;
+import com.thenexusreborn.api.sql.DatabaseRegistry;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class NexusSpigotPlugin extends JavaPlugin {
@@ -10,10 +11,6 @@ public class NexusSpigotPlugin extends JavaPlugin {
     }
     
     public void registerStats(StatRegistry registry) {
-        
-    }
-    
-    public void registerNetworkCommands(NetworkCommandRegistry registry) {
         
     }
     

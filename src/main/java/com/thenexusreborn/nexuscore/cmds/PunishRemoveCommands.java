@@ -98,7 +98,6 @@ public class PunishRemoveCommands implements CommandExecutor {
         for (Punishment punishment : activePunishments) {
             punishment.setPardonInfo(info);
             NexusAPI.getApi().getPrimaryDatabase().saveSilent(punishment);
-            NexusAPI.getApi().getNetworkManager().send("removepunishment", punishment.getId() + "");
             plugin.getPunishmentChannel().sendPunishmentRemoval(punishment);
         }
         
