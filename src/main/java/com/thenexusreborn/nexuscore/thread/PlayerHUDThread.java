@@ -1,15 +1,15 @@
 package com.thenexusreborn.nexuscore.thread;
 
-import com.stardevllc.starmclib.StarThread;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.IActionBar;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.nexuscore.NexusCore;
+import com.thenexusreborn.nexuscore.api.NexusThread;
 import com.thenexusreborn.nexuscore.util.SpigotUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-public class PlayerHUDThread extends StarThread<NexusCore> {
+public class PlayerHUDThread extends NexusThread<NexusCore> {
     
     public PlayerHUDThread(NexusCore plugin) {
         super(plugin, 1L, 0L, false);
