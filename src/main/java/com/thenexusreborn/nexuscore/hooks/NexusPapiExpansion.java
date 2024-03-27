@@ -17,10 +17,11 @@ public class NexusPapiExpansion extends PlaceholderExpansion {
     }
 
     /* 
-    %nexuscore_coloredname% - Colored name of the player
-    %nexuscore_displayname% - Main Displayname including prefix, name and tag
-    %nexuscore_level% - Player level
-    %nexuscore_chatcolor% - Player's chat color based on rank
+    nexuscore_coloredname - Colored name of the player
+    nexuscore_displayname - Main Displayname including prefix, name and tag
+    nexuscore_level - Player level
+    nexuscore_chatcolor - Player's chat color based on rank
+    nexuscore_servername - Name of the current server
      */
     @Override
     public String onPlaceholderRequest(Player player, String params) {
@@ -56,6 +57,8 @@ public class NexusPapiExpansion extends PlaceholderExpansion {
             } else {
                 return "&7";
             }
+        } else if (params.equalsIgnoreCase("servername")) {
+            return NexusAPI.getApi().getServerManager().getCurrentServer().getName();
         }
 
         return null;
