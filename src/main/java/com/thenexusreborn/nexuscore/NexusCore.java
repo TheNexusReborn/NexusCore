@@ -16,8 +16,6 @@ import com.thenexusreborn.nexuscore.server.SpigotServerManager;
 import com.thenexusreborn.nexuscore.thread.*;
 import com.thenexusreborn.nexuscore.util.MCUtils;
 import com.thenexusreborn.nexuscore.util.MsgType;
-import com.thenexusreborn.nexuscore.util.nms.NMS;
-import com.thenexusreborn.nexuscore.util.nms.NMS.Version;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabExecutor;
@@ -35,7 +33,6 @@ import java.util.function.Supplier;
 @SuppressWarnings("SameParameterValue")
 public class NexusCore extends JavaPlugin {
     
-    private NMS nms;
     private final List<NexusSpigotPlugin> nexusPlugins = new ArrayList<>();
     private ChatManager chatManager;
     private ToggleCmds toggleCmdExecutor;
@@ -87,9 +84,6 @@ public class NexusCore extends JavaPlugin {
         this.starChatPlugin.getStaffChannel().setViewPermission("nexuscore.staff.view");
         this.punishmentChannel = new PunishmentChannel(this);
         getLogger().info("Hooked into StarChat");
-        
-        nms = NMS.getNMS(Version.MC_1_8_R3);
-        getLogger().info("Registered NMS Version");
         
         chatManager = new ChatManager(this);
         getLogger().info("Registered Chat Manager");
@@ -184,10 +178,6 @@ public class NexusCore extends JavaPlugin {
         return chatManager;
     }
     
-    public NMS getNMS() {
-        return nms;
-    }
-    
     public Connection getConnection(String database) throws SQLException {
         String url = "jdbc:mysql://" + getConfig().getString("mysql.host") + "/" + database + "?user=" + getConfig().getString("mysql.user") + "&password=" + getConfig().getString("mysql.password");
         return DriverManager.getConnection(url);
@@ -228,4 +218,9 @@ public class NexusCore extends JavaPlugin {
     public PunishmentChannel getPunishmentChannel() {
         return punishmentChannel;
     }
+    /*
+        CraftServer craftServer = (CraftServer) Bukkit.getServer();
+        SimpleCommandMap commandMap = craftServer.getCommandMap();
+        commandMap.register(plugin.getName(), command);
+     */
 }
