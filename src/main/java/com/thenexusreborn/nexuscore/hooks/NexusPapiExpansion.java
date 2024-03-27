@@ -18,9 +18,8 @@ public class NexusPapiExpansion extends PlaceholderExpansion {
 
     /* 
     %nexuscore_coloredname% - Colored name of the player
-    %nexuscore_displayname% - Main Displayname including rank prefix and name
+    %nexuscore_displayname% - Main Displayname including prefix, name and tag
     %nexuscore_level% - Player level
-    %nexuscore_tag% - Player active tag
     %nexuscore_chatcolor% - Player's chat color based on rank
      */
     @Override
@@ -33,15 +32,15 @@ public class NexusPapiExpansion extends PlaceholderExpansion {
         if (params.equalsIgnoreCase("coloredname")) {
             return nexusPlayer.getColoredName();
         } else if (params.equalsIgnoreCase("displayname")) {
-            return nexusPlayer.getDisplayName();
+            String tag;
+            if (nexusPlayer.hasActiveTag()) {
+                tag = " " + nexusPlayer.getActiveTag().getDisplayName();
+            } else {
+                tag =  "";
+            }
+            return nexusPlayer.getDisplayName() + tag;
         } else if (params.equalsIgnoreCase("level")) {
             return MCUtils.formatNumber(nexusPlayer.getExperience().getLevel());
-        } else if (params.equalsIgnoreCase("tag")) {
-            if (nexusPlayer.hasActiveTag()) {
-                return nexusPlayer.getActiveTag().getDisplayName();
-            } else {
-                return "";
-            }
         } else if (params.equalsIgnoreCase("chatcolor")) {
             Rank rank = nexusPlayer.getRank();
             if (rank == Rank.NEXUS) {
