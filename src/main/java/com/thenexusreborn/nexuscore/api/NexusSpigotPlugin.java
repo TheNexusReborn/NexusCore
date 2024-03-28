@@ -10,10 +10,6 @@ public class NexusSpigotPlugin extends JavaPlugin {
         
     }
     
-    public void registerStats(StatRegistry registry) {
-        
-    }
-    
     public void registerToggles(ToggleRegistry registry) {
         
     }

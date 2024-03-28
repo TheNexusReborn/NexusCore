@@ -3,7 +3,6 @@ package com.thenexusreborn.nexuscore.cmds;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Rank;
-import com.thenexusreborn.api.stats.StatOperator;
 import com.thenexusreborn.api.tags.Tag;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.util.MCUtils;
@@ -150,20 +149,12 @@ public class TagCommand implements CommandExecutor {
             }
 
             nexusPlayer.setActiveTag(tagName);
-            nexusPlayer.changeStat("tag", tagName, StatOperator.SET).push();
             nexusPlayer.sendMessage("&eYou set your tag to " + nexusPlayer.getActiveTag().getDisplayName());
-            pushTagChange(nexusPlayer);
         } else if (args[0].equalsIgnoreCase("reset")) {
-            nexusPlayer.changeStat("tag", "null", StatOperator.SET).push();
             nexusPlayer.setActiveTag(null);
             nexusPlayer.sendMessage("&eYou reset your tag.");
-            pushTagChange(nexusPlayer);
         }
 
         return true;
-    }
-
-    private void pushTagChange(NexusPlayer player) {
-        NexusAPI.getApi().getScheduler().runTaskAsynchronously(() -> NexusAPI.getApi().getPrimaryDatabase().saveSilent(player.getStatValue("tag").getAsString()));
     }
 }

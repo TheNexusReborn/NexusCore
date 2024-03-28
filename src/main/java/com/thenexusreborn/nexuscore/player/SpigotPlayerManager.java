@@ -13,8 +13,6 @@ import com.thenexusreborn.api.server.NetworkType;
 import com.thenexusreborn.api.sql.objects.Row;
 import com.thenexusreborn.api.sql.objects.SQLDatabase;
 import com.thenexusreborn.api.sql.objects.Table;
-import com.thenexusreborn.api.stats.StatChange;
-import com.thenexusreborn.api.stats.StatHelper;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.api.events.NexusPlayerLoadEvent;
 import com.thenexusreborn.nexuscore.scoreboard.SpigotNexusScoreboard;
@@ -207,12 +205,6 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                 }
                 nexusPlayer.setSession(null);
                 nexusPlayer.getPlayerTime().addPlaytime(playTime);
-                for (StatChange change : nexusPlayer.getStats().findAllChanges()) {
-                    if (change.getId() != 0) {
-                        change.push();
-                    }
-                }
-                StatHelper.consolidateStats(nexusPlayer);
                 NexusAPI.getApi().getPrimaryDatabase().saveSilent(nexusPlayer);
             });
             this.players.remove(nexusPlayer.getUniqueId());

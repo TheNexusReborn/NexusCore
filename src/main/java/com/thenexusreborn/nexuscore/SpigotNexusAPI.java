@@ -3,7 +3,6 @@ package com.thenexusreborn.nexuscore;
 import com.stardevllc.starmclib.task.SpigotTaskFactory;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.PlayerProxy;
-import com.thenexusreborn.api.registry.StatRegistry;
 import com.thenexusreborn.api.registry.ToggleRegistry;
 import com.thenexusreborn.api.server.Environment;
 import com.thenexusreborn.api.sql.DatabaseRegistry;
@@ -40,13 +39,6 @@ public class SpigotNexusAPI extends NexusAPI {
     
         for (NexusSpigotPlugin nexusPlugin : plugin.getNexusPlugins()) {
             nexusPlugin.registerDatabases(registry);
-        }
-    }
-    
-    @Override
-    public void registerStats(StatRegistry registry) {
-        for (NexusSpigotPlugin nexusPlugin : plugin.getNexusPlugins()) {
-            nexusPlugin.registerStats(registry);
         }
     }
     
