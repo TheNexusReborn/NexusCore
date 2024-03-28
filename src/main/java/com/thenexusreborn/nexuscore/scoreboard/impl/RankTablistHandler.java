@@ -86,8 +86,8 @@ public class RankTablistHandler extends TablistHandler {
         } else {
             team.setPrefix(MCUtils.color(nexusPlayer.getRank().getPrefix() + " &r"));
         }
-        if (nexusPlayer.getTags().hasActiveTag()) {
-            team.setSuffix(MCUtils.color(" " + nexusPlayer.getTags().getActive().getDisplayName()));
+        if (nexusPlayer.hasActiveTag()) {
+            team.setSuffix(MCUtils.color(" " + nexusPlayer.getActiveTag().getDisplayName()));
         } else {
             team.setSuffix("");
         }

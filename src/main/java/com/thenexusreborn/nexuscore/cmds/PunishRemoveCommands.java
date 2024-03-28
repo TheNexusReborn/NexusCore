@@ -6,7 +6,7 @@ import com.thenexusreborn.api.player.PlayerManager;
 import com.thenexusreborn.api.punishment.PardonInfo;
 import com.thenexusreborn.api.punishment.Punishment;
 import com.thenexusreborn.api.punishment.PunishmentType;
-import com.thenexusreborn.api.util.StaffChat;
+import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.util.MCUtils;
 import com.thenexusreborn.nexuscore.util.MsgType;
 import org.bukkit.command.Command;
@@ -18,8 +18,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@SuppressWarnings("DuplicatedCode")
 public class PunishRemoveCommands implements CommandExecutor {
     
+    private NexusCore plugin;
+
+    public PunishRemoveCommands(NexusCore plugin) {
+        this.plugin = plugin;
+    }
+
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         PunishmentType type = null;
@@ -52,7 +59,6 @@ public class PunishRemoveCommands implements CommandExecutor {
         }
 
         UUID targetUniqueID = playerInfo.firstValue();
-        String targetName = playerInfo.secondValue();
     
         List<Punishment> punishments = NexusAPI.getApi().getPunishmentManager().getPunishmentsByTarget(targetUniqueID);
         if (punishments.isEmpty()) {
@@ -92,8 +98,7 @@ public class PunishRemoveCommands implements CommandExecutor {
         for (Punishment punishment : activePunishments) {
             punishment.setPardonInfo(info);
             NexusAPI.getApi().getPrimaryDatabase().saveSilent(punishment);
-            NexusAPI.getApi().getNetworkManager().send("removepunishment", punishment.getId() + "");
-            StaffChat.sendPunishmentRemoval(punishment);
+            plugin.getPunishmentChannel().sendPunishmentRemoval(punishment);
         }
         
         return true;

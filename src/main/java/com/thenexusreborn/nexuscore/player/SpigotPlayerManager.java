@@ -10,10 +10,9 @@ import com.thenexusreborn.api.punishment.Punishment;
 import com.thenexusreborn.api.scoreboard.NexusScoreboard;
 import com.thenexusreborn.api.scoreboard.ScoreboardView;
 import com.thenexusreborn.api.server.NetworkType;
-import com.thenexusreborn.api.stats.StatChange;
-import com.thenexusreborn.api.stats.StatHelper;
-import com.thenexusreborn.api.stats.StatOperator;
-import com.thenexusreborn.api.util.StaffChat;
+import com.thenexusreborn.api.sql.objects.Row;
+import com.thenexusreborn.api.sql.objects.SQLDatabase;
+import com.thenexusreborn.api.sql.objects.Table;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.api.events.NexusPlayerLoadEvent;
 import com.thenexusreborn.nexuscore.scoreboard.SpigotNexusScoreboard;
@@ -21,9 +20,6 @@ import com.thenexusreborn.nexuscore.scoreboard.impl.RankTablistHandler;
 import com.thenexusreborn.nexuscore.util.MCUtils;
 import com.thenexusreborn.nexuscore.util.MsgType;
 import com.thenexusreborn.nexuscore.util.SpigotUtils;
-import me.firestar311.starsql.api.objects.Row;
-import me.firestar311.starsql.api.objects.SQLDatabase;
-import me.firestar311.starsql.api.objects.Table;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -111,6 +107,8 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                     
                     if (nexusPlayer.getRank().ordinal() <= Rank.HELPER.ordinal()) {
                         player.addAttachment(plugin, "vulcan.alerts", true);
+                        player.addAttachment(plugin, "nexuscore.staff.send", true);
+                        player.addAttachment(plugin, "nexuscore.staff.view", true);
                     }
 
                     getPlayers().put(nexusPlayer.getUniqueId(), nexusPlayer);
@@ -149,7 +147,7 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                         scoreboard.apply();
 
                         String joinMessage = loadEvent.getJoinMessage();
-                        if (joinMessage != null && !joinMessage.equals("")) {
+                        if (joinMessage != null && !joinMessage.isEmpty()) {
                             Bukkit.broadcastMessage(MCUtils.color(joinMessage));
                         }
 
@@ -163,7 +161,7 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                         SpigotUtils.sendActionBar(player, "&aYour data has been loaded");
 
                         if (finalNexusPlayer.getRank().ordinal() <= Rank.MEDIA.ordinal()) {
-                            StaffChat.sendJoin(finalNexusPlayer);
+                            plugin.getStaffChannel().sendMessage(finalNexusPlayer.getDisplayName() + " &7&l-> &6" + NexusAPI.getApi().getServerManager().getCurrentServer().getName());
                         }
 
                         if (loadEvent.getActionBar() != null) {
@@ -206,18 +204,12 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                     database.saveSilent(session);
                 }
                 nexusPlayer.setSession(null);
-                nexusPlayer.changeStat("playtime", playTime, StatOperator.ADD);
-                for (StatChange change : nexusPlayer.getStats().findAllChanges()) {
-                    if (change.getId() != 0) {
-                        change.push();
-                    }
-                }
-                StatHelper.consolidateStats(nexusPlayer);
+                nexusPlayer.getPlayerTime().addPlaytime(playTime);
                 NexusAPI.getApi().getPrimaryDatabase().saveSilent(nexusPlayer);
             });
             this.players.remove(nexusPlayer.getUniqueId());
             if (nexusPlayer.getRank().ordinal() <= Rank.MEDIA.ordinal()) {
-                StaffChat.sendDisconnect(nexusPlayer);
+                plugin.getStaffChannel().sendMessage(nexusPlayer.getDisplayName() + " &7disconnected");
             }
         }
     }

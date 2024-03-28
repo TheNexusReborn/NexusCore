@@ -31,9 +31,9 @@ public class BalanceCommand implements CommandExecutor {
             return true;
         }
 
-        double credits = nexusPlayer.getStatValue("credits").getAsDouble();
-        double nexites = nexusPlayer.getStatValue("nexites").getAsDouble();
-        double xp = nexusPlayer.getStatValue("xp").getAsDouble();
+        double credits = nexusPlayer.getBalance().getCredits();
+        double nexites = nexusPlayer.getBalance().getNexites();
+        double xp = nexusPlayer.getExperience().getLevelXp();
 
         DecimalFormat format = new DecimalFormat("0.#");
         nexusPlayer.sendMessage(MsgType.INFO + "Your balances");

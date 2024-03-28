@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.UUID;
 
+@SuppressWarnings("DuplicatedCode")
 public class RankCommand implements TabExecutor {
 
     private final NexusCore plugin;
@@ -125,8 +126,6 @@ public class RankCommand implements TabExecutor {
             }
             sender.sendMessage(MCUtils.color("&eYou removed the rank " + rankName + " &efrom &b" + targetName));
         }
-
-        NexusAPI.getApi().getNetworkManager().send("updaterank", targetUniqueID.toString(), args[1], rank.name(), expire + "");
 
         StringBuilder sb = new StringBuilder();
         for (Entry<Rank, Long> entry : targetRanks.findAll().entrySet()) {

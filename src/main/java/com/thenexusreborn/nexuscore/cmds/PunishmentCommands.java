@@ -1,21 +1,33 @@
 package com.thenexusreborn.nexuscore.cmds;
 
+import com.stardevllc.starlib.CodeGenerator;
 import com.stardevllc.starlib.Pair;
 import com.stardevllc.starlib.time.TimeParser;
 import com.thenexusreborn.api.NexusAPI;
-import com.thenexusreborn.api.player.*;
-import com.thenexusreborn.api.punishment.*;
-import com.thenexusreborn.api.util.*;
+import com.thenexusreborn.api.player.IPEntry;
+import com.thenexusreborn.api.player.PlayerManager;
+import com.thenexusreborn.api.player.Rank;
+import com.thenexusreborn.api.punishment.AcknowledgeInfo;
+import com.thenexusreborn.api.punishment.Punishment;
+import com.thenexusreborn.api.punishment.PunishmentType;
+import com.thenexusreborn.api.punishment.Visibility;
 import com.thenexusreborn.nexuscore.NexusCore;
-import com.thenexusreborn.nexuscore.util.*;
+import com.thenexusreborn.nexuscore.util.MCUtils;
+import com.thenexusreborn.nexuscore.util.MsgType;
 import org.bukkit.Bukkit;
-import org.bukkit.command.*;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Stream;
 
+@SuppressWarnings("DuplicatedCode")
 public class PunishmentCommands implements CommandExecutor {
     
     private final NexusCore plugin;
@@ -88,7 +100,6 @@ public class PunishmentCommands implements CommandExecutor {
         }
         
         UUID targetUniqueID = playerInfo.firstValue();
-        String targetName = playerInfo.secondValue();
         Rank targetRank = playerManager.getPlayerRank(targetUniqueID);
 
         if (targetRank.ordinal() < actorRank.ordinal()) {
@@ -125,13 +136,48 @@ public class PunishmentCommands implements CommandExecutor {
         
         String reason = sb.toString().trim();
         Punishment punishment = new Punishment(System.currentTimeMillis(), length, actor, targetUniqueID.toString(), server, reason, type, Visibility.SILENT);
+
+        Player targetPlayer = Bukkit.getPlayer(UUID.fromString(punishment.getTarget()));
         
-        if (punishment.getType() == PunishmentType.WARN) {
-            punishment.setAcknowledgeInfo(new AcknowledgeInfo(Utils.generateCode(8, true, true, true)));
+        if (punishment.getType() == PunishmentType.MUTE) {
+            if (targetPlayer != null && punishment.isActive()) {
+                if (punishment.getType() == PunishmentType.MUTE) {
+                    targetPlayer.sendMessage(MCUtils.color(MsgType.WARN + "You have been muted by " + punishment.getActorNameCache() + " for " + punishment.getReason() + ". (" + punishment.formatTimeLeft() + ")"));
+                }
+            }
+        } else if (punishment.getType() == PunishmentType.WARN) {
+            punishment.setAcknowledgeInfo(new AcknowledgeInfo(CodeGenerator.generate(8, true, true, true)));
+            targetPlayer.sendMessage(MCUtils.color(MsgType.WARN + "You have been warned by " + punishment.getActorNameCache() + " for " + punishment.getReason() + "."));
+            targetPlayer.sendMessage(MCUtils.color(MsgType.WARN + "You must type the code " + punishment.getAcknowledgeInfo().getCode() + " in chat before you can speak again."));
         } else if (Stream.of(PunishmentType.BAN, PunishmentType.BLACKLIST, PunishmentType.KICK).anyMatch(punishmentType -> punishment.getType() == punishmentType)) {
-            Player targetPlayer = Bukkit.getPlayer(targetUniqueID);
             if (targetPlayer != null) {
                 targetPlayer.kickPlayer(punishment.formatKick()); //TODO this doesn't provide an id right away though
+            }
+
+            if (punishment.getType() == PunishmentType.BLACKLIST) {
+                if (punishment.isActive()) {
+                    Set<IPEntry> playerIps = new HashSet<>();
+                    for (IPEntry ipEntry : NexusAPI.getApi().getPlayerManager().getIpHistory()) {
+                        if (ipEntry.getUuid().equals(targetPlayer.getUniqueId())) {
+                            playerIps.add(ipEntry);
+                        }
+                    }
+
+                    Set<UUID> alts = new HashSet<>();
+                    for (IPEntry playerIp : playerIps) {
+                        alts.addAll(NexusAPI.getApi().getPlayerManager().getPlayersByIp(playerIp.getIp()));
+                    }
+
+                    String kickMessage = MCUtils.color(punishment.formatKick());
+                    Bukkit.getScheduler().runTask(plugin, () -> {
+                        for (UUID alt : alts) {
+                            Player altPlayer = Bukkit.getPlayer(alt);
+                            if (altPlayer != null) {
+                                altPlayer.kickPlayer(kickMessage);
+                            }
+                        }
+                    });
+                }
             }
         }
 
@@ -150,8 +196,8 @@ public class PunishmentCommands implements CommandExecutor {
                 return;
             }
 
-            NexusAPI.getApi().getNetworkManager().send("punishment", punishment.getId() + "");
-            StaffChat.sendPunishment(punishment); 
+            NexusAPI.getApi().getPunishmentManager().addPunishment(punishment);
+            plugin.getPunishmentChannel().sendPunishment(punishment);
         });
         return true;
     }

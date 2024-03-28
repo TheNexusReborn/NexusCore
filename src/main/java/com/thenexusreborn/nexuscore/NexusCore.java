@@ -1,22 +1,25 @@
 package com.thenexusreborn.nexuscore;
 
+import com.stardevllc.starchat.StarChat;
+import com.stardevllc.starchat.channels.ChatChannel;
 import com.stardevllc.starclock.ClockManager;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.server.ServerInfo;
+import com.thenexusreborn.api.sql.objects.SQLDatabase;
 import com.thenexusreborn.nexuscore.api.NexusSpigotPlugin;
 import com.thenexusreborn.nexuscore.chat.ChatManager;
+import com.thenexusreborn.nexuscore.chat.PunishmentChannel;
 import com.thenexusreborn.nexuscore.cmds.*;
+import com.thenexusreborn.nexuscore.hooks.NexusPapiExpansion;
 import com.thenexusreborn.nexuscore.player.SpigotPlayerManager;
 import com.thenexusreborn.nexuscore.server.SpigotServerManager;
 import com.thenexusreborn.nexuscore.thread.*;
 import com.thenexusreborn.nexuscore.util.MCUtils;
 import com.thenexusreborn.nexuscore.util.MsgType;
-import com.thenexusreborn.nexuscore.util.nms.NMS;
-import com.thenexusreborn.nexuscore.util.nms.NMS.Version;
-import me.firestar311.starsql.api.objects.SQLDatabase;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabExecutor;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -27,18 +30,34 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
+@SuppressWarnings("SameParameterValue")
 public class NexusCore extends JavaPlugin {
     
-    private NMS nms;
     private final List<NexusSpigotPlugin> nexusPlugins = new ArrayList<>();
     private ChatManager chatManager;
     private ToggleCmds toggleCmdExecutor;
     private Supplier<String> motdSupplier;
+    
+    private StarChat starChatPlugin;
+    private PunishmentChannel punishmentChannel;
 
     @Override
     public void onEnable() {
         getLogger().info("Loading NexusCore v" + getDescription().getVersion());
         this.saveDefaultConfig();
+
+        PluginManager pluginManager = Bukkit.getPluginManager();
+        if (pluginManager.getPlugin("StarCore") == null) {
+            getLogger().severe("StarCore not found, disabling NexusCore.");
+            pluginManager.disablePlugin(this);
+            return;
+        }
+        
+        if (pluginManager.getPlugin("StarChat") == null) {
+            getLogger().severe("StarChat not found, disabling NexusCore.");
+            pluginManager.disablePlugin(this);
+            return;
+        }
         
         NexusAPI.setApi(new SpigotNexusAPI(this));
         try {
@@ -53,9 +72,18 @@ public class NexusCore extends JavaPlugin {
         NexusAPI.getApi().setClockManager(getServer().getServicesManager().getRegistration(ClockManager.class).getProvider());
         
         Bukkit.getServicesManager().register(SQLDatabase.class, NexusAPI.getApi().getPrimaryDatabase(), this, ServicePriority.Highest);
+
+        new NexusPapiExpansion(this).register();
+        getLogger().info("Hooked into PlaceholderAPI");
         
-        nms = NMS.getNMS(Version.MC_1_8_R3);
-        getLogger().info("Registered NMS Version");
+        this.starChatPlugin = (StarChat) pluginManager.getPlugin("StarChat");
+        this.starChatPlugin.getGlobalChannel().setSenderFormat("&8(&2&l%nexuscore_level%&8) &r%nexuscore_displayname%&8: %nexuscore_chatcolor%{message}");
+        this.starChatPlugin.getStaffChannel().setSenderFormat("&2&l[&aSTAFF&2&l] &r%nexuscore_coloredname%: &f{message}");
+        this.starChatPlugin.getStaffChannel().setSystemFormat("&2&l[&aSTAFF&2&l] &f{message}");
+        this.starChatPlugin.getStaffChannel().setSendPermission("nexuscore.staff.send");
+        this.starChatPlugin.getStaffChannel().setViewPermission("nexuscore.staff.view");
+        this.punishmentChannel = new PunishmentChannel(this);
+        getLogger().info("Hooked into StarChat");
         
         chatManager = new ChatManager(this);
         getLogger().info("Registered Chat Manager");
@@ -69,7 +97,6 @@ public class NexusCore extends JavaPlugin {
         getLogger().info("Registered Event Listeners");
         
         registerCommand("rank", new RankCommand(this));
-        registerCommand("setstat", new SetStatCmd(this));
         getCommand("tag").setExecutor(new TagCommand(this));
         getCommand("say").setExecutor(new SayCommand(this));
         getCommand("message").setExecutor(new MessageCommand());
@@ -96,7 +123,7 @@ public class NexusCore extends JavaPlugin {
         getCommand("warn").setExecutor(puCmds);
         getCommand("blacklist").setExecutor(puCmds);
         
-        PunishRemoveCommands prCmds = new PunishRemoveCommands();
+        PunishRemoveCommands prCmds = new PunishRemoveCommands(this);
         getCommand("unban").setExecutor(prCmds);
         getCommand("unmute").setExecutor(prCmds);
         getCommand("pardon").setExecutor(prCmds);
@@ -139,7 +166,6 @@ public class NexusCore extends JavaPlugin {
         serverInfo.setState("none");
         serverInfo.setPlayers(0);
         NexusAPI.getApi().getPrimaryDatabase().saveSilent(serverInfo);
-        NexusAPI.getApi().getNetworkManager().close();
     }
     
     private void registerCommand(String cmd, TabExecutor tabExecutor) {
@@ -150,10 +176,6 @@ public class NexusCore extends JavaPlugin {
     
     public ChatManager getChatManager() {
         return chatManager;
-    }
-    
-    public NMS getNMS() {
-        return nms;
     }
     
     public Connection getConnection(String database) throws SQLException {
@@ -180,4 +202,25 @@ public class NexusCore extends JavaPlugin {
     public void setMotdSupplier(Supplier<String> motdSupplier) {
         this.motdSupplier = motdSupplier;
     }
+
+    public StarChat getStarChatPlugin() {
+        return starChatPlugin;
+    }
+    
+    public ChatChannel getGlobalChannel() {
+        return starChatPlugin.getGlobalChannel();
+    }
+    
+    public ChatChannel getStaffChannel() {
+        return starChatPlugin.getStaffChannel();
+    }
+
+    public PunishmentChannel getPunishmentChannel() {
+        return punishmentChannel;
+    }
+    /*
+        CraftServer craftServer = (CraftServer) Bukkit.getServer();
+        SimpleCommandMap commandMap = craftServer.getCommandMap();
+        commandMap.register(plugin.getName(), command);
+     */
 }

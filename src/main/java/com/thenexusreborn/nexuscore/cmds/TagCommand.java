@@ -3,7 +3,6 @@ package com.thenexusreborn.nexuscore.cmds;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Rank;
-import com.thenexusreborn.api.stats.StatOperator;
 import com.thenexusreborn.api.tags.Tag;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.util.MCUtils;
@@ -75,6 +74,8 @@ public class TagCommand implements CommandExecutor {
                     }
                 }
 
+                NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(uniqueId);
+
                 String cmdAction, verb;
                 if (args[0].equalsIgnoreCase("unlock")) {
                     if (tag != null) {
@@ -85,9 +86,15 @@ public class TagCommand implements CommandExecutor {
                     tag = new Tag(uniqueId, tagName, System.currentTimeMillis());
                     cmdAction = "unlocked";
                     verb = "for";
+                    
+                    if (nexusPlayer != null) {
+                        nexusPlayer.addTag(tag);
+                    }
                 } else {
                     cmdAction = "removed";
                     verb = "from";
+                    
+                    nexusPlayer.removeTag(tagName);
                 }
 
                 if (cmdAction.equals("unlocked")) {
@@ -96,7 +103,6 @@ public class TagCommand implements CommandExecutor {
                     NexusAPI.getApi().getPrimaryDatabase().deleteSilent(Tag.class, tag.getId());
                 }
 
-                NexusAPI.getApi().getNetworkManager().send("updatetag", uniqueId.toString(), args[0], tagName, tag.getTimestamp() + "");
                 String playerName = NexusAPI.getApi().getPlayerManager().getNameFromUUID(uniqueId);
                 sender.sendMessage(MCUtils.color("&eYou " + cmdAction + " the tag " + tag.getDisplayName() + " &e" + verb + " the player &b" + playerName));
             });
@@ -114,7 +120,7 @@ public class TagCommand implements CommandExecutor {
             return true;
         }
 
-        Set<String> unlockedTags = nexusPlayer.getTags().findAll();
+        Set<String> unlockedTags = nexusPlayer.getTags();
         if (args[0].equalsIgnoreCase("list")) {
             if (!unlockedTags.isEmpty()) {
                 nexusPlayer.sendMessage("&eList of available tags...");
@@ -137,28 +143,18 @@ public class TagCommand implements CommandExecutor {
             }
             String tagName = sb.substring(0, sb.length() - 1);
 
-            if (!nexusPlayer.getTags().isUnlocked(tagName)) {
+            if (!nexusPlayer.isTagUnlocked(tagName)) {
                 nexusPlayer.sendMessage("&cYou do not have a tag with that name.");
                 return true;
             }
 
-            nexusPlayer.getTags().setActive(tagName);
-            nexusPlayer.changeStat("tag", tagName, StatOperator.SET).push();
-            nexusPlayer.sendMessage("&eYou set your tag to " + nexusPlayer.getTags().getActive().getDisplayName());
-            NexusAPI.getApi().getNetworkManager().send("updatetag", nexusPlayer.getUniqueId().toString(), "set", tagName);
-            pushTagChange(nexusPlayer);
+            nexusPlayer.setActiveTag(tagName);
+            nexusPlayer.sendMessage("&eYou set your tag to " + nexusPlayer.getActiveTag().getDisplayName());
         } else if (args[0].equalsIgnoreCase("reset")) {
-            nexusPlayer.changeStat("tag", "null", StatOperator.SET).push();
-            nexusPlayer.getTags().setActive(null);
+            nexusPlayer.setActiveTag(null);
             nexusPlayer.sendMessage("&eYou reset your tag.");
-            NexusAPI.getApi().getNetworkManager().send("updatetag", nexusPlayer.getUniqueId().toString(), "reset");
-            pushTagChange(nexusPlayer);
         }
 
         return true;
-    }
-
-    private void pushTagChange(NexusPlayer player) {
-        NexusAPI.getApi().getScheduler().runTaskAsynchronously(() -> NexusAPI.getApi().getPrimaryDatabase().saveSilent(player.getStatValue("tag").getAsString()));
     }
 }

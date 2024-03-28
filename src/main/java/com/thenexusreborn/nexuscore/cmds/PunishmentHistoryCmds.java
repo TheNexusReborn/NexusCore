@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 
 import java.util.*;
 
+@SuppressWarnings("ExtractMethodRecommender")
 public class PunishmentHistoryCmds implements CommandExecutor {
     
     private final NexusCore plugin;
@@ -101,7 +102,7 @@ public class PunishmentHistoryCmds implements CommandExecutor {
             Punishment punishment = punishments.get(i);
             String pType = punishment.getType().getColor() + punishment.getType().getVerb();
             String timeLeft = punishment.formatTimeLeft();
-            if (timeLeft != null && !timeLeft.equals("")) {
+            if (timeLeft != null && !timeLeft.isEmpty()) {
                 timeLeft = " &c(" + timeLeft + ")";
             }
             String actorName = "&b" + punishment.getActorNameCache();
