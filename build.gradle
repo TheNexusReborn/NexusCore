@@ -1,0 +1,60 @@
+plugins {
+    id 'java-library'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+    id 'maven-publish'
+}
+
+repositories {
+    mavenLocal()
+    maven {
+        url = uri('https://www.jitpack.io')
+    }
+
+    maven {
+        url = uri('https://hub.spigotmc.org/nexus/content/repositories/snapshots/')
+    }
+
+    maven {
+        url = uri('https://repo.extendedclip.com/content/repositories/placeholderapi/')
+    }
+
+    maven {
+        url = uri('https://repo.maven.apache.org/maven2/')
+    }
+}
+
+dependencies {
+    api 'com.thenexusreborn:NexusAPI:1.12-ALPHA'
+    compileOnly 'com.github.StarDevelopmentLLC:StarLib:1.0.0-alpha.3'
+    compileOnly 'com.github.StarDevelopmentLLC:StarClock:1.0.0-alpha.3'
+    compileOnly 'com.github.StarDevelopmentLLC:StarCore:1.0.0-alpha.14'
+    compileOnly 'com.github.StarDevelopmentLLC:StarChat:1.0.0-alpha.2'
+    compileOnly 'me.clip:placeholderapi:2.11.5'
+    compileOnly 'org.spigotmc:spigot:1.8.8-R0.1-SNAPSHOT'
+}
+
+group = 'com.thenexusreborn'
+version = '1.11-ALPHA'
+description = 'NexusCore'
+java.sourceCompatibility = JavaVersion.VERSION_17
+
+shadowJar {
+    archiveClassifier.set('')
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+publishing {
+    publications {
+        shadow(MavenPublication) { publication ->
+            project.shadow.component(publication)
+        }
+    }
+}
+
+tasks.jar.finalizedBy(shadowJar)
+tasks.publishToMavenLocal.dependsOn(shadowJar)
