@@ -38,6 +38,12 @@ version = '1.11-ALPHA'
 description = 'NexusCore'
 java.sourceCompatibility = JavaVersion.VERSION_17
 
+processResources {
+    filesMatching("*.yml") {
+        expand(project.properties)
+    }
+}
+
 shadowJar {
     archiveClassifier.set('')
 }
@@ -58,3 +64,4 @@ publishing {
 
 tasks.jar.finalizedBy(shadowJar)
 tasks.publishToMavenLocal.dependsOn(shadowJar)
+tasks.compileJava.dependsOn(clean)
