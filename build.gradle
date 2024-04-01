@@ -29,12 +29,13 @@ dependencies {
     compileOnly 'com.github.StarDevelopmentLLC:StarClock:1.0.0-alpha.3'
     compileOnly 'com.github.StarDevelopmentLLC:StarCore:1.0.0-alpha.14'
     compileOnly 'com.github.StarDevelopmentLLC:StarChat:1.0.0-alpha.2'
+    compileOnly 'com.github.StarDevelopmentLLC:StarBeans:1.0.0-alpha.1'
     compileOnly 'me.clip:placeholderapi:2.11.5'
     compileOnly 'org.spigotmc:spigot:1.8.8-R0.1-SNAPSHOT'
 }
 
 group = 'com.thenexusreborn'
-version = '1.11-ALPHA'
+version = '1.12-ALPHA'
 description = 'NexusCore'
 java.sourceCompatibility = JavaVersion.VERSION_17
 
