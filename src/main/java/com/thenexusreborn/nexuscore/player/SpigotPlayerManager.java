@@ -9,10 +9,10 @@ import com.thenexusreborn.api.player.Session;
 import com.thenexusreborn.api.punishment.Punishment;
 import com.thenexusreborn.api.scoreboard.NexusScoreboard;
 import com.thenexusreborn.api.scoreboard.ScoreboardView;
-import com.thenexusreborn.api.server.NetworkType;
 import com.thenexusreborn.api.sql.objects.Row;
 import com.thenexusreborn.api.sql.objects.SQLDatabase;
 import com.thenexusreborn.api.sql.objects.Table;
+import com.thenexusreborn.api.util.NetworkType;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.api.events.NexusPlayerLoadEvent;
 import com.thenexusreborn.nexuscore.scoreboard.SpigotNexusScoreboard;
@@ -161,7 +161,7 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                         SpigotUtils.sendActionBar(player, "&aYour data has been loaded");
 
                         if (finalNexusPlayer.getRank().ordinal() <= Rank.MEDIA.ordinal()) {
-                            plugin.getStaffChannel().sendMessage(finalNexusPlayer.getDisplayName() + " &7&l-> &6" + NexusAPI.getApi().getServerManager().getCurrentServer().getName());
+                            plugin.getStaffChannel().sendMessage(finalNexusPlayer.getDisplayName() + " &7&l-> &6Nexus"); //TODO
                         }
 
                         if (loadEvent.getActionBar() != null) {

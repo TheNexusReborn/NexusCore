@@ -4,7 +4,6 @@ import com.stardevllc.starchat.StarChat;
 import com.stardevllc.starchat.channels.ChatChannel;
 import com.stardevllc.starclock.ClockManager;
 import com.thenexusreborn.api.NexusAPI;
-import com.thenexusreborn.api.server.ServerInfo;
 import com.thenexusreborn.api.sql.objects.SQLDatabase;
 import com.thenexusreborn.nexuscore.api.NexusSpigotPlugin;
 import com.thenexusreborn.nexuscore.chat.ChatManager;
@@ -12,7 +11,6 @@ import com.thenexusreborn.nexuscore.chat.PunishmentChannel;
 import com.thenexusreborn.nexuscore.cmds.*;
 import com.thenexusreborn.nexuscore.hooks.NexusPapiExpansion;
 import com.thenexusreborn.nexuscore.player.SpigotPlayerManager;
-import com.thenexusreborn.nexuscore.server.SpigotServerManager;
 import com.thenexusreborn.nexuscore.thread.*;
 import com.thenexusreborn.nexuscore.util.MCUtils;
 import com.thenexusreborn.nexuscore.util.MsgType;
@@ -93,7 +91,6 @@ public class NexusCore extends JavaPlugin {
         
         Bukkit.getServer().getPluginManager().registerEvents((SpigotPlayerManager) NexusAPI.getApi().getPlayerManager(), this);
         Bukkit.getServer().getPluginManager().registerEvents(chatManager, this);
-        Bukkit.getServer().getPluginManager().registerEvents((SpigotServerManager) NexusAPI.getApi().getServerManager(), this);
         getLogger().info("Registered Event Listeners");
         
         registerCommand("rank", new RankCommand(this));
@@ -161,11 +158,6 @@ public class NexusCore extends JavaPlugin {
     @Override
     public void onDisable() {
         NexusAPI.getApi().getPlayerManager().saveData();
-        ServerInfo serverInfo = NexusAPI.getApi().getServerManager().getCurrentServer();
-        serverInfo.setStatus("offline");
-        serverInfo.setState("none");
-        serverInfo.setPlayers(0);
-        NexusAPI.getApi().getPrimaryDatabase().saveSilent(serverInfo);
     }
     
     private void registerCommand(String cmd, TabExecutor tabExecutor) {
@@ -218,6 +210,21 @@ public class NexusCore extends JavaPlugin {
     public PunishmentChannel getPunishmentChannel() {
         return punishmentChannel;
     }
+    
+    /* ServerPingEvent
+    Iterator<Player> iterator = e.iterator();
+        while(iterator.hasNext()) {
+            Player player = iterator.next();
+            NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(player.getUniqueId());
+            if (nexusPlayer == null) {
+                continue;
+            }
+            if (nexusPlayer.getToggleValue("vanish") || nexusPlayer.getToggleValue("incognito")) {
+                iterator.remove();
+            }
+        }
+     */
+    
     /*
         CraftServer craftServer = (CraftServer) Bukkit.getServer();
         SimpleCommandMap commandMap = craftServer.getCommandMap();

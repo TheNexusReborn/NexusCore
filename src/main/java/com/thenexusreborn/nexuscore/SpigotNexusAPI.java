@@ -4,16 +4,15 @@ import com.stardevllc.starmclib.task.SpigotTaskFactory;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.PlayerProxy;
 import com.thenexusreborn.api.registry.ToggleRegistry;
-import com.thenexusreborn.api.server.Environment;
 import com.thenexusreborn.api.sql.DatabaseRegistry;
 import com.thenexusreborn.api.sql.mysql.MySQLDatabase;
 import com.thenexusreborn.api.sql.mysql.MySQLProperties;
 import com.thenexusreborn.api.sql.objects.SQLDatabase;
+import com.thenexusreborn.api.util.Environment;
 import com.thenexusreborn.nexuscore.api.NexusSpigotPlugin;
 import com.thenexusreborn.nexuscore.data.handlers.PositionHandler;
 import com.thenexusreborn.nexuscore.player.SpigotPlayerManager;
 import com.thenexusreborn.nexuscore.player.SpigotPlayerProxy;
-import com.thenexusreborn.nexuscore.server.SpigotServerManager;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
@@ -25,7 +24,7 @@ public class SpigotNexusAPI extends NexusAPI {
     private final NexusCore plugin;
     
     public SpigotNexusAPI(NexusCore plugin) {
-        super(Environment.valueOf(plugin.getConfig().getString("environment").toUpperCase()), plugin.getLogger(), new SpigotPlayerManager(plugin), new SpigotTaskFactory(plugin), new SpigotServerManager(plugin));
+        super(Environment.valueOf(plugin.getConfig().getString("environment").toUpperCase()), plugin.getLogger(), new SpigotPlayerManager(plugin), new SpigotTaskFactory(plugin));
         this.plugin = plugin;
         PlayerProxy.setProxyClass(SpigotPlayerProxy.class);
     }

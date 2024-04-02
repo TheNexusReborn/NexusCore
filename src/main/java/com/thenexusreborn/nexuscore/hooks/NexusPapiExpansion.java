@@ -58,7 +58,7 @@ public class NexusPapiExpansion extends PlaceholderExpansion {
                 return "&7";
             }
         } else if (params.equalsIgnoreCase("servername")) {
-            return NexusAPI.getApi().getServerManager().getCurrentServer().getName();
+            return "Nexus"; //TODO
         }
 
         return null;

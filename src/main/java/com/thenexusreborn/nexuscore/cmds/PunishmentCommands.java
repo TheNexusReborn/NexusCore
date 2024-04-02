@@ -114,7 +114,7 @@ public class PunishmentCommands implements CommandExecutor {
             actor = sender.getName();
         }
         
-        String server = NexusAPI.getApi().getServerManager().getCurrentServer().getName();
+        String server = "Nexus"; //TODO
         
         StringBuilder sb = new StringBuilder();
         int startIndex = 1;
