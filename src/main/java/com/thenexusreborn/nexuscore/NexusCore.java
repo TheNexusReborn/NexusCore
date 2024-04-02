@@ -4,13 +4,17 @@ import com.stardevllc.starchat.StarChat;
 import com.stardevllc.starchat.channels.ChatChannel;
 import com.stardevllc.starclock.ClockManager;
 import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.server.InstanceServer;
+import com.thenexusreborn.api.server.VirtualServer;
 import com.thenexusreborn.api.sql.objects.SQLDatabase;
 import com.thenexusreborn.nexuscore.api.NexusSpigotPlugin;
+import com.thenexusreborn.nexuscore.api.events.NexusServerSetupEvent;
 import com.thenexusreborn.nexuscore.chat.ChatManager;
 import com.thenexusreborn.nexuscore.chat.PunishmentChannel;
 import com.thenexusreborn.nexuscore.cmds.*;
 import com.thenexusreborn.nexuscore.hooks.NexusPapiExpansion;
 import com.thenexusreborn.nexuscore.player.SpigotPlayerManager;
+import com.thenexusreborn.nexuscore.server.CoreInstanceServer;
 import com.thenexusreborn.nexuscore.thread.*;
 import com.thenexusreborn.nexuscore.util.MCUtils;
 import com.thenexusreborn.nexuscore.util.MsgType;
@@ -26,6 +30,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 @SuppressWarnings("SameParameterValue")
@@ -38,6 +43,8 @@ public class NexusCore extends JavaPlugin {
     
     private StarChat starChatPlugin;
     private PunishmentChannel punishmentChannel;
+    
+    private InstanceServer nexusServer;
 
     @Override
     public void onEnable() {
@@ -149,6 +156,20 @@ public class NexusCore extends JavaPlugin {
         new ServerUpdateThread(this).start();
         new PlayerLoadActionBarThread(this).start();
         getLogger().info("Registered Tasks");
+        
+        getServer().getScheduler().runTaskLater(this, () -> {
+            NexusServerSetupEvent event = new NexusServerSetupEvent(NexusAPI.NETWORK_TYPE);
+            getServer().getPluginManager().callEvent(event);
+            nexusServer = event.getServer();
+            if (nexusServer == null) {
+                nexusServer = new CoreInstanceServer(); //This is for the single network type with using instance servers
+                Map<String, VirtualServer> virtualServers = event.getVirtualServers();
+                for (VirtualServer server : virtualServers.values()) {
+                    nexusServer.getChildServers().register(server);
+                    server.setParentServer(nexusServer);
+                }
+            }
+        }, 1L);
     }
     
     public void addNexusPlugin(NexusSpigotPlugin plugin) {
@@ -209,6 +230,10 @@ public class NexusCore extends JavaPlugin {
 
     public PunishmentChannel getPunishmentChannel() {
         return punishmentChannel;
+    }
+
+    public InstanceServer getNexusServer() {
+        return nexusServer;
     }
     
     /* ServerPingEvent
