@@ -5,6 +5,7 @@ import com.stardevllc.starchat.channels.ChatChannel;
 import com.stardevllc.starclock.ClockManager;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.server.InstanceServer;
+import com.thenexusreborn.api.server.NexusServer;
 import com.thenexusreborn.api.server.VirtualServer;
 import com.thenexusreborn.api.sql.objects.SQLDatabase;
 import com.thenexusreborn.nexuscore.api.NexusSpigotPlugin;
@@ -162,12 +163,15 @@ public class NexusCore extends JavaPlugin {
             getServer().getPluginManager().callEvent(event);
             nexusServer = event.getServer();
             if (nexusServer == null) {
-                nexusServer = new CoreInstanceServer(); //This is for the single network type with using instance servers
+                nexusServer = new CoreInstanceServer();
                 Map<String, VirtualServer> virtualServers = event.getVirtualServers();
                 for (VirtualServer server : virtualServers.values()) {
                     nexusServer.getChildServers().register(server);
                     server.setParentServer(nexusServer);
                 }
+                
+                nexusServer.onStart();
+                nexusServer.getChildServers().forEach(NexusServer::onStart);
             }
         }, 1L);
     }
