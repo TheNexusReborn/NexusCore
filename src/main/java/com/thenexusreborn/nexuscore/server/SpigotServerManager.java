@@ -45,7 +45,6 @@ public class SpigotServerManager extends ServerManager implements Listener {
     
     @Override
     public void setupCurrentServer() {
-        int multicraftId = plugin.getConfig().getInt("serverInfo.multicraftid");
         String ip = ServerProperties.getServerIp();
         String name = plugin.getConfig().getString("serverInfo.serverName");
         int port = ServerProperties.getServerPort();
@@ -56,7 +55,7 @@ public class SpigotServerManager extends ServerManager implements Listener {
         String status = "loading";
         String state = "none";
         long id = plugin.getConfig().getLong("serverInfo.id");
-        this.currentServer = new ServerInfo(multicraftId, ip, name, port, players, maxPlayers, hiddenPlayers, type, status, state);
+        this.currentServer = new ServerInfo(ip, name, port, players, maxPlayers, hiddenPlayers, type, status, state);
         this.currentServer.setId(id);
         NexusAPI.getApi().getPrimaryDatabase().saveSilent(this.currentServer);
         plugin.getConfig().set("serverInfo.id", this.currentServer.getId());
