@@ -156,6 +156,7 @@ public class NexusCore extends JavaPlugin {
         new PlayerPermThread(this).start();
         new ServerUpdateThread(this).start();
         new PlayerLoadActionBarThread(this).start();
+        new PlayerVisibilityThread(this).start();
         getLogger().info("Registered Tasks");
         
         getServer().getScheduler().runTaskLater(this, () -> {

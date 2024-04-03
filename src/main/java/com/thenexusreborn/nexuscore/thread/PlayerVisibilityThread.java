@@ -1,0 +1,85 @@
+package com.thenexusreborn.nexuscore.thread;
+
+import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.player.NexusPlayer;
+import com.thenexusreborn.api.player.Rank;
+import com.thenexusreborn.api.server.NexusServer;
+import com.thenexusreborn.nexuscore.NexusCore;
+import com.thenexusreborn.nexuscore.api.NexusThread;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+
+public class PlayerVisibilityThread extends NexusThread<NexusCore> {
+    public PlayerVisibilityThread(NexusCore plugin) {
+        super(plugin, 20L, 1L, false);
+    }
+
+    @SuppressWarnings("DuplicatedCode")
+    @Override
+    public void onRun() {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            NexusServer playerServer = null;
+
+            for (NexusServer nexusServer : NexusAPI.getApi().getServerRegistry()) {
+                if (nexusServer.getPlayers().contains(player.getUniqueId())) {
+                    playerServer = nexusServer;
+                    break;
+                }
+            }
+
+            for (Player otherPlayer : Bukkit.getOnlinePlayers()) {
+                if (otherPlayer.getUniqueId().equals(player.getUniqueId())) {
+                    continue;
+                }
+                
+                if (playerServer == null) {
+                    otherPlayer.hidePlayer(player);
+                    continue;
+                }
+
+                NexusServer otherPlayerServer = null;
+
+                for (NexusServer nexusServer : NexusAPI.getApi().getServerRegistry()) {
+                    if (nexusServer.getPlayers().contains(otherPlayer.getUniqueId())) {
+                        otherPlayerServer = nexusServer;
+                        break;
+                    }
+                }
+
+                NexusPlayer otherNexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(otherPlayer.getUniqueId());
+                
+                if (otherPlayerServer == null || otherNexusPlayer == null) {
+                    player.hidePlayer(otherPlayer);
+                    continue;
+                }
+
+                if (!playerServer.getName().equals(otherPlayerServer.getName())) {
+                    player.hidePlayer(otherPlayer);
+                    otherPlayer.hidePlayer(player);
+                } else {
+                    if (playerServer.recalculateVisibility(player.getUniqueId(), otherPlayer.getUniqueId())) {
+                        continue;
+                    }
+                    
+                    NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(player.getUniqueId());
+                    Rank playerRank = nexusPlayer.getRank();
+                    
+                    Rank otherPlayerRank = otherNexusPlayer.getRank();
+                    boolean otherPlayerIsVanished = otherPlayerRank.ordinal() <= Rank.HELPER.ordinal() && otherNexusPlayer.getToggleValue("vanish");
+                    boolean otherPlayerIsIncognito = otherPlayerRank.ordinal() <= Rank.MEDIA.ordinal() && otherNexusPlayer.getToggleValue("incognito");
+                    boolean otherPlayerIsNotVisible = otherPlayerIsVanished || otherPlayerIsIncognito;
+                    
+                    if (otherPlayerIsNotVisible) {
+                        if (otherPlayerRank.ordinal() < playerRank.ordinal()) {
+                            player.hidePlayer(otherPlayer);
+                        } else {
+                            player.showPlayer(otherPlayer);
+                        }
+                    } else {
+                        player.showPlayer(otherPlayer);
+                    }
+                }
+            }
+        }
+    }
+}
