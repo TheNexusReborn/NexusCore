@@ -18,8 +18,8 @@ public class CoreInstanceServer extends InstanceServer {
     public void join(NexusPlayer nexusPlayer) {
         String name = getName();
         if (primaryVirtualServer != null) {
-            primaryVirtualServer.join(nexusPlayer);
-            name = primaryVirtualServer.getName();
+            primaryVirtualServer.get().join(nexusPlayer);
+            name = primaryVirtualServer.get().getName();
         }
         
         if (nexusPlayer.getRank().ordinal() <= Rank.MEDIA.ordinal()) {
