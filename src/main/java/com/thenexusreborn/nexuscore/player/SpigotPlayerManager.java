@@ -102,7 +102,6 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                     } catch (SQLException ex) {
                         player.sendMessage(MCUtils.color(MsgType.ERROR + "Failed to save your player data to the database. Please report as a bug and try to re-log."));
                         ex.printStackTrace();
-                        return;
                     }
                     
                     if (nexusPlayer.getRank().ordinal() <= Rank.HELPER.ordinal()) {
@@ -151,18 +150,11 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                             Bukkit.broadcastMessage(MCUtils.color(joinMessage));
                         }
 
-                        if (finalNexusPlayer.getRank().ordinal() <= Rank.HELPER.ordinal()) {
-                            player.addAttachment(plugin, "spartan.info", true);
-                            player.addAttachment(plugin, "spartan.notifications", true);
-                        }
-
                         NexusAPI.getApi().getPlayerManager().getPlayers().put(finalNexusPlayer.getUniqueId(), finalNexusPlayer);
 
                         SpigotUtils.sendActionBar(player, "&aYour data has been loaded");
 
-                        if (finalNexusPlayer.getRank().ordinal() <= Rank.MEDIA.ordinal()) {
-                            plugin.getStaffChannel().sendMessage(finalNexusPlayer.getDisplayName() + " &7&l-> &6Nexus"); //TODO
-                        }
+                        plugin.getNexusServer().join(finalNexusPlayer);
 
                         if (loadEvent.getActionBar() != null) {
                             new BukkitRunnable() {

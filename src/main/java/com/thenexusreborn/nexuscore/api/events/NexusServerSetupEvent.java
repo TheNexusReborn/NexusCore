@@ -17,6 +17,7 @@ public class NexusServerSetupEvent extends Event {
     
     private InstanceServer server;
     
+    private VirtualServer primaryVirtualServer;
     private Map<String, VirtualServer> virtualServers = new HashMap<>();
 
     public NexusServerSetupEvent(NetworkType networkType) {
@@ -25,6 +26,14 @@ public class NexusServerSetupEvent extends Event {
 
     public void setServer(InstanceServer server) {
         this.server = server;
+    }
+
+    public void setPrimaryVirtualServer(VirtualServer primaryVirtualServer) {
+        this.primaryVirtualServer = primaryVirtualServer;
+    }
+
+    public VirtualServer getPrimaryVirtualServer() {
+        return primaryVirtualServer;
     }
 
     public InstanceServer getServer() {

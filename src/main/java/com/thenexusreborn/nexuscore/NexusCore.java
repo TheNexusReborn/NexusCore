@@ -163,16 +163,19 @@ public class NexusCore extends JavaPlugin {
             getServer().getPluginManager().callEvent(event);
             nexusServer = event.getServer();
             if (nexusServer == null) {
-                nexusServer = new CoreInstanceServer();
+                CoreInstanceServer coreInstanceServer = new CoreInstanceServer(this);
+                coreInstanceServer.setPrimaryVirtualServer(event.getPrimaryVirtualServer());
                 Map<String, VirtualServer> virtualServers = event.getVirtualServers();
                 for (VirtualServer server : virtualServers.values()) {
-                    nexusServer.getChildServers().register(server);
-                    server.setParentServer(nexusServer);
+                    coreInstanceServer.getChildServers().register(server);
+                    server.setParentServer(coreInstanceServer);
+                    NexusAPI.getApi().getServerRegistry().register(server);
                 }
-                
-                nexusServer.onStart();
-                nexusServer.getChildServers().forEach(NexusServer::onStart);
+
+                coreInstanceServer.onStart();
+                coreInstanceServer.getChildServers().forEach(NexusServer::onStart);
             }
+            NexusAPI.getApi().getServerRegistry().register(nexusServer);
         }, 1L);
     }
     
