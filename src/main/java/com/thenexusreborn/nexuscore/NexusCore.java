@@ -174,6 +174,7 @@ public class NexusCore extends JavaPlugin {
 
                 coreInstanceServer.onStart();
                 coreInstanceServer.getChildServers().forEach(NexusServer::onStart);
+                nexusServer = coreInstanceServer;
             }
             NexusAPI.getApi().getServerRegistry().register(nexusServer);
         }, 1L);
