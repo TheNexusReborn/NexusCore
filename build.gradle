@@ -29,7 +29,7 @@ dependencies {
     compileOnly 'com.github.StarDevelopmentLLC:StarLib:1.0.0-alpha.4'
     compileOnly 'com.github.StarDevelopmentLLC:StarClock:1.0.0-alpha.4'
     compileOnly 'com.github.StarDevelopmentLLC:StarCore:1.0.0-alpha.16'
-    compileOnly 'com.github.StarDevelopmentLLC:StarChat:1.0.0-alpha.3'
+    compileOnly 'com.github.StarDevelopmentLLC:StarChat:1.0.0-alpha.4'
     compileOnly 'me.clip:placeholderapi:2.11.5'
     compileOnly 'org.spigotmc:spigot:1.8.8-R0.1-SNAPSHOT'
 }
