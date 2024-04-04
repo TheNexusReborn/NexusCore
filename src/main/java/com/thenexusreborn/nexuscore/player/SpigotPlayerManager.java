@@ -162,6 +162,10 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
 
                         Stopwatch playtimeStopwatch = plugin.getClockManager().createStopwatch(Long.MAX_VALUE);
                         playtimeStopwatch.addRepeatingCallback(stopwatchSnapshot -> {
+                            if (finalNexusPlayer.getToggleValue("vanish")) {
+                                return;
+                            }
+                            
                             Rank rank = finalNexusPlayer.getRank();
                             double xp = 10 * rank.getMultiplier();
 
