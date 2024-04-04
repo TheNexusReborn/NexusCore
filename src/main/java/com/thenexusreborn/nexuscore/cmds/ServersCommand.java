@@ -9,12 +9,13 @@ import com.thenexusreborn.api.server.VirtualServer;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.util.MCUtils;
 import com.thenexusreborn.nexuscore.util.MsgType;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class ServersCommand implements CommandExecutor {
     
@@ -82,6 +83,21 @@ public class ServersCommand implements CommandExecutor {
                 if (args[1].equalsIgnoreCase("state")) {
                     sender.sendMessage(MsgType.INFO.format("State for %v", name));
                     sender.sendMessage(ColorUtils.color(MsgType.INFO.getVariableColor() + server.getState()));
+                } else if (args[1].equalsIgnoreCase("players")) {
+                    Set<String> serverPlayers = new HashSet<>();
+                    for (UUID uuid : server.getPlayers()) {
+                        String playerName;
+                        Player player = Bukkit.getPlayer(uuid);
+                        if (player != null) {
+                            playerName = player.getName();
+                        } else {
+                            playerName = NexusAPI.getApi().getPlayerManager().getNameFromUUID(uuid);
+                        }
+                        serverPlayers.add(playerName);
+                    }
+
+                    sender.sendMessage(MsgType.INFO.format("Players on %v", name));
+                    sender.sendMessage(ColorUtils.color(MsgType.INFO.getVariableColor() + serverPlayers));
                 }
             }
         }
