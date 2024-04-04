@@ -46,3 +46,4 @@ commands:
   list:
   balance:
     aliases: [bal]
+  servers:
