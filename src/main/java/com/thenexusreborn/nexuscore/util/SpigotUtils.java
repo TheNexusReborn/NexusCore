@@ -1,6 +1,7 @@
 package com.thenexusreborn.nexuscore.util;
 
 import com.mojang.authlib.GameProfile;
+import com.stardevllc.starcore.utils.color.ColorUtils;
 import net.minecraft.server.v1_8_R3.ChatComponentText;
 import net.minecraft.server.v1_8_R3.PacketPlayOutChat;
 import org.bukkit.Material;
@@ -13,7 +14,7 @@ import java.lang.reflect.Field;
 
 public final class SpigotUtils {
     public static void sendActionBar(Player player, String text) {
-        PacketPlayOutChat packet = new PacketPlayOutChat(new ChatComponentText(MCUtils.color(text)), (byte) 2);
+        PacketPlayOutChat packet = new PacketPlayOutChat(new ChatComponentText(ColorUtils.color(text)), (byte) 2);
         ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
     }
     
