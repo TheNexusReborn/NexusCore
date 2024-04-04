@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.api;
 
-import com.stardevllc.starmclib.StarThread;
+import com.stardevllc.starcore.utils.StarThread;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashSet;

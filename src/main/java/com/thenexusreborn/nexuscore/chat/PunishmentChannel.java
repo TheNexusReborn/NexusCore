@@ -1,7 +1,7 @@
 package com.thenexusreborn.nexuscore.chat;
 
 import com.stardevllc.starchat.channels.ChatChannel;
-import com.stardevllc.starmclib.color.ColorUtils;
+import com.stardevllc.starcore.utils.color.ColorUtils;
 import com.thenexusreborn.api.punishment.Punishment;
 import com.thenexusreborn.api.punishment.PunishmentType;
 import com.thenexusreborn.nexuscore.NexusCore;

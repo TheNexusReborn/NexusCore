@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore;
 
-import com.stardevllc.starmclib.task.SpigotTaskFactory;
+import com.stardevllc.starcore.utils.task.SpigotTaskFactory;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.PlayerProxy;
 import com.thenexusreborn.api.registry.ToggleRegistry;

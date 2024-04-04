@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.data.handlers;
 
-import com.stardevllc.starmclib.Position;
+import com.stardevllc.starcore.utils.Position;
 import com.thenexusreborn.api.sql.objects.TypeHandler;
 
 public class PositionHandler extends TypeHandler {
