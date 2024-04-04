@@ -4,10 +4,15 @@ import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.api.server.NexusServer;
+import com.thenexusreborn.api.server.ServerType;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.api.NexusThread;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 public class PlayerVisibilityThread extends NexusThread<NexusCore> {
     public PlayerVisibilityThread(NexusCore plugin) {
@@ -17,10 +22,21 @@ public class PlayerVisibilityThread extends NexusThread<NexusCore> {
     @SuppressWarnings("DuplicatedCode")
     @Override
     public void onRun() {
+        List<NexusServer> servers = new LinkedList<>();
+        Iterator<NexusServer> serverIterator = NexusAPI.getApi().getServerRegistry().iterator();
+        while (serverIterator.hasNext()) {
+            NexusServer ns = serverIterator.next();
+            if (ns.getType() == ServerType.INSTANCE) {
+                serverIterator.remove();
+            } else {
+                servers.add(ns);
+            }
+        }
+        
         for (Player player : Bukkit.getOnlinePlayers()) {
             NexusServer playerServer = null;
-
-            for (NexusServer nexusServer : NexusAPI.getApi().getServerRegistry()) {
+            
+            for (NexusServer nexusServer : servers) {
                 if (nexusServer.getPlayers().contains(player.getUniqueId())) {
                     playerServer = nexusServer;
                     break;
@@ -39,7 +55,7 @@ public class PlayerVisibilityThread extends NexusThread<NexusCore> {
 
                 NexusServer otherPlayerServer = null;
 
-                for (NexusServer nexusServer : NexusAPI.getApi().getServerRegistry()) {
+                for (NexusServer nexusServer : servers) {
                     if (nexusServer.getPlayers().contains(otherPlayer.getUniqueId())) {
                         otherPlayerServer = nexusServer;
                         break;
