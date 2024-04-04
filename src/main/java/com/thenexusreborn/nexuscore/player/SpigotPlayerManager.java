@@ -178,7 +178,7 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
 
                             finalNexusPlayer.sendMessage(MsgType.INFO + "&d+" + format.format(xp) + "XP (Playtime) " + bonusMessage);
                             finalNexusPlayer.addXp(xp);
-                        }, TimeUnit.SECONDS.toMillis(10)); //TODO Test Time
+                        }, TimeUnit.MINUTES.toMillis(10));
                         playtimeStopwatch.start();
 
                         if (loadEvent.getActionBar() != null) {
