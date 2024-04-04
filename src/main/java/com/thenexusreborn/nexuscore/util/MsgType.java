@@ -1,5 +1,7 @@
 package com.thenexusreborn.nexuscore.util;
 
+import com.stardevllc.starcore.utils.color.ColorUtils;
+
 public enum MsgType {
     
     // Codes to use in messages: &bc for base color and &vc for variable color
@@ -23,7 +25,7 @@ public enum MsgType {
     
     // %v is the variable placeholder
     public String format(String message, Object... replacements) {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(getBaseColor());
         char[] msgChars = message.toCharArray();
         int replacementIndex = 0;
         for (int i = 0; i < msgChars.length; i++) {
@@ -39,7 +41,7 @@ public enum MsgType {
             }
         }
 
-        return sb.toString();
+        return ColorUtils.color(sb.toString());
     }
     
     public String getPrefixColor() {
