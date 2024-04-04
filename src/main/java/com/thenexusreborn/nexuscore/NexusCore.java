@@ -46,6 +46,7 @@ public class NexusCore extends JavaPlugin {
     private PunishmentChannel punishmentChannel;
     
     private InstanceServer nexusServer;
+    private ClockManager clockManager;
 
     @Override
     public void onEnable() {
@@ -58,6 +59,8 @@ public class NexusCore extends JavaPlugin {
             pluginManager.disablePlugin(this);
             return;
         }
+        
+        this.clockManager = Bukkit.getServicesManager().getRegistration(ClockManager.class).getProvider();
         
         if (pluginManager.getPlugin("StarChat") == null) {
             getLogger().severe("StarChat not found, disabling NexusCore.");
@@ -244,6 +247,10 @@ public class NexusCore extends JavaPlugin {
 
     public InstanceServer getNexusServer() {
         return nexusServer;
+    }
+
+    public ClockManager getClockManager() {
+        return this.clockManager;
     }
     
     /* ServerPingEvent

@@ -1,5 +1,8 @@
 package com.thenexusreborn.nexuscore.player;
 
+import com.stardevllc.starclock.clocks.Stopwatch;
+import com.stardevllc.starlib.helper.StringHelper;
+import com.stardevllc.starlib.time.TimeUnit;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.gamearchive.GameInfo;
 import com.thenexusreborn.api.player.NexusPlayer;
@@ -12,6 +15,7 @@ import com.thenexusreborn.api.scoreboard.ScoreboardView;
 import com.thenexusreborn.api.sql.objects.Row;
 import com.thenexusreborn.api.sql.objects.SQLDatabase;
 import com.thenexusreborn.api.sql.objects.Table;
+import com.thenexusreborn.api.util.Constants;
 import com.thenexusreborn.api.util.NetworkType;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.api.events.NexusPlayerLoadEvent;
@@ -32,8 +36,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.net.InetSocketAddress;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class SpigotPlayerManager extends PlayerManager implements Listener {
 
@@ -155,6 +159,23 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                         SpigotUtils.sendActionBar(player, "&aYour data has been loaded");
 
                         plugin.getNexusServer().join(finalNexusPlayer);
+
+                        Stopwatch playtimeStopwatch = plugin.getClockManager().createStopwatch(Long.MAX_VALUE);
+                        playtimeStopwatch.addRepeatingCallback(stopwatchSnapshot -> {
+                            Rank rank = finalNexusPlayer.getRank();
+                            double xp = 10 * rank.getMultiplier();
+
+                            DecimalFormat format = new DecimalFormat(Constants.NUMBER_FORMAT);
+                            
+                            String bonusMessage = "";
+                            if (rank.getMultiplier() > 1) {
+                                bonusMessage = rank.getColor() + "&l x" + format.format(rank.getMultiplier()) + " " + StringHelper.titlize(rank.name()) + " Bonus";
+                            }
+
+                            finalNexusPlayer.sendMessage(MsgType.INFO + "&d+" + format.format(xp) + "XP (Playtime) " + bonusMessage);
+                            finalNexusPlayer.addXp(xp);
+                        }, TimeUnit.SECONDS.toMillis(10)); //TODO Test Time
+                        playtimeStopwatch.start();
 
                         if (loadEvent.getActionBar() != null) {
                             new BukkitRunnable() {
