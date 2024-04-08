@@ -5,9 +5,4 @@ databases:
     password: password
     database: database
     primary: true
-serverInfo: 
-  serverName: Server
-  type: Default
-  multicraftid: 0
-  id: 0
 environment: DEVELOPMENT
