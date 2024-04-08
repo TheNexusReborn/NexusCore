@@ -3,6 +3,7 @@ package com.thenexusreborn.nexuscore;
 import com.stardevllc.starchat.StarChat;
 import com.stardevllc.starchat.channels.ChatChannel;
 import com.stardevllc.starclock.ClockManager;
+import com.sun.net.httpserver.HttpServer;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.server.InstanceServer;
 import com.thenexusreborn.api.server.NexusServer;
@@ -14,6 +15,7 @@ import com.thenexusreborn.nexuscore.chat.ChatManager;
 import com.thenexusreborn.nexuscore.chat.PunishmentChannel;
 import com.thenexusreborn.nexuscore.cmds.*;
 import com.thenexusreborn.nexuscore.hooks.NexusPapiExpansion;
+import com.thenexusreborn.nexuscore.http.ServerHttpHandler;
 import com.thenexusreborn.nexuscore.player.SpigotPlayerManager;
 import com.thenexusreborn.nexuscore.server.CoreInstanceServer;
 import com.thenexusreborn.nexuscore.thread.*;
@@ -26,25 +28,28 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.net.InetSocketAddress;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.function.Supplier;
 
 @SuppressWarnings("SameParameterValue")
 public class NexusCore extends JavaPlugin {
-    
+
     private final List<NexusSpigotPlugin> nexusPlugins = new ArrayList<>();
     private ChatManager chatManager;
     private ToggleCmds toggleCmdExecutor;
     private Supplier<String> motdSupplier;
-    
+
     private StarChat starChatPlugin;
     private PunishmentChannel punishmentChannel;
-    
+
     private InstanceServer nexusServer;
     private ClockManager clockManager;
 
@@ -59,15 +64,15 @@ public class NexusCore extends JavaPlugin {
             pluginManager.disablePlugin(this);
             return;
         }
-        
+
         this.clockManager = Bukkit.getServicesManager().getRegistration(ClockManager.class).getProvider();
-        
+
         if (pluginManager.getPlugin("StarChat") == null) {
             getLogger().severe("StarChat not found, disabling NexusCore.");
             pluginManager.disablePlugin(this);
             return;
         }
-        
+
         NexusAPI.setApi(new SpigotNexusAPI(this));
         try {
             NexusAPI.getApi().init();
@@ -77,14 +82,14 @@ public class NexusCore extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
-        
+
         NexusAPI.getApi().setClockManager(getServer().getServicesManager().getRegistration(ClockManager.class).getProvider());
-        
+
         Bukkit.getServicesManager().register(SQLDatabase.class, NexusAPI.getApi().getPrimaryDatabase(), this, ServicePriority.Highest);
 
         new NexusPapiExpansion(this).register();
         getLogger().info("Hooked into PlaceholderAPI");
-        
+
         this.starChatPlugin = (StarChat) pluginManager.getPlugin("StarChat");
         this.starChatPlugin.getGlobalChannel().setSenderFormat("&8(&2&l%nexuscore_level%&8) &r%nexuscore_displayname%&8: %nexuscore_chatcolor%{message}");
         this.starChatPlugin.getStaffChannel().setSenderFormat("&2&l[&aSTAFF&2&l] &r%nexuscore_coloredname%: &f{message}");
@@ -93,17 +98,17 @@ public class NexusCore extends JavaPlugin {
         this.starChatPlugin.getStaffChannel().setViewPermission("nexuscore.staff.view");
         this.punishmentChannel = new PunishmentChannel(this);
         getLogger().info("Hooked into StarChat");
-        
+
         chatManager = new ChatManager(this);
         getLogger().info("Registered Chat Manager");
-        
+
         this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         getLogger().info("Registered BungeeCore Plugin Channel");
-        
+
         Bukkit.getServer().getPluginManager().registerEvents((SpigotPlayerManager) NexusAPI.getApi().getPlayerManager(), this);
         Bukkit.getServer().getPluginManager().registerEvents(chatManager, this);
         getLogger().info("Registered Event Listeners");
-        
+
         registerCommand("rank", new RankCommand(this));
         getCommand("tag").setExecutor(new TagCommand(this));
         getCommand("say").setExecutor(new SayCommand(this));
@@ -117,12 +122,12 @@ public class NexusCore extends JavaPlugin {
             sender.sendMessage(MCUtils.color(MsgType.INFO + "Discord: &bhttps://discord.gg/bawZKSWEpT"));
             return true;
         });
-        
+
         getCommand("shop").setExecutor((sender, cmd, label, args) -> {
             sender.sendMessage(MCUtils.color(MsgType.INFO + "Shop: &bhttps://nexusreborn.tebex.io/"));
             return true;
         });
-        
+
         PunishmentCommands puCmds = new PunishmentCommands(this);
         getCommand("ban").setExecutor(puCmds);
         getCommand("tempban").setExecutor(puCmds);
@@ -131,30 +136,30 @@ public class NexusCore extends JavaPlugin {
         getCommand("kick").setExecutor(puCmds);
         getCommand("warn").setExecutor(puCmds);
         getCommand("blacklist").setExecutor(puCmds);
-        
+
         PunishRemoveCommands prCmds = new PunishRemoveCommands(this);
         getCommand("unban").setExecutor(prCmds);
         getCommand("unmute").setExecutor(prCmds);
         getCommand("pardon").setExecutor(prCmds);
         getCommand("unblacklist").setExecutor(prCmds);
-        
+
         PunishmentHistoryCmds phCmds = new PunishmentHistoryCmds(this);
         getCommand("history").setExecutor(phCmds);
         getCommand("staffhistory").setExecutor(phCmds);
-        
+
         getCommand("alts").setExecutor(new AltsCommand(this));
-    
+
         toggleCmdExecutor = new ToggleCmds();
         getCommand("incognito").setExecutor(toggleCmdExecutor);
         getCommand("vanish").setExecutor(toggleCmdExecutor);
         getCommand("fly").setExecutor(toggleCmdExecutor);
-        
+
         getCommand("nexusversion").setExecutor(new NexusVersionCmd(this));
         getCommand("tps").setExecutor(new PerformanceCmd(this));
         getCommand("playtime").setExecutor(new PlaytimeCommand(this));
-        
+
         getLogger().info("Registered Commands");
-        
+
         new PlayerHUDThread(this).start();
         new PlayerTablistThread(this).start();
         new PlayerPermThread(this).start();
@@ -162,7 +167,7 @@ public class NexusCore extends JavaPlugin {
         new PlayerLoadActionBarThread(this).start();
         new PlayerVisibilityThread(this).start();
         getLogger().info("Registered Tasks");
-        
+
         getServer().getScheduler().runTaskLater(this, () -> {
             NexusServerSetupEvent event = new NexusServerSetupEvent(NexusAPI.NETWORK_TYPE);
             getServer().getPluginManager().callEvent(event);
@@ -183,40 +188,52 @@ public class NexusCore extends JavaPlugin {
             }
             NexusAPI.getApi().getServerRegistry().register(nexusServer);
         }, 1L);
+
+        Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
+            try {
+                ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
+                HttpServer server = HttpServer.create(new InetSocketAddress("localhost", 8001), 0);
+                server.createContext("/server", new ServerHttpHandler(this));
+                server.setExecutor(threadPoolExecutor);
+                //server.start();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
-    
+
     public void addNexusPlugin(NexusSpigotPlugin plugin) {
         this.nexusPlugins.add(plugin);
     }
-    
+
     @Override
     public void onDisable() {
         NexusAPI.getApi().getPlayerManager().saveData();
     }
-    
+
     private void registerCommand(String cmd, TabExecutor tabExecutor) {
         PluginCommand command = getCommand(cmd);
         command.setExecutor(tabExecutor);
         command.setTabCompleter(tabExecutor);
     }
-    
+
     public ChatManager getChatManager() {
         return chatManager;
     }
-    
+
     public Connection getConnection(String database) throws SQLException {
         String url = "jdbc:mysql://" + getConfig().getString("mysql.host") + "/" + database + "?user=" + getConfig().getString("mysql.user") + "&password=" + getConfig().getString("mysql.password");
         return DriverManager.getConnection(url);
     }
-    
+
     public Connection getConnection() throws SQLException {
         return getConnection(getConfig().getString("mysql.database"));
     }
-    
+
     public List<NexusSpigotPlugin> getNexusPlugins() {
         return new ArrayList<>(this.nexusPlugins);
     }
-    
+
     public ToggleCmds getToggleCmdExecutor() {
         return toggleCmdExecutor;
     }
@@ -232,11 +249,11 @@ public class NexusCore extends JavaPlugin {
     public StarChat getStarChatPlugin() {
         return starChatPlugin;
     }
-    
+
     public ChatChannel getGlobalChannel() {
         return starChatPlugin.getGlobalChannel();
     }
-    
+
     public ChatChannel getStaffChannel() {
         return starChatPlugin.getStaffChannel();
     }
