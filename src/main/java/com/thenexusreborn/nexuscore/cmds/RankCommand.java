@@ -73,8 +73,8 @@ public class RankCommand implements TabExecutor {
             return true;
         }
 
-        UUID targetUniqueID = playerInfo.firstValue();
-        String targetName = playerInfo.secondValue();
+        UUID targetUniqueID = playerInfo.key();
+        String targetName = playerInfo.value();
         PlayerRanks targetRanks = playerManager.getPlayerRanks(targetUniqueID);
 
         if (senderRank.ordinal() >= targetRanks.get().ordinal()) {

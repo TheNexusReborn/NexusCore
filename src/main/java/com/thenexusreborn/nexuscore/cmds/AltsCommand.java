@@ -47,7 +47,7 @@ public class AltsCommand implements CommandExecutor {
     
         Set<String> ips = new HashSet<>();
         for (IPEntry ipEntry : playerManager.getIpHistory()) {
-            if (ipEntry.getUuid().equals(playerInfo.firstValue())) {
+            if (ipEntry.getUuid().equals(playerInfo.key())) {
                 ips.add(ipEntry.getIp());
             }
         }
@@ -63,7 +63,7 @@ public class AltsCommand implements CommandExecutor {
         }
         
         String altNameList = StringHelper.join(altNames, ", ");
-        sender.sendMessage(MCUtils.color(MsgType.INFO + playerInfo.secondValue() + " has the following alt accounts..."));
+        sender.sendMessage(MCUtils.color(MsgType.INFO + playerInfo.value() + " has the following alt accounts..."));
         sender.sendMessage(MCUtils.color("&6&l> &b" + altNameList));
         return true;
     }

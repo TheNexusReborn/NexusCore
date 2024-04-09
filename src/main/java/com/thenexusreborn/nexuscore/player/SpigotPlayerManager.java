@@ -1,5 +1,6 @@
 package com.thenexusreborn.nexuscore.player;
 
+import com.stardevllc.starchat.context.ChatContext;
 import com.stardevllc.starclock.clocks.Stopwatch;
 import com.stardevllc.starlib.helper.StringHelper;
 import com.stardevllc.starlib.time.TimeUnit;
@@ -226,7 +227,7 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
             });
             this.players.remove(nexusPlayer.getUniqueId());
             if (nexusPlayer.getRank().ordinal() <= Rank.MEDIA.ordinal()) {
-                plugin.getStaffChannel().sendMessage(nexusPlayer.getDisplayName() + " &7disconnected");
+                plugin.getStaffChannel().sendMessage(new ChatContext(nexusPlayer.getDisplayName() + " &7disconnected"));
             }
         }
     }

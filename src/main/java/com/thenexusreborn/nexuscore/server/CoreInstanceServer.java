@@ -1,5 +1,6 @@
 package com.thenexusreborn.nexuscore.server;
 
+import com.stardevllc.starchat.context.ChatContext;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.api.server.InstanceServer;
@@ -23,7 +24,7 @@ public class CoreInstanceServer extends InstanceServer {
         }
         
         if (nexusPlayer.getRank().ordinal() <= Rank.MEDIA.ordinal()) {
-            plugin.getStaffChannel().sendMessage(nexusPlayer.getDisplayName() + " &7&l-> &6" + name);
+            plugin.getStaffChannel().sendMessage(new ChatContext(nexusPlayer.getDisplayName() + " &7&l-> &6" + name));
         }
     }
 

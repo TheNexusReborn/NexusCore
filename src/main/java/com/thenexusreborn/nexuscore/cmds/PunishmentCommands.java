@@ -99,7 +99,7 @@ public class PunishmentCommands implements CommandExecutor {
             return true;
         }
         
-        UUID targetUniqueID = playerInfo.firstValue();
+        UUID targetUniqueID = playerInfo.key();
         Rank targetRank = playerManager.getPlayerRank(targetUniqueID);
 
         if (targetRank.ordinal() < actorRank.ordinal()) {

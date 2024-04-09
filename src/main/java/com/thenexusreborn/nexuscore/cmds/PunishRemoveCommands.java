@@ -58,7 +58,7 @@ public class PunishRemoveCommands implements CommandExecutor {
             return true;
         }
 
-        UUID targetUniqueID = playerInfo.firstValue();
+        UUID targetUniqueID = playerInfo.key();
     
         List<Punishment> punishments = NexusAPI.getApi().getPunishmentManager().getPunishmentsByTarget(targetUniqueID);
         if (punishments.isEmpty()) {
