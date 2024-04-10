@@ -4,6 +4,7 @@ import com.stardevllc.starlib.time.TimeFormat;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.PlayerRanks;
+import com.thenexusreborn.api.player.PlayerTime;
 import com.thenexusreborn.api.player.Session;
 import com.thenexusreborn.api.sql.objects.SQLDatabase;
 import com.thenexusreborn.api.sql.objects.codecs.RanksCodec;
@@ -71,8 +72,8 @@ public class PlaytimeCommand implements CommandExecutor {
                 SQLDatabase database = NexusAPI.getApi().getPrimaryDatabase();
                 try {
                     PlayerRanks ranks = new RanksCodec().decode(database.executeQuery("select `ranks` from `players` where `uniqueId`='" + finalUuid + "';").get(0).getString("ranks"));
-                    //TODO
-                    sendPlaytimeMessages(0, self, sender, ranks.get().getColor() + name);
+                    PlayerTime playerTime = database.get(PlayerTime.class, "uniqueid", player.getUniqueId().toString()).get(0);
+                    sendPlaytimeMessages(playerTime.getPlaytime(), self, sender, ranks.get().getColor() + name);
                 } catch (Exception e) {
                     sender.sendMessage(MCUtils.color(MsgType.ERROR + "There was an error getting " + name + "'s playtime."));
                 }
