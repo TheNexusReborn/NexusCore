@@ -2,6 +2,7 @@ package com.thenexusreborn.nexuscore.player;
 
 import com.stardevllc.starchat.context.ChatContext;
 import com.stardevllc.starclock.clocks.Stopwatch;
+import com.stardevllc.starcore.utils.color.ColorUtils;
 import com.stardevllc.starlib.helper.StringHelper;
 import com.stardevllc.starlib.time.TimeUnit;
 import com.thenexusreborn.api.NexusAPI;
@@ -22,7 +23,6 @@ import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.api.events.NexusPlayerLoadEvent;
 import com.thenexusreborn.nexuscore.scoreboard.SpigotNexusScoreboard;
 import com.thenexusreborn.nexuscore.scoreboard.impl.RankTablistHandler;
-import com.thenexusreborn.nexuscore.util.MCUtils;
 import com.thenexusreborn.nexuscore.util.MsgType;
 import com.thenexusreborn.nexuscore.util.SpigotUtils;
 import net.md_5.bungee.api.ChatColor;
@@ -105,7 +105,7 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                     try {
                         NexusAPI.getApi().getPrimaryDatabase().save(nexusPlayer);
                     } catch (SQLException ex) {
-                        player.sendMessage(MCUtils.color(MsgType.ERROR + "Failed to save your player data to the database. Please report as a bug and try to re-log."));
+                        player.sendMessage(ColorUtils.color(MsgType.ERROR + "Failed to save your player data to the database. Please report as a bug and try to re-log."));
                         ex.printStackTrace();
                     }
                     
@@ -152,7 +152,7 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
 
                         String joinMessage = loadEvent.getJoinMessage();
                         if (joinMessage != null && !joinMessage.isEmpty()) {
-                            Bukkit.broadcastMessage(MCUtils.color(joinMessage));
+                            Bukkit.broadcastMessage(ColorUtils.color(joinMessage));
                         }
 
                         NexusAPI.getApi().getPlayerManager().getPlayers().put(finalNexusPlayer.getUniqueId(), finalNexusPlayer);

@@ -3,6 +3,7 @@ package com.thenexusreborn.nexuscore;
 import com.stardevllc.starchat.StarChat;
 import com.stardevllc.starchat.channels.ChatChannel;
 import com.stardevllc.starclock.ClockManager;
+import com.stardevllc.starcore.utils.color.ColorUtils;
 import com.sun.net.httpserver.HttpServer;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.server.InstanceServer;
@@ -19,7 +20,6 @@ import com.thenexusreborn.nexuscore.http.ServerHttpHandler;
 import com.thenexusreborn.nexuscore.player.SpigotPlayerManager;
 import com.thenexusreborn.nexuscore.server.CoreInstanceServer;
 import com.thenexusreborn.nexuscore.thread.*;
-import com.thenexusreborn.nexuscore.util.MCUtils;
 import com.thenexusreborn.nexuscore.util.MsgType;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
@@ -119,12 +119,12 @@ public class NexusCore extends JavaPlugin {
         getCommand("balance").setExecutor(new BalanceCommand(this));
         getCommand("servers").setExecutor(new ServersCommand(this));
         getCommand("discord").setExecutor((sender, cmd, label, args) -> {
-            sender.sendMessage(MCUtils.color(MsgType.INFO + "Discord: &bhttps://discord.gg/bawZKSWEpT"));
+            sender.sendMessage(ColorUtils.color(MsgType.INFO + "Discord: &bhttps://discord.gg/bawZKSWEpT"));
             return true;
         });
 
         getCommand("shop").setExecutor((sender, cmd, label, args) -> {
-            sender.sendMessage(MCUtils.color(MsgType.INFO + "Shop: &bhttps://nexusreborn.tebex.io/"));
+            sender.sendMessage(ColorUtils.color(MsgType.INFO + "Shop: &bhttps://nexusreborn.tebex.io/"));
             return true;
         });
 

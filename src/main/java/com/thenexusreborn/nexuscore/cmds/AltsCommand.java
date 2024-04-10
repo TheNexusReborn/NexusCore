@@ -1,5 +1,6 @@
 package com.thenexusreborn.nexuscore.cmds;
 
+import com.stardevllc.starcore.utils.color.ColorUtils;
 import com.stardevllc.starlib.Pair;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.helper.StringHelper;
@@ -29,19 +30,19 @@ public class AltsCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         Rank senderRank = MCUtils.getSenderRank(plugin, sender);
         if (senderRank.ordinal() > Rank.HELPER.ordinal()) {
-            sender.sendMessage(MCUtils.color(MsgType.WARN + "You do not have permission to use that command."));
+            sender.sendMessage(ColorUtils.color(MsgType.WARN + "You do not have permission to use that command."));
             return true;
         }
     
         if (!(args.length > 0)) {
-            sender.sendMessage(MCUtils.color(MsgType.WARN + "Usage: /" + label + " <target>"));
+            sender.sendMessage(ColorUtils.color(MsgType.WARN + "Usage: /" + label + " <target>"));
             return true;
         }
 
         PlayerManager playerManager = NexusAPI.getApi().getPlayerManager();
         Pair<UUID, String> playerInfo = playerManager.getPlayerFromIdentifier(args[0]);
         if (playerInfo == null) {
-            sender.sendMessage(MCUtils.color(MsgType.WARN + "Could not find a player with that information."));
+            sender.sendMessage(ColorUtils.color(MsgType.WARN + "Could not find a player with that information."));
             return true;
         }
     
@@ -63,8 +64,8 @@ public class AltsCommand implements CommandExecutor {
         }
         
         String altNameList = StringHelper.join(altNames, ", ");
-        sender.sendMessage(MCUtils.color(MsgType.INFO + playerInfo.value() + " has the following alt accounts..."));
-        sender.sendMessage(MCUtils.color("&6&l> &b" + altNameList));
+        sender.sendMessage(ColorUtils.color(MsgType.INFO + playerInfo.value() + " has the following alt accounts..."));
+        sender.sendMessage(ColorUtils.color("&6&l> &b" + altNameList));
         return true;
     }
 }

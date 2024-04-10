@@ -1,5 +1,6 @@
 package com.thenexusreborn.nexuscore.cmds;
 
+import com.stardevllc.starcore.utils.color.ColorUtils;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.punishment.Punishment;
@@ -24,12 +25,12 @@ public class PunishmentHistoryCmds implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         Rank senderRank = MCUtils.getSenderRank(plugin, sender);
         if (senderRank.ordinal() > Rank.HELPER.ordinal()) {
-            sender.sendMessage(MCUtils.color(MsgType.WARN + "You do not have permission to use that command."));
+            sender.sendMessage(ColorUtils.color(MsgType.WARN + "You do not have permission to use that command."));
             return true;
         }
         
         if (!(args.length > 0)) {
-            sender.sendMessage(MCUtils.color(MsgType.WARN + "Usage: /" + label + " <target> [page]"));
+            sender.sendMessage(ColorUtils.color(MsgType.WARN + "Usage: /" + label + " <target> [page]"));
             return true;
         }
         
@@ -68,7 +69,7 @@ public class PunishmentHistoryCmds implements CommandExecutor {
         }
         
         if (unfilteredPunishments.isEmpty()) {
-            sender.sendMessage(MCUtils.color(MsgType.WARN + "Could not find any punishments."));
+            sender.sendMessage(ColorUtils.color(MsgType.WARN + "Could not find any punishments."));
             return true;
         }
         
@@ -79,7 +80,7 @@ public class PunishmentHistoryCmds implements CommandExecutor {
             try {
                 page = Integer.parseInt(args[1]) - 1;
             } catch (NumberFormatException e) {
-                sender.sendMessage(MCUtils.color(MsgType.WARN + "Invalid page number."));
+                sender.sendMessage(ColorUtils.color(MsgType.WARN + "Invalid page number."));
                 return true;
             }
         }
@@ -96,7 +97,7 @@ public class PunishmentHistoryCmds implements CommandExecutor {
             type = "History";
         }
         
-        sender.sendMessage(MCUtils.color("&6&l>> &e" + type + " for " + commandTargetName + " Page " + (page + 1) + "/" + totalPages));
+        sender.sendMessage(ColorUtils.color("&6&l>> &e" + type + " for " + commandTargetName + " Page " + (page + 1) + "/" + totalPages));
         boolean isStaff = cmd.getName().equals("staffhistory");
         for (int i = start; i < end; i++) {
             Punishment punishment = punishments.get(i);
@@ -118,7 +119,7 @@ public class PunishmentHistoryCmds implements CommandExecutor {
             } else {
                 message = targetName + " &fwas " + pType + " &fby " + actorName + " &ffor " + reason + timeLeft + pardoned;
             }
-            sender.sendMessage(MCUtils.color("&6&l> &f" + message));
+            sender.sendMessage(ColorUtils.color("&6&l> &f" + message));
         }
         
         return true;

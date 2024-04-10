@@ -1,5 +1,6 @@
 package com.thenexusreborn.nexuscore.cmds;
 
+import com.stardevllc.starcore.utils.color.ColorUtils;
 import com.stardevllc.starlib.Pair;
 import com.stardevllc.starlib.time.TimeParser;
 import com.thenexusreborn.api.NexusAPI;
@@ -34,12 +35,12 @@ public class RankCommand implements TabExecutor {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         Rank senderRank = MCUtils.getSenderRank(plugin, sender);
         if (senderRank.ordinal() > Rank.ADMIN.ordinal()) {
-            sender.sendMessage(MCUtils.color("&cYou do not have permission to use that command."));
+            sender.sendMessage(ColorUtils.color("&cYou do not have permission to use that command."));
             return true;
         }
 
         if (!(args.length > 2)) {
-            sender.sendMessage(MCUtils.color("&cUsage: /rank <player> <add|set|remove> <rank> [length]"));
+            sender.sendMessage(ColorUtils.color("&cUsage: /rank <player> <add|set|remove> <rank> [length]"));
             return true;
         }
 
@@ -47,17 +48,17 @@ public class RankCommand implements TabExecutor {
         try {
             rank = Rank.valueOf(args[2].toUpperCase());
         } catch (IllegalArgumentException e) {
-            sender.sendMessage(MCUtils.color("&cYou provided an invalid rank name."));
+            sender.sendMessage(ColorUtils.color("&cYou provided an invalid rank name."));
             return true;
         }
 
         if (rank == Rank.NEXUS) {
             if (!(sender instanceof Player player) || !player.getUniqueId().toString().equals("3f7891ce-5a73-4d52-a2ba-299839053fdc")) {
-                sender.sendMessage(MCUtils.color("&cYou cannot set " + args[0] + "'s rank to " + Rank.NEXUS.name() + " as it is equal to or higher than your own."));
+                sender.sendMessage(ColorUtils.color("&cYou cannot set " + args[0] + "'s rank to " + Rank.NEXUS.name() + " as it is equal to or higher than your own."));
                 return true;
             }
         } else if (senderRank.ordinal() >= rank.ordinal() && !(sender instanceof ConsoleCommandSender)) {
-            sender.sendMessage(MCUtils.color("&cYou cannot set " + args[0] + "'s rank to " + rank.name() + " as it is equal to or higher than your own."));
+            sender.sendMessage(ColorUtils.color("&cYou cannot set " + args[0] + "'s rank to " + rank.name() + " as it is equal to or higher than your own."));
             return true;
         }
 
@@ -69,7 +70,7 @@ public class RankCommand implements TabExecutor {
         PlayerManager playerManager = NexusAPI.getApi().getPlayerManager();
         Pair<UUID, String> playerInfo = playerManager.getPlayerFromIdentifier(args[0]);
         if (playerInfo == null) {
-            sender.sendMessage(MCUtils.color(MsgType.WARN + "Could not find a player with that identifier."));
+            sender.sendMessage(ColorUtils.color(MsgType.WARN + "Could not find a player with that identifier."));
             return true;
         }
 
@@ -79,7 +80,7 @@ public class RankCommand implements TabExecutor {
 
         if (senderRank.ordinal() >= targetRanks.get().ordinal()) {
             if (!(sender instanceof ConsoleCommandSender)) {
-                sender.sendMessage(MCUtils.color("&cYou cannot modify " + targetName + "'s rank as they have " + targetRanks.get().name() + " and you have " + senderRank.name()));
+                sender.sendMessage(ColorUtils.color("&cYou cannot modify " + targetName + "'s rank as they have " + targetRanks.get().name() + " and you have " + senderRank.name()));
                 return true;
             }
         }
@@ -104,27 +105,27 @@ public class RankCommand implements TabExecutor {
             if (time > -1) {
                 message += " &efor &b" + Constants.PUNISHMENT_TIME_FORMAT.format(time);
             }
-            sender.sendMessage(MCUtils.color(message));
+            sender.sendMessage(ColorUtils.color(message));
         } else if (args[1].equalsIgnoreCase("add")) {
             try {
                 targetRanks.add(rank, expire);
             } catch (Exception e) {
-                sender.sendMessage(MCUtils.color(MsgType.WARN + "There was a problem setting the rank: " + e.getMessage()));
+                sender.sendMessage(ColorUtils.color(MsgType.WARN + "There was a problem setting the rank: " + e.getMessage()));
                 return true;
             }
             String message = "&eYou added the rank " + rankName + " &eto the player &b" + targetName;
             if (time > -1) {
                 message += " &efor &b" + Constants.PUNISHMENT_TIME_FORMAT.format(time);
             }
-            sender.sendMessage(MCUtils.color(message));
+            sender.sendMessage(ColorUtils.color(message));
         } else if (args[1].equalsIgnoreCase("remove")) {
             try {
                 targetRanks.remove(rank);
             } catch (Exception e) {
-                sender.sendMessage(MCUtils.color(MsgType.WARN + "There was a problem removing the rank: " + e.getMessage()));
+                sender.sendMessage(ColorUtils.color(MsgType.WARN + "There was a problem removing the rank: " + e.getMessage()));
                 return true;
             }
-            sender.sendMessage(MCUtils.color("&eYou removed the rank " + rankName + " &efrom &b" + targetName));
+            sender.sendMessage(ColorUtils.color("&eYou removed the rank " + rankName + " &efrom &b" + targetName));
         }
 
         StringBuilder sb = new StringBuilder();

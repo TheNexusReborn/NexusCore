@@ -1,5 +1,6 @@
 package com.thenexusreborn.nexuscore.cmds;
 
+import com.stardevllc.starcore.utils.color.ColorUtils;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.nexuscore.NexusCore;
@@ -21,13 +22,13 @@ public class BalanceCommand implements CommandExecutor {
     
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (!(sender instanceof Player player)) {
-            sender.sendMessage(MCUtils.color(MsgType.WARN + "Only players can use that command."));
+            sender.sendMessage(ColorUtils.color(MsgType.WARN + "Only players can use that command."));
             return true;
         }
 
         NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(player.getUniqueId());
         if (nexusPlayer == null) {
-            player.sendMessage(MCUtils.color(MsgType.WARN + "Could not get your profile data."));
+            player.sendMessage(ColorUtils.color(MsgType.WARN + "Could not get your profile data."));
             return true;
         }
 

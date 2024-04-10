@@ -1,5 +1,6 @@
 package com.thenexusreborn.nexuscore.cmds;
 
+import com.stardevllc.starcore.utils.color.ColorUtils;
 import com.stardevllc.starlib.Pair;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.PlayerManager;
@@ -7,7 +8,6 @@ import com.thenexusreborn.api.punishment.PardonInfo;
 import com.thenexusreborn.api.punishment.Punishment;
 import com.thenexusreborn.api.punishment.PunishmentType;
 import com.thenexusreborn.nexuscore.NexusCore;
-import com.thenexusreborn.nexuscore.util.MCUtils;
 import com.thenexusreborn.nexuscore.util.MsgType;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -42,19 +42,19 @@ public class PunishRemoveCommands implements CommandExecutor {
         }
     
         if (type == null && !all) {
-            sender.sendMessage(MCUtils.color(MsgType.WARN + "Invalid punishment type."));
+            sender.sendMessage(ColorUtils.color(MsgType.WARN + "Invalid punishment type."));
             return true;
         }
     
         if (!(args.length > 1)) {
-            sender.sendMessage(MCUtils.color(MsgType.WARN + "Usage: /" + label + " <target> <reason>"));
+            sender.sendMessage(ColorUtils.color(MsgType.WARN + "Usage: /" + label + " <target> <reason>"));
             return true;
         }
 
         PlayerManager playerManager = NexusAPI.getApi().getPlayerManager();
         Pair<UUID, String> playerInfo = playerManager.getPlayerFromIdentifier(args[0]);
         if (playerInfo == null) {
-            sender.sendMessage(MCUtils.color(MsgType.WARN + "Could not find a player with that identifier."));
+            sender.sendMessage(ColorUtils.color(MsgType.WARN + "Could not find a player with that identifier."));
             return true;
         }
 
@@ -62,7 +62,7 @@ public class PunishRemoveCommands implements CommandExecutor {
     
         List<Punishment> punishments = NexusAPI.getApi().getPunishmentManager().getPunishmentsByTarget(targetUniqueID);
         if (punishments.isEmpty()) {
-            sender.sendMessage(MCUtils.color(MsgType.WARN + "That player does not have any punishments"));
+            sender.sendMessage(ColorUtils.color(MsgType.WARN + "That player does not have any punishments"));
             return true;
         }
         
@@ -76,7 +76,7 @@ public class PunishRemoveCommands implements CommandExecutor {
         }
         
         if (activePunishments.isEmpty()) {
-            sender.sendMessage(MCUtils.color(MsgType.WARN + "That player does not have any active punishmentss."));
+            sender.sendMessage(ColorUtils.color(MsgType.WARN + "That player does not have any active punishmentss."));
             return true;
         }
         

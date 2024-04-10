@@ -1,5 +1,6 @@
 package com.thenexusreborn.nexuscore.cmds;
 
+import com.stardevllc.starcore.utils.color.ColorUtils;
 import com.stardevllc.starlib.CodeGenerator;
 import com.stardevllc.starlib.Pair;
 import com.stardevllc.starlib.time.TimeParser;
@@ -48,31 +49,31 @@ public class PunishmentCommands implements CommandExecutor {
         };
         
         if (type == null) {
-            sender.sendMessage(MCUtils.color(MsgType.WARN + "Invalid punishment type."));
+            sender.sendMessage(ColorUtils.color(MsgType.WARN + "Invalid punishment type."));
             return true;
         }
         
         long length = -1;
         if (cmd.getName().toLowerCase().contains("temp") || cmd.getName().equalsIgnoreCase("tb") || cmd.getName().equalsIgnoreCase("tm")) {
             if (!(args.length > 2)) {
-                sender.sendMessage(MCUtils.color(MsgType.WARN + "/" + label + " <target> <length> <reason>"));
+                sender.sendMessage(ColorUtils.color(MsgType.WARN + "/" + label + " <target> <length> <reason>"));
                 return true;
             }
             
             try {
                 length = new TimeParser().parseTime(args[1]);
             } catch (Exception e) {
-                sender.sendMessage(MCUtils.color(MsgType.WARN + "Invalid length argument."));
+                sender.sendMessage(ColorUtils.color(MsgType.WARN + "Invalid length argument."));
                 return true;
             }
             
             if (length == 0) {
-                sender.sendMessage(MCUtils.color(MsgType.WARN + "Invalid length argument."));
+                sender.sendMessage(ColorUtils.color(MsgType.WARN + "Invalid length argument."));
                 return true;
             }
         } else {
             if (!(args.length > 1)) {
-                sender.sendMessage(MCUtils.color(MsgType.WARN + "/" + label + " <target> <reason>"));
+                sender.sendMessage(ColorUtils.color(MsgType.WARN + "/" + label + " <target> <reason>"));
                 return true;
             }
         }
@@ -88,14 +89,14 @@ public class PunishmentCommands implements CommandExecutor {
         
         Rank actorRank = MCUtils.getSenderRank(plugin, sender);
         if (actorRank.ordinal() > minRank.ordinal()) {
-            sender.sendMessage(MCUtils.color(MsgType.WARN + "You do not have permission to use that punishment type."));
+            sender.sendMessage(ColorUtils.color(MsgType.WARN + "You do not have permission to use that punishment type."));
             return true;
         }
     
         PlayerManager playerManager = NexusAPI.getApi().getPlayerManager();
         Pair<UUID, String> playerInfo = playerManager.getPlayerFromIdentifier(args[0]);
         if (playerInfo == null) {
-            sender.sendMessage(MCUtils.color(MsgType.WARN + "Could not find a player with that identifier."));
+            sender.sendMessage(ColorUtils.color(MsgType.WARN + "Could not find a player with that identifier."));
             return true;
         }
         
@@ -103,7 +104,7 @@ public class PunishmentCommands implements CommandExecutor {
         Rank targetRank = playerManager.getPlayerRank(targetUniqueID);
 
         if (targetRank.ordinal() < actorRank.ordinal()) {
-            sender.sendMessage(MCUtils.color(MsgType.WARN + "You cannot " + type.name().toLowerCase() + " that player because their rank is higher than your own."));
+            sender.sendMessage(ColorUtils.color(MsgType.WARN + "You cannot " + type.name().toLowerCase() + " that player because their rank is higher than your own."));
             return true;
         }
         
@@ -142,13 +143,13 @@ public class PunishmentCommands implements CommandExecutor {
         if (punishment.getType() == PunishmentType.MUTE) {
             if (targetPlayer != null && punishment.isActive()) {
                 if (punishment.getType() == PunishmentType.MUTE) {
-                    targetPlayer.sendMessage(MCUtils.color(MsgType.WARN + "You have been muted by " + punishment.getActorNameCache() + " for " + punishment.getReason() + ". (" + punishment.formatTimeLeft() + ")"));
+                    targetPlayer.sendMessage(ColorUtils.color(MsgType.WARN + "You have been muted by " + punishment.getActorNameCache() + " for " + punishment.getReason() + ". (" + punishment.formatTimeLeft() + ")"));
                 }
             }
         } else if (punishment.getType() == PunishmentType.WARN) {
             punishment.setAcknowledgeInfo(new AcknowledgeInfo(CodeGenerator.generate(8, true, true, true)));
-            targetPlayer.sendMessage(MCUtils.color(MsgType.WARN + "You have been warned by " + punishment.getActorNameCache() + " for " + punishment.getReason() + "."));
-            targetPlayer.sendMessage(MCUtils.color(MsgType.WARN + "You must type the code " + punishment.getAcknowledgeInfo().getCode() + " in chat before you can speak again."));
+            targetPlayer.sendMessage(ColorUtils.color(MsgType.WARN + "You have been warned by " + punishment.getActorNameCache() + " for " + punishment.getReason() + "."));
+            targetPlayer.sendMessage(ColorUtils.color(MsgType.WARN + "You must type the code " + punishment.getAcknowledgeInfo().getCode() + " in chat before you can speak again."));
         } else if (Stream.of(PunishmentType.BAN, PunishmentType.BLACKLIST, PunishmentType.KICK).anyMatch(punishmentType -> punishment.getType() == punishmentType)) {
             if (targetPlayer != null) {
                 targetPlayer.kickPlayer(punishment.formatKick()); //TODO this doesn't provide an id right away though
@@ -168,7 +169,7 @@ public class PunishmentCommands implements CommandExecutor {
                         alts.addAll(NexusAPI.getApi().getPlayerManager().getPlayersByIp(playerIp.getIp()));
                     }
 
-                    String kickMessage = MCUtils.color(punishment.formatKick());
+                    String kickMessage = ColorUtils.color(punishment.formatKick());
                     Bukkit.getScheduler().runTask(plugin, () -> {
                         for (UUID alt : alts) {
                             Player altPlayer = Bukkit.getPlayer(alt);
@@ -185,13 +186,13 @@ public class PunishmentCommands implements CommandExecutor {
             try {
                 NexusAPI.getApi().getPrimaryDatabase().save(punishment);
             } catch (SQLException e) {
-                sender.sendMessage(MCUtils.color(MsgType.WARN + "Could not create the punishment. Please report to Firestar311."));
+                sender.sendMessage(ColorUtils.color(MsgType.WARN + "Could not create the punishment. Please report to Firestar311."));
                 e.printStackTrace();
                 return;
             }
 
             if (punishment.getId() < 1) {
-                sender.sendMessage(MCUtils.color(MsgType.WARN + "Could not create the punishment. Please report to Firestar311."));
+                sender.sendMessage(ColorUtils.color(MsgType.WARN + "Could not create the punishment. Please report to Firestar311."));
                 plugin.getLogger().severe("Had a Punishment ID that was " + punishment.getId() + " after saving to the database, with no SQL Error");
                 return;
             }

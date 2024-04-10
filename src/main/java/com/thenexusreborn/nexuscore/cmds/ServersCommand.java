@@ -28,7 +28,7 @@ public class ServersCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         Rank senderRank = MCUtils.getSenderRank(plugin, sender);
         if (senderRank.ordinal() > Rank.ADMIN.ordinal()) {
-            sender.sendMessage(MCUtils.color("&cYou do not have permission to use that command."));
+            sender.sendMessage(ColorUtils.color("&cYou do not have permission to use that command."));
             return true;
         }
         

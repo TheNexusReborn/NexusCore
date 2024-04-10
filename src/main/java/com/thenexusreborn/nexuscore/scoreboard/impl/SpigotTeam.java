@@ -1,8 +1,8 @@
 package com.thenexusreborn.nexuscore.scoreboard.impl;
 
+import com.stardevllc.starcore.utils.color.ColorUtils;
 import com.thenexusreborn.api.scoreboard.ValueUpdater;
 import com.thenexusreborn.api.scoreboard.wrapper.ITeam;
-import com.thenexusreborn.nexuscore.util.MCUtils;
 import org.bukkit.scoreboard.Team;
 
 import java.util.HashSet;
@@ -56,14 +56,14 @@ public class SpigotTeam implements ITeam {
     @Override
     public void setPrefix(String prefix) {
         try {
-            team.setPrefix(MCUtils.color(prefix));
+            team.setPrefix(ColorUtils.color(prefix));
         } catch (Exception e) {}
     }
     
     @Override
     public void setSuffix(String suffix) {
         try {
-            team.setSuffix(MCUtils.color(suffix));
+            team.setSuffix(ColorUtils.color(suffix));
         } catch (Exception e) {
             
         }

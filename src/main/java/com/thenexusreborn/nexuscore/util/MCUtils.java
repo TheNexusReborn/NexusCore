@@ -1,9 +1,10 @@
 package com.thenexusreborn.nexuscore.util;
 
+import com.stardevllc.starcore.utils.color.ColorUtils;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.Rank;
+import com.thenexusreborn.api.util.Constants;
 import com.thenexusreborn.nexuscore.NexusCore;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -84,17 +85,10 @@ public final class MCUtils {
     }
     
     public static String formatNumber(Number number) {
-        return new DecimalFormat("#.#").format(number);
-    }
-    
-    public static String color(String uncolored) {
-        if (uncolored == null) {
-            return "";
-        }
-        return ChatColor.translateAlternateColorCodes('&', uncolored);
+        return new DecimalFormat(Constants.NUMBER_FORMAT).format(number);
     }
     
     public static void debugSender(CommandSender sender, String message) {
-        sender.sendMessage(MCUtils.color("&7&o" + message));
+        sender.sendMessage(ColorUtils.color("&7&o" + message));
     }
 }

@@ -1,9 +1,11 @@
 package com.thenexusreborn.nexuscore.scoreboard;
 
-import com.thenexusreborn.api.scoreboard.*;
+import com.stardevllc.starcore.utils.color.ColorUtils;
+import com.thenexusreborn.api.scoreboard.NexusScoreboard;
+import com.thenexusreborn.api.scoreboard.ScoreboardView;
+import com.thenexusreborn.api.scoreboard.TeamBuilder;
 import com.thenexusreborn.api.scoreboard.wrapper.ITeam;
 import com.thenexusreborn.nexuscore.scoreboard.impl.SpigotObjective;
-import com.thenexusreborn.nexuscore.util.MCUtils;
 import org.bukkit.scoreboard.DisplaySlot;
 
 public abstract class SpigotScoreboardView extends ScoreboardView {
@@ -26,7 +28,7 @@ public abstract class SpigotScoreboardView extends ScoreboardView {
             team.setValueUpdater(teamBuilder.getValueUpdater());
         }
 
-        addEntry(objective, team, MCUtils.color(teamBuilder.getEntry()), teamBuilder.getScore());
+        addEntry(objective, team, ColorUtils.color(teamBuilder.getEntry()), teamBuilder.getScore());
         this.teams.add(team);
         return team;
     }
