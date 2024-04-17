@@ -160,11 +160,15 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                         SpigotUtils.sendActionBar(player, "&aYour data has been loaded");
 
                         plugin.getNexusServer().join(finalNexusPlayer);
-
+        
                         Stopwatch playtimeStopwatch = plugin.getClockManager().createStopwatch(Long.MAX_VALUE);
                         playtimeStopwatch.addRepeatingCallback(stopwatchSnapshot -> {
                             if (finalNexusPlayer.getToggleValue("vanish")) {
                                 return;
+                            }
+                            
+                            if (stopwatchSnapshot.getTime() == 0) {
+                                return; //Prevent this running immediately when a player joins
                             }
                             
                             Rank rank = finalNexusPlayer.getRank();
