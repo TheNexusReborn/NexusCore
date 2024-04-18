@@ -2,7 +2,7 @@ package com.thenexusreborn.nexuscore.player;
 
 import com.stardevllc.starchat.context.ChatContext;
 import com.stardevllc.starclock.clocks.Stopwatch;
-import com.stardevllc.starcore.utils.color.ColorUtils;
+import com.stardevllc.starcore.color.ColorUtils;
 import com.stardevllc.starlib.helper.StringHelper;
 import com.stardevllc.starlib.time.TimeUnit;
 import com.thenexusreborn.api.NexusAPI;

@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.scoreboard;
 
-import com.stardevllc.starcore.utils.color.ColorUtils;
+import com.stardevllc.starcore.color.ColorUtils;
 import com.thenexusreborn.api.scoreboard.NexusScoreboard;
 import com.thenexusreborn.api.scoreboard.ScoreboardView;
 import com.thenexusreborn.api.scoreboard.TeamBuilder;

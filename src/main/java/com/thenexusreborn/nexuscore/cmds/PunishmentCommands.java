@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.cmds;
 
-import com.stardevllc.starcore.utils.color.ColorUtils;
+import com.stardevllc.starcore.color.ColorUtils;
 import com.stardevllc.starlib.CodeGenerator;
 import com.stardevllc.starlib.Pair;
 import com.stardevllc.starlib.time.TimeParser;
