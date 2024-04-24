@@ -21,7 +21,7 @@ public abstract class NexusThread<T extends JavaPlugin> extends StarThread<T> {
     }
 
     public NexusThread(T plugin, ThreadOptions threadOptions) {
-        super(plugin, threadOptions);
+        super(plugin, "", threadOptions);
         THREADS.add(this);
     }
 
