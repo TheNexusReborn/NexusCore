@@ -25,10 +25,10 @@ repositories {
 
 dependencies {
     api 'com.thenexusreborn:NexusAPI:1.13-ALPHA'
-    compileOnly 'com.github.StarDevelopmentLLC:StarLib:1.0.0-alpha.11'
-    compileOnly 'com.github.StarDevelopmentLLC:StarClock:1.0.0-alpha.10'
-    compileOnly 'com.github.StarDevelopmentLLC:StarCore:1.0.0-alpha.25'
-    compileOnly 'com.github.StarDevelopmentLLC:StarChat:1.0.0-alpha.10'
+    compileOnly 'com.github.StarDevelopmentLLC:StarLib:1.0.0-alpha.14'
+    compileOnly 'com.github.StarDevelopmentLLC:StarClock:1.0.0-alpha.11'
+    compileOnly 'com.github.StarDevelopmentLLC:StarCore:1.0.0-alpha.27'
+    compileOnly 'com.github.StarDevelopmentLLC:StarChat:1.0.0-alpha.12'
     compileOnly 'me.clip:placeholderapi:2.11.5'
     compileOnly 'org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT'
 }
