@@ -2,8 +2,8 @@ package com.thenexusreborn.nexuscore.cmds;
 
 import com.stardevllc.starcore.color.ColorUtils;
 import com.stardevllc.starlib.Pair;
+import com.stardevllc.starlib.helper.StringHelper;
 import com.thenexusreborn.api.NexusAPI;
-import com.thenexusreborn.api.helper.StringHelper;
 import com.thenexusreborn.api.player.IPEntry;
 import com.thenexusreborn.api.player.PlayerManager;
 import com.thenexusreborn.api.player.Rank;
