@@ -32,9 +32,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.net.InetSocketAddress;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -229,15 +226,6 @@ public class NexusCore extends JavaPlugin {
 
     public ChatManager getChatManager() {
         return chatManager;
-    }
-
-    public Connection getConnection(String database) throws SQLException {
-        String url = "jdbc:mysql://" + getConfig().getString("mysql.host") + "/" + database + "?user=" + getConfig().getString("mysql.user") + "&password=" + getConfig().getString("mysql.password");
-        return DriverManager.getConnection(url);
-    }
-
-    public Connection getConnection() throws SQLException {
-        return getConnection(getConfig().getString("mysql.database"));
     }
 
     public List<NexusSpigotPlugin> getNexusPlugins() {

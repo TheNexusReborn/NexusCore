@@ -16,8 +16,6 @@ import com.thenexusreborn.nexuscore.player.SpigotPlayerProxy;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
-import java.sql.Connection;
-import java.sql.SQLException;
 
 public class SpigotNexusAPI extends NexusAPI {
     
@@ -46,11 +44,6 @@ public class SpigotNexusAPI extends NexusAPI {
         for (NexusSpigotPlugin nexusPlugin : plugin.getNexusPlugins()) {
             nexusPlugin.registerToggles(registry);
         }
-    }
-    
-    @Override
-    public Connection getConnection() throws SQLException {
-        return plugin.getConnection();
     }
     
     @Override
