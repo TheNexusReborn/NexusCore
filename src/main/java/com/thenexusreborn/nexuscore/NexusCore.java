@@ -4,6 +4,8 @@ import com.stardevllc.starchat.StarChat;
 import com.stardevllc.starchat.channels.ChatChannel;
 import com.stardevllc.starclock.ClockManager;
 import com.stardevllc.starcore.color.ColorUtils;
+import com.stardevllc.starcore.utils.ServerProperties;
+import com.stardevllc.starlib.helper.FileHelper;
 import com.sun.net.httpserver.HttpServer;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.server.InstanceServer;
@@ -28,6 +30,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.net.InetSocketAddress;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -209,6 +212,13 @@ public class NexusCore extends JavaPlugin {
     @Override
     public void onDisable() {
         NexusAPI.getApi().getPlayerManager().saveData();
+
+        String levelName = ServerProperties.getLevelName();
+        File worldFolder = new File("./", levelName);
+        File playerdataFolder = new File(worldFolder, "playerdata");
+        if (playerdataFolder.exists() && playerdataFolder.isDirectory()) {
+            FileHelper.deleteDirectory(playerdataFolder.toPath());
+        }
     }
 
     private void registerCommand(String cmd, TabExecutor tabExecutor) {
