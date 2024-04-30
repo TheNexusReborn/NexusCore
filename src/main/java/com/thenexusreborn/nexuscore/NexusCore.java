@@ -8,6 +8,7 @@ import com.stardevllc.starcore.utils.ServerProperties;
 import com.stardevllc.starlib.helper.FileHelper;
 import com.sun.net.httpserver.HttpServer;
 import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.server.InstanceServer;
 import com.thenexusreborn.api.server.NexusServer;
 import com.thenexusreborn.api.server.VirtualServer;
@@ -26,6 +27,10 @@ import com.thenexusreborn.nexuscore.util.MsgType;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabExecutor;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.server.ServerListPingEvent;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -33,6 +38,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -40,7 +46,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.function.Supplier;
 
 @SuppressWarnings("SameParameterValue")
-public class NexusCore extends JavaPlugin {
+public class NexusCore extends JavaPlugin implements Listener {
 
     private final List<NexusSpigotPlugin> nexusPlugins = new ArrayList<>();
     private ChatManager chatManager;
@@ -107,6 +113,7 @@ public class NexusCore extends JavaPlugin {
 
         Bukkit.getServer().getPluginManager().registerEvents((SpigotPlayerManager) NexusAPI.getApi().getPlayerManager(), this);
         Bukkit.getServer().getPluginManager().registerEvents(chatManager, this);
+        Bukkit.getServer().getPluginManager().registerEvents(this, this);
         getLogger().info("Registered Event Listeners");
 
         registerCommand("rank", new RankCommand(this));
@@ -215,6 +222,19 @@ public class NexusCore extends JavaPlugin {
         File playerdataFolder = new File(worldFolder, "playerdata");
         if (playerdataFolder.exists() && playerdataFolder.isDirectory()) {
             FileHelper.deleteDirectory(playerdataFolder.toPath());
+        }
+    }
+    
+    @EventHandler
+    public void onServerPing(ServerListPingEvent e) {
+        e.setMotd(ColorUtils.color("            &5&lTHE NEXUS REBORN &e&lALPHA\n              &7Minecraft Version 1.8"));
+
+        Iterator<Player> iterator = e.iterator();
+        while (iterator.hasNext()) {
+            NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(iterator.next().getUniqueId());
+            if (nexusPlayer.getToggleValue("vanish") || nexusPlayer.getToggleValue("incognito")) {
+                iterator.remove();
+            }
         }
     }
 
