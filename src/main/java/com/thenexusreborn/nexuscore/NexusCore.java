@@ -45,7 +45,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.function.Supplier;
 
-@SuppressWarnings("SameParameterValue")
 public class NexusCore extends JavaPlugin implements Listener {
 
     private final List<NexusSpigotPlugin> nexusPlugins = new ArrayList<>();
