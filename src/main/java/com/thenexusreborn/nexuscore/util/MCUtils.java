@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.util;
 
-import com.stardevllc.starcore.color.ColorUtils;
+import com.stardevllc.starcore.color.ColorHandler;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.api.util.Constants;
@@ -58,6 +58,6 @@ public final class MCUtils {
     }
     
     public static void debugSender(CommandSender sender, String message) {
-        sender.sendMessage(ColorUtils.color("&7&o" + message));
+        sender.sendMessage(ColorHandler.getInstance().color("&7&o" + message));
     }
 }

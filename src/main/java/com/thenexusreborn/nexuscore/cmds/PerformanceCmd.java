@@ -1,7 +1,7 @@
 package com.thenexusreborn.nexuscore.cmds;
 
-import com.stardevllc.starcore.color.ColorUtils;
-import com.stardevllc.starlib.helper.NumberHelper;
+import com.stardevllc.starcore.color.ColorHandler;
+import com.stardevllc.starlib.math.MemoryHelper;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.api.NexusThread;
 import com.thenexusreborn.nexuscore.util.MCUtils;
@@ -18,8 +18,8 @@ public class PerformanceCmd implements CommandExecutor {
     }
 
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        sender.sendMessage(ColorUtils.color("&6&l>> &d&lThe Nexus Reborn Server Performance"));
-        sender.sendMessage(ColorUtils.color("&6&l> &eTPS: &b" + MCUtils.getRecentTps()));
+        sender.sendMessage(ColorHandler.getInstance().color("&6&l>> &d&lThe Nexus Reborn Server Performance"));
+        sender.sendMessage(ColorHandler.getInstance().color("&6&l> &eTPS: &b" + MCUtils.getRecentTps()));
 
         long totalMemory = Runtime.getRuntime().totalMemory();
         long freeMemory = Runtime.getRuntime().freeMemory();
@@ -28,22 +28,22 @@ public class PerformanceCmd implements CommandExecutor {
         double percentUsed = memoryUsed / (totalMemory * 1.0) * 100;
         String formattedPercentUsed = String.format("%.2f", percentUsed);
 
-        int memoryUsedMB = (int) NumberHelper.toMegabytes(memoryUsed);
-        int totalMemoryMB = (int) NumberHelper.toMegabytes(totalMemory);
+        int memoryUsedMB = (int) MemoryHelper.toMegabytes(memoryUsed);
+        int totalMemoryMB = (int) MemoryHelper.toMegabytes(totalMemory);
 
-        sender.sendMessage(ColorUtils.color("&6&l> &eMemory Used: &b" + memoryUsedMB + "MB / " + totalMemoryMB + "MB &7(" + formattedPercentUsed + "%)"));
-        sender.sendMessage(ColorUtils.color("&6&l> &eTotal Tasks: &b" + NexusThread.getThreads().size()));
+        sender.sendMessage(ColorHandler.getInstance().color("&6&l> &eMemory Used: &b" + memoryUsedMB + "MB / " + totalMemoryMB + "MB &7(" + formattedPercentUsed + "%)"));
+        sender.sendMessage(ColorHandler.getInstance().color("&6&l> &eTotal Tasks: &b" + NexusThread.getThreads().size()));
         if (!(args.length > 0) || !args[0].equals("-t")) {
-            sender.sendMessage(ColorUtils.color("&6&l> &7Run with the -t flag to see task metrics."));
+            sender.sendMessage(ColorHandler.getInstance().color("&6&l> &7Run with the -t flag to see task metrics."));
             return true;
         }
 
         sender.sendMessage("");
-        sender.sendMessage(ColorUtils.color("&6&l>> &d&lRunning Nexus Task Metrics."));
+        sender.sendMessage(ColorHandler.getInstance().color("&6&l>> &d&lRunning Nexus Task Metrics."));
         for (NexusThread<?> task : NexusThread.getThreads()) {
-            sender.sendMessage(ColorUtils.color("&6&l> &eName: &b" + task.getClass().getSimpleName() + " &ePlugin: &b" + task.getPlugin().getName()));
-            sender.sendMessage(ColorUtils.color("      &ePeriod: &b" + task.getPeriod() + " ticks  &eAsync: &b" + task.isAsync()));
-            sender.sendMessage(ColorUtils.color("      &eLowest: &b" + task.getMinTime() + "ms   &eHighest: &b" + task.getMaxTime() + "ms   &eRecent Average: &b" + task.getRecentAverage() + "ms"));
+            sender.sendMessage(ColorHandler.getInstance().color("&6&l> &eName: &b" + task.getClass().getSimpleName() + " &ePlugin: &b" + task.getPlugin().getName()));
+            sender.sendMessage(ColorHandler.getInstance().color("      &ePeriod: &b" + task.getPeriod() + " ticks  &eAsync: &b" + task.isAsync()));
+            sender.sendMessage(ColorHandler.getInstance().color("      &eLowest: &b" + task.getMinTime() + "ms   &eHighest: &b" + task.getMaxTime() + "ms   &eRecent Average: &b" + task.getRecentAverage() + "ms"));
         }
 
         return true;

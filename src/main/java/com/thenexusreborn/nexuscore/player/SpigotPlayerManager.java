@@ -1,8 +1,8 @@
 package com.thenexusreborn.nexuscore.player;
 
 import com.stardevllc.starchat.context.ChatContext;
-import com.stardevllc.starclock.clocks.Stopwatch;
-import com.stardevllc.starcore.color.ColorUtils;
+import com.stardevllc.starcore.color.ColorHandler;
+import com.stardevllc.starlib.clock.clocks.Stopwatch;
 import com.stardevllc.starlib.helper.StringHelper;
 import com.stardevllc.starlib.time.TimeUnit;
 import com.thenexusreborn.api.NexusAPI;
@@ -105,7 +105,7 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                     try {
                         NexusAPI.getApi().getPrimaryDatabase().save(nexusPlayer);
                     } catch (SQLException ex) {
-                        player.sendMessage(ColorUtils.color(MsgType.ERROR + "Failed to save your player data to the database. Please report as a bug and try to re-log."));
+                        player.sendMessage(ColorHandler.getInstance().color(MsgType.ERROR + "Failed to save your player data to the database. Please report as a bug and try to re-log."));
                         ex.printStackTrace();
                     }
                     
@@ -152,7 +152,7 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
 
                         String joinMessage = loadEvent.getJoinMessage();
                         if (joinMessage != null && !joinMessage.isEmpty()) {
-                            Bukkit.broadcastMessage(ColorUtils.color(joinMessage));
+                            Bukkit.broadcastMessage(ColorHandler.getInstance().color(joinMessage));
                         }
 
                         NexusAPI.getApi().getPlayerManager().getPlayers().put(finalNexusPlayer.getUniqueId(), finalNexusPlayer);

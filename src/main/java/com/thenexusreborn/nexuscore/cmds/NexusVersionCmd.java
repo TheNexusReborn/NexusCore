@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.cmds;
 
-import com.stardevllc.starcore.color.ColorUtils;
+import com.stardevllc.starcore.color.ColorHandler;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.api.NexusSpigotPlugin;
@@ -17,12 +17,12 @@ public class NexusVersionCmd implements CommandExecutor {
     }
 
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        sender.sendMessage(ColorUtils.color("&6&l>> &e&lThe Nexus Reborn Plugin Versions"));
-        sender.sendMessage(ColorUtils.color("&6&l>> &eNexusAPI v" + NexusAPI.getApi().getVersion().toString()));
+        sender.sendMessage(ColorHandler.getInstance().color("&6&l>> &e&lThe Nexus Reborn Plugin Versions"));
+        sender.sendMessage(ColorHandler.getInstance().color("&6&l>> &eNexusAPI v" + NexusAPI.getApi().getVersion().toString()));
         NexusCore nexusCore = (NexusCore) Bukkit.getServer().getPluginManager().getPlugin("NexusCore");
-        sender.sendMessage(ColorUtils.color("&6&l>> &eNexusCore v" + nexusCore.getDescription().getVersion()));
+        sender.sendMessage(ColorHandler.getInstance().color("&6&l>> &eNexusCore v" + nexusCore.getDescription().getVersion()));
         for (NexusSpigotPlugin nexusPlugin : nexusCore.getNexusPlugins()) {
-            sender.sendMessage(ColorUtils.color("&6&l>> &e" + nexusPlugin.getName() + " v" + nexusPlugin.getDescription().getVersion()));
+            sender.sendMessage(ColorHandler.getInstance().color("&6&l>> &e" + nexusPlugin.getName() + " v" + nexusPlugin.getDescription().getVersion()));
         }
 
         return true;

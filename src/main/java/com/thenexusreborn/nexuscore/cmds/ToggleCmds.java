@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.cmds;
 
-import com.stardevllc.starcore.color.ColorUtils;
+import com.stardevllc.starcore.color.ColorHandler;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Toggle;
@@ -17,7 +17,7 @@ public class ToggleCmds implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ColorUtils.color(MsgType.WARN + "Only players can use that command."));
+            sender.sendMessage(ColorHandler.getInstance().color(MsgType.WARN + "Only players can use that command."));
             return true;
         }
     

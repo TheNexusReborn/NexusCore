@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.cmds;
 
-import com.stardevllc.starcore.color.ColorUtils;
+import com.stardevllc.starcore.color.ColorHandler;
 import com.stardevllc.starlib.time.TimeFormat;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.NexusPlayer;
@@ -37,7 +37,7 @@ public class PlaytimeCommand implements CommandExecutor {
                 uuid = player.getUniqueId();
                 self = true;
             } else {
-                sender.sendMessage(ColorUtils.color(MsgType.WARN + "You must provide a player name as the Console."));
+                sender.sendMessage(ColorHandler.getInstance().color(MsgType.WARN + "You must provide a player name as the Console."));
                 return true;
             }
         } else {
@@ -49,7 +49,7 @@ public class PlaytimeCommand implements CommandExecutor {
             }
 
             if (uuid == null) {
-                sender.sendMessage(ColorUtils.color(MsgType.WARN + "Could not get a player by that identifier."));
+                sender.sendMessage(ColorHandler.getInstance().color(MsgType.WARN + "Could not get a player by that identifier."));
                 return true;
             }
         }
@@ -75,7 +75,7 @@ public class PlaytimeCommand implements CommandExecutor {
                     PlayerTime playerTime = database.get(PlayerTime.class, "uniqueid", player.getUniqueId().toString()).get(0);
                     sendPlaytimeMessages(playerTime.getPlaytime(), self, sender, ranks.get().getColor() + name);
                 } catch (Exception e) {
-                    sender.sendMessage(ColorUtils.color(MsgType.ERROR + "There was an error getting " + name + "'s playtime."));
+                    sender.sendMessage(ColorHandler.getInstance().color(MsgType.ERROR + "There was an error getting " + name + "'s playtime."));
                 }
             });
         }
@@ -86,9 +86,9 @@ public class PlaytimeCommand implements CommandExecutor {
     private void sendPlaytimeMessages(long playtime, boolean self, CommandSender sender, String coloredName) {
         String formattedPlaytime = timeFormat.format(playtime);
         if (self) {
-            sender.sendMessage(ColorUtils.color(MsgType.INFO + "Your playtime is " + MsgType.INFO.getVariableColor() + formattedPlaytime));
+            sender.sendMessage(ColorHandler.getInstance().color(MsgType.INFO + "Your playtime is " + MsgType.INFO.getVariableColor() + formattedPlaytime));
         } else {
-            sender.sendMessage(ColorUtils.color(MsgType.INFO + coloredName + "&e's playtime is &b" + formattedPlaytime));
+            sender.sendMessage(ColorHandler.getInstance().color(MsgType.INFO + coloredName + "&e's playtime is &b" + formattedPlaytime));
         }
     }
 }

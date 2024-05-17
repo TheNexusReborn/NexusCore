@@ -1,11 +1,8 @@
 package com.thenexusreborn.nexuscore.util;
 
-import com.stardevllc.starcore.color.ColorUtils;
+import com.stardevllc.starcore.color.ColorHandler;
 
 public enum MsgType {
-    
-    // Codes to use in messages: &bc for base color and &vc for variable color
-    
     INFO("&6", "&e", "&b"),
     SUCCESS("&6", "&a", "&b"),
     IMPORTANT("&2", "&a", "&b"),
@@ -41,7 +38,7 @@ public enum MsgType {
             }
         }
 
-        return ColorUtils.color(sb.toString());
+        return ColorHandler.getInstance().color(sb.toString());
     }
     
     public String getPrefixColor() {

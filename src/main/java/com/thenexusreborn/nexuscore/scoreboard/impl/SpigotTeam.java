@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.scoreboard.impl;
 
-import com.stardevllc.starcore.color.ColorUtils;
+import com.stardevllc.starcore.color.ColorHandler;
 import com.thenexusreborn.api.scoreboard.ValueUpdater;
 import com.thenexusreborn.api.scoreboard.wrapper.ITeam;
 import org.bukkit.scoreboard.Team;
@@ -56,14 +56,14 @@ public class SpigotTeam implements ITeam {
     @Override
     public void setPrefix(String prefix) {
         try {
-            team.setPrefix(ColorUtils.color(prefix));
+            team.setPrefix(ColorHandler.getInstance().color(prefix));
         } catch (Exception e) {}
     }
     
     @Override
     public void setSuffix(String suffix) {
         try {
-            team.setSuffix(ColorUtils.color(suffix));
+            team.setSuffix(ColorHandler.getInstance().color(suffix));
         } catch (Exception e) {
             
         }

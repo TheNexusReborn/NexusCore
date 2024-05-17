@@ -2,7 +2,7 @@ package com.thenexusreborn.nexuscore.cmds;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import com.stardevllc.starcore.color.ColorUtils;
+import com.stardevllc.starcore.color.ColorHandler;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Rank;
@@ -49,7 +49,7 @@ public class ListCommand implements CommandExecutor {
             playerList.put(nexusPlayer.getRank(), nexusPlayer);
         }
 
-        sender.sendMessage(ColorUtils.color(MsgType.INFO + "Players online on The Nexus Reborn."));
+        sender.sendMessage(ColorHandler.getInstance().color(MsgType.INFO + "Players online on The Nexus Reborn."));
         for (Map.Entry<Rank, Collection<NexusPlayer>> entry : playerList.asMap().entrySet()) {
             Rank rank = entry.getKey();
             Collection<NexusPlayer> players = entry.getValue();
@@ -63,7 +63,7 @@ public class ListCommand implements CommandExecutor {
                 }
             }
             if (!sb.isEmpty()) {
-                sender.sendMessage(ColorUtils.color("  &6&l> " + rank.getPrefix() + "&8: &f" + sb));
+                sender.sendMessage(ColorHandler.getInstance().color("  &6&l> " + rank.getPrefix() + "&8: &f" + sb));
             }
         }
         
