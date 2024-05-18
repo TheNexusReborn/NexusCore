@@ -1,12 +1,12 @@
 package com.thenexusreborn.nexuscore.scoreboard.impl;
 
+import com.stardevllc.starcore.color.ColorHandler;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.api.scoreboard.NexusScoreboard;
 import com.thenexusreborn.api.scoreboard.TablistHandler;
 import com.thenexusreborn.api.scoreboard.wrapper.ITeam;
-import com.thenexusreborn.nexuscore.util.MCUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -82,12 +82,12 @@ public class RankTablistHandler extends TablistHandler {
     @Override
     public void setDisplayOptions(NexusPlayer nexusPlayer, ITeam team) {
         if (nexusPlayer.getRank() == Rank.MEMBER) {
-            team.setPrefix(MCUtils.color(nexusPlayer.getRank().getColor()));
+            team.setPrefix(ColorHandler.getInstance().color(nexusPlayer.getRank().getColor()));
         } else {
-            team.setPrefix(MCUtils.color(nexusPlayer.getRank().getPrefix() + " &r"));
+            team.setPrefix(ColorHandler.getInstance().color(nexusPlayer.getRank().getPrefix() + " &r"));
         }
         if (nexusPlayer.hasActiveTag()) {
-            team.setSuffix(MCUtils.color(" " + nexusPlayer.getActiveTag().getDisplayName()));
+            team.setSuffix(ColorHandler.getInstance().color(" " + nexusPlayer.getActiveTag().getDisplayName()));
         } else {
             team.setSuffix("");
         }

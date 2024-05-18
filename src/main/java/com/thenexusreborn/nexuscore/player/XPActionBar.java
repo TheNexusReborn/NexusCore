@@ -1,9 +1,10 @@
 package com.thenexusreborn.nexuscore.player;
 
+import com.stardevllc.starcore.utils.ProgressBar;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.experience.ExperienceLevel;
-import com.thenexusreborn.api.player.*;
-import com.thenexusreborn.nexuscore.util.ProgressBar;
+import com.thenexusreborn.api.player.IActionBar;
+import com.thenexusreborn.api.player.NexusPlayer;
 
 import java.util.Map;
 
@@ -24,7 +25,7 @@ public class XPActionBar implements IActionBar {
     
     @Override
     public String getText() {
-        if (System.currentTimeMillis() >= this.time + 3000) {
+        if (System.currentTimeMillis() >= this.time + 5000) {
             player.setActionBar(previous);
             return "";
         }
@@ -38,8 +39,8 @@ public class XPActionBar implements IActionBar {
         } else {
             return "";
         }
-        
-        ProgressBar progressBar = new ProgressBar(currentXp, nextLevelXp, 100, "|", "&a", "&c");
-        return "&aLVL " + level + "&8[" + progressBar.display() + "&8] &7" + currentXp + " XP&8/&7" + nextLevelXp + " XP";
+
+        String bar = ProgressBar.of(currentXp, nextLevelXp, 70, "|", "&a", "&c");
+        return "&aLVL " + level + " &8[" + bar + "&8] &7" + currentXp + " XP&8/&7" + nextLevelXp + " XP";
     }
 }

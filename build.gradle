@@ -24,17 +24,21 @@ repositories {
 }
 
 dependencies {
-    api 'com.thenexusreborn:NexusAPI:1.12-ALPHA'
-    compileOnly 'com.github.StarDevelopmentLLC:StarLib:1.0.0-alpha.3'
-    compileOnly 'com.github.StarDevelopmentLLC:StarClock:1.0.0-alpha.3'
-    compileOnly 'com.github.StarDevelopmentLLC:StarCore:1.0.0-alpha.14'
-    compileOnly 'com.github.StarDevelopmentLLC:StarChat:1.0.0-alpha.2'
+    api 'com.thenexusreborn:NexusAPI:1.13-ALPHA'
+    compileOnly 'com.github.StarDevelopmentLLC:StarCore:1.0.0-alpha.33'
+    compileOnly 'com.github.StarDevelopmentLLC:StarChat:1.0.0-alpha.16'
     compileOnly 'me.clip:placeholderapi:2.11.5'
-    compileOnly 'org.spigotmc:spigot:1.8.8-R0.1-SNAPSHOT'
+    compileOnly 'org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT'
+}
+
+shadowJar {
+    dependencies {
+        exclude(dependency('com.github.StarDevelopmentLLC:StarLib:1.0.0-alpha.5'))
+    }
 }
 
 group = 'com.thenexusreborn'
-version = '1.11-ALPHA'
+version = '1.12-ALPHA'
 description = 'NexusCore'
 java.sourceCompatibility = JavaVersion.VERSION_17
 
@@ -46,6 +50,7 @@ processResources {
 
 shadowJar {
     archiveClassifier.set('')
+    destinationDirectory = file(System.getProperty("user.home") + File.separator + "Documents" + File.separator + "JarOutput" + File.separator + "NexusReborn")
 }
 
 java {

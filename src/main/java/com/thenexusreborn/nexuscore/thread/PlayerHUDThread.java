@@ -25,7 +25,10 @@ public class PlayerHUDThread extends NexusThread<NexusCore> {
                 }
                 IActionBar actionBar = nexusPlayer.getActionBar();
                 if (actionBar != null) {
-                    SpigotUtils.sendActionBar(player, actionBar.getText());
+                    String text = actionBar.getText();
+                    if (text != null) {
+                        SpigotUtils.sendActionBar(player, text);
+                    }
                 }
             }
         }

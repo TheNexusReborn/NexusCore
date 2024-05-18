@@ -3,7 +3,7 @@ version: ${version}
 name: NexusCore
 description: The main core of The Nexus Reborn
 author: Firestar311
-depend: [StarCore, StarUI, StarChat, PlaceholderAPI]
+depend: [StarCore, StarChat, PlaceholderAPI]
 softdepend: [Vulcan]
 commands:
   rank:
@@ -46,3 +46,4 @@ commands:
   list:
   balance:
     aliases: [bal]
+  servers:

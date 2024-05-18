@@ -1,7 +1,9 @@
 package com.thenexusreborn.nexuscore.player;
 
+import com.stardevllc.starcore.color.ColorHandler;
+import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.PlayerProxy;
-import com.thenexusreborn.nexuscore.util.MCUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -17,7 +19,7 @@ public class SpigotPlayerProxy extends PlayerProxy {
     public void sendMessage(String message) {
         Player player = Bukkit.getPlayer(uniqueId);
         if (player != null) {
-            player.sendMessage(MCUtils.color(message));
+            player.sendMessage(ColorHandler.getInstance().color(message));
         }
     }
     
@@ -29,5 +31,13 @@ public class SpigotPlayerProxy extends PlayerProxy {
     @Override
     public String getName() {
         return Bukkit.getPlayer(uniqueId).getName();
+    }
+
+    @Override
+    public void showXPActionBar() {
+        NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(this.uniqueId);
+        if (nexusPlayer != null) {
+            nexusPlayer.setActionBar(new XPActionBar(nexusPlayer, nexusPlayer.getActionBar(), 5000));
+        }
     }
 }

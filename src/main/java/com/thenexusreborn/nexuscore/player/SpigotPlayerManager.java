@@ -1,5 +1,10 @@
 package com.thenexusreborn.nexuscore.player;
 
+import com.stardevllc.starchat.context.ChatContext;
+import com.stardevllc.starcore.color.ColorHandler;
+import com.stardevllc.starlib.clock.clocks.Stopwatch;
+import com.stardevllc.starlib.helper.StringHelper;
+import com.stardevllc.starlib.time.TimeUnit;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.gamearchive.GameInfo;
 import com.thenexusreborn.api.player.NexusPlayer;
@@ -9,15 +14,15 @@ import com.thenexusreborn.api.player.Session;
 import com.thenexusreborn.api.punishment.Punishment;
 import com.thenexusreborn.api.scoreboard.NexusScoreboard;
 import com.thenexusreborn.api.scoreboard.ScoreboardView;
-import com.thenexusreborn.api.server.NetworkType;
 import com.thenexusreborn.api.sql.objects.Row;
 import com.thenexusreborn.api.sql.objects.SQLDatabase;
 import com.thenexusreborn.api.sql.objects.Table;
+import com.thenexusreborn.api.util.Constants;
+import com.thenexusreborn.api.util.NetworkType;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.api.events.NexusPlayerLoadEvent;
 import com.thenexusreborn.nexuscore.scoreboard.SpigotNexusScoreboard;
 import com.thenexusreborn.nexuscore.scoreboard.impl.RankTablistHandler;
-import com.thenexusreborn.nexuscore.util.MCUtils;
 import com.thenexusreborn.nexuscore.util.MsgType;
 import com.thenexusreborn.nexuscore.util.SpigotUtils;
 import net.md_5.bungee.api.ChatColor;
@@ -32,8 +37,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.net.InetSocketAddress;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class SpigotPlayerManager extends PlayerManager implements Listener {
 
@@ -100,9 +105,8 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                     try {
                         NexusAPI.getApi().getPrimaryDatabase().save(nexusPlayer);
                     } catch (SQLException ex) {
-                        player.sendMessage(MCUtils.color(MsgType.ERROR + "Failed to save your player data to the database. Please report as a bug and try to re-log."));
+                        player.sendMessage(ColorHandler.getInstance().color(MsgType.ERROR + "Failed to save your player data to the database. Please report as a bug and try to re-log."));
                         ex.printStackTrace();
-                        return;
                     }
                     
                     if (nexusPlayer.getRank().ordinal() <= Rank.HELPER.ordinal()) {
@@ -148,21 +152,39 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
 
                         String joinMessage = loadEvent.getJoinMessage();
                         if (joinMessage != null && !joinMessage.isEmpty()) {
-                            Bukkit.broadcastMessage(MCUtils.color(joinMessage));
-                        }
-
-                        if (finalNexusPlayer.getRank().ordinal() <= Rank.HELPER.ordinal()) {
-                            player.addAttachment(plugin, "spartan.info", true);
-                            player.addAttachment(plugin, "spartan.notifications", true);
+                            Bukkit.broadcastMessage(ColorHandler.getInstance().color(joinMessage));
                         }
 
                         NexusAPI.getApi().getPlayerManager().getPlayers().put(finalNexusPlayer.getUniqueId(), finalNexusPlayer);
 
                         SpigotUtils.sendActionBar(player, "&aYour data has been loaded");
 
-                        if (finalNexusPlayer.getRank().ordinal() <= Rank.MEDIA.ordinal()) {
-                            plugin.getStaffChannel().sendMessage(finalNexusPlayer.getDisplayName() + " &7&l-> &6" + NexusAPI.getApi().getServerManager().getCurrentServer().getName());
-                        }
+                        plugin.getNexusServer().join(finalNexusPlayer);
+        
+                        Stopwatch playtimeStopwatch = plugin.getClockManager().createStopwatch(Long.MAX_VALUE);
+                        playtimeStopwatch.addRepeatingCallback(stopwatchSnapshot -> {
+                            if (finalNexusPlayer.getToggleValue("vanish")) {
+                                return;
+                            }
+                            
+                            if (stopwatchSnapshot.getTime() == 0) {
+                                return; //Prevent this running immediately when a player joins
+                            }
+                            
+                            Rank rank = finalNexusPlayer.getRank();
+                            double xp = 10 * rank.getMultiplier();
+
+                            DecimalFormat format = new DecimalFormat(Constants.NUMBER_FORMAT);
+                            
+                            String bonusMessage = "";
+                            if (rank.getMultiplier() > 1) {
+                                bonusMessage = rank.getColor() + "&l x" + format.format(rank.getMultiplier()) + " " + StringHelper.titlize(rank.name()) + " Bonus";
+                            }
+
+                            finalNexusPlayer.sendMessage(MsgType.INFO + "&d+" + format.format(xp) + "XP (Playtime) " + bonusMessage);
+                            finalNexusPlayer.addXp(xp);
+                        }, TimeUnit.MINUTES.toMillis(10));
+                        playtimeStopwatch.start();
 
                         if (loadEvent.getActionBar() != null) {
                             new BukkitRunnable() {
@@ -209,7 +231,7 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
             });
             this.players.remove(nexusPlayer.getUniqueId());
             if (nexusPlayer.getRank().ordinal() <= Rank.MEDIA.ordinal()) {
-                plugin.getStaffChannel().sendMessage(nexusPlayer.getDisplayName() + " &7disconnected");
+                plugin.getStaffChannel().sendMessage(new ChatContext(nexusPlayer.getDisplayName() + " &7disconnected"));
             }
         }
     }

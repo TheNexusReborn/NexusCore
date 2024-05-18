@@ -1,6 +1,7 @@
 package com.thenexusreborn.nexuscore.chat;
 
 import com.stardevllc.starchat.channels.ChatChannel;
+import com.stardevllc.starchat.context.ChatContext;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.punishment.Punishment;
@@ -35,7 +36,7 @@ public class ChatManager implements Listener {
         if (e.getMessage().startsWith("@")) {
             ChatChannel staffChannel = plugin.getStarChatPlugin().getStaffChannel();
             if (e.getPlayer().hasPermission(staffChannel.getSendPermission())) {
-                staffChannel.sendMessage(e.getPlayer(), e.getMessage().substring(1));
+                staffChannel.sendMessage(new ChatContext(e.getPlayer(), e.getMessage().substring(1)));
                 e.setCancelled(true);
                 return;
             }

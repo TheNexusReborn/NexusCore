@@ -3,6 +3,7 @@ package com.thenexusreborn.nexuscore.hooks;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Rank;
+import com.thenexusreborn.api.server.NexusServer;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.util.MCUtils;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
@@ -58,7 +59,12 @@ public class NexusPapiExpansion extends PlaceholderExpansion {
                 return "&7";
             }
         } else if (params.equalsIgnoreCase("servername")) {
-            return NexusAPI.getApi().getServerManager().getCurrentServer().getName();
+            for (NexusServer server : NexusAPI.getApi().getServerRegistry()) {
+                if (server.getPlayers().contains(player.getUniqueId())) {
+                    return server.getName();
+                }
+            }
+            return "Nexus";
         }
 
         return null;
