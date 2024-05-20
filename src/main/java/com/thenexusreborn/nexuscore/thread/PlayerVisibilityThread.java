@@ -1,12 +1,12 @@
 package com.thenexusreborn.nexuscore.thread;
 
+import com.stardevllc.starcore.utils.StarThread;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.api.server.NexusServer;
 import com.thenexusreborn.api.server.ServerType;
 import com.thenexusreborn.nexuscore.NexusCore;
-import com.thenexusreborn.nexuscore.api.NexusThread;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-public class PlayerVisibilityThread extends NexusThread<NexusCore> {
+public class PlayerVisibilityThread extends StarThread<NexusCore> {
     public PlayerVisibilityThread(NexusCore plugin) {
         super(plugin, 20L, 1L, false);
     }

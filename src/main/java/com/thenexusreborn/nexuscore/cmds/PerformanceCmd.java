@@ -1,9 +1,9 @@
 package com.thenexusreborn.nexuscore.cmds;
 
 import com.stardevllc.starcore.color.ColorHandler;
+import com.stardevllc.starcore.utils.StarThread;
 import com.stardevllc.starlib.math.MemoryHelper;
 import com.thenexusreborn.nexuscore.NexusCore;
-import com.thenexusreborn.nexuscore.api.NexusThread;
 import com.thenexusreborn.nexuscore.util.MCUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -32,7 +32,7 @@ public class PerformanceCmd implements CommandExecutor {
         int totalMemoryMB = (int) MemoryHelper.toMegabytes(totalMemory);
 
         sender.sendMessage(ColorHandler.getInstance().color("&6&l> &eMemory Used: &b" + memoryUsedMB + "MB / " + totalMemoryMB + "MB &7(" + formattedPercentUsed + "%)"));
-        sender.sendMessage(ColorHandler.getInstance().color("&6&l> &eTotal Tasks: &b" + NexusThread.getThreads().size()));
+        sender.sendMessage(ColorHandler.getInstance().color("&6&l> &eTotal Tasks: &b" + StarThread.THREADS.size()));
         if (!(args.length > 0) || !args[0].equals("-t")) {
             sender.sendMessage(ColorHandler.getInstance().color("&6&l> &7Run with the -t flag to see task metrics."));
             return true;
@@ -40,7 +40,7 @@ public class PerformanceCmd implements CommandExecutor {
 
         sender.sendMessage("");
         sender.sendMessage(ColorHandler.getInstance().color("&6&l>> &d&lRunning Nexus Task Metrics."));
-        for (NexusThread<?> task : NexusThread.getThreads()) {
+        for (StarThread<?> task : StarThread.THREADS) {
             sender.sendMessage(ColorHandler.getInstance().color("&6&l> &eName: &b" + task.getClass().getSimpleName() + " &ePlugin: &b" + task.getPlugin().getName()));
             sender.sendMessage(ColorHandler.getInstance().color("      &ePeriod: &b" + task.getPeriod() + " ticks  &eAsync: &b" + task.isAsync()));
             sender.sendMessage(ColorHandler.getInstance().color("      &eLowest: &b" + task.getMinTime() + "ms   &eHighest: &b" + task.getMaxTime() + "ms   &eRecent Average: &b" + task.getRecentAverage() + "ms"));

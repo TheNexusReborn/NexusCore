@@ -1,17 +1,17 @@
 package com.thenexusreborn.nexuscore.thread;
 
+import com.stardevllc.starcore.utils.StarThread;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.nexuscore.NexusCore;
-import com.thenexusreborn.nexuscore.api.NexusThread;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 
 import java.util.Set;
 
-public class PlayerPermThread extends NexusThread<NexusCore> {
+public class PlayerPermThread extends StarThread<NexusCore> {
     
     public PlayerPermThread(NexusCore plugin) {
         super(plugin, 20L, 0L, true);
