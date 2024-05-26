@@ -8,6 +8,7 @@ import com.stardevllc.starlib.clock.ClockManager;
 import com.stardevllc.starlib.helper.FileHelper;
 import com.sun.net.httpserver.HttpServer;
 import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.gamearchive.GameLogExporter;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.server.InstanceServer;
 import com.thenexusreborn.api.server.NexusServer;
@@ -19,6 +20,7 @@ import com.thenexusreborn.nexuscore.chat.ChatManager;
 import com.thenexusreborn.nexuscore.chat.PunishmentChannel;
 import com.thenexusreborn.nexuscore.cmds.*;
 import com.thenexusreborn.nexuscore.hooks.NexusPapiExpansion;
+import com.thenexusreborn.nexuscore.http.GameHttpHandler;
 import com.thenexusreborn.nexuscore.http.ServerHttpHandler;
 import com.thenexusreborn.nexuscore.player.SpigotPlayerManager;
 import com.thenexusreborn.nexuscore.server.CoreInstanceServer;
@@ -57,6 +59,7 @@ public class NexusCore extends JavaPlugin implements Listener {
 
     private InstanceServer nexusServer;
     private ClockManager clockManager;
+    private GameLogExporter gameLogExporter;
 
     @Override
     public void onEnable() {
@@ -194,14 +197,24 @@ public class NexusCore extends JavaPlugin implements Listener {
             }
             NexusAPI.getApi().getServerRegistry().register(nexusServer);
         }, 1L);
+        
+        NexusAPI.getApi().setGameLogExporter(new GameLogExporter(new File(getDataFolder(), "export" + File.separator + "games")));
+        getServer().getScheduler().runTaskAsynchronously(this, () -> {
+            try {
+                NexusAPI.getApi().getGameLogExporter().exportGames();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
 
         Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
             try {
                 ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
-                HttpServer server = HttpServer.create(new InetSocketAddress("localhost", 8001), 0);
+                HttpServer server = HttpServer.create(new InetSocketAddress("0.0.0.0", 8051), 0);
                 server.createContext("/server", new ServerHttpHandler(this));
+                server.createContext("/game", new GameHttpHandler(this));
                 server.setExecutor(threadPoolExecutor);
-                //server.start();
+                server.start();
             } catch (Exception e) {
                 e.printStackTrace();
             }

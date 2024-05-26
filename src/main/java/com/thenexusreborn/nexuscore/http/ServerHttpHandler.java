@@ -43,6 +43,7 @@ public class ServerHttpHandler implements HttpHandler {
             response = "Invalid arguments";
         }
         
+        t.getResponseHeaders().add("Content-Type", "application/json");
         t.sendResponseHeaders(200, response.length());
         OutputStream os = t.getResponseBody();
         os.write(response.getBytes());
