@@ -24,7 +24,7 @@ repositories {
 }
 
 dependencies {
-    api 'com.thenexusreborn:NexusAPI:1.13.2-ALPHA'
+    api 'com.thenexusreborn:NexusAPI:1.14-ALPHA'
     compileOnly 'com.github.StarDevelopmentLLC:StarCore:1.0.0-alpha.36'
     compileOnly 'com.github.StarDevelopmentLLC:StarChat:1.0.0-alpha.16'
     compileOnly 'me.clip:placeholderapi:2.11.5'
@@ -38,7 +38,7 @@ shadowJar {
 }
 
 group = 'com.thenexusreborn'
-version = '1.12.2-ALPHA'
+version = '1.13-ALPHA'
 description = 'NexusCore'
 java.sourceCompatibility = JavaVersion.VERSION_17
 

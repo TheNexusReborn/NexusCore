@@ -47,3 +47,4 @@ commands:
   balance:
     aliases: [bal]
   servers:
+  verify:

@@ -19,6 +19,8 @@ import com.thenexusreborn.nexuscore.api.events.NexusServerSetupEvent;
 import com.thenexusreborn.nexuscore.chat.ChatManager;
 import com.thenexusreborn.nexuscore.chat.PunishmentChannel;
 import com.thenexusreborn.nexuscore.cmds.*;
+import com.thenexusreborn.nexuscore.communication.SocketClientHandler;
+import com.thenexusreborn.nexuscore.discord.DiscordVerifyCode;
 import com.thenexusreborn.nexuscore.hooks.NexusPapiExpansion;
 import com.thenexusreborn.nexuscore.http.GameHttpHandler;
 import com.thenexusreborn.nexuscore.http.ServerHttpHandler;
@@ -38,7 +40,9 @@ import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -60,6 +64,11 @@ public class NexusCore extends JavaPlugin implements Listener {
     private InstanceServer nexusServer;
     private ClockManager clockManager;
     private GameLogExporter gameLogExporter;
+    
+    private ServerSocket serverSocket;
+    private List<SocketClientHandler> clientHandlers = new ArrayList<>();
+    
+    private List<DiscordVerifyCode> discordVerifyCodes = new ArrayList<>();
 
     @Override
     public void onEnable() {
@@ -166,6 +175,7 @@ public class NexusCore extends JavaPlugin implements Listener {
         getCommand("nexusversion").setExecutor(new NexusVersionCmd(this));
         getCommand("tps").setExecutor(new PerformanceCmd(this));
         getCommand("playtime").setExecutor(new PlaytimeCommand(this));
+        getCommand("verify").setExecutor(new VerifyCommand(this));
 
         getLogger().info("Registered Commands");
 
@@ -219,15 +229,48 @@ public class NexusCore extends JavaPlugin implements Listener {
                 e.printStackTrace();
             }
         });
+        
+        Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
+            try {
+                serverSocket = new ServerSocket();
+                serverSocket.bind(new InetSocketAddress("127.0.0.1", 8044));
+                while (isEnabled()) {
+                    SocketClientHandler handler = new SocketClientHandler(this, serverSocket.accept());
+                    this.clientHandlers.add(handler);
+                    handler.runTaskAsynchronously(this);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    serverSocket.close();
+                    this.clientHandlers.clear();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    public List<DiscordVerifyCode> getDiscordVerifyCodes() {
+        return discordVerifyCodes;
     }
 
     public void addNexusPlugin(NexusSpigotPlugin plugin) {
         this.nexusPlugins.add(plugin);
     }
 
+    public List<SocketClientHandler> getClientHandlers() {
+        return clientHandlers;
+    }
+
     @Override
     public void onDisable() {
         NexusAPI.getApi().getPlayerManager().saveData();
+
+        try {
+            this.serverSocket.close();
+        } catch (IOException e) {}
 
         String levelName = ServerProperties.getLevelName();
         File worldFolder = new File("./", levelName);
