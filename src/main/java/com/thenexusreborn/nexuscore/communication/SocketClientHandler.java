@@ -1,6 +1,8 @@
 package com.thenexusreborn.nexuscore.communication;
 
 import com.stardevllc.starlib.misc.CodeGenerator;
+import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.discord.DiscordVerifyCode;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -10,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.List;
 
 public class SocketClientHandler extends BukkitRunnable {
     
@@ -46,11 +49,24 @@ public class SocketClientHandler extends BukkitRunnable {
                 } else if (inputLine.startsWith("link")) {
                     String[] inputSplit = inputLine.split(" ");
                     String discordId = inputSplit[1];
+                    
+                    plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+                        try {
+                            List<NexusPlayer> results = NexusAPI.getApi().getPrimaryDatabase().get(NexusPlayer.class, "discordid", discordId);
+                            if (!results.isEmpty()) {
+                                out.println("linkcode " + discordId + " alreadylinked");
+                                out.flush();
+                                return;
+                            }
 
-                    DiscordVerifyCode discordVerifyCode = new DiscordVerifyCode(discordId, CodeGenerator.generate(16));
-                    plugin.getDiscordVerifyCodes().add(discordVerifyCode);
-                    out.println("linkcode " + discordId + " " + discordVerifyCode.getCode());
-                    out.flush();
+                            DiscordVerifyCode discordVerifyCode = new DiscordVerifyCode(discordId, CodeGenerator.generate(16));
+                            plugin.getDiscordVerifyCodes().add(discordVerifyCode);
+                            out.println("linkcode " + discordId + " " + discordVerifyCode.getCode());
+                            out.flush();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    });
                 }
             }
         } catch (Exception e) {
