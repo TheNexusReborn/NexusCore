@@ -26,11 +26,10 @@ public class SocketClientHandler extends BukkitRunnable {
         this.out = new PrintWriter(socket.getOutputStream());
         this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         
-        plugin.getLogger().info("Connected to " + socket.getLocalSocketAddress().toString());
+        plugin.getLogger().info("Connected to " + socket.getRemoteSocketAddress().toString());
     }
     
     public void sendMessage(String message) {
-        System.out.println("Sending message to socket " + message);
         out.println(message);
         out.flush();
     }
@@ -40,7 +39,6 @@ public class SocketClientHandler extends BukkitRunnable {
         try {
             String inputLine;
             while ((inputLine = in.readLine()) != null) {
-                System.out.println(inputLine);
                 if (inputLine.equals("exit")) {
                     break;
                 } else if (inputLine.equals("heartbeat")) {
@@ -51,10 +49,8 @@ public class SocketClientHandler extends BukkitRunnable {
 
                     DiscordVerifyCode discordVerifyCode = new DiscordVerifyCode(discordId, CodeGenerator.generate(16));
                     plugin.getDiscordVerifyCodes().add(discordVerifyCode);
-                    plugin.getLogger().info("Generated Link Code " + discordVerifyCode.getCode());
                     out.println("linkcode " + discordId + " " + discordVerifyCode.getCode());
                     out.flush();
-                    plugin.getLogger().info("Send over socket");
                 }
             }
         } catch (Exception e) {
