@@ -16,7 +16,7 @@ import java.util.List;
 
 public class PlayerVisibilityThread extends StarThread<NexusCore> {
     public PlayerVisibilityThread(NexusCore plugin) {
-        super(plugin, 20L, 1L, false);
+        super(plugin, 1L, 1L, false);
     }
 
     @SuppressWarnings("DuplicatedCode")
@@ -73,26 +73,40 @@ public class PlayerVisibilityThread extends StarThread<NexusCore> {
                     player.hidePlayer(otherPlayer);
                     otherPlayer.hidePlayer(player);
                 } else {
-                    if (playerServer.recalculateVisibility(player.getUniqueId(), otherPlayer.getUniqueId())) {
-                        continue;
-                    }
-                    
-                    NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(player.getUniqueId());
-                    Rank playerRank = nexusPlayer.getRank();
-                    
-                    Rank otherPlayerRank = otherNexusPlayer.getRank();
-                    boolean otherPlayerIsVanished = otherPlayerRank.ordinal() <= Rank.HELPER.ordinal() && otherNexusPlayer.getToggleValue("vanish");
-                    boolean otherPlayerIsIncognito = otherPlayerRank.ordinal() <= Rank.MEDIA.ordinal() && otherNexusPlayer.getToggleValue("incognito");
-                    boolean otherPlayerIsNotVisible = otherPlayerIsVanished || otherPlayerIsIncognito;
-                    
-                    if (otherPlayerIsNotVisible) {
-                        if (otherPlayerRank.ordinal() < playerRank.ordinal()) {
-                            player.hidePlayer(otherPlayer);
+                    boolean canSeeOther;
+                    try {
+                        canSeeOther = playerServer.recalculateVisibility(player.getUniqueId(), otherPlayer.getUniqueId());
+                    } catch (UnsupportedOperationException e) {
+                        NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(player.getUniqueId());
+                        Rank playerRank = nexusPlayer.getRank();
+
+                        Rank otherPlayerRank = otherNexusPlayer.getRank();
+                        boolean otherPlayerIsVanished = otherPlayerRank.ordinal() <= Rank.HELPER.ordinal() && otherNexusPlayer.getToggleValue("vanish");
+                        boolean otherPlayerIsIncognito = otherPlayerRank.ordinal() <= Rank.MEDIA.ordinal() && otherNexusPlayer.getToggleValue("incognito");
+                        boolean otherPlayerIsNotVisible = otherPlayerIsVanished || otherPlayerIsIncognito;
+
+                        if (otherPlayerIsNotVisible) {
+                            if (otherPlayerRank.ordinal() < playerRank.ordinal()) {
+                                canSeeOther = false;
+                                //player.hidePlayer(otherPlayer);
+                            } else {
+                                canSeeOther = true;
+                                //player.showPlayer(otherPlayer);
+                            }
                         } else {
+                            canSeeOther = true;
+                            //player.showPlayer(otherPlayer);
+                        }
+                    }
+
+                    if (canSeeOther) {
+                        if (!player.canSee(otherPlayer)) {
                             player.showPlayer(otherPlayer);
                         }
                     } else {
-                        player.showPlayer(otherPlayer);
+                        if (player.canSee(otherPlayer)) {
+                            player.hidePlayer(otherPlayer);
+                        }
                     }
                 }
             }
