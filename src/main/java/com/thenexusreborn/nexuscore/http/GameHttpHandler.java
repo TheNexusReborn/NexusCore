@@ -5,12 +5,12 @@ import com.google.gson.GsonBuilder;
 import com.stardevllc.starlib.helper.StringHelper;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.nexuscore.NexusCore;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameHttpHandler implements HttpHandler {
@@ -66,7 +66,7 @@ public class GameHttpHandler implements HttpHandler {
         //responseBuilder.append("<h1>Nexus Reborn Survival Games</h1>");
         responseBuilder.append("<h1>Classic Game #").append(gameId).append("</h2>");
 
-        List<String> gameTxt = NexusAPI.getApi().getGameLogExporter().getGameTxt(gameId);
+        List<String> gameTxt = new ArrayList<>(); //TODO Redo this using JSON
         boolean gameInfo = false, actions = false;
         for (int i = 0; i < gameTxt.size(); i++) {
             String line = gameTxt.get(i);
