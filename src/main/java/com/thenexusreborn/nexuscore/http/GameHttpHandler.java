@@ -2,11 +2,15 @@ package com.thenexusreborn.nexuscore.http;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.stardevllc.starlib.helper.StringHelper;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.thenexusreborn.nexuscore.NexusCore;
 
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
@@ -66,6 +70,14 @@ public class GameHttpHandler implements HttpHandler {
         //responseBuilder.append("<h1>Nexus Reborn Survival Games</h1>");
         responseBuilder.append("<h1>Classic Game #").append(gameId).append("</h2>");
 
+        JsonObject gameJson = new JsonParser().parse(new FileReader(new File(plugin.getDataFolder(), "export" + File.separator + "games" + File.separator + gameId + ".json"))).getAsJsonObject();
+
+        responseBuilder.append("<h2>Basic Game Info</h2>");
+        //Game Info
+        
+        
+        responseBuilder.append("<h2>Actions</h2>");
+        //Actions
         List<String> gameTxt = new ArrayList<>(); //TODO Redo this using JSON
         boolean gameInfo = false, actions = false;
         for (int i = 0; i < gameTxt.size(); i++) {
@@ -156,5 +168,17 @@ public class GameHttpHandler implements HttpHandler {
         os.write(response.getBytes(StandardCharsets.UTF_8));
         os.flush();
         os.close();
+    }
+    
+    private void appendInfoLine(StringBuilder lineBuilder, String prefix, Object value) {
+        lineBuilder.append("<div class=\"infoDiv\">").append("<b>").append(prefix).append(":</b>").append(value).append("</div>");
+    }
+    
+    private void appendTimeToActionLine(StringBuilder lineBuilder, String timeColor, String dateTime) {
+        lineBuilder.append("<div class='actionDiv'>").append("<span style='color: white; background: ").append("; padding: 3px; border-radius: 5px'>").append(dateTime).append("</span>");
+    }
+    
+    private void appendChatValue(String team, String sender, String message) {
+        //TODO
     }
 }
