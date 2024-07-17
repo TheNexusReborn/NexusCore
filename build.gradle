@@ -24,9 +24,9 @@ repositories {
 }
 
 dependencies {
-    api 'com.thenexusreborn:NexusAPI:1.14-ALPHA'
-    compileOnly 'com.github.StarDevelopmentLLC:StarCore:1.0.0-alpha.36'
-    compileOnly 'com.github.StarDevelopmentLLC:StarChat:1.0.0-alpha.16'
+    api 'com.thenexusreborn:NexusAPI:1.15-ALPHA'
+    compileOnly 'com.github.StarDevelopmentLLC:StarCore:1.0.0-alpha.37'
+    compileOnly 'com.github.StarDevelopmentLLC:StarChat:1.0.0-alpha.17'
     compileOnly 'me.clip:placeholderapi:2.11.5'
     compileOnly 'org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT'
 }
@@ -38,9 +38,8 @@ shadowJar {
 }
 
 group = 'com.thenexusreborn'
-version = '1.13-ALPHA'
+version = '1.14-ALPHA'
 description = 'NexusCore'
-java.sourceCompatibility = JavaVersion.VERSION_17
 
 processResources {
     filesMatching("*.yml") {
@@ -55,7 +54,7 @@ shadowJar {
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
 

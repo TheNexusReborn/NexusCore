@@ -2,7 +2,7 @@ package com.thenexusreborn.nexuscore.cmds;
 
 import com.stardevllc.starcore.color.ColorHandler;
 import com.stardevllc.starcore.utils.StarThread;
-import com.stardevllc.starlib.math.MemoryHelper;
+import com.stardevllc.starlib.math.MemoryUnit;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.util.MCUtils;
 import org.bukkit.command.Command;
@@ -28,8 +28,10 @@ public class PerformanceCmd implements CommandExecutor {
         double percentUsed = memoryUsed / (totalMemory * 1.0) * 100;
         String formattedPercentUsed = String.format("%.2f", percentUsed);
 
-        int memoryUsedMB = (int) MemoryHelper.toMegabytes(memoryUsed);
-        int totalMemoryMB = (int) MemoryHelper.toMegabytes(totalMemory);
+        
+
+        int memoryUsedMB = (int) MemoryUnit.BYTE.toMegabytes(memoryUsed);
+        int totalMemoryMB = (int) MemoryUnit.BYTE.toMegabytes(totalMemory);
 
         sender.sendMessage(ColorHandler.getInstance().color("&6&l> &eMemory Used: &b" + memoryUsedMB + "MB / " + totalMemoryMB + "MB &7(" + formattedPercentUsed + "%)"));
         sender.sendMessage(ColorHandler.getInstance().color("&6&l> &eTotal Tasks: &b" + StarThread.THREADS.size()));
