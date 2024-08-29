@@ -4,10 +4,12 @@ import com.stardevllc.starcore.color.ColorHandler;
 import com.stardevllc.starlib.misc.Pair;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.PlayerManager;
+import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.api.punishment.PardonInfo;
 import com.thenexusreborn.api.punishment.Punishment;
 import com.thenexusreborn.api.punishment.PunishmentType;
 import com.thenexusreborn.nexuscore.NexusCore;
+import com.thenexusreborn.nexuscore.util.MCUtils;
 import com.thenexusreborn.nexuscore.util.MsgType;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -43,6 +45,14 @@ public class PunishRemoveCommands implements CommandExecutor {
     
         if (type == null && !all) {
             sender.sendMessage(ColorHandler.getInstance().color(MsgType.WARN + "Invalid punishment type."));
+            return true;
+        }
+
+        Rank minRank = type.getMinRankPermanent();
+
+        Rank actorRank = MCUtils.getSenderRank(plugin, sender);
+        if (actorRank.ordinal() > minRank.ordinal()) {
+            sender.sendMessage(ColorHandler.getInstance().color(MsgType.WARN + "You do not have permission to use that punishment type."));
             return true;
         }
     

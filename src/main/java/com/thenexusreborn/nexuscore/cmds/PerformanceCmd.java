@@ -28,8 +28,6 @@ public class PerformanceCmd implements CommandExecutor {
         double percentUsed = memoryUsed / (totalMemory * 1.0) * 100;
         String formattedPercentUsed = String.format("%.2f", percentUsed);
 
-        
-
         int memoryUsedMB = (int) MemoryUnit.BYTE.toMegabytes(memoryUsed);
         int totalMemoryMB = (int) MemoryUnit.BYTE.toMegabytes(totalMemory);
 
