@@ -78,24 +78,24 @@ public class PlayerVisibilityThread extends StarThread<NexusCore> {
                         canSeeOther = playerServer.recalculateVisibility(player.getUniqueId(), otherPlayer.getUniqueId());
                     } catch (UnsupportedOperationException e) {
                         NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(player.getUniqueId());
-                        Rank playerRank = nexusPlayer.getRank();
+                        if (nexusPlayer != null) {
+                            Rank playerRank = nexusPlayer.getRank();
 
-                        Rank otherPlayerRank = otherNexusPlayer.getRank();
-                        boolean otherPlayerIsVanished = otherPlayerRank.ordinal() <= Rank.HELPER.ordinal() && otherNexusPlayer.getToggleValue("vanish");
-                        boolean otherPlayerIsIncognito = otherPlayerRank.ordinal() <= Rank.MEDIA.ordinal() && otherNexusPlayer.getToggleValue("incognito");
-                        boolean otherPlayerIsNotVisible = otherPlayerIsVanished || otherPlayerIsIncognito;
+                            Rank otherPlayerRank = otherNexusPlayer.getRank();
+                            boolean otherPlayerIsVanished = otherPlayerRank.ordinal() <= Rank.HELPER.ordinal() && otherNexusPlayer.getToggleValue("vanish");
+                            boolean otherPlayerIsIncognito = otherPlayerRank.ordinal() <= Rank.MEDIA.ordinal() && otherNexusPlayer.getToggleValue("incognito");
+                            boolean otherPlayerIsNotVisible = otherPlayerIsVanished || otherPlayerIsIncognito;
 
-                        if (otherPlayerIsNotVisible) {
-                            if (otherPlayerRank.ordinal() < playerRank.ordinal()) {
-                                canSeeOther = false;
+                            if (otherPlayerIsNotVisible) {
                                 //player.hidePlayer(otherPlayer);
+                                //player.showPlayer(otherPlayer);
+                                canSeeOther = otherPlayerRank.ordinal() >= playerRank.ordinal();
                             } else {
                                 canSeeOther = true;
                                 //player.showPlayer(otherPlayer);
                             }
                         } else {
-                            canSeeOther = true;
-                            //player.showPlayer(otherPlayer);
+                            canSeeOther = false;
                         }
                     }
 
