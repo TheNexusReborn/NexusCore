@@ -24,8 +24,8 @@ repositories {
 }
 
 dependencies {
-    api 'com.thenexusreborn:NexusAPI:1.14.1-ALPHA'
-    compileOnly 'com.github.StarDevelopmentLLC:StarCore:1.0.0-alpha.40'
+    api 'com.thenexusreborn:NexusAPI:1.15-ALPHA'
+    compileOnly 'com.github.StarDevelopmentLLC:StarCore:1.0.0-alpha.39'
     compileOnly 'com.github.StarDevelopmentLLC:StarChat:1.0.0-alpha.20'
     compileOnly 'me.clip:placeholderapi:2.11.5'
     compileOnly 'org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT'
@@ -38,7 +38,7 @@ shadowJar {
 }
 
 group = 'com.thenexusreborn'
-version = '1.13.1-ALPHA'
+version = '1.14-ALPHA'
 description = 'NexusCore'
 
 processResources {
