@@ -286,6 +286,9 @@ public class NexusCore extends JavaPlugin implements Listener {
         Iterator<Player> iterator = e.iterator();
         while (iterator.hasNext()) {
             NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(iterator.next().getUniqueId());
+            if (nexusPlayer == null) {
+                continue;
+            }
             if (nexusPlayer.getToggleValue("vanish") || nexusPlayer.getToggleValue("incognito")) {
                 iterator.remove();
             }
