@@ -3,7 +3,6 @@ package com.thenexusreborn.nexuscore.cmds;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.nexuscore.NexusCore;
-import com.thenexusreborn.nexuscore.communication.SocketClientHandler;
 import com.thenexusreborn.nexuscore.discord.DiscordVerifyCode;
 import com.thenexusreborn.nexuscore.util.MsgType;
 import org.bukkit.command.Command;
@@ -42,9 +41,6 @@ public class VerifyCommand implements CommandExecutor {
                 try {
                     NexusAPI.getApi().getPrimaryDatabase().save(nexusPlayer);
                     plugin.getDiscordVerifyCodes().remove(discordVerifyCode);
-                    for (SocketClientHandler clientHandler : plugin.getClientHandlers()) {
-                        clientHandler.sendMessage("linksuccess " + discordVerifyCode.getDiscordId() + " " + player.getName());
-                    }
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }

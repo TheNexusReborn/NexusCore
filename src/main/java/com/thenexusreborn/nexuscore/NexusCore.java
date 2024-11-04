@@ -19,8 +19,8 @@ import com.thenexusreborn.nexuscore.api.events.NexusServerSetupEvent;
 import com.thenexusreborn.nexuscore.chat.ChatManager;
 import com.thenexusreborn.nexuscore.chat.PunishmentChannel;
 import com.thenexusreborn.nexuscore.cmds.*;
-import com.thenexusreborn.nexuscore.communication.SocketClientHandler;
 import com.thenexusreborn.nexuscore.discord.DiscordVerifyCode;
+import com.thenexusreborn.nexuscore.discord.NexusBot;
 import com.thenexusreborn.nexuscore.hooks.NexusPapiExpansion;
 import com.thenexusreborn.nexuscore.http.ServerHttpHandler;
 import com.thenexusreborn.nexuscore.player.SpigotPlayerManager;
@@ -65,7 +65,8 @@ public class NexusCore extends JavaPlugin implements Listener {
     private GameLogExporter gameLogExporter;
     
     private ServerSocket serverSocket;
-    private List<SocketClientHandler> clientHandlers = new ArrayList<>();
+    
+    private NexusBot nexusBot;
     
     private List<DiscordVerifyCode> discordVerifyCodes = new ArrayList<>();
 
@@ -118,6 +119,8 @@ public class NexusCore extends JavaPlugin implements Listener {
         chatManager = new ChatManager(this);
         getLogger().info("Registered Chat Manager");
 
+        this.nexusBot = new NexusBot(this);
+        
         this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         getLogger().info("Registered BungeeCore Plugin Channel");
 
@@ -228,27 +231,6 @@ public class NexusCore extends JavaPlugin implements Listener {
                 e.printStackTrace();
             }
         });
-        
-        Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
-            try {
-                serverSocket = new ServerSocket();
-                serverSocket.bind(new InetSocketAddress("127.0.0.1", 8044));
-                while (isEnabled()) {
-                    SocketClientHandler handler = new SocketClientHandler(this, serverSocket.accept());
-                    this.clientHandlers.add(handler);
-                    handler.runTaskAsynchronously(this);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    serverSocket.close();
-                    this.clientHandlers.clear();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
     }
 
     public List<DiscordVerifyCode> getDiscordVerifyCodes() {
@@ -257,10 +239,6 @@ public class NexusCore extends JavaPlugin implements Listener {
 
     public void addNexusPlugin(NexusSpigotPlugin plugin) {
         this.nexusPlugins.add(plugin);
-    }
-
-    public List<SocketClientHandler> getClientHandlers() {
-        return clientHandlers;
     }
 
     @Override
