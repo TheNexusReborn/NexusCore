@@ -1,7 +1,7 @@
 package com.thenexusreborn.nexuscore.cmds;
 
+import com.stardevllc.helper.Pair;
 import com.stardevllc.starcore.color.ColorHandler;
-import com.stardevllc.starlib.misc.Pair;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.PlayerManager;
 import com.thenexusreborn.api.player.Rank;

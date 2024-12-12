@@ -1,6 +1,7 @@
 package com.thenexusreborn.nexuscore.util;
 
 import com.stardevllc.starcore.color.ColorHandler;
+import org.bukkit.command.CommandSender;
 
 public enum MsgType {
     INFO("&6", "&e", "&b"),
@@ -18,6 +19,10 @@ public enum MsgType {
         this.prefixColor = prefixColor;
         this.baseColor = baseColor;
         this.variableColor = variableColor;
+    }
+    
+    public void send(CommandSender sender, String message, Object... replacements) {
+        sender.sendMessage(format(message, replacements));
     }
     
     // %v is the variable placeholder

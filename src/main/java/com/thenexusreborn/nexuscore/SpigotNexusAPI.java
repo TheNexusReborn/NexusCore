@@ -1,6 +1,5 @@
 package com.thenexusreborn.nexuscore;
 
-import com.stardevllc.starcore.task.SpigotTaskFactory;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.PlayerProxy;
 import com.thenexusreborn.api.registry.ToggleRegistry;
@@ -22,7 +21,7 @@ public class SpigotNexusAPI extends NexusAPI {
     private final NexusCore plugin;
     
     public SpigotNexusAPI(NexusCore plugin) {
-        super(Environment.valueOf(plugin.getConfig().getString("environment").toUpperCase()), plugin.getLogger(), new SpigotPlayerManager(plugin), new SpigotTaskFactory(plugin));
+        super(Environment.valueOf(plugin.getConfig().getString("environment").toUpperCase()), plugin.getLogger(), new SpigotPlayerManager(plugin));
         this.plugin = plugin;
         PlayerProxy.setProxyClass(SpigotPlayerProxy.class);
     }

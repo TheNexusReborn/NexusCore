@@ -2,7 +2,7 @@ package com.thenexusreborn.nexuscore.cmds;
 
 import com.stardevllc.starcore.color.ColorHandler;
 import com.stardevllc.starcore.utils.StarThread;
-import com.stardevllc.starlib.math.MemoryUnit;
+import com.stardevllc.units.MemoryUnit;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.util.MCUtils;
 import org.bukkit.command.Command;

@@ -1,11 +1,11 @@
 package com.thenexusreborn.nexuscore;
 
+import com.stardevllc.clock.ClockManager;
+import com.stardevllc.helper.FileHelper;
 import com.stardevllc.starchat.StarChat;
 import com.stardevllc.starchat.channels.ChatChannel;
 import com.stardevllc.starcore.color.ColorHandler;
 import com.stardevllc.starcore.utils.ServerProperties;
-import com.stardevllc.starlib.clock.ClockManager;
-import com.stardevllc.starlib.helper.FileHelper;
 import com.sun.net.httpserver.HttpServer;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.gamearchive.GameLogExporter;
@@ -27,6 +27,7 @@ import com.thenexusreborn.nexuscore.player.SpigotPlayerManager;
 import com.thenexusreborn.nexuscore.server.CoreInstanceServer;
 import com.thenexusreborn.nexuscore.thread.*;
 import com.thenexusreborn.nexuscore.util.MsgType;
+import net.dv8tion.jda.internal.utils.JDALogger;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabExecutor;
@@ -39,9 +40,7 @@ import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -63,11 +62,9 @@ public class NexusCore extends JavaPlugin implements Listener {
     private InstanceServer nexusServer;
     private ClockManager clockManager;
     private GameLogExporter gameLogExporter;
-    
-    private ServerSocket serverSocket;
-    
+
     private NexusBot nexusBot;
-    
+
     private List<DiscordVerifyCode> discordVerifyCodes = new ArrayList<>();
 
     @Override
@@ -119,15 +116,15 @@ public class NexusCore extends JavaPlugin implements Listener {
         chatManager = new ChatManager(this);
         getLogger().info("Registered Chat Manager");
 
+        JDALogger.setFallbackLoggerEnabled(false);
         this.nexusBot = new NexusBot(this);
-        
-        this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-        getLogger().info("Registered BungeeCore Plugin Channel");
 
         Bukkit.getServer().getPluginManager().registerEvents((SpigotPlayerManager) NexusAPI.getApi().getPlayerManager(), this);
         Bukkit.getServer().getPluginManager().registerEvents(chatManager, this);
         Bukkit.getServer().getPluginManager().registerEvents(this, this);
         getLogger().info("Registered Event Listeners");
+        
+        getCommand("nexusbot").setExecutor(new BotCommand(this));
 
         registerCommand("rank", new RankCommand(this));
         getCommand("tag").setExecutor(new TagCommand(this));
@@ -209,7 +206,7 @@ public class NexusCore extends JavaPlugin implements Listener {
             }
             NexusAPI.getApi().getServerRegistry().register(nexusServer);
         }, 1L);
-        
+
         NexusAPI.getApi().setGameLogExporter(new GameLogExporter(new File(getDataFolder(), "export" + File.separator + "games")));
         getServer().getScheduler().runTaskAsynchronously(this, () -> {
             try {
@@ -231,6 +228,8 @@ public class NexusCore extends JavaPlugin implements Listener {
                 e.printStackTrace();
             }
         });
+        
+        this.nexusBot.start();
     }
 
     public List<DiscordVerifyCode> getDiscordVerifyCodes() {
@@ -241,13 +240,17 @@ public class NexusCore extends JavaPlugin implements Listener {
         this.nexusPlugins.add(plugin);
     }
 
+    public NexusBot getNexusBot() {
+        return nexusBot;
+    }
+
     @Override
     public void onDisable() {
         NexusAPI.getApi().getPlayerManager().saveData();
 
-        try {
-            this.serverSocket.close();
-        } catch (IOException e) {}
+        if (this.nexusBot != null) {
+            this.nexusBot.shutdown();
+        }
 
         String levelName = ServerProperties.getLevelName();
         File worldFolder = new File("./", levelName);
@@ -256,7 +259,7 @@ public class NexusCore extends JavaPlugin implements Listener {
             FileHelper.deleteDirectory(playerdataFolder.toPath());
         }
     }
-    
+
     @EventHandler
     public void onServerPing(ServerListPingEvent e) {
         e.setMotd(ColorHandler.getInstance().color("            &5&lTHE NEXUS REBORN &e&lALPHA\n              &7Minecraft Version 1.8"));

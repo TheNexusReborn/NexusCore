@@ -1,8 +1,8 @@
 package com.thenexusreborn.nexuscore.cmds;
 
+import com.stardevllc.helper.Pair;
 import com.stardevllc.starcore.color.ColorHandler;
-import com.stardevllc.starlib.misc.Pair;
-import com.stardevllc.starlib.time.TimeParser;
+import com.stardevllc.time.TimeParser;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.PlayerManager;
 import com.thenexusreborn.api.player.PlayerRanks;
@@ -11,6 +11,7 @@ import com.thenexusreborn.api.util.Constants;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.util.MCUtils;
 import com.thenexusreborn.nexuscore.util.MsgType;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -140,7 +141,7 @@ public class RankCommand implements TabExecutor {
             ranks = "";
         }
 
-        NexusAPI.getApi().getScheduler().runTaskAsynchronously(() -> {
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             try {
                 NexusAPI.getApi().getPrimaryDatabase().execute("update players set `ranks`='" + ranks + "' where `uniqueId`='" + targetUniqueID + "';");
             } catch (SQLException e) {

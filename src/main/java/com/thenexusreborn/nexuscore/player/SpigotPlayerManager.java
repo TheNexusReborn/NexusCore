@@ -1,10 +1,10 @@
 package com.thenexusreborn.nexuscore.player;
 
+import com.stardevllc.clock.clocks.Stopwatch;
+import com.stardevllc.helper.StringHelper;
 import com.stardevllc.starchat.context.ChatContext;
 import com.stardevllc.starcore.color.ColorHandler;
-import com.stardevllc.starlib.clock.clocks.Stopwatch;
-import com.stardevllc.starlib.helper.StringHelper;
-import com.stardevllc.starlib.time.TimeUnit;
+import com.stardevllc.time.TimeUnit;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.gamearchive.GameInfo;
 import com.thenexusreborn.api.player.NexusPlayer;
@@ -74,13 +74,13 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
             }
 
             if (!getPlayers().containsKey(player.getUniqueId())) {
-                NexusAPI.getApi().getScheduler().runTaskAsynchronously(() -> {
+                Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
                     NexusPlayer nexusPlayer = null;
                     if (!getUuidNameMap().containsKey(player.getUniqueId())) {
                         nexusPlayer = createPlayerData(player.getUniqueId(), player.getName());
                     } else {
                         try {
-                            nexusPlayer = NexusAPI.getApi().getPrimaryDatabase().get(NexusPlayer.class, "uniqueId", player.getUniqueId()).get(0);
+                            nexusPlayer = NexusAPI.getApi().getPrimaryDatabase().get(NexusPlayer.class, "uniqueId", player.getUniqueId()).getFirst();
                         } catch (SQLException ex) {
                             ex.printStackTrace();
                         }
@@ -206,7 +206,7 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
         e.setQuitMessage(null);
 
         if (NexusAPI.NETWORK_TYPE == NetworkType.SINGLE) {
-            NexusAPI.getApi().getScheduler().runTaskAsynchronously(() -> {
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
                 Session session = nexusPlayer.getSession();
                 session.end();
                 nexusPlayer.setLastLogout(session.getEnd());
