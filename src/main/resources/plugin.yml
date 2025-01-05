@@ -48,3 +48,4 @@ commands:
     aliases: [bal]
   servers:
   verify:
+  nexusbot:
