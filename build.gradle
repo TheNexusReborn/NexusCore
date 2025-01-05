@@ -29,17 +29,14 @@ dependencies {
     implementation('net.dv8tion:JDA:5.2.0') {
         exclude module: 'opus-java'
     }
+    api('com.mysql:mysql-connector-j:8.1.0') {
+        exclude group: 'com.google.protobuf', module: 'protobuf-java'
+    }
     api 'org.slf4j:slf4j-nop:2.0.16'
     compileOnly 'com.github.StarDevelopmentLLC:StarCore:0.1.7'
     compileOnly 'com.github.StarDevelopmentLLC:StarChat:0.1.2'
     compileOnly 'me.clip:placeholderapi:2.11.5'
     compileOnly 'org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT'
-}
-
-shadowJar {
-    dependencies {
-        exclude(dependency('com.github.StarDevelopmentLLC:StarLib:1.0.0-alpha.25'))
-    }
 }
 
 group = 'com.thenexusreborn'
