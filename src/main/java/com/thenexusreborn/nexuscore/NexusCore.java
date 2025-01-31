@@ -6,6 +6,7 @@ import com.stardevllc.helper.FileHelper;
 import com.stardevllc.starchat.StarChat;
 import com.stardevllc.starchat.channels.ChatChannel;
 import com.stardevllc.starcore.utils.ServerProperties;
+import com.stardevllc.starui.GuiManager;
 import com.sun.net.httpserver.HttpServer;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.gamearchive.GameLogExporter;
@@ -61,6 +62,7 @@ public class NexusCore extends JavaPlugin implements Listener {
 
     private InstanceServer nexusServer;
     private ClockManager clockManager;
+    private GuiManager guiManager;
     private GameLogExporter gameLogExporter;
 
     private NexusBot nexusBot;
@@ -79,7 +81,12 @@ public class NexusCore extends JavaPlugin implements Listener {
             return;
         }
 
-        this.clockManager = Bukkit.getServicesManager().getRegistration(ClockManager.class).getProvider();
+        this.clockManager = new ClockManager(getLogger(), 50);
+        Bukkit.getServicesManager().register(ClockManager.class, this.clockManager, this, ServicePriority.High);
+
+        guiManager = new GuiManager(this);
+        guiManager.setup();
+        Bukkit.getServicesManager().register(GuiManager.class, this.guiManager, this, ServicePriority.High);
 
         if (pluginManager.getPlugin("StarChat") == null) {
             getLogger().severe("StarChat not found, disabling NexusCore.");
@@ -115,7 +122,7 @@ public class NexusCore extends JavaPlugin implements Listener {
 
         chatManager = new ChatManager(this);
         getLogger().info("Registered Chat Manager");
-
+        
         JDALogger.setFallbackLoggerEnabled(false);
         this.nexusBot = new NexusBot(this);
 
