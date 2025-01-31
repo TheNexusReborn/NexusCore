@@ -1,8 +1,8 @@
 package com.thenexusreborn.nexuscore.chat;
 
+import com.stardevllc.colors.StarColors;
 import com.stardevllc.starchat.channels.ChatChannel;
 import com.stardevllc.starchat.context.ChatContext;
-import com.stardevllc.starcore.color.ColorHandler;
 import com.thenexusreborn.api.punishment.Punishment;
 import com.thenexusreborn.api.punishment.PunishmentType;
 import com.thenexusreborn.nexuscore.NexusCore;
@@ -40,7 +40,7 @@ public class PunishmentChannel extends ChatChannel {
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (player.hasPermission(this.viewPermission.get())) {
-                player.sendMessage(ColorHandler.getInstance().color(message));
+                player.sendMessage(StarColors.color(message));
             }
         }
     }
@@ -53,7 +53,7 @@ public class PunishmentChannel extends ChatChannel {
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (player.hasPermission(this.viewPermission.get())) {
-                player.sendMessage(ColorHandler.getInstance().color(message));
+                player.sendMessage(StarColors.color(message));
             }
         }
     }

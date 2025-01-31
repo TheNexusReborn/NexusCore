@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.cmds;
 
-import com.stardevllc.starcore.color.ColorHandler;
+import com.stardevllc.colors.StarColors;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.NexusPlayer;
 import org.bukkit.command.Command;
@@ -13,12 +13,12 @@ public class ReplyCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (!(sender instanceof Player senderPlayer)) {
-            sender.sendMessage(ColorHandler.getInstance().color("&cOnly players may use that command."));
+            sender.sendMessage(StarColors.color("&cOnly players may use that command."));
             return true;
         }
     
         if (!(args.length > 0)) {
-            sender.sendMessage(ColorHandler.getInstance().color("&cUsage: /reply <text>"));
+            sender.sendMessage(StarColors.color("&cUsage: /reply <text>"));
             return true;
         }
     

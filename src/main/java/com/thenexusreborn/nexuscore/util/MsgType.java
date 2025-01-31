@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.util;
 
-import com.stardevllc.starcore.color.ColorHandler;
+import com.stardevllc.colors.StarColors;
 import org.bukkit.command.CommandSender;
 
 public enum MsgType {
@@ -43,7 +43,7 @@ public enum MsgType {
             }
         }
 
-        return ColorHandler.getInstance().color(sb.toString());
+        return StarColors.color(sb.toString());
     }
     
     public String getPrefixColor() {

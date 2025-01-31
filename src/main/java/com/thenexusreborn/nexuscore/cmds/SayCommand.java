@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.cmds;
 
-import com.stardevllc.starcore.color.ColorHandler;
+import com.stardevllc.colors.StarColors;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.util.MCUtils;
@@ -21,7 +21,7 @@ public class SayCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         Rank senderRank = MCUtils.getSenderRank(plugin, sender);
         if (senderRank.ordinal() > Rank.HELPER.ordinal()) {
-            sender.sendMessage(ColorHandler.getInstance().color("&cYou do not have permission to use that command."));
+            sender.sendMessage(StarColors.color("&cYou do not have permission to use that command."));
             return true;
         }
     
@@ -30,7 +30,7 @@ public class SayCommand implements CommandExecutor {
             sb.append(arg).append(" ");
         }
     
-        Bukkit.broadcastMessage(ColorHandler.getInstance().color("&8[&f&l&oSAY&8] " + senderRank.getColor() + sender.getName() + "&8: &b" + sb));
+        Bukkit.broadcastMessage(StarColors.color("&8[&f&l&oSAY&8] " + senderRank.getColor() + sender.getName() + "&8: &b" + sb));
         return true;
     }
 }

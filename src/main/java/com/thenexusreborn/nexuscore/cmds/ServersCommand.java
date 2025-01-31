@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.cmds;
 
-import com.stardevllc.starcore.color.ColorHandler;
+import com.stardevllc.colors.StarColors;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.api.server.InstanceServer;
@@ -28,7 +28,7 @@ public class ServersCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         Rank senderRank = MCUtils.getSenderRank(plugin, sender);
         if (senderRank.ordinal() > Rank.ADMIN.ordinal()) {
-            sender.sendMessage(ColorHandler.getInstance().color("&cYou do not have permission to use that command."));
+            sender.sendMessage(StarColors.color("&cYou do not have permission to use that command."));
             return true;
         }
         
@@ -82,7 +82,7 @@ public class ServersCommand implements CommandExecutor {
                 // /server <name> state
                 if (args[1].equalsIgnoreCase("state")) {
                     sender.sendMessage(MsgType.INFO.format("State for %v", name));
-                    sender.sendMessage(ColorHandler.getInstance().color(MsgType.INFO.getVariableColor() + server.getState()));
+                    sender.sendMessage(StarColors.color(MsgType.INFO.getVariableColor() + server.getState()));
                 } else if (args[1].equalsIgnoreCase("players")) {
                     Set<String> serverPlayers = new HashSet<>();
                     for (UUID uuid : server.getPlayers()) {
@@ -97,7 +97,7 @@ public class ServersCommand implements CommandExecutor {
                     }
 
                     sender.sendMessage(MsgType.INFO.format("Players on %v", name));
-                    sender.sendMessage(ColorHandler.getInstance().color(MsgType.INFO.getVariableColor() + serverPlayers));
+                    sender.sendMessage(StarColors.color(MsgType.INFO.getVariableColor() + serverPlayers));
                 }
             }
         }

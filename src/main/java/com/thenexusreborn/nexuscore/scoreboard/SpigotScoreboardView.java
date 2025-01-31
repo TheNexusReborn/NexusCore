@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.scoreboard;
 
-import com.stardevllc.starcore.color.ColorHandler;
+import com.stardevllc.colors.StarColors;
 import com.thenexusreborn.api.scoreboard.NexusScoreboard;
 import com.thenexusreborn.api.scoreboard.ScoreboardView;
 import com.thenexusreborn.api.scoreboard.TeamBuilder;
@@ -28,7 +28,7 @@ public abstract class SpigotScoreboardView extends ScoreboardView {
             team.setValueUpdater(teamBuilder.getValueUpdater());
         }
 
-        addEntry(objective, team, ColorHandler.getInstance().color(teamBuilder.getEntry()), teamBuilder.getScore());
+        addEntry(objective, team, StarColors.color(teamBuilder.getEntry()), teamBuilder.getScore());
         this.teams.add(team);
         return team;
     }

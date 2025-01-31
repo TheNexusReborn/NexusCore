@@ -1,8 +1,8 @@
 package com.thenexusreborn.nexuscore.cmds;
 
+import com.stardevllc.colors.StarColors;
 import com.stardevllc.helper.Pair;
 import com.stardevllc.helper.StringHelper;
-import com.stardevllc.starcore.color.ColorHandler;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.IPEntry;
 import com.thenexusreborn.api.player.PlayerManager;
@@ -30,19 +30,19 @@ public class AltsCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         Rank senderRank = MCUtils.getSenderRank(plugin, sender);
         if (senderRank.ordinal() > Rank.HELPER.ordinal()) {
-            sender.sendMessage(ColorHandler.getInstance().color(MsgType.WARN + "You do not have permission to use that command."));
+            sender.sendMessage(StarColors.color(MsgType.WARN + "You do not have permission to use that command."));
             return true;
         }
     
         if (!(args.length > 0)) {
-            sender.sendMessage(ColorHandler.getInstance().color(MsgType.WARN + "Usage: /" + label + " <target>"));
+            sender.sendMessage(StarColors.color(MsgType.WARN + "Usage: /" + label + " <target>"));
             return true;
         }
 
         PlayerManager playerManager = NexusAPI.getApi().getPlayerManager();
         Pair<UUID, String> playerInfo = playerManager.getPlayerFromIdentifier(args[0]);
         if (playerInfo == null) {
-            sender.sendMessage(ColorHandler.getInstance().color(MsgType.WARN + "Could not find a player with that information."));
+            sender.sendMessage(StarColors.color(MsgType.WARN + "Could not find a player with that information."));
             return true;
         }
     
@@ -64,8 +64,8 @@ public class AltsCommand implements CommandExecutor {
         }
         
         String altNameList = StringHelper.join(altNames, ", ");
-        sender.sendMessage(ColorHandler.getInstance().color(MsgType.INFO + playerInfo.value() + " has the following alt accounts..."));
-        sender.sendMessage(ColorHandler.getInstance().color("&6&l> &b" + altNameList));
+        sender.sendMessage(StarColors.color(MsgType.INFO + playerInfo.value() + " has the following alt accounts..."));
+        sender.sendMessage(StarColors.color("&6&l> &b" + altNameList));
         return true;
     }
 }

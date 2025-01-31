@@ -1,7 +1,7 @@
 package com.thenexusreborn.nexuscore.cmds;
 
 import com.stardevllc.helper.Pair;
-import com.stardevllc.starcore.color.ColorHandler;
+import com.stardevllc.colors.StarColors;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.PlayerManager;
 import com.thenexusreborn.api.player.Rank;
@@ -44,7 +44,7 @@ public class PunishRemoveCommands implements CommandExecutor {
         }
     
         if (type == null && !all) {
-            sender.sendMessage(ColorHandler.getInstance().color(MsgType.WARN + "Invalid punishment type."));
+            sender.sendMessage(StarColors.color(MsgType.WARN + "Invalid punishment type."));
             return true;
         }
 
@@ -52,19 +52,19 @@ public class PunishRemoveCommands implements CommandExecutor {
 
         Rank actorRank = MCUtils.getSenderRank(plugin, sender);
         if (actorRank.ordinal() > minRank.ordinal()) {
-            sender.sendMessage(ColorHandler.getInstance().color(MsgType.WARN + "You do not have permission to use that punishment type."));
+            sender.sendMessage(StarColors.color(MsgType.WARN + "You do not have permission to use that punishment type."));
             return true;
         }
     
         if (!(args.length > 1)) {
-            sender.sendMessage(ColorHandler.getInstance().color(MsgType.WARN + "Usage: /" + label + " <target> <reason>"));
+            sender.sendMessage(StarColors.color(MsgType.WARN + "Usage: /" + label + " <target> <reason>"));
             return true;
         }
 
         PlayerManager playerManager = NexusAPI.getApi().getPlayerManager();
         Pair<UUID, String> playerInfo = playerManager.getPlayerFromIdentifier(args[0]);
         if (playerInfo == null) {
-            sender.sendMessage(ColorHandler.getInstance().color(MsgType.WARN + "Could not find a player with that identifier."));
+            sender.sendMessage(StarColors.color(MsgType.WARN + "Could not find a player with that identifier."));
             return true;
         }
 
@@ -72,7 +72,7 @@ public class PunishRemoveCommands implements CommandExecutor {
     
         List<Punishment> punishments = NexusAPI.getApi().getPunishmentManager().getPunishmentsByTarget(targetUniqueID);
         if (punishments.isEmpty()) {
-            sender.sendMessage(ColorHandler.getInstance().color(MsgType.WARN + "That player does not have any punishments"));
+            sender.sendMessage(StarColors.color(MsgType.WARN + "That player does not have any punishments"));
             return true;
         }
         
@@ -86,7 +86,7 @@ public class PunishRemoveCommands implements CommandExecutor {
         }
         
         if (activePunishments.isEmpty()) {
-            sender.sendMessage(ColorHandler.getInstance().color(MsgType.WARN + "That player does not have any active punishmentss."));
+            sender.sendMessage(StarColors.color(MsgType.WARN + "That player does not have any active punishmentss."));
             return true;
         }
         

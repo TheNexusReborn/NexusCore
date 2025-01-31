@@ -1,10 +1,10 @@
 package com.thenexusreborn.nexuscore;
 
 import com.stardevllc.clock.ClockManager;
+import com.stardevllc.colors.StarColors;
 import com.stardevllc.helper.FileHelper;
 import com.stardevllc.starchat.StarChat;
 import com.stardevllc.starchat.channels.ChatChannel;
-import com.stardevllc.starcore.color.ColorHandler;
 import com.stardevllc.starcore.utils.ServerProperties;
 import com.sun.net.httpserver.HttpServer;
 import com.thenexusreborn.api.NexusAPI;
@@ -136,12 +136,12 @@ public class NexusCore extends JavaPlugin implements Listener {
         getCommand("balance").setExecutor(new BalanceCommand(this));
         getCommand("servers").setExecutor(new ServersCommand(this));
         getCommand("discord").setExecutor((sender, cmd, label, args) -> {
-            sender.sendMessage(ColorHandler.getInstance().color(MsgType.INFO + "Discord: &bhttps://discord.gg/bawZKSWEpT"));
+            sender.sendMessage(StarColors.color(MsgType.INFO + "Discord: &bhttps://discord.gg/bawZKSWEpT"));
             return true;
         });
 
         getCommand("shop").setExecutor((sender, cmd, label, args) -> {
-            sender.sendMessage(ColorHandler.getInstance().color(MsgType.INFO + "Shop: &bhttps://nexusreborn.tebex.io/"));
+            sender.sendMessage(StarColors.color(MsgType.INFO + "Shop: &bhttps://nexusreborn.tebex.io/"));
             return true;
         });
 
@@ -262,7 +262,7 @@ public class NexusCore extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onServerPing(ServerListPingEvent e) {
-        e.setMotd(ColorHandler.getInstance().color("            &5&lTHE NEXUS REBORN &e&lALPHA\n              &7Minecraft Version 1.8"));
+        e.setMotd(StarColors.color("            &5&lTHE NEXUS REBORN &e&lALPHA\n              &7Minecraft Version 1.8"));
 
         Iterator<Player> iterator = e.iterator();
         while (iterator.hasNext()) {

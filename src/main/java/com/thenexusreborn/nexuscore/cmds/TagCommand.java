@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.cmds;
 
-import com.stardevllc.starcore.color.ColorHandler;
+import com.stardevllc.colors.StarColors;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Rank;
@@ -30,19 +30,19 @@ public class TagCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (!(args.length > 0)) {
-            sender.sendMessage(ColorHandler.getInstance().color("&cUsage: /tag <list|set|reset> [tagname]"));
+            sender.sendMessage(StarColors.color("&cUsage: /tag <list|set|reset> [tagname]"));
             return true;
         }
 
         if (args[0].equalsIgnoreCase("unlock") || args[0].equalsIgnoreCase("remove")) {
             Rank senderRank = MCUtils.getSenderRank(plugin, sender);
             if (senderRank.ordinal() > Rank.ADMIN.ordinal()) {
-                sender.sendMessage(ColorHandler.getInstance().color("&cYou do not have permission to use that command."));
+                sender.sendMessage(StarColors.color("&cYou do not have permission to use that command."));
                 return true;
             }
 
             if (!(args.length > 2)) {
-                sender.sendMessage(ColorHandler.getInstance().color("&cUsage: /tag " + args[0] + " <player> <tagName>"));
+                sender.sendMessage(StarColors.color("&cUsage: /tag " + args[0] + " <player> <tagName>"));
                 return true;
             }
 
@@ -54,7 +54,7 @@ public class TagCommand implements CommandExecutor {
 
             UUID uniqueId = NexusAPI.getApi().getPlayerManager().getUUIDFromName(args[1]);
             if (uniqueId == null) {
-                sender.sendMessage(ColorHandler.getInstance().color(MsgType.WARN + "That player has not yet joined the server."));
+                sender.sendMessage(StarColors.color(MsgType.WARN + "That player has not yet joined the server."));
                 return true;
             }
 
@@ -63,7 +63,7 @@ public class TagCommand implements CommandExecutor {
                 try {
                     tags = NexusAPI.getApi().getPrimaryDatabase().get(Tag.class, "uuid", uniqueId.toString());
                 } catch (SQLException e) {
-                    sender.sendMessage(ColorHandler.getInstance().color(MsgType.ERROR + "There was a database error while getting the list of tags."));
+                    sender.sendMessage(StarColors.color(MsgType.ERROR + "There was a database error while getting the list of tags."));
                     return;
                 }
 
@@ -80,7 +80,7 @@ public class TagCommand implements CommandExecutor {
                 String cmdAction, verb;
                 if (args[0].equalsIgnoreCase("unlock")) {
                     if (tag != null) {
-                        sender.sendMessage(ColorHandler.getInstance().color(MsgType.WARN + "That player already has that tag unlocked."));
+                        sender.sendMessage(StarColors.color(MsgType.WARN + "That player already has that tag unlocked."));
                         return;
                     }
 
@@ -105,19 +105,19 @@ public class TagCommand implements CommandExecutor {
                 }
 
                 String playerName = NexusAPI.getApi().getPlayerManager().getNameFromUUID(uniqueId);
-                sender.sendMessage(ColorHandler.getInstance().color("&eYou " + cmdAction + " the tag " + tag.getDisplayName() + " &e" + verb + " the player &b" + playerName));
+                sender.sendMessage(StarColors.color("&eYou " + cmdAction + " the tag " + tag.getDisplayName() + " &e" + verb + " the player &b" + playerName));
             });
             return true;
         }
 
         if (!(sender instanceof Player player)) {
-            sender.sendMessage(ColorHandler.getInstance().color("&cOnly players can use that command."));
+            sender.sendMessage(StarColors.color("&cOnly players can use that command."));
             return true;
         }
 
         NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(player.getUniqueId());
         if (nexusPlayer == null) {
-            player.sendMessage(ColorHandler.getInstance().color("&cPlease wait for your data to load before using this command."));
+            player.sendMessage(StarColors.color("&cPlease wait for your data to load before using this command."));
             return true;
         }
 
