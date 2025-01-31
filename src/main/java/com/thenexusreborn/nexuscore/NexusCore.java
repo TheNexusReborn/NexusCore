@@ -82,6 +82,7 @@ public class NexusCore extends JavaPlugin implements Listener {
         }
 
         this.clockManager = new ClockManager(getLogger(), 50);
+        getServer().getScheduler().runTaskTimer(this, this.clockManager.getRunnable(), 1L, 1L);
         Bukkit.getServicesManager().register(ClockManager.class, this.clockManager, this, ServicePriority.High);
 
         guiManager = new GuiManager(this);
