@@ -26,7 +26,7 @@ repositories {
 dependencies {
     api 'com.thenexusreborn:NexusAPI:1.15-ALPHA'
     api 'com.github.StarDevelopmentLLC:units:0.1.0'
-    api 'com.github.StarDevelopmentLLC:StarUI:0.1.0'
+    api 'com.github.StarDevelopmentLLC:StarUI:0.1.1'
     api 'com.github.StarDevelopmentLLC:itembuilder:0.1.1'
     implementation('net.dv8tion:JDA:5.2.0') {
         exclude module: 'opus-java'
@@ -36,13 +36,13 @@ dependencies {
     }
     api 'org.slf4j:slf4j-nop:2.0.16'
     compileOnly 'com.github.StarDevelopmentLLC:StarCore:0.1.10'
-    compileOnly 'com.github.StarDevelopmentLLC:StarChat:0.1.6'
+    compileOnly 'com.github.StarDevelopmentLLC:StarChat:0.1.7'
     compileOnly 'me.clip:placeholderapi:2.11.5'
     compileOnly 'org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT'
 }
 
 group = 'com.thenexusreborn'
-version = '1.14-ALPHA'
+version = '1.14.1-ALPHA'
 description = 'NexusCore'
 
 processResources {
