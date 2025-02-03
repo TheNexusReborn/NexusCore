@@ -45,7 +45,13 @@ public class AltsCommand implements CommandExecutor {
             sender.sendMessage(StarColors.color(MsgType.WARN + "Could not find a player with that information."));
             return true;
         }
-    
+        
+        Rank playerRank = playerManager.getPlayerRank(playerInfo.key());
+        if (playerRank.ordinal() < senderRank.ordinal()) {
+            sender.sendMessage(MsgType.WARN.format("You do not have permission to view %v's alt ccounts", playerInfo.key()));
+            return true;
+        }
+
         Set<String> ips = new HashSet<>();
         for (IPEntry ipEntry : playerManager.getIpHistory()) {
             if (ipEntry.getUuid().equals(playerInfo.key())) {
