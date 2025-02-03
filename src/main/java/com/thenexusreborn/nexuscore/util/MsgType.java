@@ -40,6 +40,8 @@ public enum MsgType {
                 //Should be now %v
                 sb.append(getVariableColor()).append(replacements[replacementIndex++]).append(getBaseColor());
                 i++;
+            } else if (msgChars[i + 1] == 'b') {
+                sb.append(getBaseColor());
             }
         }
 
