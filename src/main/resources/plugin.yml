@@ -48,4 +48,5 @@ commands:
     aliases: [bal]
   servers:
   verify:
-  nexusbot:
+  nexusbot: 
+  tagadmin:

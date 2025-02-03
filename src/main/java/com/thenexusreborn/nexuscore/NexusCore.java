@@ -21,6 +21,8 @@ import com.thenexusreborn.nexuscore.chat.ChatManager;
 import com.thenexusreborn.nexuscore.chat.PunishmentChannel;
 import com.thenexusreborn.nexuscore.cmds.*;
 import com.thenexusreborn.nexuscore.cmds.rank.RankCommand;
+import com.thenexusreborn.nexuscore.cmds.tag.TagCommand;
+import com.thenexusreborn.nexuscore.cmds.tag.admin.TagAdminCommand;
 import com.thenexusreborn.nexuscore.discord.DiscordVerifyCode;
 import com.thenexusreborn.nexuscore.discord.NexusBot;
 import com.thenexusreborn.nexuscore.hooks.NexusPapiExpansion;
@@ -136,7 +138,8 @@ public class NexusCore extends JavaPlugin implements Listener {
         getCommand("nexusbot").setExecutor(new BotCommand(this));
 
         new RankCommand(this);
-        getCommand("tag").setExecutor(new TagCommand(this));
+        new TagCommand(this);
+        new TagAdminCommand(this);
         new SayCommand(this);
         new MessageCommand(this);
         new ReplyCommand(this);
