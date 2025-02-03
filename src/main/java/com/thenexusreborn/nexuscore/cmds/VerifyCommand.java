@@ -1,38 +1,37 @@
 package com.thenexusreborn.nexuscore.cmds;
 
+import com.stardevllc.cmdflags.FlagResult;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.NexusPlayer;
+import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.nexuscore.NexusCore;
+import com.thenexusreborn.nexuscore.api.command.NexusCommand;
 import com.thenexusreborn.nexuscore.discord.DiscordVerifyCode;
 import com.thenexusreborn.nexuscore.util.MsgType;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class VerifyCommand implements CommandExecutor {
-    
-    private NexusCore plugin;
+public class VerifyCommand extends NexusCommand<NexusCore> {
 
     public VerifyCommand(NexusCore plugin) {
-        this.plugin = plugin;
+        super(plugin, "verify", "", Rank.MEMBER);
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    public boolean execute(CommandSender sender, Rank senderRank, String label, String[] args, FlagResult flagResults) {
         if (!(sender instanceof Player player)) {
             sender.sendMessage(MsgType.WARN.format("Only players can use that command."));
             return true;
         }
-        
+
         if (!(args.length > 0)) {
             player.sendMessage(MsgType.WARN.format("Usage: /verify <link code>"));
             return true;
         }
-        
+
         String linkCode = args[0];
         for (DiscordVerifyCode discordVerifyCode : new ArrayList<>(plugin.getDiscordVerifyCodes())) {
             if (discordVerifyCode.getCode().equals(linkCode)) {
@@ -46,7 +45,7 @@ public class VerifyCommand implements CommandExecutor {
                 }
             }
         }
-        
+
         return true;
     }
 }
