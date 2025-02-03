@@ -5,10 +5,8 @@ import com.stardevllc.cmdflags.FlagResult;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.nexuscore.util.MCUtils;
 import com.thenexusreborn.nexuscore.util.MsgType;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.PluginCommand;
-import org.bukkit.command.TabExecutor;
+import org.bukkit.command.*;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
@@ -22,6 +20,8 @@ public class NexusCommand<T extends JavaPlugin> implements ICommand<T>, TabExecu
     protected String name;
     protected String[] aliases;
     protected String description;
+    protected boolean playerOnly = false;
+    protected boolean consoleOnly = false;
     
     protected Rank minRank;
     
@@ -51,6 +51,16 @@ public class NexusCommand<T extends JavaPlugin> implements ICommand<T>, TabExecu
     
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        if (this.playerOnly && !(sender instanceof Player)) {
+            sender.sendMessage(MsgType.ERROR.format("Only players can use that command."));
+            return true;
+        }
+        
+        if (this.consoleOnly && !(sender instanceof ConsoleCommandSender)) {
+            sender.sendMessage(MsgType.ERROR.format("Only console can use that command."));
+            return true;
+        }
+        
         Rank senderRank = MCUtils.getSenderRank(sender);
         if (senderRank.ordinal() > minRank.ordinal()) {
             sender.sendMessage(MsgType.WARN.format("You must have the rank " + this.minRank.getColor() + "&l" + this.minRank.name() + " %bto use that command."));
@@ -89,13 +99,15 @@ public class NexusCommand<T extends JavaPlugin> implements ICommand<T>, TabExecu
                 sender.sendMessage(MsgType.WARN.format("Unable to find subcommand matching %v.", args[0]));
                 return true;
             }
+            
+            String cmdLabel = args[0];
 
             String[] newArgs = new String[args.length - 1];
             System.arraycopy(args, 1, newArgs, 0, args.length - 1);
 
             args = newArgs;
             
-            subCommand.onCommand(sender, senderRank, args[0], args, flagResults);
+            subCommand.onCommand(sender, senderRank, cmdLabel, args, flagResults);
         }
         
         return true;
