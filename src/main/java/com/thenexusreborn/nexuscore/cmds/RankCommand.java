@@ -34,7 +34,7 @@ public class RankCommand implements TabExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        Rank senderRank = MCUtils.getSenderRank(plugin, sender);
+        Rank senderRank = MCUtils.getSenderRank(sender);
         if (senderRank.ordinal() > Rank.ADMIN.ordinal()) {
             sender.sendMessage(StarColors.color("&cYou do not have permission to use that command."));
             return true;

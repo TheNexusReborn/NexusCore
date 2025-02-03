@@ -23,7 +23,7 @@ public class PunishmentHistoryCmds implements CommandExecutor {
     
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        Rank senderRank = MCUtils.getSenderRank(plugin, sender);
+        Rank senderRank = MCUtils.getSenderRank(sender);
         if (senderRank.ordinal() > Rank.HELPER.ordinal()) {
             sender.sendMessage(StarColors.color(MsgType.WARN + "You do not have permission to use that command."));
             return true;

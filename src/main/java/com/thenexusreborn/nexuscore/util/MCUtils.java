@@ -4,7 +4,6 @@ import com.stardevllc.colors.StarColors;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.api.util.Constants;
-import com.thenexusreborn.nexuscore.NexusCore;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -44,9 +43,9 @@ public final class MCUtils {
         return -1;
     }
     
-    public static Rank getSenderRank(NexusCore plugin, CommandSender sender) {
+    public static Rank getSenderRank(CommandSender sender) {
         if (sender instanceof ConsoleCommandSender) {
-            return Rank.ADMIN;
+            return Rank.CONSOLE;
         } else if (sender instanceof Player player) {
             return NexusAPI.getApi().getPlayerManager().getNexusPlayer(player.getUniqueId()).getRank();
         }

@@ -18,7 +18,7 @@ public class BotCommand implements CommandExecutor {
     
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        Rank senderRank = MCUtils.getSenderRank(plugin, sender);
+        Rank senderRank = MCUtils.getSenderRank(sender);
         
         if (senderRank.ordinal() > Rank.ADMIN.ordinal()) {
             MsgType.WARN.send(sender, "Only Admins or higher can use that command.");

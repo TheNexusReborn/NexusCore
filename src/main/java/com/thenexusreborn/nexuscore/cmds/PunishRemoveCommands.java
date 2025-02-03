@@ -50,7 +50,7 @@ public class PunishRemoveCommands implements CommandExecutor {
 
         Rank minRank = type.getMinRankPermanent();
 
-        Rank actorRank = MCUtils.getSenderRank(plugin, sender);
+        Rank actorRank = MCUtils.getSenderRank(sender);
         if (actorRank.ordinal() > minRank.ordinal()) {
             sender.sendMessage(StarColors.color(MsgType.WARN + "You do not have permission to use that punishment type."));
             return true;
