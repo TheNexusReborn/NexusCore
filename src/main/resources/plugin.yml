@@ -10,7 +10,7 @@ commands:
     description: Set player ranks
   tag:
   message:
-    aliases: [msg, whisper, tell]
+    aliases: [msg, whisper, tell, w]
   reply:
     aliases: [r]
   say:
