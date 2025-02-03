@@ -1,35 +1,27 @@
 package com.thenexusreborn.nexuscore.cmds;
 
+import com.stardevllc.cmdflags.FlagResult;
 import com.stardevllc.colors.StarColors;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.nexuscore.NexusCore;
-import com.thenexusreborn.nexuscore.util.MCUtils;
+import com.thenexusreborn.nexuscore.api.command.NexusCommand;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-public class SayCommand implements CommandExecutor {
-    
-    private final NexusCore plugin;
+public class SayCommand extends NexusCommand<NexusCore> {
     
     public SayCommand(NexusCore plugin) {
-        this.plugin = plugin;
+        super(plugin, "say", "", Rank.HELPER);
     }
-    
+
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        Rank senderRank = MCUtils.getSenderRank(sender);
-        if (senderRank.ordinal() > Rank.HELPER.ordinal()) {
-            sender.sendMessage(StarColors.color("&cYou do not have permission to use that command."));
-            return true;
-        }
-    
+    public boolean execute(CommandSender sender, Rank senderRank, String label, String[] args, FlagResult flagResults) {
         StringBuilder sb = new StringBuilder();
         for (String arg : args) {
             sb.append(arg).append(" ");
         }
-    
+
+        //TODO Make this a channel that is per server, Broadcast will be global
         Bukkit.broadcastMessage(StarColors.color("&8[&f&l&oSAY&8] " + senderRank.getColor() + sender.getName() + "&8: &b" + sb));
         return true;
     }

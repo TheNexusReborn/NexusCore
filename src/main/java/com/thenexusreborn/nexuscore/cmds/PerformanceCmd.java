@@ -1,23 +1,27 @@
 package com.thenexusreborn.nexuscore.cmds;
 
+import com.stardevllc.cmdflags.FlagResult;
+import com.stardevllc.cmdflags.type.PresenceFlag;
 import com.stardevllc.colors.StarColors;
 import com.stardevllc.starcore.utils.StarThread;
 import com.stardevllc.units.MemoryUnit;
+import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.nexuscore.NexusCore;
+import com.thenexusreborn.nexuscore.api.command.NexusCommand;
 import com.thenexusreborn.nexuscore.util.MCUtils;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-public class PerformanceCmd implements CommandExecutor {
+public class PerformanceCmd extends NexusCommand<NexusCore> {
 
-    private final NexusCore plugin;
-
+    public static final PresenceFlag THREADS_FLAG = new PresenceFlag("t", "Threads");
+    
     public PerformanceCmd(NexusCore plugin) {
-        this.plugin = plugin;
+        super(plugin, "tps", "", Rank.MEMBER, "performance", "memory", "mem", "perf");
+        cmdFlags.addFlag(THREADS_FLAG);
     }
 
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    @Override
+    public boolean execute(CommandSender sender, Rank senderRank, String label, String[] args, FlagResult flagResults) {
         sender.sendMessage(StarColors.color("&6&l>> &d&lThe Nexus Reborn Server Performance"));
         sender.sendMessage(StarColors.color("&6&l> &eTPS: &b" + MCUtils.getRecentTps()));
 
@@ -33,7 +37,7 @@ public class PerformanceCmd implements CommandExecutor {
 
         sender.sendMessage(StarColors.color("&6&l> &eMemory Used: &b" + memoryUsedMB + "MB / " + totalMemoryMB + "MB &7(" + formattedPercentUsed + "%)"));
         sender.sendMessage(StarColors.color("&6&l> &eTotal Tasks: &b" + StarThread.THREADS.size()));
-        if (!(args.length > 0) || !args[0].equals("-t")) {
+        if (!flagResults.isPresent(THREADS_FLAG)) {
             sender.sendMessage(StarColors.color("&6&l> &7Run with the -t flag to see task metrics."));
             return true;
         }

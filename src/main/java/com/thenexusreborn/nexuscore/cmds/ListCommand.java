@@ -1,17 +1,15 @@
 package com.thenexusreborn.nexuscore.cmds;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
+import com.google.common.collect.TreeMultimap;
+import com.stardevllc.cmdflags.FlagResult;
 import com.stardevllc.colors.StarColors;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.nexuscore.NexusCore;
-import com.thenexusreborn.nexuscore.util.MCUtils;
+import com.thenexusreborn.nexuscore.api.command.NexusCommand;
 import com.thenexusreborn.nexuscore.util.MsgType;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -20,16 +18,13 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
-public class ListCommand implements CommandExecutor {
-    
-    private NexusCore plugin;
-
+public class ListCommand extends NexusCommand<NexusCore> {
     public ListCommand(NexusCore plugin) {
-        this.plugin = plugin;
+        super(plugin, "list", "", Rank.MEMBER);
     }
-    
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        Rank senderRank = MCUtils.getSenderRank(plugin, sender);
+
+    @Override
+    public boolean execute(CommandSender sender, Rank senderRank, String label, String[] args, FlagResult flagResults) {
         if (sender instanceof ConsoleCommandSender) {
             senderRank = Rank.NEXUS; //Override to allow console to see nexus team, as only Nexus Team have console access
         }
@@ -38,7 +33,7 @@ public class ListCommand implements CommandExecutor {
         for (Player player : Bukkit.getOnlinePlayers()) {
             NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(player.getUniqueId());
             if (nexusPlayer == null) {
-                continue; //Should never happen
+                continue;
             }
 
             if (nexusPlayer.getToggleValue("vanish") || nexusPlayer.getToggleValue("incognito")) {
@@ -68,7 +63,7 @@ public class ListCommand implements CommandExecutor {
                 sender.sendMessage(StarColors.color("  &6&l> " + rankName + "&8: &f" + sb));
             }
         }
-        
+
         return true;
     }
 }

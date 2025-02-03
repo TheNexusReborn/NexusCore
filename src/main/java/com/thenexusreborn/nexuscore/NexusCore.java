@@ -20,6 +20,7 @@ import com.thenexusreborn.nexuscore.api.events.NexusServerSetupEvent;
 import com.thenexusreborn.nexuscore.chat.ChatManager;
 import com.thenexusreborn.nexuscore.chat.PunishmentChannel;
 import com.thenexusreborn.nexuscore.cmds.*;
+import com.thenexusreborn.nexuscore.cmds.rank.RankCommand;
 import com.thenexusreborn.nexuscore.discord.DiscordVerifyCode;
 import com.thenexusreborn.nexuscore.discord.NexusBot;
 import com.thenexusreborn.nexuscore.hooks.NexusPapiExpansion;
@@ -134,14 +135,14 @@ public class NexusCore extends JavaPlugin implements Listener {
         
         getCommand("nexusbot").setExecutor(new BotCommand(this));
 
-        registerCommand("rank", new RankCommand(this));
+        new RankCommand(this);
         getCommand("tag").setExecutor(new TagCommand(this));
-        getCommand("say").setExecutor(new SayCommand(this));
-        getCommand("message").setExecutor(new MessageCommand());
-        getCommand("reply").setExecutor(new ReplyCommand());
+        new SayCommand(this);
+        new MessageCommand(this);
+        new ReplyCommand(this);
         getCommand("me").setExecutor(new MeCommand());
-        getCommand("list").setExecutor(new ListCommand(this));
-        getCommand("balance").setExecutor(new BalanceCommand(this));
+        new ListCommand(this);
+        new BalanceCommand(this);
         getCommand("servers").setExecutor(new ServersCommand(this));
         getCommand("discord").setExecutor((sender, cmd, label, args) -> {
             sender.sendMessage(StarColors.color(MsgType.INFO + "Discord: &bhttps://discord.gg/bawZKSWEpT"));
@@ -172,17 +173,17 @@ public class NexusCore extends JavaPlugin implements Listener {
         getCommand("history").setExecutor(phCmds);
         getCommand("staffhistory").setExecutor(phCmds);
 
-        getCommand("alts").setExecutor(new AltsCommand(this));
+        new AltsCommand(this);
 
         toggleCmdExecutor = new ToggleCmds();
         getCommand("incognito").setExecutor(toggleCmdExecutor);
         getCommand("vanish").setExecutor(toggleCmdExecutor);
         getCommand("fly").setExecutor(toggleCmdExecutor);
 
-        getCommand("nexusversion").setExecutor(new NexusVersionCmd(this));
-        getCommand("tps").setExecutor(new PerformanceCmd(this));
-        getCommand("playtime").setExecutor(new PlaytimeCommand(this));
-        getCommand("verify").setExecutor(new VerifyCommand(this));
+        new NexusVersionCmd(this);
+        new PerformanceCmd(this);
+        new PlaytimeCommand(this);
+        new VerifyCommand(this);
 
         getLogger().info("Registered Commands");
 

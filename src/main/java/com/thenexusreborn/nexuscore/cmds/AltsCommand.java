@@ -1,5 +1,6 @@
 package com.thenexusreborn.nexuscore.cmds;
 
+import com.stardevllc.cmdflags.FlagResult;
 import com.stardevllc.colors.StarColors;
 import com.stardevllc.helper.Pair;
 import com.stardevllc.helper.StringHelper;
@@ -8,32 +9,22 @@ import com.thenexusreborn.api.player.IPEntry;
 import com.thenexusreborn.api.player.PlayerManager;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.nexuscore.NexusCore;
-import com.thenexusreborn.nexuscore.util.MCUtils;
+import com.thenexusreborn.nexuscore.api.command.NexusCommand;
 import com.thenexusreborn.nexuscore.util.MsgType;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-public class AltsCommand implements CommandExecutor {
-    
-    private final NexusCore plugin;
+public class AltsCommand extends NexusCommand<NexusCore> {
     
     public AltsCommand(NexusCore plugin) {
-        this.plugin = plugin;
+        super(plugin, "alts", "", Rank.MOD);
     }
-    
+
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        Rank senderRank = MCUtils.getSenderRank(plugin, sender);
-        if (senderRank.ordinal() > Rank.HELPER.ordinal()) {
-            sender.sendMessage(StarColors.color(MsgType.WARN + "You do not have permission to use that command."));
-            return true;
-        }
-    
+    public boolean execute(CommandSender sender, Rank senderRank, String label, String[] args, FlagResult flagResults) {
         if (!(args.length > 0)) {
             sender.sendMessage(StarColors.color(MsgType.WARN + "Usage: /" + label + " <target>"));
             return true;
@@ -58,12 +49,12 @@ public class AltsCommand implements CommandExecutor {
                 ips.add(ipEntry.getIp());
             }
         }
-        
+
         Set<UUID> players = new HashSet<>();
         for (String ip : ips) {
             players.addAll(playerManager.getPlayersByIp(ip));
         }
-        
+
         Set<String> altNames = new HashSet<>();
         for (UUID player : players) {
             String nameFromUUID = playerManager.getNameFromUUID(player);
@@ -73,7 +64,7 @@ public class AltsCommand implements CommandExecutor {
                 plugin.getLogger().warning("Found alt " + player.toString() + " for " + playerInfo.value() + " but could not get the name. Cache returned: " + nameFromUUID);
             }
         }
-        
+
         String altNameList = StringHelper.join(altNames, ", ");
         sender.sendMessage(StarColors.color(MsgType.INFO + playerInfo.value() + " has the following alt accounts..."));
         sender.sendMessage(StarColors.color("&6&l> &b" + altNameList));

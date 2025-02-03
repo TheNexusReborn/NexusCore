@@ -1,34 +1,31 @@
 package com.thenexusreborn.nexuscore.cmds;
 
+import com.stardevllc.cmdflags.FlagResult;
 import com.stardevllc.colors.StarColors;
 import com.stardevllc.time.TimeFormat;
 import com.thenexusreborn.api.NexusAPI;
-import com.thenexusreborn.api.player.NexusPlayer;
-import com.thenexusreborn.api.player.PlayerRanks;
-import com.thenexusreborn.api.player.PlayerTime;
-import com.thenexusreborn.api.player.Session;
+import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.sql.objects.SQLDatabase;
 import com.thenexusreborn.api.sql.objects.codecs.RanksCodec;
 import com.thenexusreborn.nexuscore.NexusCore;
+import com.thenexusreborn.nexuscore.api.command.NexusCommand;
 import com.thenexusreborn.nexuscore.util.MsgType;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
-public class PlaytimeCommand implements CommandExecutor {
+public class PlaytimeCommand extends NexusCommand<NexusCore> {
 
-    private final NexusCore plugin;
     private final TimeFormat timeFormat = new TimeFormat("%*00y%%*00mo%%*00w%%*00d%%*00h%%*00m%%00s%");
 
     public PlaytimeCommand(NexusCore plugin) {
-        this.plugin = plugin;
+        super(plugin, "playtime", "", Rank.MEMBER);
     }
 
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    @Override
+    public boolean execute(CommandSender sender, Rank senderRank, String label, String[] args, FlagResult flagResults) {
         UUID uuid;
         boolean self;
 
@@ -64,7 +61,7 @@ public class PlaytimeCommand implements CommandExecutor {
                 }
             }
 
-           sendPlaytimeMessages(playtime, self, sender, player.getColoredName());
+            sendPlaytimeMessages(playtime, self, sender, player.getColoredName());
         } else {
             UUID finalUuid = uuid;
             Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
@@ -79,7 +76,7 @@ public class PlaytimeCommand implements CommandExecutor {
                 }
             });
         }
-        
+
         return true;
     }
     
