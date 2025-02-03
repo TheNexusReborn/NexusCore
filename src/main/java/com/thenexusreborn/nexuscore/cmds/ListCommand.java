@@ -33,7 +33,8 @@ public class ListCommand implements CommandExecutor {
         if (sender instanceof ConsoleCommandSender) {
             senderRank = Rank.NEXUS; //Override to allow console to see nexus team, as only Nexus Team have console access
         }
-        Multimap<Rank, NexusPlayer> playerList = HashMultimap.create();
+
+        TreeMultimap<Rank, NexusPlayer> playerList = TreeMultimap.create();
         for (Player player : Bukkit.getOnlinePlayers()) {
             NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(player.getUniqueId());
             if (nexusPlayer == null) {
@@ -63,7 +64,8 @@ public class ListCommand implements CommandExecutor {
                 }
             }
             if (!sb.isEmpty()) {
-                sender.sendMessage(StarColors.color("  &6&l> " + rank.getPrefix() + "&8: &f" + sb));
+                String rankName = rank.getColor() + (rank.isBold() ? "&l" : "") + rank.name().replace("_", " ");
+                sender.sendMessage(StarColors.color("  &6&l> " + rankName + "&8: &f" + sb));
             }
         }
         
