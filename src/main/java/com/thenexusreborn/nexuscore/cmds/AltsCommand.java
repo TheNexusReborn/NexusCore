@@ -66,7 +66,12 @@ public class AltsCommand implements CommandExecutor {
         
         Set<String> altNames = new HashSet<>();
         for (UUID player : players) {
-            altNames.add(playerManager.getNameFromUUID(player));
+            String nameFromUUID = playerManager.getNameFromUUID(player);
+            if (nameFromUUID != null && !nameFromUUID.isEmpty()) {
+                altNames.add(nameFromUUID);
+            } else {
+                plugin.getLogger().warning("Found alt " + player.toString() + " for " + playerInfo.value() + " but could not get the name. Cache returned: " + nameFromUUID);
+            }
         }
         
         String altNameList = StringHelper.join(altNames, ", ");
