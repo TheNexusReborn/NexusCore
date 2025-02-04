@@ -14,7 +14,6 @@ commands:
   reply:
     aliases: [r]
   say:
-  me: 
   discord:
   shop:
     aliases: [store]

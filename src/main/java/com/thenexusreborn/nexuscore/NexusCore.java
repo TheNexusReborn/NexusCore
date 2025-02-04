@@ -143,7 +143,6 @@ public class NexusCore extends JavaPlugin implements Listener {
         new SayCommand(this);
         new MessageCommand(this);
         new ReplyCommand(this);
-        getCommand("me").setExecutor(new MeCommand());
         new ListCommand(this);
         new BalanceCommand(this);
         getCommand("servers").setExecutor(new ServersCommand(this));

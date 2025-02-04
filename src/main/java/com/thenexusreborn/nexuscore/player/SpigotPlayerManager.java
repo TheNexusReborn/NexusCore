@@ -93,7 +93,7 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                     nexusPlayer.setSession(session);
                     playerManager.getUuidNameMap().forcePut(nexusPlayer.getUniqueId(), new Name(nexusPlayer.getName()));
                     playerManager.getUuidRankMap().put(nexusPlayer.getUniqueId(), nexusPlayer.getRanks());
-                    
+
                     if (nexusPlayer.getFirstJoined() == 0) {
                         nexusPlayer.setFirstJoined(System.currentTimeMillis());
                     }
@@ -108,7 +108,7 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                         player.sendMessage(StarColors.color(MsgType.ERROR + "Failed to save your player data to the database. Please report as a bug and try to re-log."));
                         ex.printStackTrace();
                     }
-                    
+
                     if (nexusPlayer.getRank().ordinal() <= Rank.HELPER.ordinal()) {
                         player.addAttachment(plugin, "vulcan.alerts", true);
                         player.addAttachment(plugin, "nexuscore.staff.send", true);
@@ -160,22 +160,22 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                         SpigotUtils.sendActionBar(player, "&aYour data has been loaded");
 
                         plugin.getNexusServer().join(finalNexusPlayer);
-        
+
                         Stopwatch playtimeStopwatch = plugin.getClockManager().createStopwatch(Long.MAX_VALUE);
                         playtimeStopwatch.addRepeatingCallback(stopwatchSnapshot -> {
                             if (finalNexusPlayer.getToggleValue("vanish")) {
                                 return;
                             }
-                            
+
                             if (stopwatchSnapshot.getTime() == 0) {
                                 return; //Prevent this running immediately when a player joins
                             }
-                            
+
                             Rank rank = finalNexusPlayer.getRank();
                             double xp = 10 * rank.getMultiplier();
 
                             DecimalFormat format = new DecimalFormat(Constants.NUMBER_FORMAT);
-                            
+
                             String bonusMessage = "";
                             if (rank.getMultiplier() > 1) {
                                 bonusMessage = rank.getColor() + "&l x" + format.format(rank.getMultiplier()) + " " + StringHelper.titlize(rank.name()) + " Bonus";
@@ -238,10 +238,8 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
 
     @EventHandler
     public void onCommandPreProcess(PlayerCommandPreprocessEvent e) {
-        if (e.getMessage().startsWith("minecraft:")) {
-            if (!e.getPlayer().hasPermission("nexuscore.admin")) {
-                e.setCancelled(true);
-            }
+        if (e.getMessage().equalsIgnoreCase("me")) {
+            e.setCancelled(true);
         }
     }
 }
