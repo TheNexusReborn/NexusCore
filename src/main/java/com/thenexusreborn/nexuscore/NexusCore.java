@@ -20,6 +20,7 @@ import com.thenexusreborn.nexuscore.api.events.NexusServerSetupEvent;
 import com.thenexusreborn.nexuscore.chat.ChatManager;
 import com.thenexusreborn.nexuscore.chat.PunishmentChannel;
 import com.thenexusreborn.nexuscore.cmds.*;
+import com.thenexusreborn.nexuscore.cmds.bot.BotCommand;
 import com.thenexusreborn.nexuscore.cmds.rank.RankCommand;
 import com.thenexusreborn.nexuscore.cmds.tag.TagCommand;
 import com.thenexusreborn.nexuscore.cmds.tag.admin.TagAdminCommand;
@@ -135,7 +136,7 @@ public class NexusCore extends JavaPlugin implements Listener {
         Bukkit.getServer().getPluginManager().registerEvents(this, this);
         getLogger().info("Registered Event Listeners");
         
-        getCommand("nexusbot").setExecutor(new BotCommand(this));
+        new BotCommand(this);
 
         new RankCommand(this);
         new TagCommand(this);
