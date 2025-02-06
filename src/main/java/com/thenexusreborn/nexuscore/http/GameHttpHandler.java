@@ -4,10 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.stardevllc.helper.StringHelper;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import com.thenexusreborn.api.gamearchive.GameInfo;
 import com.thenexusreborn.nexuscore.NexusCore;
 
 import java.io.File;
@@ -15,9 +13,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.List;
 
 public class GameHttpHandler implements HttpHandler {
 
@@ -46,53 +41,53 @@ public class GameHttpHandler implements HttpHandler {
             }
         }
 
-        StringBuilder responseBuilder = new StringBuilder();
-        responseBuilder.append("""
-                <head>
-                <title>Nexus Reborn Game Info</title>
-                <style>
-                .infoDiv {
-                  font-family: Arial, Helvetica, sans-serif;
-                  padding-left: 30px;
-                  padding-top: 2px;
-                  padding-bottom: 2px;
-                }
-                .actionDiv {
-                  font-family: Arial, Helvetica, sans-serif;
-                  padding-left: 30px;
-                  padding-top: 2px;
-                  padding-bottom: 2px;
-                }
-                h1 {font-family: Arial, Helvetica, sans-serif'; font-size: 30px}
-                h2 {font-family: Arial, Helvetica, sans-serif; font-size: 20px}
-                </style>
-                </head>
-                """);
-        responseBuilder.append("<img src=\"https://gyazo.com/d8b173ff48af39725507b10f73e362a4.png\" style='display: block; margin-left: auto; margin-right: auto;' width=\"300\" height=\"264.39\"</img>");
-        //responseBuilder.append("<h1>Nexus Reborn Survival Games</h1>");
-        responseBuilder.append("<h1>Classic Game #").append(gameId).append("</h2>");
-
-        JsonObject gameJson = new JsonParser().parse(new FileReader(new File(plugin.getDataFolder(), "export" + File.separator + "games" + File.separator + gameId + ".json"))).getAsJsonObject();
-
-        GameInfo gameInfo = new GameInfo(gameJson);
-
-        responseBuilder.append("<h2>Basic Game Info</h2>");
-        //Game Info
-        responseBuilder.append("<b>ID: </b>").append(gameInfo.getId());
-        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss a z");
-
-
-        responseBuilder.append(getInfoLine("Server", gameInfo.getServerName()));
-        responseBuilder.append(getInfoLine("Map", gameInfo.getMapName()));
-        responseBuilder.append(getInfoLine("Start Date", dateFormat.format(gameInfo.getGameStart())));
-        responseBuilder.append(getInfoLine("End Date", dateFormat.format(gameInfo.getGameEnd())));
-//        TODO responseBuilder.append("<b>Total Duration: </b>").append();
-
-        responseBuilder.append(getInfoLine("Winner", gameInfo.getWinner()));
-        responseBuilder.append(getInfoLine("First Blood", gameInfo.getFirstBlood()));
-        responseBuilder.append(getInfoLine("Players", StringHelper.join(List.of(gameInfo.getPlayers()), ", ")));
-
-        responseBuilder.append("<h2>Actions</h2>");
+//        StringBuilder responseBuilder = new StringBuilder();
+//        responseBuilder.append("""
+//                <head>
+//                <title>Nexus Reborn Game Info</title>
+//                <style>
+//                .infoDiv {
+//                  font-family: Arial, Helvetica, sans-serif;
+//                  padding-left: 30px;
+//                  padding-top: 2px;
+//                  padding-bottom: 2px;
+//                }
+//                .actionDiv {
+//                  font-family: Arial, Helvetica, sans-serif;
+//                  padding-left: 30px;
+//                  padding-top: 2px;
+//                  padding-bottom: 2px;
+//                }
+//                h1 {font-family: Arial, Helvetica, sans-serif'; font-size: 30px}
+//                h2 {font-family: Arial, Helvetica, sans-serif; font-size: 20px}
+//                </style>
+//                </head>
+//                """);
+//        responseBuilder.append("<img src=\"https://gyazo.com/d8b173ff48af39725507b10f73e362a4.png\" style='display: block; margin-left: auto; margin-right: auto;' width=\"300\" height=\"264.39\"</img>");
+//        //responseBuilder.append("<h1>Nexus Reborn Survival Games</h1>");
+//        responseBuilder.append("<h1>Classic Game #").append(gameId).append("</h2>");
+//
+//        JsonObject gameJson = new JsonParser().parse(new FileReader(new File(plugin.getDataFolder(), "export" + File.separator + "games" + File.separator + gameId + ".json"))).getAsJsonObject();
+//
+//        GameInfo gameInfo = new GameInfo(gameJson);
+//
+//        responseBuilder.append("<h2>Basic Game Info</h2>");
+//        //Game Info
+//        responseBuilder.append("<b>ID: </b>").append(gameInfo.getId());
+//        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss a z");
+//
+//
+//        responseBuilder.append(getInfoLine("Server", gameInfo.getServerName()));
+//        responseBuilder.append(getInfoLine("Map", gameInfo.getMapName()));
+//        responseBuilder.append(getInfoLine("Start Date", dateFormat.format(gameInfo.getGameStart())));
+//        responseBuilder.append(getInfoLine("End Date", dateFormat.format(gameInfo.getGameEnd())));
+////        TODO responseBuilder.append("<b>Total Duration: </b>").append();
+//
+//        responseBuilder.append(getInfoLine("Winner", gameInfo.getWinner()));
+//        responseBuilder.append(getInfoLine("First Blood", gameInfo.getFirstBlood()));
+//        responseBuilder.append(getInfoLine("Players", StringHelper.join(List.of(gameInfo.getPlayers()), ", ")));
+//
+//        responseBuilder.append("<h2>Actions</h2>");
         //Actions
 
 //        for (GameAction action : gameInfo.getActions()) {
@@ -153,10 +148,15 @@ public class GameHttpHandler implements HttpHandler {
 //            }
 //        }
 
-        String response = responseBuilder.toString();
+//        String response = responseBuilder.toString();
 
-        httpExchange.getResponseHeaders().add("Content-Type", "text/html; charset=utf-8");
-        httpExchange.getResponseHeaders().add("Content-Length", Integer.toString(response.length()));
+        JsonObject gameJson = new JsonParser().parse(new FileReader(new File(plugin.getDataFolder(), "export" + File.separator + "games" + File.separator + gameId + ".json"))).getAsJsonObject();
+        
+        String response = gameJson.toString();
+        
+//        httpExchange.getResponseHeaders().add("Content-Type", "text/html; charset=utf-8");
+        httpExchange.getResponseHeaders().add("Content-Type", "application/json");
+//        httpExchange.getResponseHeaders().add("Content-Length", Integer.toString(response.length()));
         httpExchange.sendResponseHeaders(200, response.length());
         OutputStream os = httpExchange.getResponseBody();
         os.write(response.getBytes(StandardCharsets.UTF_8));
