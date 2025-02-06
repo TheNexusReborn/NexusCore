@@ -11,7 +11,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.UUID;
 
 public class RankTablistHandler extends TablistHandler {
     
@@ -42,6 +44,8 @@ public class RankTablistHandler extends TablistHandler {
     
     @Override
     public void update() {
+        removeDisconnectedPlayers();
+        
         for (Player player : Bukkit.getOnlinePlayers()) {
             NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(player.getUniqueId());
             if (nexusPlayer != null) {
@@ -56,6 +60,17 @@ public class RankTablistHandler extends TablistHandler {
                         refreshPlayerTeam(nexusPlayer);
                     }
                 }
+            }
+        }
+    }
+    
+    public void removeDisconnectedPlayers() {
+        Iterator<Map.Entry<UUID, ITeam>> teamIterator = this.playerTeams.entrySet().iterator();
+        while (teamIterator.hasNext()) {
+            Map.Entry<UUID, ITeam> entry = teamIterator.next();
+            if (Bukkit.getPlayer(entry.getKey()) == null) {
+                entry.getValue().unregister();
+                teamIterator.remove();
             }
         }
     }
