@@ -59,7 +59,6 @@ public class NexusCore extends JavaPlugin implements Listener {
 
     private final List<NexusSpigotPlugin> nexusPlugins = new ArrayList<>();
     private ChatManager chatManager;
-    private ToggleCmds toggleCmdExecutor;
     private Supplier<String> motdSupplier;
 
     private StarChat starChatPlugin;
@@ -180,10 +179,9 @@ public class NexusCore extends JavaPlugin implements Listener {
 
         new AltsCommand(this);
 
-        toggleCmdExecutor = new ToggleCmds();
-        getCommand("incognito").setExecutor(toggleCmdExecutor);
-        getCommand("vanish").setExecutor(toggleCmdExecutor);
-        getCommand("fly").setExecutor(toggleCmdExecutor);
+        new ToggleCmd(this, "incognito", "i");
+        new ToggleCmd(this, "vanish", "v");
+        new ToggleCmd(this, "fly");
 
         new NexusVersionCmd(this);
         new PerformanceCmd(this);
@@ -302,10 +300,6 @@ public class NexusCore extends JavaPlugin implements Listener {
 
     public List<NexusSpigotPlugin> getNexusPlugins() {
         return new ArrayList<>(this.nexusPlugins);
-    }
-
-    public ToggleCmds getToggleCmdExecutor() {
-        return toggleCmdExecutor;
     }
 
     public Supplier<String> getMotdSupplier() {
