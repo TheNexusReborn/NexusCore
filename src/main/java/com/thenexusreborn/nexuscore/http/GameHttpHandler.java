@@ -7,6 +7,7 @@ import com.google.gson.JsonParser;
 import com.stardevllc.helper.StringHelper;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import com.thenexusreborn.api.gamearchive.GameInfo;
 import com.thenexusreborn.nexuscore.NexusCore;
 
 import java.io.File;
@@ -14,7 +15,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class GameHttpHandler implements HttpHandler {
@@ -72,92 +74,84 @@ public class GameHttpHandler implements HttpHandler {
 
         JsonObject gameJson = new JsonParser().parse(new FileReader(new File(plugin.getDataFolder(), "export" + File.separator + "games" + File.separator + gameId + ".json"))).getAsJsonObject();
 
+        GameInfo gameInfo = new GameInfo(gameJson);
+
         responseBuilder.append("<h2>Basic Game Info</h2>");
         //Game Info
-        
-        
+        responseBuilder.append("<b>ID: </b>").append(gameInfo.getId());
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss a z");
+
+
+        responseBuilder.append(getInfoLine("Server", gameInfo.getServerName()));
+        responseBuilder.append(getInfoLine("Map", gameInfo.getMapName()));
+        responseBuilder.append(getInfoLine("Start Date", dateFormat.format(gameInfo.getGameStart())));
+        responseBuilder.append(getInfoLine("End Date", dateFormat.format(gameInfo.getGameEnd())));
+//        TODO responseBuilder.append("<b>Total Duration: </b>").append();
+
+        responseBuilder.append(getInfoLine("Winner", gameInfo.getWinner()));
+        responseBuilder.append(getInfoLine("First Blood", gameInfo.getFirstBlood()));
+        responseBuilder.append(getInfoLine("Players", StringHelper.join(List.of(gameInfo.getPlayers()), ", ")));
+
         responseBuilder.append("<h2>Actions</h2>");
         //Actions
-        List<String> gameTxt = new ArrayList<>(); //TODO Redo this using JSON
-        boolean gameInfo = false, actions = false;
-        for (int i = 0; i < gameTxt.size(); i++) {
-            String line = gameTxt.get(i);
-            if (line.equals(" ")) {
-                continue;
-            }
-            if (line.startsWith("----")) {
-                responseBuilder.append("<h2>").append(line.replace("----", "")).append("</h3>");
-                if (line.contains("Basic Game Info")) {
-                    gameInfo = true;
-                    actions = false;
-                } else if (line.contains("Actions")) {
-                    actions = true;
-                    gameInfo = false;
-                }
-            } else {
-                if (gameInfo) {
-                    String[] lineSplit = line.split(":");
-                    StringBuilder lineBuilder = new StringBuilder();
-                    lineBuilder.append("<div class=\"infoDiv\">").append("<b>").append(lineSplit[0]).append(":</b>");
-                    for (int s = 1; s < lineSplit.length; s++) {
-                        lineBuilder.append(lineSplit[s]);
-                        if (s < lineSplit.length - 1) {
-                            lineBuilder.append(":");
-                        }
-                    }
-                    line = lineBuilder.append("</div>").toString();
-                } else if (actions) {
-                    String color = "purple";
-                    String[] lineSplit = line.split(" ");
-                    StringBuilder lineBuilder = new StringBuilder();
-                    lineBuilder.append("<div class='actionDiv'>").append("<span style='color: white; background: {timecolor}; padding: 3px; border-radius: 5px'>").append(lineSplit[0]).append(" ").append(lineSplit[1]).append("</span>"); //This is the time stamp section
-                    if (lineSplit[2].equals("statechange")) {
-                        lineBuilder.append(" ").append("Game state was changed to ").append(StringHelper.titlize(lineSplit[3]));
-                        color = "darkslategray";
-                    } else if (lineSplit[2].equals("chat") || lineSplit[2].equals("deadchat")) {
-                        String[] firstArgSplit = lineSplit[3].split(":");
-                        String player = firstArgSplit[0];
-                        StringBuilder msgBuilder = new StringBuilder();
-                        msgBuilder.append(firstArgSplit[1]).append(" ");
-                        for (int s = 4; s < lineSplit.length; s++) {
-                            msgBuilder.append(lineSplit[s]).append(" ");
-                        }
-                        if (lineSplit[2].equals("deadchat")) {
-                            lineBuilder.append(" [Spectators]");
-                            color = "dodgerblue";
-                        } else {
-                            color = "green";
-                        }
-                        lineBuilder.append(" <b>").append(player).append(": </b>").append(msgBuilder);
-                    }  else {
-                        if (lineSplit[2].equals("death")) {
-                            color = "red";
-                        } else if (lineSplit[2].equals("assist")) {
-                            color = "orangered";
-                        } else if (lineSplit[2].equals("mutation")) {
-                            color = "MediumOrchid";
-                        }
-                        
-                        for (int s = 3; s < lineSplit.length; s++) {
-                            lineBuilder.append(" ").append(lineSplit[s]);
-                        }
-                    }
-                    
-                    line = lineBuilder.append("</div>").toString().replace("{timecolor}", color);
-                }
-                
-                responseBuilder.append("    ").append(line).append("\n");
-                if (i < gameTxt.size() - 2) {
-                    if (!gameTxt.get(i + 1).startsWith("----")) {
-                        //responseBuilder.append("<br>");
-                    }
-                }
-            }
 
-            if (i == gameTxt.size() - 1) {
-                responseBuilder.append("</pre>");
-            }
-        }
+//        for (GameAction action : gameInfo.getActions()) {
+//            String color = "purple";
+//            StringBuilder lineBuilder = new StringBuilder();
+//            lineBuilder.append("<div class='actionDiv'><span style='color: white; background: {timecolor}; padding: 3px; border-radius: 5px'>").append(lineSplit[0]).append(" ").append(lineSplit[1]).append("</span>"); //This is the time stamp section
+//            if (action.getType().equals("statechange")) {
+//                lineBuilder.append(" ").append("Game state was changed to ").append(StringHelper.titlize(action.getValueData().get("nicevalue")));
+//                color = "darkslategray";
+//            } else if (action.getType().equals("chat") || action.getType().equals("deadchat")) {
+//                String player = action.getValueData().get("sender");
+//                String message = action.getValueData().get("message");
+//                if (action.getType().equals("deadchat")) {
+//                    lineBuilder.append(" [Spectators]");
+//                    color = "dodgerblue";
+//                } else {
+//                    color = "green";
+//                }
+//
+//                lineBuilder.append(" <b>").append(player).append(": </b>").append(message);
+//            } else if (action.getType().equals("death")) {
+//                color = "red";
+//            } else if (action.getType().equals("assist")) {
+//                color = "orangered";
+//            } else if (action.getType().equals("mutation")) {
+//                color = "MediumOrchid";
+//            }
+//        }
+//
+//        for (int i = 0; i < gameTxt.size(); i++) {
+//            String color = "purple";
+//            StringBuilder lineBuilder = new StringBuilder();
+//            lineBuilder.append("<div class='actionDiv'><span style='color: white; background: {timecolor}; padding: 3px; border-radius: 5px'>").append(lineSplit[0]).append(" ").append(lineSplit[1]).append("</span>"); //This is the time stamp section
+//
+//            if (lineSplit[2].equals("death")) {
+//                color = "red";
+//            } else if (lineSplit[2].equals("assist")) {
+//                color = "orangered";
+//            } else if (lineSplit[2].equals("mutation")) {
+//                color = "MediumOrchid";
+//            }
+//
+//            for (int s = 3; s < lineSplit.length; s++) {
+//                lineBuilder.append(" ").append(lineSplit[s]);
+//            }
+//
+//            line = lineBuilder.append("</div>").toString().replace("{timecolor}", color);
+//
+//            responseBuilder.append("    ").append(line).append("\n");
+//            if (i < gameTxt.size() - 2) {
+//                if (!gameTxt.get(i + 1).startsWith("----")) {
+//                    //responseBuilder.append("<br>");
+//                }
+//            }
+//
+//            if (i == gameTxt.size() - 1) {
+//                responseBuilder.append("</pre>");
+//            }
+//        }
 
         String response = responseBuilder.toString();
 
@@ -169,15 +163,19 @@ public class GameHttpHandler implements HttpHandler {
         os.flush();
         os.close();
     }
-    
+
+    private String getInfoLine(String prefix, Object value) {
+        return "<div class=\"infoDiv\"><b>" + prefix + ":</b>" + value + "</div>";
+    }
+
     private void appendInfoLine(StringBuilder lineBuilder, String prefix, Object value) {
         lineBuilder.append("<div class=\"infoDiv\">").append("<b>").append(prefix).append(":</b>").append(value).append("</div>");
     }
-    
+
     private void appendTimeToActionLine(StringBuilder lineBuilder, String timeColor, String dateTime) {
         lineBuilder.append("<div class='actionDiv'>").append("<span style='color: white; background: ").append("; padding: 3px; border-radius: 5px'>").append(dateTime).append("</span>");
     }
-    
+
     private void appendChatValue(String team, String sender, String message) {
         //TODO
     }
