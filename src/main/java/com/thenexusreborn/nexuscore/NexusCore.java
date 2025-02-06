@@ -67,7 +67,6 @@ public class NexusCore extends JavaPlugin implements Listener {
     private InstanceServer nexusServer;
     private ClockManager clockManager;
     private GuiManager guiManager;
-    private GameLogExporter gameLogExporter;
 
     private NexusBot nexusBot;
 
