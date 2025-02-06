@@ -22,6 +22,7 @@ import com.thenexusreborn.nexuscore.chat.PunishmentChannel;
 import com.thenexusreborn.nexuscore.cmds.*;
 import com.thenexusreborn.nexuscore.cmds.bot.BotCommand;
 import com.thenexusreborn.nexuscore.cmds.rank.RankCommand;
+import com.thenexusreborn.nexuscore.cmds.servers.ServersCommand;
 import com.thenexusreborn.nexuscore.cmds.tag.TagCommand;
 import com.thenexusreborn.nexuscore.cmds.tag.admin.TagAdminCommand;
 import com.thenexusreborn.nexuscore.discord.DiscordVerifyCode;
@@ -146,7 +147,8 @@ public class NexusCore extends JavaPlugin implements Listener {
         new ReplyCommand(this);
         new ListCommand(this);
         new BalanceCommand(this);
-        getCommand("servers").setExecutor(new ServersCommand(this));
+        new ServersCommand(this);
+        
         getCommand("discord").setExecutor((sender, cmd, label, args) -> {
             sender.sendMessage(StarColors.color(MsgType.INFO + "Discord: &bhttps://discord.gg/bawZKSWEpT"));
             return true;
