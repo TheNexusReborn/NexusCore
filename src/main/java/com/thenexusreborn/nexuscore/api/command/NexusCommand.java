@@ -76,27 +76,10 @@ public class NexusCommand<T extends JavaPlugin> implements ICommand<T>, TabExecu
         }
         
         if (args.length > 0) {
-            SubCommand<T> subCommand = null;
-            for (SubCommand<T> sc : this.subCommands) {
-                if (args[0].equalsIgnoreCase(sc.getName())) {
-                    subCommand = sc;
-                    break;
-                }
-                
-                if (aliases == null) {
-                    continue;
-                }
-
-                for (String alias : sc.getAliases()) {
-                    if (args[0].equalsIgnoreCase(alias)) {
-                        subCommand = sc;
-                        break;
-                    }
-                }
-            }
+            SubCommand<T> subCommand = getSubCommand(args[0]);
             
             if (subCommand == null) {
-                sender.sendMessage(MsgType.WARN.format("Unable to find subcommand matching %v.", args[0]));
+                sender.sendMessage(MsgType.WARN.format("Unable to find a subcommand matching %v.", args[0]));
                 return true;
             }
             
@@ -115,7 +98,55 @@ public class NexusCommand<T extends JavaPlugin> implements ICommand<T>, TabExecu
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
-        return List.of();
+        Rank senderRank = MCUtils.getSenderRank(sender);
+        if (senderRank.ordinal() > minRank.ordinal()) {
+            return List.of();
+        }
+        
+        List<String> completions = new ArrayList<>();
+
+        FlagResult flagResults = this.cmdFlags.parse(args);
+        args = flagResults.args();
+        
+        if (args.length == 1) {
+            this.subCommands.forEach(scmd -> completions.add(scmd.getName().toLowerCase()));
+            String arg = args[0].toLowerCase();
+            completions.removeIf(completion -> !completion.startsWith(arg));
+        } else if (args.length > 1) {
+            SubCommand<T> subCommand = getSubCommand(args[0]);
+            if (subCommand != null) {
+                String cmdLabel = args[0];
+
+                String[] newArgs = new String[args.length - 1];
+                System.arraycopy(args, 1, newArgs, 0, args.length - 1);
+
+                args = newArgs;
+                
+                completions.addAll(subCommand.getCompletions(sender, senderRank, cmdLabel, args));
+            }
+        }
+        
+        return completions;
+    }
+    
+    public SubCommand<T> getSubCommand(String name) {
+        for (SubCommand<T> subCommand : this.subCommands) {
+            if (subCommand.getName().equalsIgnoreCase(name)) {
+                return subCommand;
+            }
+            
+            if (subCommand.getAliases() == null) {
+                continue;
+            }
+
+            for (String alias : subCommand.getAliases()) {
+                if (alias.equalsIgnoreCase(name)) {
+                    return subCommand;
+                }
+            }
+        }
+        
+        return null;
     }
 
     public CmdFlags getCmdFlags() {
