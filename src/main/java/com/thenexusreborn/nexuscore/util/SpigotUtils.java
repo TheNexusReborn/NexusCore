@@ -63,6 +63,9 @@ public final class SpigotUtils {
         SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
         try {
             Object craftPlayer = craftPlayerClass.cast(player);
+            if (craftPlayer == null) {
+                return skull;
+            }
             Object mcProfile = getProfileMethod.invoke(craftPlayer);
             
             if (profileField == null) {

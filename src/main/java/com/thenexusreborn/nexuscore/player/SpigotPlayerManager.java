@@ -217,6 +217,8 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
         e.setQuitMessage(null);
         
         if (nexusPlayer == null) {
+            plugin.getLogger().warning("Player " + e.getPlayer().getUniqueId() + " quit, but did not have data loaded");
+            plugin.getNexusServer().quit(e.getPlayer().getUniqueId());
             return; //Probably joined then left before it could be fully loaded
         }
 
@@ -245,6 +247,7 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                 NexusAPI.getApi().getPrimaryDatabase().saveSilent(nexusPlayer);
             });
             this.players.remove(nexusPlayer.getUniqueId());
+            this.plugin.getNexusServer().quit(nexusPlayer);
             if (nexusPlayer.getRank().ordinal() <= Rank.MEDIA.ordinal()) {
                 plugin.getStaffChannel().sendMessage(new ChatContext(nexusPlayer.getDisplayName() + " &7disconnected"));
             }

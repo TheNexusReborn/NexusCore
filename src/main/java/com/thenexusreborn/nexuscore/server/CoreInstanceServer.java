@@ -6,6 +6,8 @@ import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.api.server.InstanceServer;
 import com.thenexusreborn.nexuscore.NexusCore;
 
+import java.util.UUID;
+
 public class CoreInstanceServer extends InstanceServer {
     
     private NexusCore plugin;
@@ -31,6 +33,11 @@ public class CoreInstanceServer extends InstanceServer {
     @Override
     public void quit(NexusPlayer nexusPlayer) {
         getChildServers().forEach(s -> s.quit(nexusPlayer));
+    }
+
+    @Override
+    public void quit(UUID uuid) {
+        getChildServers().forEach(s -> s.quit(uuid));
     }
 
     @Override
