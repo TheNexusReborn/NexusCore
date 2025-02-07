@@ -33,7 +33,7 @@ public class ServersPlayersSubCommand extends ServersSubCommand {
             serverPlayers.add(playerName);
         }
 
-        sender.sendMessage(MsgType.INFO.format("Players on %v", name));
+        sender.sendMessage(MsgType.INFO.format("Players on %v", server.getName()));
         sender.sendMessage(StarColors.color(MsgType.INFO.getVariableColor() + serverPlayers));
     }
 }
