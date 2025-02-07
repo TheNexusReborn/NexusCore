@@ -30,6 +30,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -39,6 +40,7 @@ import java.net.InetSocketAddress;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.UUID;
 
 public class SpigotPlayerManager extends PlayerManager implements Listener {
 
@@ -46,6 +48,16 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
 
     public SpigotPlayerManager(NexusCore plugin) {
         this.plugin = plugin;
+    }
+    
+    @EventHandler
+    public void onPlayerPreLogin(AsyncPlayerPreLoginEvent e) {
+        UUID uniqueId = e.getUniqueId();
+
+        Punishment punishment = checkPunishments(uniqueId);
+        if (punishment != null) {
+            e.disallow(AsyncPlayerPreLoginEvent.Result.KICK_BANNED, ChatColor.translateAlternateColorCodes('&', punishment.formatKick()));
+        }
     }
 
     @EventHandler
@@ -202,8 +214,11 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent e) {
         NexusPlayer nexusPlayer = this.players.get(e.getPlayer().getUniqueId());
-        this.players.remove(e.getPlayer().getUniqueId());
         e.setQuitMessage(null);
+        
+        if (nexusPlayer == null) {
+            return; //Probably joined then left before it could be fully loaded
+        }
 
         if (NexusAPI.NETWORK_TYPE == NetworkType.SINGLE) {
             Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
@@ -238,7 +253,9 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
 
     @EventHandler
     public void onCommandPreProcess(PlayerCommandPreprocessEvent e) {
-        if (e.getMessage().equalsIgnoreCase("me")) {
+        if (e.getMessage().toLowerCase().startsWith("me")) {
+            e.setCancelled(true);
+        } else if (e.getMessage().toLowerCase().startsWith("minecraft:tell") || e.getMessage().toLowerCase().startsWith("minecraft:whisper")) {
             e.setCancelled(true);
         }
     }
