@@ -93,6 +93,10 @@ public class SubCommand<T extends JavaPlugin> implements ICommand<T> {
     public boolean execute(CommandSender sender, Rank senderRank, String label, String[] args, FlagResult flagResults) {
         return false;
     }
+
+    public List<String> getCompletions(CommandSender sender, Rank senderRank, String label, String[] args) {
+        return List.of();
+    }
     
     public T getPlugin() {
         return plugin;
