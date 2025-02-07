@@ -11,5 +11,6 @@ public class ServersCommand extends NexusCommand<NexusCore> {
         this.subCommands.add(new ServersInfoSubCommand(plugin, this));
         this.subCommands.add(new ServersPlayersSubCommand(plugin, this));
         this.subCommands.add(new ServersStateSubCommand(plugin, this));
+        this.subCommands.add(new ServersListSubCommand(plugin, this));
     }
 }
