@@ -17,6 +17,11 @@ public abstract class ServersSubCommand extends SubCommand<NexusCore> {
 
     @Override
     public boolean execute(CommandSender sender, Rank senderRank, String label, String[] args, FlagResult flagResults) {
+        if (!(args.length > 0)) {
+            MsgType.WARN.send(sender, "You must provide a server name.");
+            return true;
+        }
+        
         NexusServer server = NexusAPI.getApi().getServerRegistry().get(args[0]);
         if (server == null) {
             sender.sendMessage(MsgType.WARN.format("Invalid server name %v", args[0]));
