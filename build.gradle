@@ -25,7 +25,7 @@ repositories {
 }
 
 dependencies {
-    api 'com.thenexusreborn:NexusAPI:1.15.2-ALPHA'
+    api 'com.thenexusreborn:NexusAPI:1.15.3-ALPHA'
     api 'com.github.StarDevelopmentLLC:units:0.1.0'
     api 'com.github.StarDevelopmentLLC:StarUI:0.1.4'
     api 'com.github.StarDevelopmentLLC:itembuilder:0.1.1'
@@ -40,15 +40,17 @@ dependencies {
     compileOnly('com.github.StarDevelopmentLLC:StarCore:0.1.11') {
         exclude group: 'com.github.StarDevelopmentLLC', module: 'cmdflags'
     }
-    compileOnly('com.github.StarDevelopmentLLC:StarChat:0.1.7') {
+    compileOnly('com.github.StarDevelopmentLLC:StarChat:0.1.8') {
         exclude group: 'com.github.StarDevelopmentLLC', module: 'cmdflags'
+        exclude group: 'com.github.StarDevelopmentLLC', module: 'observable'
+        exclude group: 'com.github.StarDevelopmentLLC', module: 'property'
     }
     compileOnly 'me.clip:placeholderapi:2.11.5'
     compileOnly 'org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT'
 }
 
 group = 'com.thenexusreborn'
-version = '1.14.4-ALPHA'
+version = '1.14.5-ALPHA'
 description = 'NexusCore'
 
 processResources {
