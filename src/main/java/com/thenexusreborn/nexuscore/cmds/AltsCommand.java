@@ -59,7 +59,10 @@ public class AltsCommand extends NexusCommand<NexusCore> {
         for (UUID player : players) {
             String nameFromUUID = playerManager.getNameFromUUID(player);
             if (nameFromUUID != null && !nameFromUUID.isEmpty()) {
-                altNames.add(nameFromUUID);
+                Rank altRank = playerManager.getPlayerRank(player);
+                if (altRank.ordinal() >= playerRank.ordinal()) {
+                    altNames.add(nameFromUUID);
+                }
             } else {
                 plugin.getLogger().warning("Found alt " + player.toString() + " for " + playerInfo.value() + " but could not get the name. Cache returned: " + nameFromUUID);
             }
