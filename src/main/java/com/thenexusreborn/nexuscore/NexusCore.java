@@ -136,6 +136,7 @@ public class NexusCore extends JavaPlugin implements Listener {
         Bukkit.getServer().getPluginManager().registerEvents(this, this);
         getLogger().info("Registered Event Listeners");
         
+        new NickCmd(this);
         new BotCommand(this);
 
         new RankCommand(this);
