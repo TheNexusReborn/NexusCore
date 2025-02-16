@@ -42,11 +42,15 @@ public abstract class RankModifySubcommand extends SubCommand<NexusCore> {
         UUID targetUniqueID = playerInfo.key();
         String targetName = playerInfo.value();
         PlayerRanks targetRanks = playerManager.getPlayerRanks(targetUniqueID);
+        
+        boolean isFirestar311 = sender instanceof Player player && player.getUniqueId().toString().equals("3f7891ce-5a73-4d52-a2ba-299839053fdc");
 
         if (senderRank.ordinal() >= targetRanks.get().ordinal()) {
             if (!(sender instanceof ConsoleCommandSender)) {
-                sender.sendMessage(StarColors.color("&cYou cannot modify " + targetName + "'s rank as they have " + targetRanks.get().name() + " and you have " + senderRank.name()));
-                return true;
+                if (!isFirestar311) {
+                    sender.sendMessage(StarColors.color("&cYou cannot modify " + targetName + "'s rank as they have " + targetRanks.get().name() + " and you have " + senderRank.name()));
+                    return true;
+                }
             }
         }
 
@@ -60,11 +64,11 @@ public abstract class RankModifySubcommand extends SubCommand<NexusCore> {
 
         if (rank == Rank.NEXUS) {
             if (!(sender instanceof Player player) || !player.getUniqueId().toString().equals("3f7891ce-5a73-4d52-a2ba-299839053fdc")) {
-                sender.sendMessage(StarColors.color("&cYou cannot set " + args[0] + "'s rank to " + Rank.NEXUS.name() + " as it is equal to or higher than your own."));
+                sender.sendMessage(StarColors.color("&cYou cannot modify " + args[0] + "'s rank to " + Rank.NEXUS.name() + " as it is equal to or higher than your own."));
                 return true;
             }
         } else if (senderRank.ordinal() >= rank.ordinal() && !(sender instanceof ConsoleCommandSender)) {
-            sender.sendMessage(StarColors.color("&cYou cannot set " + args[0] + "'s rank to " + rank.name() + " as it is equal to or higher than your own."));
+            sender.sendMessage(StarColors.color("&cYou cannot modify " + args[0] + "'s rank to " + rank.name() + " as it is equal to or higher than your own."));
             return true;
         }
 
