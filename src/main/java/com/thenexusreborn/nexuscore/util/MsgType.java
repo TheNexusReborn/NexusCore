@@ -42,6 +42,7 @@ public enum MsgType {
                 i++;
             } else if (msgChars[i + 1] == 'b') {
                 sb.append(getBaseColor());
+                i++;
             }
         }
 

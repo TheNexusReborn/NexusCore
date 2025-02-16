@@ -49,3 +49,6 @@ commands:
   verify:
   nexusbot: 
   tagadmin:
+  nickname:
+    alias: [nick]
+  profile:

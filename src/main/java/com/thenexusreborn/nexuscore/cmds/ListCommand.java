@@ -29,6 +29,7 @@ public class ListCommand extends NexusCommand<NexusCore> {
             senderRank = Rank.NEXUS; //Override to allow console to see nexus team, as only Nexus Team have console access
         }
 
+        int playerCount = 0;
         TreeMultimap<Rank, NexusPlayer> playerList = TreeMultimap.create();
         for (Player player : Bukkit.getOnlinePlayers()) {
             NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(player.getUniqueId());
@@ -43,9 +44,10 @@ public class ListCommand extends NexusCommand<NexusCore> {
             }
 
             playerList.put(nexusPlayer.getRank(), nexusPlayer);
+            playerCount++;
         }
 
-        sender.sendMessage(StarColors.color(MsgType.INFO + "Players online on The Nexus Reborn."));
+        sender.sendMessage(MsgType.INFO.format("There are %v players online on The Nexus Reborn", playerCount));
         for (Map.Entry<Rank, Collection<NexusPlayer>> entry : playerList.asMap().entrySet()) {
             Rank rank = entry.getKey();
             Collection<NexusPlayer> players = entry.getValue();

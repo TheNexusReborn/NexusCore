@@ -152,7 +152,7 @@ public class PunishmentCommands implements CommandExecutor {
             targetPlayer.sendMessage(StarColors.color(MsgType.WARN + "You must type the code " + punishment.getAcknowledgeInfo().getCode() + " in chat before you can speak again."));
         } else if (Stream.of(PunishmentType.BAN, PunishmentType.BLACKLIST, PunishmentType.KICK).anyMatch(punishmentType -> punishment.getType() == punishmentType)) {
             if (targetPlayer != null) {
-                targetPlayer.kickPlayer(punishment.formatKick()); //TODO this doesn't provide an id right away though
+                targetPlayer.kickPlayer(StarColors.color(punishment.formatKick())); //TODO this doesn't provide an id right away though
             }
 
             if (punishment.getType() == PunishmentType.BLACKLIST) {
