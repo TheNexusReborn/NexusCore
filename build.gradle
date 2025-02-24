@@ -38,7 +38,7 @@ dependencies {
         exclude group: 'com.google.protobuf', module: 'protobuf-java'
     }
     api 'org.slf4j:slf4j-nop:2.0.16'
-    compileOnly('com.github.StarDevelopmentLLC:StarCore:0.1.11') {
+    compileOnly('com.github.StarDevelopmentLLC:StarCore:0.1.12') {
         exclude group: 'com.github.StarDevelopmentLLC', module: 'cmdflags'
     }
     compileOnly('com.github.StarDevelopmentLLC:StarChat:0.1.8') {
