@@ -4,43 +4,20 @@ import com.stardevllc.colors.StarColors;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.api.util.Constants;
+import com.thenexusreborn.nexuscore.reflection.ServerReflection;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-import java.lang.reflect.Array;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 
 public final class MCUtils {
     
-    private static Class<?> minecraftServerClass;
-    private static Method getServerMethod;
-    private static Field recentTpsField;
-
-    static {
-        try {
-            minecraftServerClass = Class.forName("net.minecraft.server.v1_8_R3.MinecraftServer");
-            getServerMethod = minecraftServerClass.getDeclaredMethod("getServer");
-            getServerMethod.setAccessible(true);
-            recentTpsField = minecraftServerClass.getDeclaredField("recentTps");
-            recentTpsField.setAccessible(true);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
+    private static final ServerReflection SERVER_REFLECTION = new ServerReflection();
+    
+    @Deprecated
     public static double getRecentTps() {
-        try {
-            Object serverInstance = getServerMethod.invoke(null);
-            Object recentTps = recentTpsField.get(serverInstance);
-            return Math.min(Math.round((double) Array.get(recentTps, 0) * 100.0) / 100.0, 20);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        
-        return -1;
+        return SERVER_REFLECTION.getRecentTps();
     }
     
     public static Rank getSenderRank(CommandSender sender) {
