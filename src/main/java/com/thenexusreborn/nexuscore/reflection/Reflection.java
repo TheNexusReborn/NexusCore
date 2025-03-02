@@ -52,8 +52,9 @@ public class Reflection {
 
     public static Class<?> getNMSClass(String name) {
         try {
-            return Class.forName("net.minecraft.server" + NMS_VERSION + "." + name);
+            return Class.forName("net.minecraft.server." + NMS_VERSION + "." + name);
         } catch (Exception ex) {
+            ex.printStackTrace();
             return null;
         }
     }
