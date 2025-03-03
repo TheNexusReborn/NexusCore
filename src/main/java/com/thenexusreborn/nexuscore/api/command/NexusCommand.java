@@ -49,6 +49,10 @@ public class NexusCommand<T extends JavaPlugin> implements ICommand<T>, TabExecu
         return false;
     }
     
+    public List<String> getCompletions(CommandSender sender, Rank senderRank, String label, String[] args, FlagResult flagResult) {
+        return null;
+    }
+    
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (this.playerOnly && !(sender instanceof Player)) {
@@ -109,9 +113,13 @@ public class NexusCommand<T extends JavaPlugin> implements ICommand<T>, TabExecu
         args = flagResults.args();
         
         if (args.length == 1) {
-            this.subCommands.forEach(scmd -> completions.add(scmd.getName().toLowerCase()));
+            if (this.subCommands.isEmpty()) {
+                completions.addAll(getCompletions(sender, senderRank, label, args, flagResults));
+            } else {
+                this.subCommands.forEach(scmd -> completions.add(scmd.getName().toLowerCase()));
+            }
             String arg = args[0].toLowerCase();
-            completions.removeIf(completion -> !completion.startsWith(arg));
+            completions.removeIf(completion -> !completion.toLowerCase().startsWith(arg));
         } else if (args.length > 1) {
             SubCommand<T> subCommand = getSubCommand(args[0]);
             if (subCommand != null) {
