@@ -188,4 +188,9 @@ public class NexusCommand<T extends JavaPlugin> implements ICommand<T>, TabExecu
     public List<SubCommand<T>> getSubCommands() {
         return subCommands;
     }
+
+    @Override
+    public boolean isPlayerOnly() {
+        return playerOnly;
+    }
 }
