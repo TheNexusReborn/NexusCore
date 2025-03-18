@@ -27,6 +27,8 @@ public class SubCommand<T extends JavaPlugin> implements ICommand<T> {
     protected List<SubCommand<T>> subCommands = new ArrayList<>();
     
     protected CmdFlags cmdFlags = new CmdFlags();
+    
+    protected boolean playerOnly = false;
 
     public SubCommand(T plugin, ICommand<T> parent, int index, String name, String description, Rank minRank, String... aliases) {
         this.plugin = plugin;
@@ -128,5 +130,13 @@ public class SubCommand<T extends JavaPlugin> implements ICommand<T> {
 
     public List<SubCommand<T>> getSubCommands() {
         return subCommands;
+    }
+
+    public boolean isPlayerOnly() {
+        if (this.parent.isPlayerOnly()) {
+            return true;
+        }
+        
+        return this.playerOnly;
     }
 }
