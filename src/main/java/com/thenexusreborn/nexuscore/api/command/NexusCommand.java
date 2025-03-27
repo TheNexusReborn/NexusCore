@@ -49,8 +49,32 @@ public class NexusCommand<T extends JavaPlugin> implements ICommand<T>, TabExecu
         return false;
     }
     
-    public List<String> getCompletions(CommandSender sender, Rank senderRank, String label, String[] args, FlagResult flagResult) {
-        return null;
+    public List<String> getCompletions(CommandSender sender, Rank senderRank, String label, String[] args, FlagResult flagResults) {
+        List<String> completions = new ArrayList<>();
+        
+        if (args.length == 1) {
+            if (this.subCommands.isEmpty()) {
+                completions.addAll(getCompletions(sender, senderRank, label, args, flagResults));
+            } else {
+                this.subCommands.forEach(scmd -> completions.add(scmd.getName().toLowerCase()));
+            }
+            String arg = args[0].toLowerCase();
+            completions.removeIf(completion -> !completion.toLowerCase().startsWith(arg));
+        } else if (args.length > 1) {
+            SubCommand<T> subCommand = getSubCommand(args[0]);
+            if (subCommand != null) {
+                String cmdLabel = args[0];
+                
+                String[] newArgs = new String[args.length - 1];
+                System.arraycopy(args, 1, newArgs, 0, args.length - 1);
+                
+                args = newArgs;
+                
+                completions.addAll(subCommand.getCompletions(sender, senderRank, cmdLabel, args));
+            }
+        }
+        
+        return completions;
     }
     
     @Override
@@ -107,34 +131,10 @@ public class NexusCommand<T extends JavaPlugin> implements ICommand<T>, TabExecu
             return List.of();
         }
         
-        List<String> completions = new ArrayList<>();
-
-        FlagResult flagResults = this.cmdFlags.parse(args);
-        args = flagResults.args();
+        FlagResult flagResult = this.cmdFlags.parse(args);
+        args = flagResult.args();
         
-        if (args.length == 1) {
-            if (this.subCommands.isEmpty()) {
-                completions.addAll(getCompletions(sender, senderRank, label, args, flagResults));
-            } else {
-                this.subCommands.forEach(scmd -> completions.add(scmd.getName().toLowerCase()));
-            }
-            String arg = args[0].toLowerCase();
-            completions.removeIf(completion -> !completion.toLowerCase().startsWith(arg));
-        } else if (args.length > 1) {
-            SubCommand<T> subCommand = getSubCommand(args[0]);
-            if (subCommand != null) {
-                String cmdLabel = args[0];
-
-                String[] newArgs = new String[args.length - 1];
-                System.arraycopy(args, 1, newArgs, 0, args.length - 1);
-
-                args = newArgs;
-                
-                completions.addAll(subCommand.getCompletions(sender, senderRank, cmdLabel, args));
-            }
-        }
-        
-        return completions;
+        return getCompletions(sender, senderRank, label, args, flagResult);
     }
     
     public SubCommand<T> getSubCommand(String name) {

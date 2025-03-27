@@ -53,28 +53,12 @@ public class SubCommand<T extends JavaPlugin> implements ICommand<T> {
 
         //If the execute command returns false, the handle the configured sub commands
         if (execute(sender, senderRank, label, args, flagResults)) {
+            System.out.println("Excute returned true for " + this.getName());
             return;
         }
 
-        if (!(args.length > 0)) {
-            SubCommand<T> subCommand = null;
-            for (SubCommand<T> sc : this.subCommands) {
-                if (args[0].equalsIgnoreCase(sc.getName())) {
-                    subCommand = sc;
-                    break;
-                }
-                
-                if (aliases == null) {
-                    continue;
-                }
-                
-                for (String alias : sc.getAliases()) {
-                    if (args[0].equalsIgnoreCase(alias)) {
-                        subCommand = sc;
-                        break;
-                    }
-                }
-            }
+        if (args.length > 0) {
+            SubCommand<T> subCommand = getSubCommand(args[0]);
 
             if (subCommand == null) {
                 sender.sendMessage(MsgType.WARN.format("Unable to find subcommand matching %v.", args[0]));
@@ -84,10 +68,10 @@ public class SubCommand<T extends JavaPlugin> implements ICommand<T> {
             String sLabel = args[0];
 
             String[] newArgs = new String[args.length - 1];
-            System.arraycopy(args, 1, newArgs, 0, args.length);
+            System.arraycopy(args, 1, newArgs, 0, args.length - 1);
 
             args = newArgs;
-
+            
             subCommand.onCommand(sender, senderRank, sLabel, args, flagResults);
         }
     }
@@ -97,7 +81,51 @@ public class SubCommand<T extends JavaPlugin> implements ICommand<T> {
     }
 
     public List<String> getCompletions(CommandSender sender, Rank senderRank, String label, String[] args) {
-        return List.of();
+        List<String> completions = new ArrayList<>();
+        
+        if (args.length == 1) {
+            if (this.subCommands.isEmpty()) {
+                completions.addAll(getCompletions(sender, senderRank, label, args));
+            } else {
+                this.subCommands.forEach(scmd -> completions.add(scmd.getName().toLowerCase()));
+            }
+            String arg = args[0].toLowerCase();
+            completions.removeIf(completion -> !completion.toLowerCase().startsWith(arg));
+        } else if (args.length > 1) {
+            SubCommand<T> subCommand = getSubCommand(args[0]);
+            if (subCommand != null) {
+                String cmdLabel = args[0];
+                
+                String[] newArgs = new String[args.length - 1];
+                System.arraycopy(args, 1, newArgs, 0, args.length - 1);
+                
+                args = newArgs;
+                
+                completions.addAll(subCommand.getCompletions(sender, senderRank, cmdLabel, args));
+            }
+        }
+        
+        return completions;
+    }
+    
+    public SubCommand<T> getSubCommand(String label) {
+        for (SubCommand<T> subCommand : this.subCommands) {
+            if (subCommand.getName().equalsIgnoreCase(label)) {
+                return subCommand;
+            }
+            
+            if (subCommand.getAliases() == null) {
+                continue;
+            }
+            
+            for (String alias : subCommand.getAliases()) {
+                if (alias.equalsIgnoreCase(label)) {
+                    return subCommand;
+                }
+            }
+        }
+        
+        return null;
     }
     
     public T getPlugin() {
