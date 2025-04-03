@@ -53,7 +53,6 @@ public class SubCommand<T extends JavaPlugin> implements ICommand<T> {
 
         //If the execute command returns false, the handle the configured sub commands
         if (execute(sender, senderRank, label, args, flagResults)) {
-            System.out.println("Excute returned true for " + this.getName());
             return;
         }
 
