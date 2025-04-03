@@ -1,13 +1,10 @@
 package com.thenexusreborn.nexuscore.cmds;
 
-import com.stardevllc.cmdflags.FlagResult;
-import com.stardevllc.colors.StarColors;
+import com.stardevllc.starcore.StarColors;
+import com.stardevllc.starcore.cmdflags.FlagResult;
 import com.stardevllc.time.TimeFormat;
 import com.thenexusreborn.api.NexusAPI;
-import com.thenexusreborn.api.player.NexusPlayer;
-import com.thenexusreborn.api.player.PlayerToggles;
-import com.thenexusreborn.api.player.Rank;
-import com.thenexusreborn.api.player.Toggle;
+import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.tags.Tag;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.api.command.NexusCommand;
@@ -18,9 +15,7 @@ import org.bukkit.entity.Player;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 
 public class ProfileCmd extends NexusCommand<NexusCore> {

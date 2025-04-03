@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.cmds.servers;
 
-import com.stardevllc.colors.StarColors;
+import com.stardevllc.starcore.StarColors;
 import com.thenexusreborn.api.server.NexusServer;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.api.command.ICommand;
@@ -9,7 +9,7 @@ import org.bukkit.command.CommandSender;
 
 public class ServersStateSubCommand extends ServersSubCommand {
     public ServersStateSubCommand(NexusCore plugin, ICommand<NexusCore> parent) {
-        super(plugin, parent, "state", "", "s");
+        super(plugin, parent, "state", "Gets the state of the server. This is the raw data though", "s");
     }
 
     @Override

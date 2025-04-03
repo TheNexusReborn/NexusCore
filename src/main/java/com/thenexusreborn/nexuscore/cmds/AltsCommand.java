@@ -1,21 +1,17 @@
 package com.thenexusreborn.nexuscore.cmds;
 
-import com.stardevllc.cmdflags.FlagResult;
-import com.stardevllc.colors.StarColors;
 import com.stardevllc.helper.Pair;
 import com.stardevllc.helper.StringHelper;
+import com.stardevllc.starcore.StarColors;
+import com.stardevllc.starcore.cmdflags.FlagResult;
 import com.thenexusreborn.api.NexusAPI;
-import com.thenexusreborn.api.player.IPEntry;
-import com.thenexusreborn.api.player.PlayerManager;
-import com.thenexusreborn.api.player.Rank;
+import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.api.command.NexusCommand;
 import com.thenexusreborn.nexuscore.util.MsgType;
 import org.bukkit.command.CommandSender;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class AltsCommand extends NexusCommand<NexusCore> {
     

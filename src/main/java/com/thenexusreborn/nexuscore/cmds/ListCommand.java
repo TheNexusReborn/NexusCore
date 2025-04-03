@@ -1,8 +1,8 @@
 package com.thenexusreborn.nexuscore.cmds;
 
 import com.google.common.collect.TreeMultimap;
-import com.stardevllc.cmdflags.FlagResult;
-import com.stardevllc.colors.StarColors;
+import com.stardevllc.starcore.StarColors;
+import com.stardevllc.starcore.cmdflags.FlagResult;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Rank;
@@ -14,9 +14,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 public class ListCommand extends NexusCommand<NexusCore> {
     public ListCommand(NexusCore plugin) {

@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.cmds.servers;
 
-import com.stardevllc.cmdflags.FlagResult;
+import com.stardevllc.starcore.cmdflags.FlagResult;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.api.server.NexusServer;
@@ -12,7 +12,7 @@ import org.bukkit.command.CommandSender;
 
 public class ServersListSubCommand extends SubCommand<NexusCore> {
     public ServersListSubCommand(NexusCore plugin, ICommand<NexusCore> parent) {
-        super(plugin, parent, 0, "list", "", Rank.ADMIN);
+        super(plugin, parent, 0, "list", "List of the servers connected", Rank.ADMIN);
     }
 
     @Override

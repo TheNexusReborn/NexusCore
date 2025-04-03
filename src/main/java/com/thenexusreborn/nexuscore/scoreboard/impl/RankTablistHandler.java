@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.scoreboard.impl;
 
-import com.stardevllc.colors.StarColors;
+import com.stardevllc.starcore.StarColors;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Rank;
@@ -10,10 +10,7 @@ import com.thenexusreborn.api.scoreboard.wrapper.ITeam;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class RankTablistHandler extends TablistHandler {
     

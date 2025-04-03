@@ -1,11 +1,12 @@
 package com.thenexusreborn.nexuscore.cmds;
 
-import com.stardevllc.colors.StarColors;
+import com.stardevllc.starcore.StarColors;
 import com.thenexusreborn.api.NexusAPI;
-import com.thenexusreborn.api.player.*;
+import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.api.punishment.Punishment;
 import com.thenexusreborn.nexuscore.NexusCore;
-import com.thenexusreborn.nexuscore.util.*;
+import com.thenexusreborn.nexuscore.util.MCUtils;
+import com.thenexusreborn.nexuscore.util.MsgType;
 import org.bukkit.Bukkit;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;

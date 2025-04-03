@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.cmds.rank;
 
-import com.stardevllc.colors.StarColors;
+import com.stardevllc.starcore.StarColors;
 import com.thenexusreborn.api.player.PlayerRanks;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.api.util.Constants;
@@ -10,7 +10,7 @@ import org.bukkit.command.CommandSender;
 
 public class RankSetSubCommand extends RankModifySubcommand {
     public RankSetSubCommand(NexusCore plugin, ICommand<NexusCore> parent) {
-        super(plugin, parent, "set", "s");
+        super(plugin, parent, "set", "Clear and set a player's rank", "s");
     }
 
     @Override

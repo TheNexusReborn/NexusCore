@@ -1,24 +1,18 @@
 package com.thenexusreborn.nexuscore.cmds;
 
 import com.stardevllc.helper.Pair;
-import com.stardevllc.colors.StarColors;
+import com.stardevllc.starcore.StarColors;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.PlayerManager;
 import com.thenexusreborn.api.player.Rank;
-import com.thenexusreborn.api.punishment.PardonInfo;
-import com.thenexusreborn.api.punishment.Punishment;
-import com.thenexusreborn.api.punishment.PunishmentType;
+import com.thenexusreborn.api.punishment.*;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.util.MCUtils;
 import com.thenexusreborn.nexuscore.util.MsgType;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
+import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @SuppressWarnings("DuplicatedCode")
 public class PunishRemoveCommands implements CommandExecutor {

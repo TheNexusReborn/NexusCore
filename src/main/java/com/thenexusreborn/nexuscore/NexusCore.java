@@ -1,19 +1,17 @@
 package com.thenexusreborn.nexuscore;
 
 import com.stardevllc.clock.ClockManager;
-import com.stardevllc.colors.StarColors;
 import com.stardevllc.helper.FileHelper;
 import com.stardevllc.starchat.StarChat;
 import com.stardevllc.starchat.channels.ChatChannel;
+import com.stardevllc.starcore.StarColors;
 import com.stardevllc.starcore.utils.ServerProperties;
 import com.stardevllc.starui.GuiManager;
 import com.sun.net.httpserver.HttpServer;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.gamearchive.GameLogExporter;
 import com.thenexusreborn.api.player.NexusPlayer;
-import com.thenexusreborn.api.server.InstanceServer;
-import com.thenexusreborn.api.server.NexusServer;
-import com.thenexusreborn.api.server.VirtualServer;
+import com.thenexusreborn.api.server.*;
 import com.thenexusreborn.api.sql.objects.SQLDatabase;
 import com.thenexusreborn.nexuscore.api.NexusSpigotPlugin;
 import com.thenexusreborn.nexuscore.api.events.NexusServerSetupEvent;
@@ -48,10 +46,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.function.Supplier;

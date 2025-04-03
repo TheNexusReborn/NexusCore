@@ -13,7 +13,7 @@ import java.util.List;
 
 public class ServersInfoSubCommand extends ServersSubCommand {
     public ServersInfoSubCommand(NexusCore plugin, ICommand<NexusCore> parent) {
-        super(plugin, parent, "info", "", "i");
+        super(plugin, parent, "info", "Gets information about a server", "i");
     }
     
     protected void handle(CommandSender sender, NexusServer server) {

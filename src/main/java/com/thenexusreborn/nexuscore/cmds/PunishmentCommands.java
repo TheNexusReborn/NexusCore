@@ -2,30 +2,20 @@ package com.thenexusreborn.nexuscore.cmds;
 
 import com.stardevllc.helper.CodeGenerator;
 import com.stardevllc.helper.Pair;
-import com.stardevllc.colors.StarColors;
+import com.stardevllc.starcore.StarColors;
 import com.stardevllc.time.TimeParser;
 import com.thenexusreborn.api.NexusAPI;
-import com.thenexusreborn.api.player.IPEntry;
-import com.thenexusreborn.api.player.PlayerManager;
-import com.thenexusreborn.api.player.Rank;
-import com.thenexusreborn.api.punishment.AcknowledgeInfo;
-import com.thenexusreborn.api.punishment.Punishment;
-import com.thenexusreborn.api.punishment.PunishmentType;
-import com.thenexusreborn.api.punishment.Visibility;
+import com.thenexusreborn.api.player.*;
+import com.thenexusreborn.api.punishment.*;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.util.MCUtils;
 import com.thenexusreborn.nexuscore.util.MsgType;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Stream;
 
 @SuppressWarnings("DuplicatedCode")
@@ -147,7 +137,7 @@ public class PunishmentCommands implements CommandExecutor {
                 }
             }
         } else if (punishment.getType() == PunishmentType.WARN) {
-            punishment.setAcknowledgeInfo(new AcknowledgeInfo(CodeGenerator.generate(8, true, true, true)));
+            punishment.setAcknowledgeInfo(new AcknowledgeInfo(CodeGenerator.generateAllOptions(8)));
             targetPlayer.sendMessage(StarColors.color(MsgType.WARN + "You have been warned by " + punishment.getActorNameCache() + " for " + punishment.getReason() + "."));
             targetPlayer.sendMessage(StarColors.color(MsgType.WARN + "You must type the code " + punishment.getAcknowledgeInfo().getCode() + " in chat before you can speak again."));
         } else if (Stream.of(PunishmentType.BAN, PunishmentType.BLACKLIST, PunishmentType.KICK).anyMatch(punishmentType -> punishment.getType() == punishmentType)) {

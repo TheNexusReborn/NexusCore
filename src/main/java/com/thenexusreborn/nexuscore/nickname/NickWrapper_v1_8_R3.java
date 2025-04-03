@@ -57,7 +57,7 @@ public class NickWrapper_v1_8_R3 {
     public void setSkinProperties(Player player, Skin skin) {
         CraftPlayer craftPlayer = (CraftPlayer) player;
         craftPlayer.getProfile().getProperties().clear();
-        craftPlayer.getProfile().getProperties().put("0", new Property("textures", skin.value(), skin.signature()));
+        craftPlayer.getProfile().getProperties().put("0", new Property("textures", skin.getValue(), skin.getSignature()));
     }
 
     public void refreshSelf(JavaPlugin plugin, Player nicked, String name) {

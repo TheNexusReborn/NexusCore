@@ -1,13 +1,11 @@
 package com.thenexusreborn.nexuscore.cmds.rank;
 
-import com.stardevllc.cmdflags.FlagResult;
-import com.stardevllc.colors.StarColors;
 import com.stardevllc.helper.Pair;
+import com.stardevllc.starcore.StarColors;
+import com.stardevllc.starcore.cmdflags.FlagResult;
 import com.stardevllc.time.TimeParser;
 import com.thenexusreborn.api.NexusAPI;
-import com.thenexusreborn.api.player.PlayerManager;
-import com.thenexusreborn.api.player.PlayerRanks;
-import com.thenexusreborn.api.player.Rank;
+import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.api.command.ICommand;
 import com.thenexusreborn.nexuscore.api.command.SubCommand;
@@ -19,8 +17,8 @@ import org.bukkit.entity.Player;
 import java.util.UUID;
 
 public abstract class RankModifySubcommand extends SubCommand<NexusCore> {
-    public RankModifySubcommand(NexusCore plugin, ICommand<NexusCore> parent, String name, String... aliases) {
-        super(plugin, parent, 0, name, "", Rank.ADMIN, "s", "add", "a");
+    public RankModifySubcommand(NexusCore plugin, ICommand<NexusCore> parent, String name, String description, String... aliases) {
+        super(plugin, parent, 0, name, description, Rank.ADMIN, "s", "add", "a");
     }
 
     @Override

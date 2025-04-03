@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.cmds.servers;
 
-import com.stardevllc.colors.StarColors;
+import com.stardevllc.starcore.StarColors;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.server.NexusServer;
 import com.thenexusreborn.nexuscore.NexusCore;
@@ -10,13 +10,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class ServersPlayersSubCommand extends ServersSubCommand {
     public ServersPlayersSubCommand(NexusCore plugin, ICommand<NexusCore> parent) {
-        super(plugin, parent, "players", "", "p");
+        super(plugin, parent, "players", "List the players of the server", "p");
     }
 
     @Override
