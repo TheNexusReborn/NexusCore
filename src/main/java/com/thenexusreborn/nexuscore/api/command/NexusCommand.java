@@ -134,7 +134,11 @@ public class NexusCommand<T extends JavaPlugin> implements ICommand<T>, TabExecu
         FlagResult flagResult = this.cmdFlags.parse(args);
         args = flagResult.args();
         
-        return getCompletions(sender, senderRank, label, args, flagResult);
+        try {
+            return getCompletions(sender, senderRank, label, args, flagResult);
+        } catch (Throwable t) {
+            return List.of();
+        }
     }
     
     public SubCommand<T> getSubCommand(String name) {
