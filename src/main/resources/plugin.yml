@@ -53,4 +53,5 @@ commands:
     aliases: [nick]
   unnickname:
     aliases: [unnick]
+  realname:
   profile:

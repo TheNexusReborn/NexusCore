@@ -136,6 +136,7 @@ public class NexusCore extends JavaPlugin implements Listener {
         
         new NickCommand(this);
         new UnnickCommand(this);
+        new RealnameCommand(this);
         new BotCommand(this);
         new ProfileCmd(this);
 
