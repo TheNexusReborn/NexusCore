@@ -25,7 +25,7 @@ public class ProfileCmd extends NexusCommand<NexusCore> {
     public ProfileCmd(NexusCore plugin) {
         super(plugin, "profile", "", Rank.HELPER);
     }
-
+    
     @Override
     public boolean execute(CommandSender sender, Rank senderRank, String label, String[] args, FlagResult flagResults) {
         NexusPlayer target;
@@ -40,8 +40,12 @@ public class ProfileCmd extends NexusCommand<NexusCore> {
         if (args.length > 0) {
             target = NexusAPI.getApi().getPlayerManager().getNexusPlayer(args[0]);
             
+            if (target != null && target.getNickname() != null && args[0].equalsIgnoreCase(target.getTrueName()) && target.getRank().ordinal() < senderRank.ordinal()) {
+                target = null;
+            }
+            
             if (target == null) {
-                MsgType.ERROR.send(sender, "Invalid player name %v", args[0]);
+                MsgType.ERROR.send(sender, "Invalid player name %v. Are they offline?", args[0]);
                 return true;
             }
         } else {
@@ -49,20 +53,25 @@ public class ProfileCmd extends NexusCommand<NexusCore> {
         }
         
         if (target == null) {
-            MsgType.ERROR.send(sender, "Invalid target");
+            MsgType.ERROR.send(sender, "Invalid target. Are they offline?");
             return true;
         }
-
+        
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a z");
         TimeFormat timeFormat = new TimeFormat("%*#0y %%*#0mo %%*#0d %%*#0h %%#0m %%00s%");
         DecimalFormat numberFormat = new DecimalFormat("#,###,###,###.##");
         
+        Rank rank = target.getEffectiveRank();
+        
+        boolean senderEqualOrHigher = senderRank.ordinal() <= target.getRank().ordinal();
+        
         sender.sendMessage(StarColors.color("&6&l>> &eProfile information for &b" + target.getName()));
-        sendProfileLine(sender, "Server", (target.getServer() != null ? target.getServer().getName() : "Not online"));
+            sendProfileLine(sender, "Server", (target.getServer() != null ? target.getServer().getName() : "Not online"));
         sendProfileLine(sender, "Level", target.getExperience().getLevel());
         sendProfileLine(sender, "Level XP", numberFormat.format(target.getExperience().getLevelXp()));
         sendProfileLine(sender, "First Join", dateFormat.format(target.getPlayerTime().getFirstJoined()));
         sendProfileLine(sender, "Last Login", dateFormat.format(target.getPlayerTime().getLastLogin()));
+        
         if (target.isOnline()) {
             sendProfileLine(sender, "Last Logout", "&aOnline");
         } else {
@@ -72,11 +81,15 @@ public class ProfileCmd extends NexusCommand<NexusCore> {
         sendProfileLine(sender, "Play Time", timeFormat.format(target.getPlayerTime().getPlaytime()));
         sendProfileLine(sender, "Nexites", numberFormat.format(target.getBalance().getNexites()));
         sendProfileLine(sender, "Credits", numberFormat.format(target.getBalance().getCredits()));
-
-        Rank rank = target.getEffectiveRank();
+        
         String rankName = rank.getColor() + (rank.isBold() ? "&l" : "") + rank.name().replace("_", " ");
         sendProfileLine(sender, "Primary Rank", rankName);
-
+        
+        if (target.getNickname() != null && senderEqualOrHigher) {
+            sendProfileLine(sender, "Real Primary Rank", target.getRank());
+            sendProfileLine(sender, "Real Name", target.getTrueName());
+        }
+        
         if (target.getNickname() == null) {
             StringBuilder secondaryRanksBuilder = new StringBuilder();
             Map<Rank, Long> ranks = target.getRanks().findAll();
@@ -105,20 +118,20 @@ public class ProfileCmd extends NexusCommand<NexusCore> {
         }
         
         sendProfileLine(sender, "Unlocked Tags", tagsBuilder.toString());
-
+        
         PlayerToggles toggles = target.getToggles();
-
+        
         for (Toggle.Info toggleInfo : NexusAPI.getApi().getToggleRegistry()) {
             if (target.getEffectiveRank().ordinal() <= toggleInfo.getMinRank().ordinal()) {
                 sendProfileLine(sender, toggleInfo.getDisplayName(), toggles.getValue(toggleInfo.getName()));
             }
         }
-
+        
         for (Function<NexusPlayer, Map<String, Object>> supplemental : supplementals) {
             Map<String, Object> values = supplemental.apply(target);
             values.forEach((k, v) -> sendProfileLine(sender, k, v));
         }
-
+        
         return true;
     }
     
