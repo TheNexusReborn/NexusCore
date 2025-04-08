@@ -23,6 +23,9 @@ public class UnnickCommand extends NexusCommand<NexusCore> {
         SkinManager skinManager = Bukkit.getServicesManager().getRegistration(SkinManager.class).getProvider();
         plugin.getNickWrapper().setNick(plugin, ((Player) sender), nexusPlayer.getTrueName(), skinManager.getFromMojang(nexusPlayer.getUniqueId()));
         nexusPlayer.setNickname(null);
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            NexusAPI.getApi().getPrimaryDatabase().saveSilent(nexusPlayer);
+        });
         return true;
     }
 }
