@@ -73,22 +73,24 @@ public class ProfileCmd extends NexusCommand<NexusCore> {
         sendProfileLine(sender, "Nexites", numberFormat.format(target.getBalance().getNexites()));
         sendProfileLine(sender, "Credits", numberFormat.format(target.getBalance().getCredits()));
 
-        Rank rank = target.getRank();
+        Rank rank = target.getEffectiveRank();
         String rankName = rank.getColor() + (rank.isBold() ? "&l" : "") + rank.name().replace("_", " ");
         sendProfileLine(sender, "Primary Rank", rankName);
 
-        StringBuilder secondaryRanksBuilder = new StringBuilder();
-        Map<Rank, Long> ranks = target.getRanks().findAll();
-        if (ranks.size() > 2) {
-            ranks.forEach((r, expire) -> {
-                if (r == rank) {
-                    return;
-                }
-                
-                String rn = r.getColor() + (r.isBold() ? "&l" : "") + r.name().replace("_", " ");
-                secondaryRanksBuilder.append(rn).append(" ");
-            });
-            sendProfileLine(sender, "Secondary Ranks", secondaryRanksBuilder.toString());
+        if (target.getNickname() == null) {
+            StringBuilder secondaryRanksBuilder = new StringBuilder();
+            Map<Rank, Long> ranks = target.getRanks().findAll();
+            if (ranks.size() > 2) {
+                ranks.forEach((r, expire) -> {
+                    if (r == rank) {
+                        return;
+                    }
+                    
+                    String rn = r.getColor() + (r.isBold() ? "&l" : "") + r.name().replace("_", " ");
+                    secondaryRanksBuilder.append(rn).append(" ");
+                });
+                sendProfileLine(sender, "Secondary Ranks", secondaryRanksBuilder.toString());
+            }
         }
         
         if (target.hasActiveTag()) {
@@ -107,7 +109,7 @@ public class ProfileCmd extends NexusCommand<NexusCore> {
         PlayerToggles toggles = target.getToggles();
 
         for (Toggle.Info toggleInfo : NexusAPI.getApi().getToggleRegistry()) {
-            if (target.getRank().ordinal() <= toggleInfo.getMinRank().ordinal()) {
+            if (target.getEffectiveRank().ordinal() <= toggleInfo.getMinRank().ordinal()) {
                 sendProfileLine(sender, toggleInfo.getDisplayName(), toggles.getValue(toggleInfo.getName()));
             }
         }

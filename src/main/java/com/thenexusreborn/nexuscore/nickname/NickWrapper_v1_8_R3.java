@@ -55,12 +55,14 @@ public class NickWrapper_v1_8_R3 {
     }
 
     public void setSkinProperties(Player player, Skin skin) {
-        CraftPlayer craftPlayer = (CraftPlayer) player;
-        craftPlayer.getProfile().getProperties().clear();
-        craftPlayer.getProfile().getProperties().put("0", new Property("textures", skin.getValue(), skin.getSignature()));
+        if (skin != null) {
+            CraftPlayer craftPlayer = (CraftPlayer) player;
+            craftPlayer.getProfile().getProperties().clear();
+            craftPlayer.getProfile().getProperties().put("0", new Property("textures", skin.getValue(), skin.getSignature()));
+        }
     }
 
-    public void refreshSelf(JavaPlugin plugin, Player nicked, String name) {
+    public void refreshSelf(JavaPlugin plugin, Player nicked) {
         CraftPlayer craftPlayer = (CraftPlayer) nicked;
         PacketPlayOutPlayerInfo removePlayer = new PacketPlayOutPlayerInfo(action_remove, craftPlayer.getHandle());
         PacketPlayOutPlayerInfo addPlayer = new PacketPlayOutPlayerInfo(action_add, craftPlayer.getHandle());
@@ -95,6 +97,6 @@ public class NickWrapper_v1_8_R3 {
         setProfileName(player.getPlayer(), name);
         setSkinProperties(player.getPlayer(), skin);
         refreshOthers(plugin, player.getPlayer());
-        refreshSelf(plugin, player.getPlayer(), name);
+        refreshSelf(plugin, player.getPlayer());
     }
 }

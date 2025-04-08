@@ -4,9 +4,12 @@ import com.stardevllc.clock.clocks.Stopwatch;
 import com.stardevllc.helper.StringHelper;
 import com.stardevllc.starchat.context.ChatContext;
 import com.stardevllc.starcore.StarColors;
+import com.stardevllc.starcore.skins.Skin;
+import com.stardevllc.starcore.skins.SkinManager;
 import com.stardevllc.time.TimeUnit;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.gamearchive.GameInfo;
+import com.thenexusreborn.api.nickname.Nickname;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.punishment.Punishment;
 import com.thenexusreborn.api.scoreboard.NexusScoreboard;
@@ -79,13 +82,14 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
 
             if (!getPlayers().containsKey(player.getUniqueId())) {
                 Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-                    NexusPlayer nexusPlayer = null;
+                    NexusPlayer nexusPlayer;
                     if (!getUuidNameMap().containsKey(player.getUniqueId())) {
                         nexusPlayer = createPlayerData(player.getUniqueId(), player.getName());
                     } else {
                         try {
                             nexusPlayer = NexusAPI.getApi().getPrimaryDatabase().get(NexusPlayer.class, "uniqueId", player.getUniqueId()).getFirst();
                         } catch (SQLException ex) {
+                            nexusPlayer = null;
                             ex.printStackTrace();
                         }
                     }
@@ -123,9 +127,17 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                     InetSocketAddress socketAddress = player.getAddress();
                     String hostName = socketAddress.getHostString();
                     NexusAPI.getApi().getPlayerManager().addIpHistory(player.getUniqueId(), hostName);
+                    
+                    Nickname nickname = nexusPlayer.getNickname();
+                    SkinManager skinManager = Bukkit.getServicesManager().getRegistration(SkinManager.class).getProvider();
+                    Skin skin = (nickname != null) ? skinManager.getFromMojang(UUID.fromString(nickname.getSkin())) : null;
 
                     NexusPlayer finalNexusPlayer = nexusPlayer;
                     Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                        if (skin != null) {
+                            plugin.getNickWrapper().setNick(plugin, player, nickname.getName(), skin);
+                        }
+                        
                         NexusScoreboard scoreboard = new SpigotNexusScoreboard(finalNexusPlayer);
                         scoreboard.init();
 
@@ -222,7 +234,7 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                 long playTime = session.getTimeOnline();
                 SQLDatabase database = NexusAPI.getApi().getPrimaryDatabase();
                 Table table = database.getTable(GameInfo.class);
-                String query = "select * from " + table.getName() + " where `gameStart`>='" + session.getStart() + "' and `gameEnd` <= '" + session.getEnd() + "' and `players` like '%" + nexusPlayer.getName() + "%';";
+                String query = "select * from " + table.getName() + " where `gameStart`>='" + session.getStart() + "' and `gameEnd` <= '" + session.getEnd() + "' and `players` like '%" + e.getPlayer().getName() + "%';";
                 try {
                     List<Row> rows = database.executeQuery(query);
                     session.setGamesPlayed(rows.size());
@@ -241,7 +253,7 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
             this.players.remove(nexusPlayer.getUniqueId());
             this.plugin.getNexusServer().quit(nexusPlayer);
             if (nexusPlayer.getRank().ordinal() <= Rank.MEDIA.ordinal()) {
-                plugin.getStaffChannel().sendMessage(new ChatContext(nexusPlayer.getDisplayName() + " &7disconnected"));
+                plugin.getStaffChannel().sendMessage(new ChatContext(nexusPlayer.getTrueDisplayName() + " &7disconnected"));
             }
         }
     }

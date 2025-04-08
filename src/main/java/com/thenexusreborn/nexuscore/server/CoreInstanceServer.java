@@ -26,7 +26,7 @@ public class CoreInstanceServer extends InstanceServer {
         }
         
         if (nexusPlayer.getRank().ordinal() <= Rank.MEDIA.ordinal()) {
-            plugin.getStaffChannel().sendMessage(new ChatContext(nexusPlayer.getDisplayName() + " &7&l-> &6" + name));
+            plugin.getStaffChannel().sendMessage(new ChatContext(nexusPlayer.getTrueDisplayName() + " &7&l-> &6" + name));
         }
     }
 

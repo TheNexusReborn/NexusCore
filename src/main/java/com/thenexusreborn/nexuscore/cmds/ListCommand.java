@@ -41,7 +41,7 @@ public class ListCommand extends NexusCommand<NexusCore> {
                 }
             }
 
-            playerList.put(nexusPlayer.getRank(), nexusPlayer);
+            playerList.put(nexusPlayer.getEffectiveRank(), nexusPlayer);
             playerCount++;
         }
 

@@ -56,8 +56,8 @@ public class MessageCommand extends NexusCommand<NexusCore> {
             sb.append(args[i]).append(" ");
         }
 
-        player.sendMessage("&6&l>> &2&lPRIVATE &2to " + target.getRank().getColor() + target.getName() + "&8: &a" + sb);
-        target.sendMessage("&6&l>> &2&lPRIVATE &2from " + player.getRank().getColor() + player.getName() + "&8: &a" + sb);
+        player.sendMessage("&6&l>> &2&lPRIVATE &2to " + target.getEffectiveRank().getColor() + target.getName() + "&8: &a" + sb);
+        target.sendMessage("&6&l>> &2&lPRIVATE &2from " + player.getEffectiveRank().getColor() + player.getName() + "&8: &a" + sb);
         player.setLastMessage(target);
         target.setLastMessage(player);
         return true;

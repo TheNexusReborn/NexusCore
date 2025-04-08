@@ -30,7 +30,13 @@ public class SpigotPlayerProxy extends PlayerProxy {
     
     @Override
     public String getName() {
-        return Bukkit.getPlayer(uniqueId).getName();
+        Player player = Bukkit.getPlayer(uniqueId);
+        
+        if (player == null) {
+            return null;
+        }
+        
+        return player.getName();
     }
 
     @Override

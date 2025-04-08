@@ -28,6 +28,7 @@ import com.thenexusreborn.nexuscore.discord.NexusBot;
 import com.thenexusreborn.nexuscore.hooks.NexusPapiExpansion;
 import com.thenexusreborn.nexuscore.http.GameHttpHandler;
 import com.thenexusreborn.nexuscore.http.ServerHttpHandler;
+import com.thenexusreborn.nexuscore.nickname.NickWrapper_v1_8_R3;
 import com.thenexusreborn.nexuscore.player.SpigotPlayerManager;
 import com.thenexusreborn.nexuscore.server.CoreInstanceServer;
 import com.thenexusreborn.nexuscore.thread.*;
@@ -65,6 +66,8 @@ public class NexusCore extends JavaPlugin implements Listener {
     private GuiManager guiManager;
 
     private NexusBot nexusBot;
+    
+    private NickWrapper_v1_8_R3 nickWrapper = new NickWrapper_v1_8_R3();
 
     private List<DiscordVerifyCode> discordVerifyCodes = new ArrayList<>();
 
@@ -113,7 +116,7 @@ public class NexusCore extends JavaPlugin implements Listener {
 
         this.starChatPlugin = (StarChat) pluginManager.getPlugin("StarChat");
         this.starChatPlugin.getGlobalChannel().setSenderFormat("&8(&2&l%nexuscore_level%&8) &r%nexuscore_displayname%&8: %nexuscore_chatcolor%{message}");
-        this.starChatPlugin.getStaffChannel().setSenderFormat("&2&l[&aSTAFF&2&l] &r%nexuscore_coloredname%: &f{message}");
+        this.starChatPlugin.getStaffChannel().setSenderFormat("&2&l[&aSTAFF&2&l] &r%nexuscore_coloredname_true%: &f{message}");
         this.starChatPlugin.getStaffChannel().setSystemFormat("&2&l[&aSTAFF&2&l] &f{message}");
         this.starChatPlugin.getStaffChannel().setSendPermission("nexuscore.staff.send");
         this.starChatPlugin.getStaffChannel().setViewPermission("nexuscore.staff.view");
@@ -131,7 +134,8 @@ public class NexusCore extends JavaPlugin implements Listener {
         Bukkit.getServer().getPluginManager().registerEvents(this, this);
         getLogger().info("Registered Event Listeners");
         
-        new NickCmd(this);
+        new NickCommand(this);
+        new UnnickCommand(this);
         new BotCommand(this);
         new ProfileCmd(this);
 
@@ -240,7 +244,11 @@ public class NexusCore extends JavaPlugin implements Listener {
         
         this.nexusBot.start();
     }
-
+    
+    public NickWrapper_v1_8_R3 getNickWrapper() {
+        return nickWrapper;
+    }
+    
     public List<DiscordVerifyCode> getDiscordVerifyCodes() {
         return discordVerifyCodes;
     }

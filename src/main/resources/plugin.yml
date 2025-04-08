@@ -50,5 +50,7 @@ commands:
   nexusbot: 
   tagadmin:
   nickname:
-    alias: [nick]
+    aliases: [nick]
+  unnickname:
+    aliases: [unnick]
   profile:

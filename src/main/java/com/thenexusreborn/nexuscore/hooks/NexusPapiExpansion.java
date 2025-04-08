@@ -31,20 +31,47 @@ public class NexusPapiExpansion extends PlaceholderExpansion {
         }
 
         NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(player.getUniqueId());
-        if (params.equalsIgnoreCase("coloredname")) {
+        if (params.startsWith("coloredname")) {
+            if (params.contains("_true")) {
+                return nexusPlayer.getTrueColoredName();
+            }
+            
             return nexusPlayer.getColoredName();
-        } else if (params.equalsIgnoreCase("displayname")) {
+        } else if (params.startsWith("displayname")) {
             String tag;
             if (nexusPlayer.hasActiveTag()) {
                 tag = " " + nexusPlayer.getActiveTag().getDisplayName();
             } else {
                 tag =  "";
             }
-            return nexusPlayer.getDisplayName() + tag;
-        } else if (params.equalsIgnoreCase("level")) {
-            return MCUtils.formatNumber(nexusPlayer.getExperience().getLevel());
-        } else if (params.equalsIgnoreCase("chatcolor")) {
-            Rank rank = nexusPlayer.getRank();
+            
+            String displayName;
+            
+            if (params.contains("_true")) {
+                displayName = nexusPlayer.getTrueDisplayName();
+            } else {
+                displayName = nexusPlayer.getDisplayName();
+            }
+            
+            return displayName + tag;
+        } else if (params.startsWith("level")) {
+            int level;
+            if (params.contains("_true")) {
+                level = nexusPlayer.getTrueExperience().getLevel();
+            } else {
+                level = nexusPlayer.getExperience().getLevel();
+            }
+            
+            return MCUtils.formatNumber(level);
+        } else if (params.startsWith("chatcolor")) {
+            Rank rank;
+            
+            if (params.contains("_true")) {
+                rank = nexusPlayer.getRank();
+            } else {
+                rank = nexusPlayer.getEffectiveRank();
+            }
+            
             if (rank == Rank.NEXUS) {
                 return "&6";
             } else if (rank.ordinal() >= Rank.ADMIN.ordinal() && rank.ordinal() <= Rank.HELPER.ordinal()) {
