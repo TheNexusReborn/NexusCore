@@ -253,7 +253,9 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
             this.players.remove(nexusPlayer.getUniqueId());
             this.plugin.getNexusServer().quit(nexusPlayer);
             if (nexusPlayer.getRank().ordinal() <= Rank.MEDIA.ordinal()) {
-                plugin.getStaffChannel().sendMessage(new ChatContext(nexusPlayer.getTrueDisplayName() + " &7disconnected"));
+                if (nexusPlayer.getNickname() == null) { //TODO Need a change from StarChat to filter receivers
+                    plugin.getStaffChannel().sendMessage(new ChatContext(nexusPlayer.getTrueDisplayName() + " &7disconnected"));
+                }
             }
         }
     }
