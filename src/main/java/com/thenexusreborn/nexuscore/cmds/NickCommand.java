@@ -46,18 +46,31 @@ public class NickCommand extends NexusCommand<NexusCore> {
         
         String name = args[0];
         
-        if (Bukkit.getPlayerExact(args[0]) == null) {
-            plugin.getLogger().info("Could not find exact player");
-            if (Bukkit.getPlayer(name) != null) {
-                MsgType.WARN.send(sender, "You cannot use the name of a player already online");
-                return true;
+        Player target = (Player) sender;
+        if (!(name.equalsIgnoreCase("self") || name.equalsIgnoreCase(target.getName()))) {
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                if (p.getName().equalsIgnoreCase(name)) {
+                    NexusPlayer np = NexusAPI.getApi().getPlayerManager().getNexusPlayer(p.getUniqueId());
+                    if (np.getNickname() != null && np.getNickname().getName().equalsIgnoreCase(name)) {
+                        target = p;
+                        break;
+                    }
+                    
+                    MsgType.WARN.send(sender, "You cannot use the name of a player already online");
+                    return true;
+                }
             }
+            
+            if (Bukkit.getPlayerExact(args[0]) == null) {
+                plugin.getLogger().info("Could not find exact player");
+                if (Bukkit.getPlayer(name) != null) {
+                    MsgType.WARN.send(sender, "You cannot use the name of a player already online");
+                    return true;
+                }
+            }
+        } else {
+            name = target.getName();
         }
-
-//        if (Bukkit.getPlayer(name) != null) {
-//            MsgType.WARN.send(sender, "You cannot use the name of a player already online");
-//            return true;
-//        }
         
         UUID uuidFromName = NexusAPI.getApi().getPlayerManager().getUUIDFromName(name);
         if (uuidFromName != null) {
@@ -107,7 +120,7 @@ public class NickCommand extends NexusCommand<NexusCore> {
             }
         }
         
-        Player target = (Player) sender;
+        
         if (flagResults.getValue(TARGET) != null) {
             if (senderRank.ordinal() > Rank.ADMIN.ordinal()) {
                 MsgType.WARN.send(sender, "You are not allowed to set the nickname of another player.");
@@ -190,7 +203,7 @@ public class NickCommand extends NexusCommand<NexusCore> {
             }
         }
         
-        if (skin == null) {
+        if (skin == null && uuidFromName != null) {
             skin = skinManager.getFromMojang(uuidFromName);
         }
         
@@ -210,7 +223,9 @@ public class NickCommand extends NexusCommand<NexusCore> {
         
         nexusPlayer.setNickname(nickname);
         
-        plugin.getNickWrapper().setNick(plugin, target, nickname.getName(), skin);
+        if (!(nickname.getName().equalsIgnoreCase(nickname.getTrueName()) && skin == null)) {
+            plugin.getNickWrapper().setNick(plugin, target, nickname.getName(), skin);
+        }
         
         if (target.getUniqueId().equals(((Player) sender).getUniqueId())) {
             MsgType.INFO.send(sender, "You successfully set your nick to %v.", nexusPlayer.getDisplayName());
