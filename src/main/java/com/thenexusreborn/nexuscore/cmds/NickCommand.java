@@ -144,7 +144,7 @@ public class NickCommand extends NexusCommand<NexusCore> {
         SkinManager skinManager = Bukkit.getServer().getServicesManager().getRegistration(SkinManager.class).getProvider();
         Skin skin = null;
         if (flagResults.getValue(SKIN) != null) {
-            if (senderRank.ordinal() > Rank.MVP.ordinal()) {
+            if (senderRank.ordinal() > Rank.VIP.ordinal()) {
                 MsgType.WARN.send(sender, "You are not allowed to set a custom skin.");
                 return true;
             }
@@ -188,7 +188,7 @@ public class NickCommand extends NexusCommand<NexusCore> {
         
         long playtime = 0L;
         if (flagResults.getValue(PLAYTIME) != null && !flagResults.getValue(PLAYTIME).equals("0")) {
-            if (senderRank.ordinal() > Rank.MVP.ordinal()) {
+            if (senderRank.ordinal() > Rank.VIP.ordinal()) {
                 MsgType.WARN.send(sender, "You are not allowed to set custom playtime.");
                 return true;
             }
