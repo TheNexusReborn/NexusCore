@@ -280,7 +280,7 @@ public class NexusCore extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onServerPing(ServerListPingEvent e) {
-        e.setMotd(StarColors.color("            &5&lTHE NEXUS REBORN &e&lALPHA\n              &7Minecraft Version 1.8"));
+        e.setMotd(StarColors.color("            &5&lTHE NEXUS REBORN &e&lALPHA\n       &7Minecraft Version 1.8-1.21.4"));
 
         Iterator<Player> iterator = e.iterator();
         while (iterator.hasNext()) {
