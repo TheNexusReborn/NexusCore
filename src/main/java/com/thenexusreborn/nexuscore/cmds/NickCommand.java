@@ -210,6 +210,7 @@ public class NickCommand extends NexusCommand<NexusCore> {
         String skinIdentifier = skin != null ? skin.getIdentifier() : "";
         
         NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(target.getUniqueId());
+        
         Nickname nickname = new Nickname(target.getUniqueId(), name, target.getName(), skinIdentifier, rank);
         
         NickExperience nickExperience = new NickExperience(target.getUniqueId(), level, nexusPlayer.getTrueExperience());
