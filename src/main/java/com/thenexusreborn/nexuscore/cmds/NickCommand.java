@@ -146,8 +146,8 @@ public class NickCommand extends NexusCommand<NexusCore> {
         
         String skinIdentifier = skin != null ? skin.getIdentifier() : "";
         
-        Nickname nickname = new Nickname(target.getUniqueId(), name, target.getName(), skinIdentifier, rank, new NickExperience(target.getUniqueId(), level));
         NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(target.getUniqueId());
+        Nickname nickname = new Nickname(target.getUniqueId(), name, target.getName(), skinIdentifier, rank, new NickExperience(target.getUniqueId(), level, nexusPlayer.getTrueExperience()));
         nexusPlayer.setNickname(nickname);
         
         plugin.getNickWrapper().setNick(plugin, target, nickname.getName(), skin);
