@@ -161,6 +161,10 @@ public class NickCommand extends NexusCommand<NexusCore> {
             }
         }
         
+        if (skin == null && uuidFromName != null) {
+            skin = skinManager.getFromMojang(uuidFromName);
+        }
+        
         NickBalance creditsBalance = null;
         if (flagResults.getValue(CREDITS) != null && !flagResults.getValue(CREDITS).equals("0")) {
             if (senderRank.ordinal() > Rank.MVP.ordinal()) {
@@ -211,10 +215,7 @@ public class NickCommand extends NexusCommand<NexusCore> {
             }
         }
         
-        if (skin == null && uuidFromName != null) {
-            skin = skinManager.getFromMojang(uuidFromName);
-        }
-        
+       
         boolean persist = false;
         if (flagResults.isPresent(PERSIST)) {
             if (senderRank.ordinal() > Rank.VIP.ordinal()) {
@@ -246,17 +247,19 @@ public class NickCommand extends NexusCommand<NexusCore> {
         
         if (creditsBalance != null) {
             nickname.getFakeBalance().setCredits(creditsBalance.getCredits());
-            nickname.getFakeBalance().setTrueBalance(nexusPlayer.getTrueBalance());
         }
         
         if (nexitesBalance != null) {
             nickname.getFakeBalance().setNexites(nexitesBalance.getNexites());
-            nickname.getFakeBalance().setTrueBalance(nexusPlayer.getTrueBalance());
         }
         
         if (nickTime != null) {
             nickname.setFakeTime(nickTime);
         }
+        
+        nickname.getFakeBalance().setTrueBalance(nexusPlayer.getTrueBalance());
+        nickname.getFakeExperience().setTrueExperience(nexusPlayer.getTrueExperience());
+        nickname.getFakeTime().setTrueTime(nexusPlayer.getTrueTime());
         
         nickname.setActive(true);
         
