@@ -210,11 +210,22 @@ public class NickCommand extends NexusCommand<NexusCore> {
             skin = skinManager.getFromMojang(uuidFromName);
         }
         
+        boolean persist = false;
+        if (flagResults.isPresent(PERSIST)) {
+            if (senderRank.ordinal() > Rank.VIP.ordinal()) {
+                MsgType.WARN.send(sender, "You are not allowed to persist stats across nicknames.");
+                return true;
+            }
+            
+            persist = true;
+        }
+        
         String skinIdentifier = skin != null ? skin.getIdentifier() : "";
         
         NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(target.getUniqueId());
         
         Nickname nickname = new Nickname(target.getUniqueId(), name, target.getName(), skinIdentifier, rank);
+        nickname.setPersist(persist);
         
         NickExperience nickExperience = new NickExperience(target.getUniqueId(), level, nexusPlayer.getTrueExperience());
         nickname.setFakeExperience(nickExperience);
