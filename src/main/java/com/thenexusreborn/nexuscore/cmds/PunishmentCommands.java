@@ -1,13 +1,13 @@
 package com.thenexusreborn.nexuscore.cmds;
 
 import com.stardevllc.helper.CodeGenerator;
-import com.stardevllc.helper.Pair;
 import com.stardevllc.starcore.StarColors;
 import com.stardevllc.time.TimeParser;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.punishment.*;
 import com.thenexusreborn.nexuscore.NexusCore;
+import com.thenexusreborn.nexuscore.api.events.ToggleChangeEvent;
 import com.thenexusreborn.nexuscore.util.MCUtils;
 import com.thenexusreborn.nexuscore.util.MsgType;
 import org.bukkit.Bukkit;
@@ -82,31 +82,42 @@ public class PunishmentCommands implements CommandExecutor {
             sender.sendMessage(StarColors.color(MsgType.WARN + "You do not have permission to use that punishment type."));
             return true;
         }
-    
+        
         PlayerManager playerManager = NexusAPI.getApi().getPlayerManager();
-        Pair<UUID, String> playerInfo = playerManager.getPlayerFromIdentifier(args[0]);
-        if (playerInfo == null) {
-            sender.sendMessage(StarColors.color(MsgType.WARN + "Could not find a player with that identifier."));
+        
+        NexusPlayer target;
+        
+        //First get the player if they are on the server
+        //This includes nicked players
+        //This will have to be reworked when multi-servers are back
+        Player targetPlayer = getPlayer(args[0]);
+        if (targetPlayer != null) {
+            target = playerManager.getNexusPlayer(targetPlayer.getUniqueId());
+        } else {
+            target = playerManager.getNexusPlayer(args[0]);
+        }
+        
+        if (target == null) {
+            MsgType.WARN.send(sender, "Could not find a player with the identifier %v.", args[0]);
             return true;
         }
         
-        UUID targetUniqueID = playerInfo.key();
-        Rank targetRank = playerManager.getPlayerRank(targetUniqueID);
-
-        if (targetRank.ordinal() < actorRank.ordinal()) {
-            sender.sendMessage(StarColors.color(MsgType.WARN + "You cannot " + type.name().toLowerCase() + " that player because their rank is higher than your own."));
-            return true;
+        if (!target.isNicked()) {
+            if (target.getRank().ordinal() < actorRank.ordinal()) {
+                MsgType.WARN.send(sender, "You cannot %v %v because their rank is equal to or higher than your own.", type.name().toLowerCase(), target.getName());
+                return true;
+            }
         }
-        
+    
         String actor;
         if (sender instanceof Player) {
             actor = ((Player) sender).getUniqueId().toString();
         } else {
             actor = sender.getName();
         }
-        
+
         String server = "Nexus"; //TODO
-        
+
         StringBuilder sb = new StringBuilder();
         int startIndex = 1;
         if (length > 0) {
@@ -124,12 +135,10 @@ public class PunishmentCommands implements CommandExecutor {
         for (int i = startIndex; i < args.length; i++) {
             sb.append(args[i]).append(" ");
         }
-        
-        String reason = sb.toString().trim();
-        Punishment punishment = new Punishment(System.currentTimeMillis(), length, actor, targetUniqueID.toString(), server, reason, type, Visibility.SILENT);
 
-        Player targetPlayer = Bukkit.getPlayer(UUID.fromString(punishment.getTarget()));
-        
+        String reason = sb.toString().trim();
+        Punishment punishment = new Punishment(System.currentTimeMillis(), length, actor, target.getUniqueId().toString(), server, reason, type, Visibility.SILENT);
+
         if (punishment.getType() == PunishmentType.MUTE) {
             if (targetPlayer != null && punishment.isActive()) {
                 if (punishment.getType() == PunishmentType.MUTE) {
@@ -142,7 +151,16 @@ public class PunishmentCommands implements CommandExecutor {
             targetPlayer.sendMessage(StarColors.color(MsgType.WARN + "You must type the code " + punishment.getAcknowledgeInfo().getCode() + " in chat before you can speak again."));
         } else if (Stream.of(PunishmentType.BAN, PunishmentType.BLACKLIST, PunishmentType.KICK).anyMatch(punishmentType -> punishment.getType() == punishmentType)) {
             if (targetPlayer != null) {
-                targetPlayer.kickPlayer(StarColors.color(punishment.formatKick())); //TODO this doesn't provide an id right away though
+                if (target.isNicked() && target.getRank().ordinal() <= actorRank.ordinal()) {
+                    Toggle vanish = target.getToggle("vanish");
+                    ToggleChangeEvent changeEvent = new ToggleChangeEvent(target, vanish, vanish.getValue(), !vanish.getValue());
+                    Bukkit.getPluginManager().callEvent(changeEvent);
+                    vanish.setValue(!vanish.getValue());
+                    NexusAPI.getApi().getPrimaryDatabase().saveSilent(vanish);
+                    target.sendMessage(MsgType.INFO.format("Your nickname was " + punishment.getType().getVerb() + " by " + sender.getName() + ", you have been put into vanish mode."));
+                } else {
+                    targetPlayer.kickPlayer(StarColors.color(punishment.formatKick())); //TODO this doesn't provide an id right away though'
+                }
             }
 
             if (punishment.getType() == PunishmentType.BLACKLIST) {
@@ -191,5 +209,15 @@ public class PunishmentCommands implements CommandExecutor {
             plugin.getPunishmentChannel().sendPunishment(punishment);
         });
         return true;
+    }
+    
+    protected Player getPlayer(String name) {
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            if (p.getName().equalsIgnoreCase(name)) {
+                return p;
+            }
+        }
+        
+        return null;
     }
 }
