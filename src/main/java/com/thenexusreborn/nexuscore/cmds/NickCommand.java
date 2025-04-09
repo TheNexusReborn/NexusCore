@@ -2,6 +2,7 @@ package com.thenexusreborn.nexuscore.cmds;
 
 import com.stardevllc.starcore.cmdflags.FlagResult;
 import com.stardevllc.starcore.cmdflags.type.ComplexFlag;
+import com.stardevllc.starcore.cmdflags.type.PresenceFlag;
 import com.stardevllc.starcore.skins.Skin;
 import com.stardevllc.starcore.skins.SkinManager;
 import com.stardevllc.time.TimeParser;
@@ -11,6 +12,7 @@ import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.api.command.NexusCommand;
+import com.thenexusreborn.nexuscore.api.events.NicknameSetEvent;
 import com.thenexusreborn.nexuscore.util.MsgType;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -26,7 +28,8 @@ public class NickCommand extends NexusCommand<NexusCore> {
     private static final ComplexFlag SKIN = new ComplexFlag("s", "Skin", null);
     private static final ComplexFlag CREDITS = new ComplexFlag("c", "Credits", 0);
     private static final ComplexFlag NEXITES = new ComplexFlag("n", "Nexites", 0);
-    private static final ComplexFlag PLAYTIME = new ComplexFlag("pt", "Play Time", 0);
+    private static final ComplexFlag TIME = new ComplexFlag("t", "Time", 0);
+    private static final PresenceFlag PERSIST = new PresenceFlag("p", "Persist");
     
     private static final List<Rank> ALLOWED_RANKS = List.of(Rank.MEMBER, Rank.IRON, Rank.GOLD, Rank.DIAMOND);
     
@@ -34,7 +37,7 @@ public class NickCommand extends NexusCommand<NexusCore> {
         super(plugin, "nickname", "Set a nickname", Rank.MEDIA, "nick");
         this.playerOnly = true;
         
-        this.cmdFlags.addFlag(RANK, LEVEL, TARGET, SKIN, CREDITS, NEXITES, PLAYTIME);
+        this.cmdFlags.addFlag(RANK, LEVEL, TARGET, SKIN, CREDITS, NEXITES, TIME, PERSIST);
     }
     
     @Override
@@ -187,7 +190,7 @@ public class NickCommand extends NexusCommand<NexusCore> {
         }
         
         long playtime = 0L;
-        if (flagResults.getValue(PLAYTIME) != null && !flagResults.getValue(PLAYTIME).equals("0")) {
+        if (flagResults.getValue(TIME) != null && !flagResults.getValue(TIME).equals("0")) {
             if (senderRank.ordinal() > Rank.VIP.ordinal()) {
                 MsgType.WARN.send(sender, "You are not allowed to set custom playtime.");
                 return true;
@@ -196,7 +199,7 @@ public class NickCommand extends NexusCommand<NexusCore> {
             TimeParser timeParser = new TimeParser();
             
             try {
-                playtime = timeParser.parseTime(flagResults.getValue(PLAYTIME).toString());
+                playtime = timeParser.parseTime(flagResults.getValue(TIME).toString());
             } catch (NumberFormatException e) {
                 MsgType.WARN.send(sender, "You provided an invalid time value.");
                 return true;
@@ -234,9 +237,10 @@ public class NickCommand extends NexusCommand<NexusCore> {
             MsgType.INFO.send(target, "Your nick was set to %v by %v.", nexusPlayer.getDisplayName(), sender.getName());
         }
         
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-            NexusAPI.getApi().getPrimaryDatabase().saveSilent(nexusPlayer);
-        });
+        NicknameSetEvent nicknameSetEvent = new NicknameSetEvent(nexusPlayer, nickname);
+        Bukkit.getPluginManager().callEvent(nicknameSetEvent);
+        
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> NexusAPI.getApi().getPrimaryDatabase().saveSilent(nexusPlayer));
         
         return true;
     }
