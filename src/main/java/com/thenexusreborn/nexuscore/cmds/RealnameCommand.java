@@ -36,7 +36,7 @@ public class RealnameCommand extends NexusCommand<NexusCore> {
             return true;
         }
         
-        if (targetNexusPlayer.getNickname() == null || targetNexusPlayer.getRank().ordinal() < senderRank.ordinal()) {
+        if (!targetNexusPlayer.isNicked() || targetNexusPlayer.getRank().ordinal() < senderRank.ordinal()) {
             MsgType.WARN.send(sender, "%v does not have a nickname.", targetNexusPlayer.getColoredName());
             return true;
         }

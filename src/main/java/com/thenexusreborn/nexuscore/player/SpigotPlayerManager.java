@@ -117,12 +117,6 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                         ex.printStackTrace();
                     }
 
-                    if (nexusPlayer.getRank().ordinal() <= Rank.HELPER.ordinal()) {
-                        player.addAttachment(plugin, "vulcan.alerts", true);
-                        player.addAttachment(plugin, "nexuscore.staff.send", true);
-                        player.addAttachment(plugin, "nexuscore.staff.view", true);
-                    }
-
                     getPlayers().put(nexusPlayer.getUniqueId(), nexusPlayer);
                     InetSocketAddress socketAddress = player.getAddress();
                     String hostName = socketAddress.getHostString();
@@ -130,11 +124,11 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                     
                     Nickname nickname = nexusPlayer.getNickname();
                     SkinManager skinManager = Bukkit.getServicesManager().getRegistration(SkinManager.class).getProvider();
-                    Skin skin = (nickname != null) ? skinManager.getFromMojang(UUID.fromString(nickname.getSkin())) : null;
+                    Skin skin = (nickname != null && nickname.getSkin() != null && !nickname.getSkin().isBlank()) ? skinManager.getFromMojang(UUID.fromString(nickname.getSkin())) : null;
 
                     NexusPlayer finalNexusPlayer = nexusPlayer;
                     Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                        if (skin != null) {
+                        if (skin != null && nickname.isActive()) {
                             plugin.getNickWrapper().setNick(plugin, player, nickname.getName(), skin);
                         }
                         
@@ -253,7 +247,7 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
             this.players.remove(nexusPlayer.getUniqueId());
             this.plugin.getNexusServer().quit(nexusPlayer);
             if (nexusPlayer.getRank().ordinal() <= Rank.MEDIA.ordinal()) {
-                if (nexusPlayer.getNickname() == null) { //TODO Need a change from StarChat to filter receivers
+                if (!nexusPlayer.isNicked()) { //TODO Need a change from StarChat to filter receivers
                     plugin.getStaffChannel().sendMessage(new ChatContext(nexusPlayer.getTrueDisplayName() + " &7disconnected"));
                 }
             }

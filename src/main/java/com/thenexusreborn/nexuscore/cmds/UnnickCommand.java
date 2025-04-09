@@ -24,7 +24,7 @@ public class UnnickCommand extends NexusCommand<NexusCore> {
     public boolean execute(CommandSender sender, Rank senderRank, String label, String[] args, FlagResult flagResults) {
         NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(((Player) sender).getUniqueId());
         
-        if (nexusPlayer.getNickname() == null) {
+        if (!nexusPlayer.isNicked()) {
             MsgType.WARN.send(sender, "You do not have a nickname set.");
             return true;
         }
@@ -33,7 +33,7 @@ public class UnnickCommand extends NexusCommand<NexusCore> {
         
         SkinManager skinManager = Bukkit.getServicesManager().getRegistration(SkinManager.class).getProvider();
         plugin.getNickWrapper().setNick(plugin, ((Player) sender), nexusPlayer.getTrueName(), skinManager.getFromMojang(nexusPlayer.getUniqueId()));
-        nexusPlayer.setNickname(null);
+        nickname.setActive(false);
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> NexusAPI.getApi().getPrimaryDatabase().saveSilent(nexusPlayer));
         MsgType.INFO.send(sender, "You successfully unnicked yourself.");
         

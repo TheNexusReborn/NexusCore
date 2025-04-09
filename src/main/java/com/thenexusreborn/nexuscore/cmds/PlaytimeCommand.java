@@ -84,7 +84,7 @@ public class PlaytimeCommand extends NexusCommand<NexusCore> {
         String formattedPlaytime = timeFormat.format(playtime);
         if (self) {
             String line = MsgType.INFO + "Your playtime is " + MsgType.INFO.getVariableColor() + formattedPlaytime;
-            if (sender.getNickname() != null) {
+            if (sender.isNicked()) {
                 line += " &8(&7" + timeFormat.format(sender.getTrueTime().getPlaytime()) + "&8)";
             }
             

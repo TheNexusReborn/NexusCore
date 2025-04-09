@@ -3,7 +3,6 @@ package com.thenexusreborn.nexuscore.cmds;
 import com.stardevllc.starcore.StarColors;
 import com.stardevllc.starcore.cmdflags.FlagResult;
 import com.thenexusreborn.api.NexusAPI;
-import com.thenexusreborn.api.nickname.Nickname;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.nexuscore.NexusCore;
@@ -33,16 +32,13 @@ public class BalanceCommand extends NexusCommand<NexusCore> {
         }
         
         DecimalFormat format = new DecimalFormat("0.#");
-        Nickname nickname = nexusPlayer.getNickname();
 
-        double xp = nexusPlayer.getExperience().getLevelXp();
-        
         String creditsLine = "  &6&l> &3Credits &f" + format.format(nexusPlayer.getBalance().getCredits());
         String nexitesLine = "  &6&l> &9Nexites &f" + format.format(nexusPlayer.getBalance().getNexites());
         String levelLine = "  &6&l> &2Level: &f" + format.format(nexusPlayer.getExperience().getLevel());
         String xpLine = "  &6&l> &aExperience: &f" + format.format(nexusPlayer.getExperience().getLevelXp());
         
-        if (nickname != null) {
+        if (nexusPlayer.isNicked()) {
             creditsLine += " &8(&7" + format.format(nexusPlayer.getTrueBalance().getCredits()) + "&8)";
             nexitesLine += " &8(&7" + format.format(nexusPlayer.getTrueBalance().getNexites()) + "&8)";
             levelLine += " &8(&7" + format.format(nexusPlayer.getTrueExperience().getLevel()) + "&8)";

@@ -26,7 +26,7 @@ public class CoreInstanceServer extends InstanceServer {
         }
         
         if (nexusPlayer.getRank().ordinal() <= Rank.MEDIA.ordinal()) {
-            if (nexusPlayer.getNickname() == null) { //TODO Need a change from StarChat to filter receivers
+            if (!nexusPlayer.isNicked()) { //TODO Need a change from StarChat to filter receivers
                 plugin.getStaffChannel().sendMessage(new ChatContext(nexusPlayer.getTrueDisplayName() + " &7&l-> &6" + name));
             }
         }

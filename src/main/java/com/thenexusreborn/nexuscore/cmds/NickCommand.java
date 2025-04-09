@@ -22,13 +22,13 @@ import java.util.*;
 
 public class NickCommand extends NexusCommand<NexusCore> {
     
-    private static final ComplexFlag RANK = new ComplexFlag("r", "Rank", Rank.MEMBER.toString());
-    private static final ComplexFlag LEVEL = new ComplexFlag("l", "Level", 0);
+    private static final ComplexFlag RANK = new ComplexFlag("r", "Rank", null);
+    private static final ComplexFlag LEVEL = new ComplexFlag("l", "Level", null);
     private static final ComplexFlag TARGET = new ComplexFlag("t", "target", null);
     private static final ComplexFlag SKIN = new ComplexFlag("s", "Skin", null);
-    private static final ComplexFlag CREDITS = new ComplexFlag("c", "Credits", 0);
-    private static final ComplexFlag NEXITES = new ComplexFlag("n", "Nexites", 0);
-    private static final ComplexFlag TIME = new ComplexFlag("t", "Time", 0);
+    private static final ComplexFlag CREDITS = new ComplexFlag("c", "Credits", null);
+    private static final ComplexFlag NEXITES = new ComplexFlag("n", "Nexites", null);
+    private static final ComplexFlag TIME = new ComplexFlag("t", "Time", null);
     private static final PresenceFlag PERSIST = new PresenceFlag("p", "Persist");
     
     private static final List<Rank> ALLOWED_RANKS = List.of(Rank.MEMBER, Rank.IRON, Rank.GOLD, Rank.DIAMOND);
@@ -108,22 +108,6 @@ public class NickCommand extends NexusCommand<NexusCore> {
             }
         }
         
-        int level = new Random().nextInt(6);
-        if (flagResults.getValue(LEVEL) != null && !flagResults.getValue(LEVEL).equals("0")) {
-            if (senderRank.ordinal() > Rank.VIP.ordinal()) {
-                MsgType.WARN.send(sender, "You are not allowed to set a custom experience level.");
-                return true;
-            }
-            
-            try {
-                level = Integer.parseInt(flagResults.getValue(LEVEL).toString());
-            } catch (NumberFormatException e) {
-                MsgType.WARN.send(sender, "You provided an invalid whole number.");
-                return true;
-            }
-        }
-        
-        
         if (flagResults.getValue(TARGET) != null) {
             if (senderRank.ordinal() > Rank.ADMIN.ordinal()) {
                 MsgType.WARN.send(sender, "You are not allowed to set the nickname of another player.");
@@ -144,6 +128,24 @@ public class NickCommand extends NexusCommand<NexusCore> {
             }
         }
         
+        NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(target.getUniqueId());
+
+        NickExperience nickExperience = null;
+        if (flagResults.getValue(LEVEL) != null && !flagResults.getValue(LEVEL).equals("0")) {
+            if (senderRank.ordinal() > Rank.VIP.ordinal()) {
+                MsgType.WARN.send(sender, "You are not allowed to set a custom experience level.");
+                return true;
+            }
+            
+            try {
+                int level = Integer.parseInt(flagResults.getValue(LEVEL).toString());
+                nickExperience = new NickExperience(target.getUniqueId(), level, nexusPlayer.getTrueExperience());
+            } catch (NumberFormatException e) {
+                MsgType.WARN.send(sender, "You provided an invalid whole number.");
+                return true;
+            }
+        }
+        
         SkinManager skinManager = Bukkit.getServer().getServicesManager().getRegistration(SkinManager.class).getProvider();
         Skin skin = null;
         if (flagResults.getValue(SKIN) != null) {
@@ -159,7 +161,7 @@ public class NickCommand extends NexusCommand<NexusCore> {
             }
         }
         
-        double credits = 0;
+        NickBalance creditsBalance = null;
         if (flagResults.getValue(CREDITS) != null && !flagResults.getValue(CREDITS).equals("0")) {
             if (senderRank.ordinal() > Rank.MVP.ordinal()) {
                 MsgType.WARN.send(sender, "You are not allowed to set custom credits.");
@@ -167,14 +169,15 @@ public class NickCommand extends NexusCommand<NexusCore> {
             }
             
             try {
-                credits = Integer.parseInt(flagResults.getValue(CREDITS).toString());
+                double credits = Integer.parseInt(flagResults.getValue(CREDITS).toString());
+                creditsBalance = new NickBalance(target.getUniqueId(), credits, 0, nexusPlayer.getTrueBalance());
             } catch (NumberFormatException e) {
                 MsgType.WARN.send(sender, "You provided an invalid whole number.");
                 return true;
             }
         }
         
-        double nexites = 0;
+        NickBalance nexitesBalance = null;
         if (flagResults.getValue(NEXITES) != null && !flagResults.getValue(NEXITES).equals("0")) {
             if (senderRank.ordinal() > Rank.MVP.ordinal()) {
                 MsgType.WARN.send(sender, "You are not allowed to set custom nexites.");
@@ -182,14 +185,15 @@ public class NickCommand extends NexusCommand<NexusCore> {
             }
             
             try {
-                nexites = Integer.parseInt(flagResults.getValue(NEXITES).toString());
+                double nexites = Integer.parseInt(flagResults.getValue(NEXITES).toString());
+                nexitesBalance = new NickBalance(target.getUniqueId(), 0, nexites, nexusPlayer.getTrueBalance());
             } catch (NumberFormatException e) {
                 MsgType.WARN.send(sender, "You provided an invalid whole number.");
                 return true;
             }
         }
         
-        long playtime = 0L;
+        NickTime nickTime = null;
         if (flagResults.getValue(TIME) != null && !flagResults.getValue(TIME).equals("0")) {
             if (senderRank.ordinal() > Rank.VIP.ordinal()) {
                 MsgType.WARN.send(sender, "You are not allowed to set custom playtime.");
@@ -199,7 +203,8 @@ public class NickCommand extends NexusCommand<NexusCore> {
             TimeParser timeParser = new TimeParser();
             
             try {
-                playtime = timeParser.parseTime(flagResults.getValue(TIME).toString());
+                long playtime = timeParser.parseTime(flagResults.getValue(TIME).toString());
+                nickTime = new NickTime(target.getUniqueId(), playtime, nexusPlayer.getTrueTime());
             } catch (NumberFormatException e) {
                 MsgType.WARN.send(sender, "You provided an invalid time value.");
                 return true;
@@ -222,21 +227,38 @@ public class NickCommand extends NexusCommand<NexusCore> {
         
         String skinIdentifier = skin != null ? skin.getIdentifier() : "";
         
-        NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(target.getUniqueId());
+        Nickname nickname;
+        if (nexusPlayer.getNickname() != null) {
+            nickname = nexusPlayer.getNickname();
+            nickname.setName(name);
+            nickname.setSkin(skinIdentifier);
+            nickname.setRank(rank);
+        } else {
+            nickname = new Nickname(target.getUniqueId(), name, target.getName(), skinIdentifier, rank);
+            nexusPlayer.setNickname(nickname);
+        }
         
-        Nickname nickname = new Nickname(target.getUniqueId(), name, target.getName(), skinIdentifier, rank);
         nickname.setPersist(persist);
         
-        NickExperience nickExperience = new NickExperience(target.getUniqueId(), level, nexusPlayer.getTrueExperience());
-        nickname.setFakeExperience(nickExperience);
+        if (nickExperience != null) {
+            nickname.setFakeExperience(nickExperience);
+        }
         
-        NickBalance nickBalance = new NickBalance(target.getUniqueId(), credits, nexites, nexusPlayer.getTrueBalance());
-        nickname.setFakeBalance(nickBalance);
+        if (creditsBalance != null) {
+            nickname.getFakeBalance().setCredits(creditsBalance.getCredits());
+            nickname.getFakeBalance().setTrueBalance(nexusPlayer.getTrueBalance());
+        }
         
-        NickTime nickTime = new NickTime(target.getUniqueId(), playtime, nexusPlayer.getTrueTime());
-        nickname.setFakeTime(nickTime);
+        if (nexitesBalance != null) {
+            nickname.getFakeBalance().setNexites(nexitesBalance.getNexites());
+            nickname.getFakeBalance().setTrueBalance(nexusPlayer.getTrueBalance());
+        }
         
-        nexusPlayer.setNickname(nickname);
+        if (nickTime != null) {
+            nickname.setFakeTime(nickTime);
+        }
+        
+        nickname.setActive(true);
         
         if (!(nickname.getName().equalsIgnoreCase(nickname.getTrueName()) && skin == null)) {
             plugin.getNickWrapper().setNick(plugin, target, nickname.getName(), skin);
