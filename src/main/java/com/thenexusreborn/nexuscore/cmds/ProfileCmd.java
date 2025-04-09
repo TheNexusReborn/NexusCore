@@ -9,6 +9,7 @@ import com.thenexusreborn.api.tags.Tag;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.api.command.NexusCommand;
 import com.thenexusreborn.nexuscore.util.MsgType;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -38,14 +39,24 @@ public class ProfileCmd extends NexusCommand<NexusCore> {
         }
         
         if (args.length > 0) {
-            target = NexusAPI.getApi().getPlayerManager().getNexusPlayer(args[0]);
+            Player t = getPlayer(args[0]);
+            if (t == null) {
+                MsgType.WARN.send(sender, "Invalid player name %v. Are they offline?", args[0]);
+                return true;
+            }
+            
+            target = NexusAPI.getApi().getPlayerManager().getNexusPlayer(t.getUniqueId());
+            if (target == null) {
+                MsgType.WARN.send(sender, "That player has no profile data loaded, please report to Firestar311");
+                return true;
+            }
             
             if (target != null && target.getNickname() != null && args[0].equalsIgnoreCase(target.getTrueName()) && target.getRank().ordinal() < senderRank.ordinal()) {
                 target = null;
             }
             
             if (target == null) {
-                MsgType.ERROR.send(sender, "Invalid player name %v. Are they offline?", args[0]);
+                MsgType.WARN.send(sender, "Invalid player name %v. Are they offline?", args[0]);
                 return true;
             }
         } else {
@@ -53,7 +64,7 @@ public class ProfileCmd extends NexusCommand<NexusCore> {
         }
         
         if (target == null) {
-            MsgType.ERROR.send(sender, "Invalid target. Are they offline?");
+            MsgType.WARN.send(sender, "Invalid target. Are they offline?");
             return true;
         }
         
@@ -133,6 +144,16 @@ public class ProfileCmd extends NexusCommand<NexusCore> {
         }
         
         return true;
+    }
+    
+    protected Player getPlayer(String name) {
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            if (p.getName().equalsIgnoreCase(name)) {
+                return p;
+            }
+        }
+        
+        return null;
     }
     
     private void sendProfileLine(CommandSender sender, String prefix, Object data) {
