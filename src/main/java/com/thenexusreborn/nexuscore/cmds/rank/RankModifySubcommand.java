@@ -28,13 +28,13 @@ public abstract class RankModifySubcommand extends SubCommand<NexusCore> {
 
     @Override
     public boolean execute(CommandSender sender, Rank senderRank, String label, String[] args, FlagResult flagResults) {
-        // rank set <player> <rank> [length]
-
         if (!(args.length > 1)) {
             sender.sendMessage(MsgType.WARN.format("Usage: /rank " + label + " <player> <rank> [length]"));
             return true;
         }
-
+        
+        MsgType.VERBOSE.send(sender, "Processing request...");
+        
         PlayerManager playerManager = NexusAPI.getApi().getPlayerManager();
         Pair<UUID, String> playerInfo = playerManager.getPlayerFromIdentifier(args[0]);
         boolean hasNotJoined = false;
