@@ -260,6 +260,9 @@ public class NexusCore extends JavaPlugin implements Listener {
         }
         
         this.nexusBot.start();
+        for (NexusSpigotPlugin nexusPlugin : this.getNexusPlugins()) {
+            nexusPlugin.registerChannels(this.nexusBot);
+        }
     }
     
     public NickWrapper_v1_8_R3 getNickWrapper() {

@@ -6,6 +6,7 @@ import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.nexuscore.NexusCore;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.channel.concrete.Category;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
@@ -14,13 +15,15 @@ import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
-import net.dv8tion.jda.api.requests.restaction.order.ChannelOrderAction;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DiscordListener extends ListenerAdapter {
     
     private NexusCore plugin;
+    
+    private List<String> serverChannels = new ArrayList<>();
 
     public DiscordListener(NexusCore plugin) {
         this.plugin = plugin;
@@ -44,20 +47,27 @@ public class DiscordListener extends ListenerAdapter {
                 for (Category category : guild.getCategories()) {
                     if (category.getName().equalsIgnoreCase("server status")) {
                         hasStatusCategory = true;
+                        plugin.getNexusBot().setServerStatusCategory(category.getIdLong());
                     }
-                    
-                    //TODO Additional Checks
-                    
-                    
                 }
                 
                 if (!hasStatusCategory) {
-                    guild.createCategory("Server Status").queue(category -> {
-                        ChannelOrderAction orderAction = guild.modifyCategoryPositions();
-                        orderAction.selectPosition(category);
-                        orderAction.moveTo(1);
-                        orderAction.queue();
-                    });
+                    Role memberRole = null;
+                    for (Role role : guild.getRoles()) {
+                        if (role.getName().equalsIgnoreCase("member")) {
+                            memberRole = role;
+                        }
+                    }
+                    
+//                    guild.createCategory("Server Status")
+//                            .addPermissionOverride(memberRole, List.of(Permission.VIEW_CHANNEL), List.of())
+//                            .queue(category -> {
+//                        ChannelOrderAction orderAction = guild.modifyCategoryPositions();
+//                        orderAction.selectPosition(category);
+//                        orderAction.moveTo(1);
+//                        orderAction.queue();
+//                        plugin.getNexusBot().setServerStatusCategory(category.getIdLong());
+//                    });
                 }
             }
         }

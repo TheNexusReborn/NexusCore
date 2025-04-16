@@ -42,7 +42,7 @@ dependencies {
 }
 
 group = 'com.thenexusreborn'
-version = '1.15-ALPHA'
+version = '1.15.1-ALPHA'
 description = 'NexusCore'
 
 processResources {

@@ -1,12 +1,17 @@
 package com.thenexusreborn.nexuscore.discord;
 
 import com.thenexusreborn.nexuscore.NexusCore;
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.OnlineStatus;
+import net.dv8tion.jda.api.*;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.channel.concrete.Category;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
+
+import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class NexusBot {
     
@@ -16,6 +21,10 @@ public class NexusBot {
     private NexusCore plugin;
     
     private long publicDiscord, staffDiscord;
+    
+    private long serverStatusCategory;
+    
+    private Map<String, Long> serverChannels = new HashMap<>();
     
     public NexusBot(NexusCore plugin) {
         builder = JDABuilder.createDefault(plugin.getConfig().getString("discord.token"))
@@ -83,5 +92,49 @@ public class NexusBot {
 
     public void setStaffDiscord(long staffDiscord) {
         this.staffDiscord = staffDiscord;
+    }
+    
+    public void setServerStatusCategory(long serverStatusCategory) {
+        this.serverStatusCategory = serverStatusCategory;
+    }
+    
+    public long getServerStatusCategory() {
+        return serverStatusCategory;
+    }
+    
+    public long addServerChannel(String name) {
+        Guild publicDiscord = jda.getGuildById(this.publicDiscord);
+        Category statusCategroy = publicDiscord.getCategoryById(this.serverStatusCategory);
+        for (TextChannel textChannel : statusCategroy.getTextChannels()) {
+            if (textChannel.getName().equalsIgnoreCase(name)) {
+                this.serverChannels.put(name.toLowerCase(), textChannel.getIdLong());
+                return textChannel.getIdLong();
+            }
+        }
+        
+        Role memberRole = null;
+        for (Role role : publicDiscord.getRoles()) {
+            if (role.getName().equalsIgnoreCase("member")) {
+                memberRole = role;
+            }
+        }
+        
+        AtomicLong id = new AtomicLong();
+        statusCategroy.createTextChannel(name).addPermissionOverride(memberRole, List.of(Permission.VIEW_CHANNEL), List.of(Permission.MESSAGE_SEND)).queue(channel -> id.set(channel.getIdLong()));
+        
+        this.serverChannels.put(name.toLowerCase(), id.get());
+        return id.get();
+    }
+    
+    public TextChannel getServerChannel(String name) {
+        long channelId;
+        if (!this.serverChannels.containsKey(name.toLowerCase())) {
+            channelId = addServerChannel(name);
+        } else {
+            channelId = this.serverChannels.get(name.toLowerCase());
+        }
+        
+        Guild guild = jda.getGuildById(this.publicDiscord);
+        return guild.getTextChannelById(channelId);
     }
 }
