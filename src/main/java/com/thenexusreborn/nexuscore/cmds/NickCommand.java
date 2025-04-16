@@ -112,6 +112,7 @@ public class NickCommand extends NexusCommand<NexusCore> {
         String name = args[0];
         
         Player target = (Player) sender;
+        boolean self = false;
         if (!(name.equalsIgnoreCase("self") || name.equalsIgnoreCase(target.getName()))) {
             for (Player p : Bukkit.getOnlinePlayers()) {
                 if (p.getName().equalsIgnoreCase(name)) {
@@ -146,12 +147,13 @@ public class NickCommand extends NexusCommand<NexusCore> {
             }
             
             name = target.getName();
+            self = true;
         }
         
         UUID uuidFromName = NexusAPI.getApi().getPlayerManager().getUUIDFromName(name);
         if (uuidFromName != null) {
             Rank playerRank = NexusAPI.getApi().getPlayerManager().getPlayerRank(uuidFromName);
-            if (playerRank.ordinal() <= Rank.MEDIA.ordinal()) {
+            if (playerRank.ordinal() <= Rank.MEDIA.ordinal() && !self) {
                 if (senderRank != Rank.NEXUS) {
                     MsgType.WARN.send(sender, "You cannot use the name of a player that holds a rank equal to or higher than %v.", Rank.MEDIA.getPrefix());
                     return true;
