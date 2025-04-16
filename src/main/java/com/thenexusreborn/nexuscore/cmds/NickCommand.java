@@ -57,6 +57,58 @@ public class NickCommand extends NexusCommand<NexusCore> {
             return true;
         }
         
+        if (args[0].equalsIgnoreCase("addblacklist")) {
+            if (senderRank.ordinal() > Rank.ADMIN.ordinal()) {
+                MsgType.WARN.send(sender, "That name is blacklisted, you cannot use it.");
+                return true;
+            }
+            
+            if (!(args.length > 1)) {
+                MsgType.WARN.send(sender, "You must provide one or more names to add to the blacklist.");
+                return true;
+            }
+            
+            Set<String> nicknameBlacklist = NexusAPI.getApi().getNicknameBlacklist();
+            
+            for (int i = 1; i < args.length; i++) {
+                String name = args[i].toLowerCase();
+                if (!nicknameBlacklist.contains(name)) {
+                    nicknameBlacklist.add(name);
+                    MsgType.INFO.send(sender, "You added %v to the blacklist.", name);
+                } else {
+                    MsgType.WARN.send(sender, "That name is already on the blacklist");
+                    return true;
+                }
+            }
+            
+            return true;
+        } else if (args[0].equalsIgnoreCase("removeblacklist")) {
+            if (senderRank.ordinal() > Rank.ADMIN.ordinal()) {
+                MsgType.WARN.send(sender, "That name is blacklisted, you cannot use it.");
+                return true;
+            }
+            
+            if (!(args.length > 1)) {
+                MsgType.WARN.send(sender, "You must provide one or more names to remove from the blacklist.");
+                return true;
+            }
+            
+            Set<String> nicknameBlacklist = NexusAPI.getApi().getNicknameBlacklist();
+            
+            for (int i = 1; i < args.length; i++) {
+                String name = args[i].toLowerCase();
+                if (nicknameBlacklist.contains(name)) {
+                    nicknameBlacklist.remove(name);
+                    MsgType.INFO.send(sender, "You removed %v from the blacklist.", name);
+                } else {
+                    MsgType.WARN.send(sender, "That name is not on the blacklist");
+                    return true;
+                }
+            }
+            
+            return true;
+        }
+        
         String name = args[0];
         
         Player target = (Player) sender;
@@ -75,9 +127,15 @@ public class NickCommand extends NexusCommand<NexusCore> {
             }
             
             if (Bukkit.getPlayerExact(args[0]) == null) {
-                plugin.getLogger().info("Could not find exact player");
                 if (Bukkit.getPlayer(name) != null) {
                     MsgType.WARN.send(sender, "You cannot use the name of a player already online");
+                    return true;
+                }
+            }
+            
+            if (NexusAPI.getApi().getNicknameBlacklist().contains(name.toLowerCase())) {
+                if (senderRank.ordinal() > Rank.ADMIN.ordinal()) {
+                    MsgType.WARN.send(sender, "That name is blacklisted from use. Please choose a different name.");
                     return true;
                 }
             }
