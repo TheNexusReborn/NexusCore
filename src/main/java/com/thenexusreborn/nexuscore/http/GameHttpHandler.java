@@ -109,7 +109,15 @@ public class GameHttpHandler implements HttpHandler {
             lineBuilder.append("<div class='actionDiv'><span style='color: white; background: {timecolor}; padding: 3px; border-radius: 5px'>").append(dateFormat.format(action.getTimestamp())).append("</span>"); //This is the time stamp section
             Map<String, String> valueData = action.getValueData();
             if (action.getType().equals("statechange")) {
-                lineBuilder.append(" ").append("Game state was changed to ").append(StringHelper.titlize(valueData.get("newvalue")));
+                String newvalue = valueData.get("newvalue");
+                
+                if (newvalue.equalsIgnoreCase("setup_complete") || newvalue.equalsIgnoreCase("assign_teams") || newvalue.equalsIgnoreCase("teams_assigned") ||
+                        newvalue.equalsIgnoreCase("teleport_start") || newvalue.equalsIgnoreCase("teleport_start_done") || newvalue.equalsIgnoreCase("teleport_deathmatch") ||
+                        newvalue.equalsIgnoreCase("teleport_deathmatch_done") || newvalue.equalsIgnoreCase("DEATHMATCH_WARMUP_DONE") || newvalue.equalsIgnoreCase("GAME_COMPLETE")) {
+                    continue;
+                }
+                
+                lineBuilder.append(" ").append("Game state was changed to ").append(StringHelper.titlize(newvalue));
                 color = "darkslategray";
             } else if (action.getType().equals("chat")) {
                 String player = valueData.get("sender");
