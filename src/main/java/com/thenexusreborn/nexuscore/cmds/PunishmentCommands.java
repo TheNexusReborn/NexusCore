@@ -1,6 +1,7 @@
 package com.thenexusreborn.nexuscore.cmds;
 
 import com.stardevllc.helper.CodeGenerator;
+import com.stardevllc.helper.Pair;
 import com.stardevllc.starcore.StarColors;
 import com.stardevllc.time.TimeParser;
 import com.thenexusreborn.api.NexusAPI;
@@ -94,7 +95,11 @@ public class PunishmentCommands implements CommandExecutor {
         if (targetPlayer != null) {
             target = playerManager.getNexusPlayer(targetPlayer.getUniqueId());
         } else {
-            target = playerManager.getNexusPlayer(args[0]);
+            Pair<UUID, String> info = playerManager.getPlayerFromIdentifier(args[0]);
+            target = playerManager.getNexusPlayer(info.key());
+            if (target == null) {
+                target = playerManager.createPlayerData(info.key(), info.value());
+            }
         }
         
         if (target == null) {
