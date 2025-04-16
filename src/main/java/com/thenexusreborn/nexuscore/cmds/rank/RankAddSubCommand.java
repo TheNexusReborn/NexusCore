@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.cmds.rank;
 
-import com.stardevllc.colors.StarColors;
+import com.stardevllc.starcore.StarColors;
 import com.thenexusreborn.api.player.PlayerRanks;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.api.util.Constants;
@@ -11,7 +11,7 @@ import org.bukkit.command.CommandSender;
 
 public class RankAddSubCommand extends RankModifySubcommand {
     public RankAddSubCommand(NexusCore plugin, ICommand<NexusCore> parent) {
-        super(plugin, parent, "add", "a");
+        super(plugin, parent, "add", "Add a rank to the player", "a");
     }
 
     @Override

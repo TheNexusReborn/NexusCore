@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.player;
 
-import com.stardevllc.colors.StarColors;
+import com.stardevllc.starcore.StarColors;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.PlayerProxy;
@@ -30,7 +30,13 @@ public class SpigotPlayerProxy extends PlayerProxy {
     
     @Override
     public String getName() {
-        return Bukkit.getPlayer(uniqueId).getName();
+        Player player = Bukkit.getPlayer(uniqueId);
+        
+        if (player == null) {
+            return null;
+        }
+        
+        return player.getName();
     }
 
     @Override

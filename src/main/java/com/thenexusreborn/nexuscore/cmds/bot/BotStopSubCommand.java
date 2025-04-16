@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.cmds.bot;
 
-import com.stardevllc.cmdflags.FlagResult;
+import com.stardevllc.starcore.cmdflags.FlagResult;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.api.command.ICommand;
@@ -10,7 +10,7 @@ import org.bukkit.command.CommandSender;
 
 public class BotStopSubCommand extends SubCommand<NexusCore> {
     public BotStopSubCommand(NexusCore plugin, ICommand<NexusCore> parent) {
-        super(plugin, parent, 0, "start", "", Rank.ADMIN);
+        super(plugin, parent, 0, "start", "Stops the bot", Rank.ADMIN);
     }
 
     @Override

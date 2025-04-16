@@ -1,8 +1,8 @@
 package com.thenexusreborn.nexuscore.cmds;
 
-import com.stardevllc.cmdflags.FlagResult;
-import com.stardevllc.cmdflags.type.PresenceFlag;
-import com.stardevllc.colors.StarColors;
+import com.stardevllc.starcore.StarColors;
+import com.stardevllc.starcore.cmdflags.FlagResult;
+import com.stardevllc.starcore.cmdflags.type.PresenceFlag;
 import com.stardevllc.starcore.utils.StarThread;
 import com.stardevllc.units.MemoryUnit;
 import com.thenexusreborn.api.player.Rank;

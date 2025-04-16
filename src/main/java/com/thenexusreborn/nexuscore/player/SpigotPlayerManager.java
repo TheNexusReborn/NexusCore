@@ -1,22 +1,21 @@
 package com.thenexusreborn.nexuscore.player;
 
 import com.stardevllc.clock.clocks.Stopwatch;
-import com.stardevllc.helper.StringHelper;
+import com.stardevllc.mojang.MojangAPI;
+import com.stardevllc.mojang.MojangProfile;
 import com.stardevllc.starchat.context.ChatContext;
-import com.stardevllc.colors.StarColors;
+import com.stardevllc.starcore.StarColors;
+import com.stardevllc.starcore.skins.Skin;
+import com.stardevllc.starcore.skins.SkinManager;
 import com.stardevllc.time.TimeUnit;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.gamearchive.GameInfo;
-import com.thenexusreborn.api.player.NexusPlayer;
-import com.thenexusreborn.api.player.PlayerManager;
-import com.thenexusreborn.api.player.Rank;
-import com.thenexusreborn.api.player.Session;
+import com.thenexusreborn.api.nickname.Nickname;
+import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.punishment.Punishment;
 import com.thenexusreborn.api.scoreboard.NexusScoreboard;
 import com.thenexusreborn.api.scoreboard.ScoreboardView;
-import com.thenexusreborn.api.sql.objects.Row;
-import com.thenexusreborn.api.sql.objects.SQLDatabase;
-import com.thenexusreborn.api.sql.objects.Table;
+import com.thenexusreborn.api.sql.objects.*;
 import com.thenexusreborn.api.util.Constants;
 import com.thenexusreborn.api.util.NetworkType;
 import com.thenexusreborn.nexuscore.NexusCore;
@@ -30,10 +29,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.net.InetSocketAddress;
@@ -87,13 +83,14 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
 
             if (!getPlayers().containsKey(player.getUniqueId())) {
                 Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-                    NexusPlayer nexusPlayer = null;
+                    NexusPlayer nexusPlayer;
                     if (!getUuidNameMap().containsKey(player.getUniqueId())) {
                         nexusPlayer = createPlayerData(player.getUniqueId(), player.getName());
                     } else {
                         try {
                             nexusPlayer = NexusAPI.getApi().getPrimaryDatabase().get(NexusPlayer.class, "uniqueId", player.getUniqueId()).getFirst();
                         } catch (SQLException ex) {
+                            nexusPlayer = null;
                             ex.printStackTrace();
                         }
                     }
@@ -101,6 +98,9 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                     if (Bukkit.getPlayer(nexusPlayer.getUniqueId()) == null) {
                         return;
                     }
+                    
+                    MojangProfile mojangProfile = MojangAPI.getProfile(player.getUniqueId());
+                    nexusPlayer.setMojangProfile(mojangProfile);
 
                     nexusPlayer.setSession(session);
                     playerManager.getUuidNameMap().forcePut(nexusPlayer.getUniqueId(), new Name(nexusPlayer.getName()));
@@ -121,19 +121,21 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                         ex.printStackTrace();
                     }
 
-                    if (nexusPlayer.getRank().ordinal() <= Rank.HELPER.ordinal()) {
-                        player.addAttachment(plugin, "vulcan.alerts", true);
-                        player.addAttachment(plugin, "nexuscore.staff.send", true);
-                        player.addAttachment(plugin, "nexuscore.staff.view", true);
-                    }
-
                     getPlayers().put(nexusPlayer.getUniqueId(), nexusPlayer);
                     InetSocketAddress socketAddress = player.getAddress();
                     String hostName = socketAddress.getHostString();
                     NexusAPI.getApi().getPlayerManager().addIpHistory(player.getUniqueId(), hostName);
+                    
+                    Nickname nickname = nexusPlayer.getNickname();
+                    SkinManager skinManager = Bukkit.getServicesManager().getRegistration(SkinManager.class).getProvider();
+                    Skin skin = (nickname != null && nickname.getSkin() != null && !nickname.getSkin().isBlank()) ? skinManager.getFromMojang(UUID.fromString(nickname.getSkin())) : null;
 
                     NexusPlayer finalNexusPlayer = nexusPlayer;
                     Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                        if (skin != null && nickname.isActive()) {
+                            plugin.getNickWrapper().setNick(plugin, player, nickname.getName(), skin);
+                        }
+                        
                         NexusScoreboard scoreboard = new SpigotNexusScoreboard(finalNexusPlayer);
                         scoreboard.init();
 
@@ -183,17 +185,11 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                                 return; //Prevent this running immediately when a player joins
                             }
 
-                            Rank rank = finalNexusPlayer.getRank();
-                            double xp = 10 * rank.getMultiplier();
+                            double xp = 10;
 
                             DecimalFormat format = new DecimalFormat(Constants.NUMBER_FORMAT);
 
-                            String bonusMessage = "";
-                            if (rank.getMultiplier() > 1) {
-                                bonusMessage = rank.getColor() + "&l x" + format.format(rank.getMultiplier()) + " " + StringHelper.titlize(rank.name()) + " Bonus";
-                            }
-
-                            finalNexusPlayer.sendMessage(MsgType.INFO + "&d+" + format.format(xp) + "XP (Playtime) " + bonusMessage);
+                            finalNexusPlayer.sendMessage(MsgType.INFO + "&d+" + format.format(xp) + "XP (Playtime)");
                             finalNexusPlayer.addXp(xp);
                         }, TimeUnit.MINUTES.toMillis(10));
                         playtimeStopwatch.start();
@@ -230,7 +226,7 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                 long playTime = session.getTimeOnline();
                 SQLDatabase database = NexusAPI.getApi().getPrimaryDatabase();
                 Table table = database.getTable(GameInfo.class);
-                String query = "select * from " + table.getName() + " where `gameStart`>='" + session.getStart() + "' and `gameEnd` <= '" + session.getEnd() + "' and `players` like '%" + nexusPlayer.getName() + "%';";
+                String query = "select * from " + table.getName() + " where `gameStart`>='" + session.getStart() + "' and `gameEnd` <= '" + session.getEnd() + "' and `players` like '%" + e.getPlayer().getName() + "%';";
                 try {
                     List<Row> rows = database.executeQuery(query);
                     session.setGamesPlayed(rows.size());
@@ -249,7 +245,9 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
             this.players.remove(nexusPlayer.getUniqueId());
             this.plugin.getNexusServer().quit(nexusPlayer);
             if (nexusPlayer.getRank().ordinal() <= Rank.MEDIA.ordinal()) {
-                plugin.getStaffChannel().sendMessage(new ChatContext(nexusPlayer.getDisplayName() + " &7disconnected"));
+                if (!nexusPlayer.isNicked()) { //TODO Need a change from StarChat to filter receivers
+                    plugin.getStaffChannel().sendMessage(new ChatContext(nexusPlayer.getTrueDisplayName() + " &7disconnected"));
+                }
             }
         }
     }

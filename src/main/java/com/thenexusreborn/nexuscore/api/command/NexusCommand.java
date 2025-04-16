@@ -1,7 +1,7 @@
 package com.thenexusreborn.nexuscore.api.command;
 
-import com.stardevllc.cmdflags.CmdFlags;
-import com.stardevllc.cmdflags.FlagResult;
+import com.stardevllc.starcore.cmdflags.CmdFlags;
+import com.stardevllc.starcore.cmdflags.FlagResult;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.nexuscore.util.MCUtils;
 import com.thenexusreborn.nexuscore.util.MsgType;
@@ -47,6 +47,34 @@ public class NexusCommand<T extends JavaPlugin> implements ICommand<T>, TabExecu
     
     public boolean execute(CommandSender sender, Rank senderRank, String label, String[] args, FlagResult flagResults) {
         return false;
+    }
+    
+    public List<String> getCompletions(CommandSender sender, Rank senderRank, String label, String[] args, FlagResult flagResults) {
+        List<String> completions = new ArrayList<>();
+        
+        if (args.length == 1) {
+            if (this.subCommands.isEmpty()) {
+                completions.addAll(getCompletions(sender, senderRank, label, args, flagResults));
+            } else {
+                this.subCommands.forEach(scmd -> completions.add(scmd.getName().toLowerCase()));
+            }
+            String arg = args[0].toLowerCase();
+            completions.removeIf(completion -> !completion.toLowerCase().startsWith(arg));
+        } else if (args.length > 1) {
+            SubCommand<T> subCommand = getSubCommand(args[0]);
+            if (subCommand != null) {
+                String cmdLabel = args[0];
+                
+                String[] newArgs = new String[args.length - 1];
+                System.arraycopy(args, 1, newArgs, 0, args.length - 1);
+                
+                args = newArgs;
+                
+                completions.addAll(subCommand.getCompletions(sender, senderRank, cmdLabel, args));
+            }
+        }
+        
+        return completions;
     }
     
     @Override
@@ -103,30 +131,14 @@ public class NexusCommand<T extends JavaPlugin> implements ICommand<T>, TabExecu
             return List.of();
         }
         
-        List<String> completions = new ArrayList<>();
-
-        FlagResult flagResults = this.cmdFlags.parse(args);
-        args = flagResults.args();
+        FlagResult flagResult = this.cmdFlags.parse(args);
+        args = flagResult.args();
         
-        if (args.length == 1) {
-            this.subCommands.forEach(scmd -> completions.add(scmd.getName().toLowerCase()));
-            String arg = args[0].toLowerCase();
-            completions.removeIf(completion -> !completion.startsWith(arg));
-        } else if (args.length > 1) {
-            SubCommand<T> subCommand = getSubCommand(args[0]);
-            if (subCommand != null) {
-                String cmdLabel = args[0];
-
-                String[] newArgs = new String[args.length - 1];
-                System.arraycopy(args, 1, newArgs, 0, args.length - 1);
-
-                args = newArgs;
-                
-                completions.addAll(subCommand.getCompletions(sender, senderRank, cmdLabel, args));
-            }
+        try {
+            return getCompletions(sender, senderRank, label, args, flagResult);
+        } catch (Throwable t) {
+            return List.of();
         }
-        
-        return completions;
     }
     
     public SubCommand<T> getSubCommand(String name) {
@@ -179,5 +191,10 @@ public class NexusCommand<T extends JavaPlugin> implements ICommand<T>, TabExecu
 
     public List<SubCommand<T>> getSubCommands() {
         return subCommands;
+    }
+
+    @Override
+    public boolean isPlayerOnly() {
+        return playerOnly;
     }
 }

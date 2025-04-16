@@ -1,7 +1,7 @@
 package com.thenexusreborn.nexuscore.cmds;
 
-import com.stardevllc.cmdflags.FlagResult;
-import com.stardevllc.colors.StarColors;
+import com.stardevllc.starcore.StarColors;
+import com.stardevllc.starcore.cmdflags.FlagResult;
 import com.stardevllc.time.TimeFormat;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.*;
@@ -61,7 +61,7 @@ public class PlaytimeCommand extends NexusCommand<NexusCore> {
                 }
             }
 
-            sendPlaytimeMessages(playtime, self, sender, player.getColoredName());
+            sendPlaytimeMessages(playtime, self, player, player.getColoredName());
         } else {
             UUID finalUuid = uuid;
             Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
@@ -70,7 +70,7 @@ public class PlaytimeCommand extends NexusCommand<NexusCore> {
                 try {
                     PlayerRanks ranks = new RanksCodec().decode(database.executeQuery("select `ranks` from `players` where `uniqueId`='" + finalUuid + "';").getFirst().getString("ranks"));
                     PlayerTime playerTime = database.get(PlayerTime.class, "uniqueid", player.getUniqueId().toString()).getFirst();
-                    sendPlaytimeMessages(playerTime.getPlaytime(), self, sender, ranks.get().getColor() + name);
+                    sendPlaytimeMessages(playerTime.getPlaytime(), self, player, ranks.get().getColor() + name);
                 } catch (Exception e) {
                     sender.sendMessage(StarColors.color(MsgType.ERROR + "There was an error getting " + name + "'s playtime."));
                 }
@@ -80,10 +80,15 @@ public class PlaytimeCommand extends NexusCommand<NexusCore> {
         return true;
     }
     
-    private void sendPlaytimeMessages(long playtime, boolean self, CommandSender sender, String coloredName) {
+    private void sendPlaytimeMessages(long playtime, boolean self, NexusPlayer sender, String coloredName) {
         String formattedPlaytime = timeFormat.format(playtime);
         if (self) {
-            sender.sendMessage(StarColors.color(MsgType.INFO + "Your playtime is " + MsgType.INFO.getVariableColor() + formattedPlaytime));
+            String line = MsgType.INFO + "Your playtime is " + MsgType.INFO.getVariableColor() + formattedPlaytime;
+            if (sender.isNicked()) {
+                line += " &8(&7" + timeFormat.format(sender.getTrueTime().getPlaytime()) + "&8)";
+            }
+            
+            sender.sendMessage(StarColors.color(line));
         } else {
             sender.sendMessage(StarColors.color(MsgType.INFO + coloredName + "&e's playtime is &b" + formattedPlaytime));
         }

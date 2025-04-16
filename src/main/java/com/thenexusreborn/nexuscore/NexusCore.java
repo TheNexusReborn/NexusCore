@@ -1,19 +1,17 @@
 package com.thenexusreborn.nexuscore;
 
 import com.stardevllc.clock.ClockManager;
-import com.stardevllc.colors.StarColors;
 import com.stardevllc.helper.FileHelper;
 import com.stardevllc.starchat.StarChat;
 import com.stardevllc.starchat.channels.ChatChannel;
+import com.stardevllc.starcore.StarColors;
 import com.stardevllc.starcore.utils.ServerProperties;
 import com.stardevllc.starui.GuiManager;
 import com.sun.net.httpserver.HttpServer;
 import com.thenexusreborn.api.NexusAPI;
-import com.thenexusreborn.api.gamearchive.GameLogExporter;
+import com.thenexusreborn.api.gamearchive.GameInfo;
 import com.thenexusreborn.api.player.NexusPlayer;
-import com.thenexusreborn.api.server.InstanceServer;
-import com.thenexusreborn.api.server.NexusServer;
-import com.thenexusreborn.api.server.VirtualServer;
+import com.thenexusreborn.api.server.*;
 import com.thenexusreborn.api.sql.objects.SQLDatabase;
 import com.thenexusreborn.nexuscore.api.NexusSpigotPlugin;
 import com.thenexusreborn.nexuscore.api.events.NexusServerSetupEvent;
@@ -30,6 +28,7 @@ import com.thenexusreborn.nexuscore.discord.NexusBot;
 import com.thenexusreborn.nexuscore.hooks.NexusPapiExpansion;
 import com.thenexusreborn.nexuscore.http.GameHttpHandler;
 import com.thenexusreborn.nexuscore.http.ServerHttpHandler;
+import com.thenexusreborn.nexuscore.nickname.NickWrapper_v1_8_R3;
 import com.thenexusreborn.nexuscore.player.SpigotPlayerManager;
 import com.thenexusreborn.nexuscore.server.CoreInstanceServer;
 import com.thenexusreborn.nexuscore.thread.*;
@@ -46,12 +45,9 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
+import java.io.*;
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.function.Supplier;
@@ -70,6 +66,8 @@ public class NexusCore extends JavaPlugin implements Listener {
     private GuiManager guiManager;
 
     private NexusBot nexusBot;
+    
+    private NickWrapper_v1_8_R3 nickWrapper = new NickWrapper_v1_8_R3();
 
     private List<DiscordVerifyCode> discordVerifyCodes = new ArrayList<>();
 
@@ -109,7 +107,7 @@ public class NexusCore extends JavaPlugin implements Listener {
             return;
         }
 
-        NexusAPI.getApi().setClockManager(getServer().getServicesManager().getRegistration(ClockManager.class).getProvider());
+        NexusAPI.getApi().setClockManager(this.clockManager);
 
         Bukkit.getServicesManager().register(SQLDatabase.class, NexusAPI.getApi().getPrimaryDatabase(), this, ServicePriority.Highest);
 
@@ -118,7 +116,7 @@ public class NexusCore extends JavaPlugin implements Listener {
 
         this.starChatPlugin = (StarChat) pluginManager.getPlugin("StarChat");
         this.starChatPlugin.getGlobalChannel().setSenderFormat("&8(&2&l%nexuscore_level%&8) &r%nexuscore_displayname%&8: %nexuscore_chatcolor%{message}");
-        this.starChatPlugin.getStaffChannel().setSenderFormat("&2&l[&aSTAFF&2&l] &r%nexuscore_coloredname%: &f{message}");
+        this.starChatPlugin.getStaffChannel().setSenderFormat("&2&l[&aSTAFF&2&l] &r%nexuscore_coloredname_true%: &f{message}");
         this.starChatPlugin.getStaffChannel().setSystemFormat("&2&l[&aSTAFF&2&l] &f{message}");
         this.starChatPlugin.getStaffChannel().setSendPermission("nexuscore.staff.send");
         this.starChatPlugin.getStaffChannel().setViewPermission("nexuscore.staff.view");
@@ -136,7 +134,9 @@ public class NexusCore extends JavaPlugin implements Listener {
         Bukkit.getServer().getPluginManager().registerEvents(this, this);
         getLogger().info("Registered Event Listeners");
         
-        new NickCmd(this);
+        new NickCommand(this);
+        new UnnickCommand(this);
+        new RealnameCommand(this);
         new BotCommand(this);
         new ProfileCmd(this);
 
@@ -221,10 +221,9 @@ public class NexusCore extends JavaPlugin implements Listener {
             NexusAPI.getApi().getServerRegistry().register(nexusServer);
         }, 1L);
 
-        NexusAPI.getApi().setGameLogExporter(new GameLogExporter(new File(getDataFolder(), "export" + File.separator + "games")));
         getServer().getScheduler().runTaskAsynchronously(this, () -> {
             try {
-                NexusAPI.getApi().getGameLogExporter().exportGames();
+                NexusAPI.getApi().getGameLogManager().exportGames();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -243,9 +242,30 @@ public class NexusCore extends JavaPlugin implements Listener {
             }
         });
         
+        File playersWithNoUUIDFile = new File(getDataFolder() + File.separator + "playerswithnouuid.txt");
+        if (!playersWithNoUUIDFile.exists()) {
+            try {
+                playersWithNoUUIDFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        
+        try (FileWriter fileWriter = new FileWriter(playersWithNoUUIDFile)) {
+            for (String pnu : GameInfo.playersWithNoUUID) {
+                fileWriter.write(pnu + "\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
         this.nexusBot.start();
     }
-
+    
+    public NickWrapper_v1_8_R3 getNickWrapper() {
+        return nickWrapper;
+    }
+    
     public List<DiscordVerifyCode> getDiscordVerifyCodes() {
         return discordVerifyCodes;
     }
@@ -276,7 +296,7 @@ public class NexusCore extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onServerPing(ServerListPingEvent e) {
-        e.setMotd(StarColors.color("            &5&lTHE NEXUS REBORN &e&lALPHA\n              &7Minecraft Version 1.8"));
+        e.setMotd(StarColors.color("            &5&lTHE NEXUS REBORN &e&lALPHA\n       &7Minecraft Version 1.8-1.21.4"));
 
         Iterator<Player> iterator = e.iterator();
         while (iterator.hasNext()) {

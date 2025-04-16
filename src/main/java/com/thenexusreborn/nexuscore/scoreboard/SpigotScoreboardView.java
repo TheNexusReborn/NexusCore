@@ -1,9 +1,7 @@
 package com.thenexusreborn.nexuscore.scoreboard;
 
-import com.stardevllc.colors.StarColors;
-import com.thenexusreborn.api.scoreboard.NexusScoreboard;
-import com.thenexusreborn.api.scoreboard.ScoreboardView;
-import com.thenexusreborn.api.scoreboard.TeamBuilder;
+import com.stardevllc.starcore.StarColors;
+import com.thenexusreborn.api.scoreboard.*;
 import com.thenexusreborn.api.scoreboard.wrapper.ITeam;
 import com.thenexusreborn.nexuscore.scoreboard.impl.SpigotObjective;
 import org.bukkit.scoreboard.DisplaySlot;

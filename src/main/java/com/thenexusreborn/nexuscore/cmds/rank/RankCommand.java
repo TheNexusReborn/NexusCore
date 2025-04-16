@@ -8,7 +8,7 @@ import com.thenexusreborn.nexuscore.api.command.NexusCommand;
 public class RankCommand extends NexusCommand<NexusCore> {
 
     public RankCommand(NexusCore plugin) {
-        super(plugin, "rank", "", Rank.ADMIN);
+        super(plugin, "rank", "Manage ranks", Rank.ADMIN);
         
         //New command usage
         // /rank <add|set|remove> <player> <rank> 

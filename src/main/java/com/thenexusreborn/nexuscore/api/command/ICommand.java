@@ -9,4 +9,5 @@ public interface ICommand<T extends JavaPlugin> {
     String[] getAliases();
     String getDescription();
     Rank getMinRank();
+    boolean isPlayerOnly();
 }
