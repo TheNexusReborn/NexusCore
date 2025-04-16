@@ -26,8 +26,7 @@ import com.thenexusreborn.nexuscore.cmds.tag.admin.TagAdminCommand;
 import com.thenexusreborn.nexuscore.discord.DiscordVerifyCode;
 import com.thenexusreborn.nexuscore.discord.NexusBot;
 import com.thenexusreborn.nexuscore.hooks.NexusPapiExpansion;
-import com.thenexusreborn.nexuscore.http.GameHttpHandler;
-import com.thenexusreborn.nexuscore.http.ServerHttpHandler;
+import com.thenexusreborn.nexuscore.http.*;
 import com.thenexusreborn.nexuscore.nickname.NickWrapper_v1_8_R3;
 import com.thenexusreborn.nexuscore.player.SpigotPlayerManager;
 import com.thenexusreborn.nexuscore.server.CoreInstanceServer;
@@ -233,6 +232,7 @@ public class NexusCore extends JavaPlugin implements Listener {
             try {
                 ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
                 HttpServer server = HttpServer.create(new InetSocketAddress("0.0.0.0", 8051), 0);
+                server.createContext("/", new RootHttpHandler(this));
                 server.createContext("/server", new ServerHttpHandler(this));
                 server.createContext("/game", new GameHttpHandler(this));
                 server.setExecutor(threadPoolExecutor);

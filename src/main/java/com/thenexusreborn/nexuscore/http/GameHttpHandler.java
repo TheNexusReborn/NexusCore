@@ -17,8 +17,6 @@ public class GameHttpHandler implements HttpHandler {
 
     private NexusCore plugin;
 
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-
     public GameHttpHandler(NexusCore plugin) {
         this.plugin = plugin;
     }
@@ -26,19 +24,37 @@ public class GameHttpHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
         String url = httpExchange.getRequestURI().toString();
-        String[] mainURLSplit = url.split("\\?");
-        String rawParameters = mainURLSplit[1];
-
-        String[] parameters = rawParameters.split(",");
-
-        int gameId = -1;
-
-        for (String parameter : parameters) {
-            String[] parameterSplit = parameter.split("=");
-            if (parameterSplit[0].equals("id")) {
-                gameId = Integer.parseInt(parameterSplit[1]);
-            }
+        
+        String[] split = url.split("/");
+        
+        int gameId;
+        
+        try {
+            gameId = Integer.parseInt(split[2]);
+        } catch (Exception e) {
+            String r = "Invalid game id";
+            httpExchange.getResponseHeaders().add("Content-Type", "text/html; charset=utf-8");
+            httpExchange.sendResponseHeaders(200, r.length());
+            OutputStream os = httpExchange.getResponseBody();
+            os.write(r.getBytes(StandardCharsets.UTF_8));
+            os.flush();
+            os.close();
+            return;
         }
+        
+        // /game/<id>
+        // /game?id=407
+//        String[] mainURLSplit = url.split("\\?");
+//        String rawParameters = mainURLSplit[1];
+//
+//        String[] parameters = rawParameters.split(",");
+
+//        for (String parameter : parameters) {
+//            String[] parameterSplit = parameter.split("=");
+//            if (parameterSplit[0].equals("id")) {
+//                gameId = Integer.parseInt(parameterSplit[1]);
+//            }
+//        }
 
         StringBuilder responseBuilder = new StringBuilder();
         responseBuilder.append("""
