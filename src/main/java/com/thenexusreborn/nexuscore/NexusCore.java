@@ -242,7 +242,7 @@ public class NexusCore extends JavaPlugin implements Listener {
             }
         });
         
-        File playersWithNoUUIDFile = new File(getDataFolder() + "playerswithnouuid.txt");
+        File playersWithNoUUIDFile = new File(getDataFolder() + File.separator + "playerswithnouuid.txt");
         if (!playersWithNoUUIDFile.exists()) {
             try {
                 playersWithNoUUIDFile.createNewFile();
