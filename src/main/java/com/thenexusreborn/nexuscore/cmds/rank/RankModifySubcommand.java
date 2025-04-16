@@ -85,13 +85,17 @@ public abstract class RankModifySubcommand extends SubCommand<NexusCore> {
         }
 
         if (rank == Rank.NEXUS) {
-            if (!(sender instanceof Player player) || !player.getUniqueId().toString().equals("3f7891ce-5a73-4d52-a2ba-299839053fdc")) {
-                sender.sendMessage(StarColors.color("&cYou cannot modify " + args[0] + "'s rank to " + Rank.NEXUS.name() + " as it is equal to or higher than your own."));
+            if (sender instanceof Player player) {
+                if (!player.getUniqueId().toString().equalsIgnoreCase("3f7891ce-5a73-4d52-a2ba-299839053fdc")) {
+                    sender.sendMessage(StarColors.color("&cYou cannot modify " + args[0] + "'s rank to " + Rank.NEXUS.name() + " as it is equal to or higher than your own."));
+                    return true;
+                }
+            }
+        } else if (senderRank.ordinal() >= rank.ordinal() && (sender instanceof Player player)) {
+            if (!player.getUniqueId().toString().equalsIgnoreCase("3f7891ce-5a73-4d52-a2ba-299839053fdc")) {
+                sender.sendMessage(StarColors.color("&cYou cannot modify " + args[0] + "'s rank to " + rank.name() + " as it is equal to or higher than your own."));
                 return true;
             }
-        } else if (senderRank.ordinal() >= rank.ordinal() && !(sender instanceof ConsoleCommandSender)) {
-            sender.sendMessage(StarColors.color("&cYou cannot modify " + args[0] + "'s rank to " + rank.name() + " as it is equal to or higher than your own."));
-            return true;
         }
 
         String rankName = rank.getColor() + "&l" + rank.name();
