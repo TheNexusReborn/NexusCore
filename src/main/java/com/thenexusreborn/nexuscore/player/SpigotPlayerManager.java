@@ -1,7 +1,6 @@
 package com.thenexusreborn.nexuscore.player;
 
 import com.stardevllc.clock.clocks.Stopwatch;
-import com.stardevllc.helper.StringHelper;
 import com.stardevllc.mojang.MojangAPI;
 import com.stardevllc.mojang.MojangProfile;
 import com.stardevllc.starchat.context.ChatContext;
@@ -186,17 +185,11 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                                 return; //Prevent this running immediately when a player joins
                             }
 
-                            Rank rank = finalNexusPlayer.getRank();
-                            double xp = 10 * rank.getMultiplier();
+                            double xp = 10;
 
                             DecimalFormat format = new DecimalFormat(Constants.NUMBER_FORMAT);
 
-                            String bonusMessage = "";
-                            if (rank.getMultiplier() > 1) {
-                                bonusMessage = rank.getColor() + "&l x" + format.format(rank.getMultiplier()) + " " + StringHelper.titlize(rank.name()) + " Bonus";
-                            }
-
-                            finalNexusPlayer.sendMessage(MsgType.INFO + "&d+" + format.format(xp) + "XP (Playtime) " + bonusMessage);
+                            finalNexusPlayer.sendMessage(MsgType.INFO + "&d+" + format.format(xp) + "XP (Playtime)");
                             finalNexusPlayer.addXp(xp);
                         }, TimeUnit.MINUTES.toMillis(10));
                         playtimeStopwatch.start();
