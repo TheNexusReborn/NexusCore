@@ -1,6 +1,7 @@
 package com.thenexusreborn.nexuscore;
 
 import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.gamearchive.GameLogManager;
 import com.thenexusreborn.api.player.PlayerProxy;
 import com.thenexusreborn.api.registry.ToggleRegistry;
 import com.thenexusreborn.api.sql.DatabaseRegistry;
@@ -24,6 +25,7 @@ public class SpigotNexusAPI extends NexusAPI {
         super(Environment.valueOf(plugin.getConfig().getString("environment").toUpperCase()), plugin.getLogger(), new SpigotPlayerManager(plugin));
         this.plugin = plugin;
         PlayerProxy.setProxyClass(SpigotPlayerProxy.class);
+        setGameLogManager(new GameLogManager(new File(plugin.getDataFolder(), "export" + File.separator + "games")));
     }
     
     @Override

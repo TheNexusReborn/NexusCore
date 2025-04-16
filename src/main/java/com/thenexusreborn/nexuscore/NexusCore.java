@@ -9,7 +9,7 @@ import com.stardevllc.starcore.utils.ServerProperties;
 import com.stardevllc.starui.GuiManager;
 import com.sun.net.httpserver.HttpServer;
 import com.thenexusreborn.api.NexusAPI;
-import com.thenexusreborn.api.gamearchive.GameLogExporter;
+import com.thenexusreborn.api.gamearchive.GameInfo;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.server.*;
 import com.thenexusreborn.api.sql.objects.SQLDatabase;
@@ -45,7 +45,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
+import java.io.*;
 import java.net.InetSocketAddress;
 import java.util.*;
 import java.util.concurrent.Executors;
@@ -107,7 +107,7 @@ public class NexusCore extends JavaPlugin implements Listener {
             return;
         }
 
-        NexusAPI.getApi().setClockManager(getServer().getServicesManager().getRegistration(ClockManager.class).getProvider());
+        NexusAPI.getApi().setClockManager(this.clockManager);
 
         Bukkit.getServicesManager().register(SQLDatabase.class, NexusAPI.getApi().getPrimaryDatabase(), this, ServicePriority.Highest);
 
@@ -221,10 +221,9 @@ public class NexusCore extends JavaPlugin implements Listener {
             NexusAPI.getApi().getServerRegistry().register(nexusServer);
         }, 1L);
 
-        NexusAPI.getApi().setGameLogExporter(new GameLogExporter(new File(getDataFolder(), "export" + File.separator + "games")));
         getServer().getScheduler().runTaskAsynchronously(this, () -> {
             try {
-                NexusAPI.getApi().getGameLogExporter().exportGames();
+                NexusAPI.getApi().getGameLogManager().exportGames();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -242,6 +241,23 @@ public class NexusCore extends JavaPlugin implements Listener {
                 e.printStackTrace();
             }
         });
+        
+        File playersWithNoUUIDFile = new File(getDataFolder() + "playerswithnouuid.txt");
+        if (!playersWithNoUUIDFile.exists()) {
+            try {
+                playersWithNoUUIDFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        
+        try (FileWriter fileWriter = new FileWriter(playersWithNoUUIDFile)) {
+            for (String pnu : GameInfo.playersWithNoUUID) {
+                fileWriter.write(pnu + "\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         
         this.nexusBot.start();
     }
