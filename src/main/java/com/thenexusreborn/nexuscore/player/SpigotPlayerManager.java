@@ -2,6 +2,8 @@ package com.thenexusreborn.nexuscore.player;
 
 import com.stardevllc.clock.clocks.Stopwatch;
 import com.stardevllc.helper.StringHelper;
+import com.stardevllc.mojang.MojangAPI;
+import com.stardevllc.mojang.MojangProfile;
 import com.stardevllc.starchat.context.ChatContext;
 import com.stardevllc.starcore.StarColors;
 import com.stardevllc.starcore.skins.Skin;
@@ -97,6 +99,9 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                     if (Bukkit.getPlayer(nexusPlayer.getUniqueId()) == null) {
                         return;
                     }
+                    
+                    MojangProfile mojangProfile = MojangAPI.getProfile(player.getUniqueId());
+                    nexusPlayer.setMojangProfile(mojangProfile);
 
                     nexusPlayer.setSession(session);
                     playerManager.getUuidNameMap().forcePut(nexusPlayer.getUniqueId(), new Name(nexusPlayer.getName()));
