@@ -1,11 +1,15 @@
 package com.thenexusreborn.nexuscore.cmds.rank;
 
 import com.stardevllc.helper.Pair;
+import com.stardevllc.mojang.MojangAPI;
+import com.stardevllc.mojang.MojangProfile;
 import com.stardevllc.starcore.StarColors;
 import com.stardevllc.starcore.cmdflags.FlagResult;
 import com.stardevllc.time.TimeParser;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.player.*;
+import com.thenexusreborn.api.sql.objects.SQLDatabase;
+import com.thenexusreborn.api.sql.objects.codecs.RanksCodec;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.api.command.ICommand;
 import com.thenexusreborn.nexuscore.api.command.SubCommand;
@@ -14,6 +18,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
+import java.sql.SQLException;
 import java.util.UUID;
 
 public abstract class RankModifySubcommand extends SubCommand<NexusCore> {
@@ -32,6 +37,24 @@ public abstract class RankModifySubcommand extends SubCommand<NexusCore> {
 
         PlayerManager playerManager = NexusAPI.getApi().getPlayerManager();
         Pair<UUID, String> playerInfo = playerManager.getPlayerFromIdentifier(args[0]);
+        boolean hasNotJoined = false;
+        if (playerInfo == null) {
+            try {
+                UUID uuid = UUID.fromString(args[0]);
+                MojangProfile mojangProfile = MojangAPI.getProfile(uuid);
+                if (mojangProfile != null) {
+                    playerInfo = new Pair<>(uuid, mojangProfile.getName());
+                    hasNotJoined = true;
+                }
+            } catch (Exception e) {
+                MojangProfile mojangProfile = MojangAPI.getProfile(args[0]);
+                if (mojangProfile != null) {
+                    playerInfo = new Pair<>(mojangProfile.getUniqueId(), mojangProfile.getName());
+                    hasNotJoined = true;
+                }
+            }
+        }
+        
         if (playerInfo == null) {
             sender.sendMessage(StarColors.color(MsgType.WARN + "Could not find a player with that identifier."));
             return true;
@@ -40,6 +63,10 @@ public abstract class RankModifySubcommand extends SubCommand<NexusCore> {
         UUID targetUniqueID = playerInfo.key();
         String targetName = playerInfo.value();
         PlayerRanks targetRanks = playerManager.getPlayerRanks(targetUniqueID);
+        
+        if (targetRanks == null) {
+            targetRanks = new PlayerRanks(targetUniqueID);
+        }
         
         boolean isFirestar311 = sender instanceof Player player && player.getUniqueId().toString().equals("3f7891ce-5a73-4d52-a2ba-299839053fdc");
 
@@ -90,6 +117,21 @@ public abstract class RankModifySubcommand extends SubCommand<NexusCore> {
         }
         
         handle(sender, rank, expire, targetRanks, targetName, rankName, time);
+        
+        SQLDatabase database = NexusAPI.getApi().getPrimaryDatabase();
+        
+        try {
+            String encodedRanks = new RanksCodec().encode(targetRanks);
+            if (hasNotJoined) {
+                database.execute(String.format("insert into `players`(`ranks`, `name`, `uniqueid`) VALUES ('%s','%s','%s');", encodedRanks, playerInfo.value(), playerInfo.key().toString()));
+            } else {
+                database.execute(String.format("update `players` set `ranks`='%s' where `uniqueid`=`%s';", encodedRanks, targetUniqueID.toString()));
+            }
+        } catch (SQLException e) {
+            MsgType.ERROR.send(sender, "There was an error while saving changes to the database.");
+            e.printStackTrace();
+        }
+        
         return true;
     }
     
