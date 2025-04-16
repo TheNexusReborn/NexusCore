@@ -52,7 +52,7 @@ public class DiscordListener extends ListenerAdapter {
                 }
                 
                 if (!hasStatusCategory) {
-                    guild.createCategory("Serever Status").queue(category -> {
+                    guild.createCategory("Server Status").queue(category -> {
                         ChannelOrderAction orderAction = guild.modifyCategoryPositions();
                         orderAction.selectPosition(category);
                         orderAction.moveTo(1);
