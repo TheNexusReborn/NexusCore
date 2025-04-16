@@ -37,20 +37,17 @@ public abstract class RankModifySubcommand extends SubCommand<NexusCore> {
         
         PlayerManager playerManager = NexusAPI.getApi().getPlayerManager();
         Pair<UUID, String> playerInfo = playerManager.getPlayerFromIdentifier(args[0]);
-        boolean hasNotJoined = false;
         if (playerInfo == null) {
             try {
                 UUID uuid = UUID.fromString(args[0]);
                 MojangProfile mojangProfile = MojangAPI.getProfile(uuid);
                 if (mojangProfile != null) {
                     playerInfo = new Pair<>(uuid, mojangProfile.getName());
-                    hasNotJoined = true;
                 }
             } catch (Exception e) {
                 MojangProfile mojangProfile = MojangAPI.getProfile(args[0]);
                 if (mojangProfile != null) {
                     playerInfo = new Pair<>(mojangProfile.getUniqueId(), mojangProfile.getName());
-                    hasNotJoined = true;
                 }
             }
         }
@@ -122,11 +119,7 @@ public abstract class RankModifySubcommand extends SubCommand<NexusCore> {
         
         try {
             String encodedRanks = new RanksCodec().encode(targetRanks);
-            if (hasNotJoined) {
-                database.execute(String.format("insert into `players`(`ranks`, `name`, `uniqueid`) VALUES ('%s','%s','%s');", encodedRanks, playerInfo.value(), playerInfo.key().toString()));
-            } else {
-                database.execute(String.format("update `players` set `ranks`='%s' where `uniqueid`=`%s';", encodedRanks, targetUniqueID.toString()));
-            }
+            database.execute(String.format("insert into `players`(`ranks`, `name`, `uniqueid`) values ('%s','%s','%s') on duplicate key update `ranks`='%s';", encodedRanks, playerInfo.value(), playerInfo.key().toString(), encodedRanks));
         } catch (SQLException e) {
             MsgType.ERROR.send(sender, "There was an error while saving changes to the database.");
             e.printStackTrace();
