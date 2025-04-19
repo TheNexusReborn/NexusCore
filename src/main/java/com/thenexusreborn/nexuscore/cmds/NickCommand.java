@@ -33,7 +33,8 @@ public class NickCommand extends NexusCommand<NexusCore> {
     
     private static final List<Rank> ALLOWED_RANKS = List.of(Rank.MEMBER, Rank.IRON, Rank.GOLD, Rank.DIAMOND);
     
-    private static final Rank SELF_TARGET = Rank.DIAMOND;
+    private static final Rank CUSTOM_NAME = Rank.MEDIA;
+    private static final Rank SELF_TARGET = Rank.MEDIA;
     private static final Rank CUSTOM_RANK = Rank.MEDIA;
     private static final Rank SET_OTHER = Rank.ADMIN;
     private static final Rank CUSTOM_LEVEL = Rank.VIP;
@@ -52,64 +53,27 @@ public class NickCommand extends NexusCommand<NexusCore> {
     
     @Override
     public boolean execute(CommandSender sender, Rank senderRank, String label, String[] args, FlagResult flagResults) {
-        if (!(args.length > 0)) {
-            MsgType.WARN.send(sender, "You must provide a name");
-            return true;
-        }
+        String name;
         
-        if (args[0].equalsIgnoreCase("addblacklist")) {
-            if (senderRank.ordinal() > Rank.ADMIN.ordinal()) {
-                MsgType.WARN.send(sender, "That name is blacklisted, you cannot use it.");
-                return true;
-            }
+        Random random = new Random();
+        if (args.length == 0) {
+            List<String> randomNames = new ArrayList<>(NexusAPI.getApi().getRandomNames());
             
-            if (!(args.length > 1)) {
-                MsgType.WARN.send(sender, "You must provide one or more names to add to the blacklist.");
-                return true;
-            }
-            
-            Set<String> nicknameBlacklist = NexusAPI.getApi().getNicknameBlacklist();
-            
-            for (int i = 1; i < args.length; i++) {
-                String name = args[i].toLowerCase();
-                if (!nicknameBlacklist.contains(name)) {
-                    nicknameBlacklist.add(name);
-                    MsgType.INFO.send(sender, "You added %v to the blacklist.", name);
+            if (randomNames.isEmpty()) {
+                if (senderRank.ordinal() <= CUSTOM_NAME.ordinal()) {
+                    MsgType.WARN.send(sender, "There are no random names on the list. Please use a custom name and/or contact an Admin or higher with suggestions.");
                 } else {
-                    MsgType.WARN.send(sender, "That name is already on the blacklist");
-                    return true;
+                    MsgType.WARN.send(sender, "There are no random names on the list, and you are not allowed to use a custom name. Please contact an Admin or higher with suggestions.");
                 }
-            }
-            
-            return true;
-        } else if (args[0].equalsIgnoreCase("removeblacklist")) {
-            if (senderRank.ordinal() > Rank.ADMIN.ordinal()) {
-                MsgType.WARN.send(sender, "That name is blacklisted, you cannot use it.");
                 return true;
             }
             
-            if (!(args.length > 1)) {
-                MsgType.WARN.send(sender, "You must provide one or more names to remove from the blacklist.");
-                return true;
-            }
-            
-            Set<String> nicknameBlacklist = NexusAPI.getApi().getNicknameBlacklist();
-            
-            for (int i = 1; i < args.length; i++) {
-                String name = args[i].toLowerCase();
-                if (nicknameBlacklist.contains(name)) {
-                    nicknameBlacklist.remove(name);
-                    MsgType.INFO.send(sender, "You removed %v from the blacklist.", name);
-                } else {
-                    MsgType.WARN.send(sender, "That name is not on the blacklist");
-                    return true;
-                }
-            }
-            
-            return true;
+            do {
+                name = randomNames.get(random.nextInt(randomNames.size()));
+            } while (Bukkit.getPlayer(name) != null);
+        } else {
+            name = args[0];
         }
-        
-        String name = args[0];
         
         Player target = (Player) sender;
         boolean self = false;
@@ -127,7 +91,7 @@ public class NickCommand extends NexusCommand<NexusCore> {
                 }
             }
             
-            if (Bukkit.getPlayerExact(args[0]) == null) {
+            if (Bukkit.getPlayerExact(name) == null) {
                 if (Bukkit.getPlayer(name) != null) {
                     MsgType.WARN.send(sender, "You cannot use the name of a player already online");
                     return true;
@@ -236,8 +200,16 @@ public class NickCommand extends NexusCommand<NexusCore> {
             }
         }
         
-        if (skin == null && uuidFromName != null) {
-            skin = skinManager.getFromMojang(uuidFromName);
+        if (skin == null && !self) {
+            if (uuidFromName != null) {
+                skin = skinManager.getFromMojang(uuidFromName);
+            } else {
+                List<String> randomSkins = new ArrayList<>(NexusAPI.getApi().getRandomSkins());
+                if (!randomSkins.isEmpty()) {
+                    String skinRaw = randomSkins.get(random.nextInt(randomSkins.size()));
+                    skin = skinManager.getFromMojang(skinRaw);
+                }
+            }
         }
         
         NickBalance creditsBalance = null;
@@ -338,7 +310,7 @@ public class NickCommand extends NexusCommand<NexusCore> {
         
         nickname.setActive(true);
         
-        if (!(nickname.getName().equalsIgnoreCase(nickname.getTrueName()) && skin == null)) {
+        if (!self) {
             plugin.getNickWrapper().setNick(plugin, target, nickname.getName(), skin);
         }
         
