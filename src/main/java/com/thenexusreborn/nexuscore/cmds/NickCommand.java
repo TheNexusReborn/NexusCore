@@ -8,6 +8,7 @@ import com.stardevllc.starcore.skins.SkinManager;
 import com.stardevllc.time.TimeParser;
 import com.thenexusreborn.api.NexusAPI;
 import com.thenexusreborn.api.nickname.*;
+import com.thenexusreborn.api.nickname.player.*;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.nexuscore.NexusCore;
