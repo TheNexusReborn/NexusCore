@@ -34,17 +34,6 @@ public class NickCommand extends NexusCommand<NexusCore> {
     
     private static final List<Rank> ALLOWED_RANKS = List.of(Rank.MEMBER, Rank.IRON, Rank.GOLD, Rank.DIAMOND);
     
-    private static final Rank CUSTOM_NAME = Rank.MEDIA;
-    private static final Rank SELF_TARGET = Rank.MEDIA;
-    private static final Rank CUSTOM_RANK = Rank.MEDIA;
-    private static final Rank SET_OTHER = Rank.ADMIN;
-    private static final Rank CUSTOM_LEVEL = Rank.VIP;
-    private static final Rank CUSTOM_SKIN = Rank.VIP;
-    private static final Rank CUSTOM_CREDITS = Rank.VIP;
-    private static final Rank CUSTOM_NEXITES = Rank.VIP;
-    private static final Rank CUSTOM_TIME = Rank.VIP;
-    private static final Rank PERSIST_STATS = Rank.VIP;
-    
     public NickCommand(NexusCore plugin) {
         super(plugin, "nickname", "Set a nickname", Rank.MEDIA, "nick");
         this.playerOnly = true;
@@ -56,12 +45,14 @@ public class NickCommand extends NexusCommand<NexusCore> {
     public boolean execute(CommandSender sender, Rank senderRank, String label, String[] args, FlagResult flagResults) {
         String name;
         
+        NickPerms nickPerms = NexusAPI.getApi().getNickPerms();
+        
         Random random = new Random();
         if (args.length == 0) {
             List<String> randomNames = new ArrayList<>(NexusAPI.getApi().getRandomNames());
             
             if (randomNames.isEmpty()) {
-                if (senderRank.ordinal() <= CUSTOM_NAME.ordinal()) {
+                if (senderRank.ordinal() <= nickPerms.getCustomName().ordinal()) {
                     MsgType.WARN.send(sender, "There are no random names on the list. Please use a custom name and/or contact an Admin or higher with suggestions.");
                 } else {
                     MsgType.WARN.send(sender, "There are no random names on the list, and you are not allowed to use a custom name. Please contact an Admin or higher with suggestions.");
@@ -106,7 +97,7 @@ public class NickCommand extends NexusCommand<NexusCore> {
                 }
             }
         } else {
-            if (senderRank.ordinal() > SELF_TARGET.ordinal()) {
+            if (senderRank.ordinal() > nickPerms.getSelfTarget().ordinal()) {
                 MsgType.WARN.send(sender, "You are not allowed to target yourself.");
                 return true;
             }
@@ -128,8 +119,8 @@ public class NickCommand extends NexusCommand<NexusCore> {
         
         Rank rank = Rank.MEMBER;
         if (flagResults.getValue(RANK) != null && !flagResults.getValue(RANK).equals(Rank.MEMBER.toString())) {
-            if (senderRank.ordinal() > CUSTOM_RANK.ordinal()) {
-                MsgType.WARN.send(sender, "You must have the rank %s or higher to set a custom rank.", CUSTOM_RANK.getPrefix());
+            if (senderRank.ordinal() > nickPerms.getCustomRank().ordinal()) {
+                MsgType.WARN.send(sender, "You must have the rank %s or higher to set a custom rank.", nickPerms.getCustomRank().getPrefix());
                 return true;
             }
             
@@ -149,7 +140,7 @@ public class NickCommand extends NexusCommand<NexusCore> {
         }
         
         if (flagResults.getValue(TARGET) != null) {
-            if (senderRank.ordinal() > SET_OTHER.ordinal()) {
+            if (senderRank.ordinal() > nickPerms.getSetOther().ordinal()) {
                 MsgType.WARN.send(sender, "You are not allowed to set the nickname of another player.");
                 return true;
             }
@@ -172,7 +163,7 @@ public class NickCommand extends NexusCommand<NexusCore> {
 
         NickExperience nickExperience = null;
         if (flagResults.getValue(LEVEL) != null && !flagResults.getValue(LEVEL).equals("0")) {
-            if (senderRank.ordinal() > CUSTOM_LEVEL.ordinal()) {
+            if (senderRank.ordinal() > nickPerms.getCustomLevel().ordinal()) {
                 MsgType.WARN.send(sender, "You are not allowed to set a custom experience level.");
                 return true;
             }
@@ -189,7 +180,7 @@ public class NickCommand extends NexusCommand<NexusCore> {
         SkinManager skinManager = Bukkit.getServer().getServicesManager().getRegistration(SkinManager.class).getProvider();
         Skin skin = null;
         if (flagResults.getValue(SKIN) != null) {
-            if (senderRank.ordinal() > CUSTOM_SKIN.ordinal()) {
+            if (senderRank.ordinal() > nickPerms.getCustomSkin().ordinal()) {
                 MsgType.WARN.send(sender, "You are not allowed to set a custom skin.");
                 return true;
             }
@@ -215,7 +206,7 @@ public class NickCommand extends NexusCommand<NexusCore> {
         
         NickBalance creditsBalance = null;
         if (flagResults.getValue(CREDITS) != null && !flagResults.getValue(CREDITS).equals("0")) {
-            if (senderRank.ordinal() > CUSTOM_CREDITS.ordinal()) {
+            if (senderRank.ordinal() > nickPerms.getCustomCredits().ordinal()) {
                 MsgType.WARN.send(sender, "You are not allowed to set custom credits.");
                 return true;
             }
@@ -231,7 +222,7 @@ public class NickCommand extends NexusCommand<NexusCore> {
         
         NickBalance nexitesBalance = null;
         if (flagResults.getValue(NEXITES) != null && !flagResults.getValue(NEXITES).equals("0")) {
-            if (senderRank.ordinal() > CUSTOM_NEXITES.ordinal()) {
+            if (senderRank.ordinal() > nickPerms.getCustomSkin().ordinal()) {
                 MsgType.WARN.send(sender, "You are not allowed to set custom nexites.");
                 return true;
             }
@@ -247,7 +238,7 @@ public class NickCommand extends NexusCommand<NexusCore> {
         
         NickTime nickTime = null;
         if (flagResults.getValue(TIME) != null && !flagResults.getValue(TIME).equals("0")) {
-            if (senderRank.ordinal() > CUSTOM_TIME.ordinal()) {
+            if (senderRank.ordinal() > nickPerms.getCustomTime().ordinal()) {
                 MsgType.WARN.send(sender, "You are not allowed to set custom playtime.");
                 return true;
             }
@@ -266,7 +257,7 @@ public class NickCommand extends NexusCommand<NexusCore> {
        
         boolean persist = false;
         if (flagResults.isPresent(PERSIST)) {
-            if (senderRank.ordinal() > PERSIST_STATS.ordinal()) {
+            if (senderRank.ordinal() > nickPerms.getPersistStats().ordinal()) {
                 MsgType.WARN.send(sender, "You are not allowed to persist stats across nicknames.");
                 return true;
             }

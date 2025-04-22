@@ -11,5 +11,6 @@ public class NickAdminCommand extends NexusCommand<NexusCore> {
         this.subCommands.add(new NickAdminBlacklistCommand(plugin, this));
         this.subCommands.add(new NickAdminNamesCommand(plugin, this));
         this.subCommands.add(new NickAdminSkinsCommand(plugin, this));
+        this.subCommands.add(new NickAdminSetPermCmd(plugin, this));
     }
 }
