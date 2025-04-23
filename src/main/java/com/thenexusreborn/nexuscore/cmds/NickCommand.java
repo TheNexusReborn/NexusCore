@@ -316,8 +316,12 @@ public class NickCommand extends NexusCommand<NexusCore> {
             MsgType.INFO.send(target, "Your nick was set to %v by %v.", nexusPlayer.getDisplayName(), sender.getName());
         }
         
-        NicknameSetEvent nicknameSetEvent = new NicknameSetEvent(nexusPlayer, nickname);
-        Bukkit.getPluginManager().callEvent(nicknameSetEvent);
+        try {
+            NicknameSetEvent nicknameSetEvent = new NicknameSetEvent(nexusPlayer, nickname);
+            Bukkit.getPluginManager().callEvent(nicknameSetEvent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> NexusAPI.getApi().getPrimaryDatabase().saveSilent(nexusPlayer));
         

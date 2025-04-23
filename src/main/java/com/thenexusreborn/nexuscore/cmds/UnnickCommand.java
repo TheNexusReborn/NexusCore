@@ -37,8 +37,12 @@ public class UnnickCommand extends NexusCommand<NexusCore> {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> NexusAPI.getApi().getPrimaryDatabase().saveSilent(nexusPlayer));
         MsgType.INFO.send(sender, "You successfully unnicked yourself.");
         
-        NicknameRemoveEvent nicknameRemoveEvent = new NicknameRemoveEvent(nexusPlayer, nickname);
-        Bukkit.getPluginManager().callEvent(nicknameRemoveEvent);
+        try {
+            NicknameRemoveEvent nicknameRemoveEvent = new NicknameRemoveEvent(nexusPlayer, nickname);
+            Bukkit.getPluginManager().callEvent(nicknameRemoveEvent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         
         return true;
     }
