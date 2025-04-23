@@ -16,5 +16,6 @@ public class RankCommand extends NexusCommand<NexusCore> {
         this.subCommands.add(new RankSetSubCommand(plugin, this));
         this.subCommands.add(new RankAddSubCommand(plugin, this));
         this.subCommands.add(new RankRemoveSubCommand(plugin, this));
+        this.subCommands.add(new RankListSubCommand(plugin, this));
     }
 }
