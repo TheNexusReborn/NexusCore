@@ -185,6 +185,7 @@ public class NexusCore extends JavaPlugin implements Listener {
         new ToggleCmd(this, "incognito", "i");
         new ToggleCmd(this, "vanish", "v");
         new ToggleCmd(this, "fly");
+        new ToggleCmd(this, "debug");
 
         new NexusVersionCmd(this);
         new PerformanceCmd(this);

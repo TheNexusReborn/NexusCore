@@ -57,3 +57,5 @@ commands:
   profile:
   nickadmin: 
     aliases: [na]
+  debug:
+    aliases: [dbug]

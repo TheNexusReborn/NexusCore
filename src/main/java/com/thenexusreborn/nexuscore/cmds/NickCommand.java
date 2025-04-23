@@ -106,9 +106,13 @@ public class NickCommand extends NexusCommand<NexusCore> {
             self = true;
         }
         
+        debug(sender, "Self: " + self);
+        
         UUID uuidFromName = NexusAPI.getApi().getPlayerManager().getUUIDFromName(name);
+        debug(sender, "UUID From Name: " + uuidFromName);
         if (uuidFromName != null) {
             Rank playerRank = NexusAPI.getApi().getPlayerManager().getPlayerRank(uuidFromName);
+            debug(sender, "PlayerRank: " + playerRank);
             if (playerRank.ordinal() <= Rank.MEDIA.ordinal() && !self) {
                 if (senderRank != Rank.NEXUS) {
                     MsgType.WARN.send(sender, "You cannot use the name of a player that holds a rank equal to or higher than %v.", Rank.MEDIA.getPrefix());
