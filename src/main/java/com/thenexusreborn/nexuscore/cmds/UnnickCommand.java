@@ -33,12 +33,20 @@ public class UnnickCommand extends NexusCommand<NexusCore> {
         
         SkinManager skinManager = Bukkit.getServicesManager().getRegistration(SkinManager.class).getProvider();
         plugin.getNickWrapper().setNick(plugin, ((Player) sender), nexusPlayer.getTrueName(), skinManager.getFromMojang(nexusPlayer.getUniqueId()));
-        nickname.setActive(false);
+        if (nickname.isPersist()) {
+            nickname.setActive(false);
+        } else {
+            nexusPlayer.setNickname(null);
+        }
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> NexusAPI.getApi().getPrimaryDatabase().saveSilent(nexusPlayer));
         MsgType.INFO.send(sender, "You successfully unnicked yourself.");
         
-        NicknameRemoveEvent nicknameRemoveEvent = new NicknameRemoveEvent(nexusPlayer, nickname);
-        Bukkit.getPluginManager().callEvent(nicknameRemoveEvent);
+        try {
+            NicknameRemoveEvent nicknameRemoveEvent = new NicknameRemoveEvent(nexusPlayer, nickname);
+            Bukkit.getPluginManager().callEvent(nicknameRemoveEvent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         
         return true;
     }

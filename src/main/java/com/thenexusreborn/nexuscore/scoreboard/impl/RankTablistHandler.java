@@ -23,16 +23,17 @@ public class RankTablistHandler extends TablistHandler {
         BEGIN_CHARS.put(Rank.SR_MOD, "d");
         BEGIN_CHARS.put(Rank.MOD, "e");
         BEGIN_CHARS.put(Rank.HELPER, "f");
-        BEGIN_CHARS.put(Rank.VIP, "g");
-        BEGIN_CHARS.put(Rank.ARCHITECT, "h");
-        BEGIN_CHARS.put(Rank.MEDIA, "i");
-        BEGIN_CHARS.put(Rank.PLATINUM, "j");
-        BEGIN_CHARS.put(Rank.DIAMOND, "k");
-        BEGIN_CHARS.put(Rank.BRASS, "l");
-        BEGIN_CHARS.put(Rank.GOLD, "m");
-        BEGIN_CHARS.put(Rank.INVAR, "n");
-        BEGIN_CHARS.put(Rank.IRON, "o");
-        BEGIN_CHARS.put(Rank.MEMBER, "p");
+        BEGIN_CHARS.put(Rank.MVP, "g");
+        BEGIN_CHARS.put(Rank.VIP, "h");
+        BEGIN_CHARS.put(Rank.ARCHITECT, "i");
+        BEGIN_CHARS.put(Rank.MEDIA, "j");
+        BEGIN_CHARS.put(Rank.PLATINUM, "k");
+        BEGIN_CHARS.put(Rank.DIAMOND, "l");
+        BEGIN_CHARS.put(Rank.BRASS, "m");
+        BEGIN_CHARS.put(Rank.GOLD, "n");
+        BEGIN_CHARS.put(Rank.INVAR, "o");
+        BEGIN_CHARS.put(Rank.IRON, "p");
+        BEGIN_CHARS.put(Rank.MEMBER, "q");
     }
     
     public RankTablistHandler(NexusScoreboard scoreboard) {

@@ -160,7 +160,7 @@ public class NexusCommand<T extends JavaPlugin> implements ICommand<T>, TabExecu
         
         return null;
     }
-
+    
     public CmdFlags getCmdFlags() {
         return cmdFlags;
     }

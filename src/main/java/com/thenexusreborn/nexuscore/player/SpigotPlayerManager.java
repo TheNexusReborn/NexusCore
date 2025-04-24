@@ -128,7 +128,7 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                     
                     Nickname nickname = nexusPlayer.getNickname();
                     SkinManager skinManager = Bukkit.getServicesManager().getRegistration(SkinManager.class).getProvider();
-                    Skin skin = (nickname != null && nickname.getSkin() != null && !nickname.getSkin().isBlank()) ? skinManager.getFromMojang(UUID.fromString(nickname.getSkin())) : null;
+                    Skin skin = (nickname != null && nickname.getSkin() != null && !nickname.getSkin().isBlank()) ? skinManager.getFromMojang(nickname.getSkin()) : null;
 
                     NexusPlayer finalNexusPlayer = nexusPlayer;
                     Bukkit.getScheduler().runTaskLater(plugin, () -> {

@@ -25,7 +25,7 @@ repositories {
 }
 
 dependencies {
-    api 'com.thenexusreborn:NexusAPI:1.16-ALPHA'
+    api 'com.thenexusreborn:NexusAPI:1.16.1-ALPHA'
     api 'com.github.StarDevelopmentLLC:StarUI:0.1.4'
     compileOnly 'com.github.StarDevelopmentLLC:StarItems:0.1.4'
     implementation('net.dv8tion:JDA:5.2.0') {
@@ -42,7 +42,7 @@ dependencies {
 }
 
 group = 'com.thenexusreborn'
-version = '1.15.1-ALPHA'
+version = '1.15.2-ALPHA'
 description = 'NexusCore'
 
 processResources {

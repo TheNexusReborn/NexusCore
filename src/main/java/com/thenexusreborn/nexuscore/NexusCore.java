@@ -19,6 +19,7 @@ import com.thenexusreborn.nexuscore.chat.ChatManager;
 import com.thenexusreborn.nexuscore.chat.PunishmentChannel;
 import com.thenexusreborn.nexuscore.cmds.*;
 import com.thenexusreborn.nexuscore.cmds.bot.BotCommand;
+import com.thenexusreborn.nexuscore.cmds.nickadmin.NickAdminCommand;
 import com.thenexusreborn.nexuscore.cmds.rank.RankCommand;
 import com.thenexusreborn.nexuscore.cmds.servers.ServersCommand;
 import com.thenexusreborn.nexuscore.cmds.tag.TagCommand;
@@ -138,6 +139,7 @@ public class NexusCore extends JavaPlugin implements Listener {
         new RealnameCommand(this);
         new BotCommand(this);
         new ProfileCmd(this);
+        new NickAdminCommand(this);
 
         new RankCommand(this);
         new TagCommand(this);
@@ -183,6 +185,7 @@ public class NexusCore extends JavaPlugin implements Listener {
         new ToggleCmd(this, "incognito", "i");
         new ToggleCmd(this, "vanish", "v");
         new ToggleCmd(this, "fly");
+        new ToggleCmd(this, "debug");
 
         new NexusVersionCmd(this);
         new PerformanceCmd(this);

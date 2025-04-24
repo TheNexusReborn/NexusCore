@@ -55,3 +55,7 @@ commands:
     aliases: [unnick]
   realname:
   profile:
+  nickadmin: 
+    aliases: [na]
+  debug:
+    aliases: [dbug]
