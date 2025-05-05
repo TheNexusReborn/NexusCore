@@ -36,10 +36,11 @@ public class ChatManager implements Listener {
         Player sender = context.getSenderAsPlayer();
         NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(sender.getUniqueId());
         
-        if (context.getMessage().startsWith("@")) {
+        String message = context.getMessage();
+        if (message.startsWith("@")) {
             ChatChannel staffChannel = plugin.getStarChatPlugin().getStaffChannel();
             if (sender.hasPermission(staffChannel.getSendPermission())) {
-                staffChannel.sendMessage(new ChatContext(sender, context.getMessage().substring(1)));
+                staffChannel.sendMessage(new ChatContext(sender, message.substring(1).trim()));
                 e.setCancelled(true);
                 return;
             }
@@ -79,7 +80,7 @@ public class ChatManager implements Listener {
                     nexusPlayer.sendMessage(MsgType.WARN + "You are muted, you cannot speak now. (" + punishment.formatTimeLeft() + ")");
                     return;
                 } else if (punishment.getType() == PunishmentType.WARN) {
-                    if (context.getMessage().equals(punishment.getAcknowledgeInfo().getCode())) {
+                    if (message.equals(punishment.getAcknowledgeInfo().getCode())) {
                         punishment.getAcknowledgeInfo().setTime(System.currentTimeMillis());
                         nexusPlayer.sendMessage(MsgType.INFO + "You have confirmed your warning. You can speak now.");
                         NexusAPI.getApi().getPrimaryDatabase().saveSilent(punishment);
