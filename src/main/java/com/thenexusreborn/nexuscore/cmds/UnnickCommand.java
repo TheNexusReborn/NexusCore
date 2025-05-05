@@ -22,10 +22,27 @@ public class UnnickCommand extends NexusCommand<NexusCore> {
     
     @Override
     public boolean execute(CommandSender sender, Rank senderRank, String label, String[] args, FlagResult flagResults) {
-        NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(((Player) sender).getUniqueId());
+        NexusPlayer nexusPlayer;
         
-        if (!nexusPlayer.isNicked()) {
-            MsgType.WARN.send(sender, "You do not have a nickname set.");
+        boolean self = false;
+        if (args.length > 0) {
+            nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(args[0]);
+            
+            if (nexusPlayer == null) {
+                MsgType.WARN.send(sender, "Invalid target %v", args[0]);
+                return true;
+            }
+        } else {
+            nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(((Player) sender).getUniqueId());
+            self = true;
+        }
+        
+        if (!nexusPlayer.isNicked() || nexusPlayer.getRank().ordinal() < senderRank.ordinal()) {
+            if (self) {
+                MsgType.WARN.send(sender, "You do not have a nickname set.");
+            } else {
+                MsgType.WARN.send(sender, nexusPlayer.getColoredName() + " does not have a nickname set.");
+            }
             return true;
         }
         
@@ -39,7 +56,11 @@ public class UnnickCommand extends NexusCommand<NexusCore> {
             nexusPlayer.setNickname(null);
         }
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> NexusAPI.getApi().getPrimaryDatabase().saveSilent(nexusPlayer));
-        MsgType.INFO.send(sender, "You successfully unnicked yourself.");
+        if (self) {
+            MsgType.INFO.send(sender, "You successfully unnicked yourself.");
+        } else {
+            MsgType.INFO.send(sender, "You successfully unnicked " + nexusPlayer.getColoredName());
+        }
         
         try {
             NicknameRemoveEvent nicknameRemoveEvent = new NicknameRemoveEvent(nexusPlayer, nickname);
