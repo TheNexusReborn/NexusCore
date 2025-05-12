@@ -59,3 +59,4 @@ commands:
     aliases: [na]
   debug:
     aliases: [dbug]
+  toggleop:

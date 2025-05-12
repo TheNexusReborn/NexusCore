@@ -191,6 +191,8 @@ public class NexusCore extends JavaPlugin implements Listener {
         new PerformanceCmd(this);
         new PlaytimeCommand(this);
         new VerifyCommand(this);
+        
+        new ToggleOPCmd(this);
 
         getLogger().info("Registered Commands");
 
