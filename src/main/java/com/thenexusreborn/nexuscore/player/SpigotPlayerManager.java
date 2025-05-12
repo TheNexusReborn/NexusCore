@@ -60,6 +60,11 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
     public void onPlayerJoin(PlayerJoinEvent e) {
         e.setJoinMessage(null);
         Player player = e.getPlayer();
+        Punishment activePunishment = checkPunishments(player.getUniqueId());
+        if (activePunishment != null) {
+            player.kickPlayer(ChatColor.translateAlternateColorCodes('&', activePunishment.formatKick()));
+            return;
+        }
         for (Player o : Bukkit.getOnlinePlayers()) {
             o.hidePlayer(player);
 
@@ -72,14 +77,6 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
         if (NexusAPI.NETWORK_TYPE == NetworkType.SINGLE) {
             Session session = new Session(player.getUniqueId());
             session.start();
-
-            PlayerManager playerManager = NexusAPI.getApi().getPlayerManager();
-
-            Punishment activePunishment = checkPunishments(e.getPlayer().getUniqueId());
-            if (activePunishment != null) {
-                e.getPlayer().kickPlayer(ChatColor.translateAlternateColorCodes('&', activePunishment.formatKick()));
-                return;
-            }
 
             if (!getPlayers().containsKey(player.getUniqueId())) {
                 Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
@@ -103,8 +100,8 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                     nexusPlayer.setMojangProfile(mojangProfile);
 
                     nexusPlayer.setSession(session);
-                    playerManager.getUuidNameMap().forcePut(nexusPlayer.getUniqueId(), new Name(nexusPlayer.getName()));
-                    playerManager.getUuidRankMap().put(nexusPlayer.getUniqueId(), nexusPlayer.getRanks());
+                    getUuidNameMap().forcePut(nexusPlayer.getUniqueId(), new Name(nexusPlayer.getName()));
+                    getUuidRankMap().put(nexusPlayer.getUniqueId(), nexusPlayer.getRanks());
 
                     if (nexusPlayer.getFirstJoined() == 0) {
                         nexusPlayer.setFirstJoined(System.currentTimeMillis());
