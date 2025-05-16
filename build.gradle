@@ -25,7 +25,6 @@ repositories {
 }
 
 dependencies {
-    api 'com.thenexusreborn:NexusAPI:1.16.2-ALPHA'
     api 'com.github.StarDevelopmentLLC:StarUI:0.1.4'
     compileOnly 'com.github.StarDevelopmentLLC:StarItems:0.1.5'
     implementation('net.dv8tion:JDA:5.2.0') {
@@ -42,8 +41,8 @@ dependencies {
 }
 
 group = 'com.thenexusreborn'
-version = '1.15.3-ALPHA'
-description = 'NexusCore'
+//version = '1.15.3-ALPHA'
+version = '0.1.0'
 
 processResources {
     filesMatching("*.yml") {
