@@ -4,7 +4,7 @@ import com.stardevllc.helper.Pair;
 import com.stardevllc.helper.StringHelper;
 import com.stardevllc.starcore.StarColors;
 import com.stardevllc.starcore.cmdflags.FlagResult;
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.api.command.NexusCommand;
@@ -26,7 +26,7 @@ public class AltsCommand extends NexusCommand<NexusCore> {
             return true;
         }
 
-        PlayerManager playerManager = NexusAPI.getApi().getPlayerManager();
+        PlayerManager playerManager = NexusReborn.getPlayerManager();
         Pair<UUID, String> playerInfo = playerManager.getPlayerFromIdentifier(args[0]);
         if (playerInfo == null) {
             sender.sendMessage(StarColors.color(MsgType.WARN + "Could not find a player with that information."));

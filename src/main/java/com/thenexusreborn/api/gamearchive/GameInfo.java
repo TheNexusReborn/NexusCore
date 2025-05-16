@@ -2,7 +2,7 @@ package com.thenexusreborn.api.gamearchive;
 
 import com.google.gson.*;
 import com.stardevllc.helper.StringHelper;
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.PlayerManager;
 import com.thenexusreborn.api.sql.annotations.column.*;
 import com.thenexusreborn.api.sql.annotations.table.TableHandler;
@@ -102,7 +102,7 @@ public class GameInfo implements Comparable<GameInfo> {
 
         JsonArray playersArray = new JsonArray();
 
-        PlayerManager playerManager = NexusAPI.getApi().getPlayerManager();
+        PlayerManager playerManager = NexusReborn.getPlayerManager();
         
         for (PlayerInfo player : this.players) {
             playersArray.add(player.toJson());

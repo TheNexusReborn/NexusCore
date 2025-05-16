@@ -1,6 +1,6 @@
 package com.thenexusreborn.api.punishment;
 
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.IPEntry;
 
 import java.util.*;
@@ -30,7 +30,7 @@ public class PunishmentManager {
     public List<Punishment> getPunishmentsByTarget(UUID target) {
         List<Punishment> punishments = new ArrayList<>();
     
-        Set<IPEntry> ipHistory = new HashSet<>(NexusAPI.getApi().getPlayerManager().getIpHistory());
+        Set<IPEntry> ipHistory = new HashSet<>(NexusReborn.getPlayerManager().getIpHistory());
         List<String> methodTargetIPs = getIpHistory(ipHistory, target);
     
         for (Punishment punishment : this.punishments.values()) {

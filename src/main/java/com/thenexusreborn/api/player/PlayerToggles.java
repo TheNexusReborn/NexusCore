@@ -1,6 +1,6 @@
 package com.thenexusreborn.api.player;
 
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.Toggle.Info;
 
 import java.util.*;
@@ -23,7 +23,7 @@ public class PlayerToggles {
         if (toggle != null) {
             toggle.setValue(value);
         } else {
-            Info info = NexusAPI.getApi().getToggleRegistry().get(name);
+            Info info = NexusReborn.getToggleRegistry().get(name);
             if (info != null) {
                 this.add(toggle = new Toggle(info, uniqueId, value));
             }
@@ -38,7 +38,7 @@ public class PlayerToggles {
         if (toggle != null) {
             return toggle.getValue();
         } else {
-            Info info = NexusAPI.getApi().getToggleRegistry().get(name.toLowerCase());
+            Info info = NexusReborn.getToggleRegistry().get(name.toLowerCase());
             if (info != null) {
                 return info.getDefaultValue();
             } else {

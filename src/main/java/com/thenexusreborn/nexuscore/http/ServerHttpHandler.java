@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.server.NexusServer;
 import com.thenexusreborn.nexuscore.NexusCore;
 
@@ -30,7 +30,7 @@ public class ServerHttpHandler implements HttpHandler {
         if (urlParamSplit.length > 1) {
             String[] keyValueSplit = urlParamSplit[1].split("=");
             if (keyValueSplit[0].equalsIgnoreCase("name")) {
-                NexusServer server = NexusAPI.getApi().getServerRegistry().get(keyValueSplit[1]);
+                NexusServer server = NexusReborn.getServerRegistry().get(keyValueSplit[1]);
                 if (server == null) {
                     response = "Not a valid server name";
                 } else {

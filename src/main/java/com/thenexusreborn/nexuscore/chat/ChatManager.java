@@ -3,7 +3,7 @@ package com.thenexusreborn.nexuscore.chat;
 import com.stardevllc.starchat.api.SpaceChatEvent;
 import com.stardevllc.starchat.channels.ChatChannel;
 import com.stardevllc.starchat.context.ChatContext;
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.api.punishment.Punishment;
@@ -34,7 +34,7 @@ public class ChatManager implements Listener {
         }
         
         Player sender = context.getSenderAsPlayer();
-        NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(sender.getUniqueId());
+        NexusPlayer nexusPlayer = NexusReborn.getPlayerManager().getNexusPlayer(sender.getUniqueId());
         
         String message = context.getMessage();
         if (message.startsWith("@")) {
@@ -72,7 +72,7 @@ public class ChatManager implements Listener {
             }
         }
         
-        List<Punishment> punishments = NexusAPI.getApi().getPunishmentManager().getPunishmentsByTarget(sender.getUniqueId());
+        List<Punishment> punishments = NexusReborn.getPunishmentManager().getPunishmentsByTarget(sender.getUniqueId());
         for (Punishment punishment : punishments) {
             if (punishment != null && punishment.isActive()) {
                 if (punishment.getType() == PunishmentType.MUTE) {
@@ -83,7 +83,7 @@ public class ChatManager implements Listener {
                     if (message.equals(punishment.getAcknowledgeInfo().getCode())) {
                         punishment.getAcknowledgeInfo().setTime(System.currentTimeMillis());
                         nexusPlayer.sendMessage(MsgType.INFO + "You have confirmed your warning. You can speak now.");
-                        NexusAPI.getApi().getPrimaryDatabase().saveSilent(punishment);
+                        NexusReborn.getPrimaryDatabase().saveSilent(punishment);
                     } else {
                         e.setCancelled(true);
                         nexusPlayer.sendMessage(MsgType.WARN + "You have an unconfirmed warning, please type the code " + punishment.getAcknowledgeInfo().getCode() + " to confirm.");

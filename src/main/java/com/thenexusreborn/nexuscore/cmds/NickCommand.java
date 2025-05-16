@@ -6,7 +6,7 @@ import com.stardevllc.starcore.cmdflags.type.PresenceFlag;
 import com.stardevllc.starcore.skins.Skin;
 import com.stardevllc.starcore.skins.SkinManager;
 import com.stardevllc.time.TimeParser;
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.nickname.*;
 import com.thenexusreborn.api.nickname.player.*;
 import com.thenexusreborn.api.player.NexusPlayer;
@@ -45,11 +45,11 @@ public class NickCommand extends NexusCommand<NexusCore> {
     public boolean execute(CommandSender sender, Rank senderRank, String label, String[] args, FlagResult flagResults) {
         String name;
         
-        NickPerms nickPerms = NexusAPI.getApi().getNickPerms();
+        NickPerms nickPerms = NexusReborn.getNickPerms();
         
         Random random = new Random();
         if (args.length == 0) {
-            List<String> randomNames = new ArrayList<>(NexusAPI.getApi().getRandomNames());
+            List<String> randomNames = new ArrayList<>(NexusReborn.getRandomNames());
             
             if (randomNames.isEmpty()) {
                 if (senderRank.ordinal() <= nickPerms.getCustomName().ordinal()) {
@@ -72,7 +72,7 @@ public class NickCommand extends NexusCommand<NexusCore> {
         if (!(name.equalsIgnoreCase("self") || name.equalsIgnoreCase(target.getName()))) {
             for (Player p : Bukkit.getOnlinePlayers()) {
                 if (p.getName().equalsIgnoreCase(name)) {
-                    NexusPlayer np = NexusAPI.getApi().getPlayerManager().getNexusPlayer(p.getUniqueId());
+                    NexusPlayer np = NexusReborn.getPlayerManager().getNexusPlayer(p.getUniqueId());
                     if (np.getNickname() != null && np.getNickname().getName().equalsIgnoreCase(name)) {
                         target = p;
                         break;
@@ -90,7 +90,7 @@ public class NickCommand extends NexusCommand<NexusCore> {
                 }
             }
             
-            if (NexusAPI.getApi().getNicknameBlacklist().contains(name.toLowerCase())) {
+            if (NexusReborn.getNicknameBlacklist().contains(name.toLowerCase())) {
                 if (senderRank.ordinal() > Rank.ADMIN.ordinal()) {
                     MsgType.WARN.send(sender, "That name is blacklisted from use. Please choose a different name.");
                     return true;
@@ -108,10 +108,10 @@ public class NickCommand extends NexusCommand<NexusCore> {
         
         debug(sender, "Self: " + self);
         
-        UUID uuidFromName = NexusAPI.getApi().getPlayerManager().getUUIDFromName(name);
+        UUID uuidFromName = NexusReborn.getPlayerManager().getUUIDFromName(name);
         debug(sender, "UUID From Name: " + uuidFromName);
         if (uuidFromName != null) {
-            Rank playerRank = NexusAPI.getApi().getPlayerManager().getPlayerRank(uuidFromName);
+            Rank playerRank = NexusReborn.getPlayerManager().getPlayerRank(uuidFromName);
             debug(sender, "PlayerRank: " + playerRank);
             if (playerRank.ordinal() <= Rank.MEDIA.ordinal() && !self) {
                 if (senderRank != Rank.NEXUS) {
@@ -156,14 +156,14 @@ public class NickCommand extends NexusCommand<NexusCore> {
                 return true;
             }
             
-            NexusPlayer targetNexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(target.getUniqueId());
+            NexusPlayer targetNexusPlayer = NexusReborn.getPlayerManager().getNexusPlayer(target.getUniqueId());
             if (targetNexusPlayer.getRank().ordinal() <= senderRank.ordinal()) {
                 MsgType.WARN.send(sender, "You are not allowed to set the nickname of someone that has a rank greater than or equal to your own.");
                 return true;
             }
         }
         
-        NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(target.getUniqueId());
+        NexusPlayer nexusPlayer = NexusReborn.getPlayerManager().getNexusPlayer(target.getUniqueId());
 
         NickExperience nickExperience = null;
         if (flagResults.getValue(LEVEL) != null && !flagResults.getValue(LEVEL).equals("0")) {
@@ -200,7 +200,7 @@ public class NickCommand extends NexusCommand<NexusCore> {
             if (uuidFromName != null) {
                 skin = skinManager.getFromMojang(uuidFromName);
             } else {
-                List<String> randomSkins = new ArrayList<>(NexusAPI.getApi().getRandomSkins());
+                List<String> randomSkins = new ArrayList<>(NexusReborn.getRandomSkins());
                 if (!randomSkins.isEmpty()) {
                     String skinRaw = randomSkins.get(random.nextInt(randomSkins.size()));
                     skin = skinManager.getFromMojang(skinRaw);
@@ -323,7 +323,7 @@ public class NickCommand extends NexusCommand<NexusCore> {
             e.printStackTrace();
         }
         
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> NexusAPI.getApi().getPrimaryDatabase().saveSilent(nexusPlayer));
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> NexusReborn.getPrimaryDatabase().saveSilent(nexusPlayer));
         
         return true;
     }

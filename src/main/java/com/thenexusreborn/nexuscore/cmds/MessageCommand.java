@@ -2,7 +2,7 @@ package com.thenexusreborn.nexuscore.cmds;
 
 import com.stardevllc.starcore.StarColors;
 import com.stardevllc.starcore.cmdflags.FlagResult;
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.nexuscore.NexusCore;
@@ -30,13 +30,13 @@ public class MessageCommand extends NexusCommand<NexusCore> {
             return true;
         }
 
-        NexusPlayer player = NexusAPI.getApi().getPlayerManager().getNexusPlayer(senderPlayer.getUniqueId());
+        NexusPlayer player = NexusReborn.getPlayerManager().getNexusPlayer(senderPlayer.getUniqueId());
 
         NexusPlayer target;
         try {
-            target = NexusAPI.getApi().getPlayerManager().getNexusPlayer(UUID.fromString(args[0]));
+            target = NexusReborn.getPlayerManager().getNexusPlayer(UUID.fromString(args[0]));
         } catch (Exception e) {
-            target = NexusAPI.getApi().getPlayerManager().getNexusPlayer(args[0]);
+            target = NexusReborn.getPlayerManager().getNexusPlayer(args[0]);
         }
 
         if (target == null) {

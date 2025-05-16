@@ -2,7 +2,7 @@ package com.thenexusreborn.nexuscore.cmds.nickadmin;
 
 import com.stardevllc.helper.ReflectionHelper;
 import com.stardevllc.starcore.cmdflags.FlagResult;
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.nickname.NickPerms;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.nexuscore.NexusCore;
@@ -62,7 +62,7 @@ public class NickAdminSetPermCmd extends SubCommand<NexusCore> {
         }
         
         try {
-            field.set(NexusAPI.getApi().getNickPerms(), rank);
+            field.set(NexusReborn.getNickPerms(), rank);
             MsgType.INFO.send(sender, "You set the nick permission %v to have a minimum rank of %v", args[0], rank.getColor() + rank.name().replace("_", " "));
         } catch (IllegalAccessException e) {
             MsgType.ERROR.send(sender, "There was an error while setting the permission. Please report to Firestar311.");

@@ -3,7 +3,7 @@ package com.thenexusreborn.nexuscore.cmds;
 import com.stardevllc.starcore.StarColors;
 import com.stardevllc.starcore.cmdflags.FlagResult;
 import com.stardevllc.time.TimeFormat;
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.tags.Tag;
 import com.thenexusreborn.nexuscore.NexusCore;
@@ -45,7 +45,7 @@ public class ProfileCmd extends NexusCommand<NexusCore> {
                 return true;
             }
             
-            target = NexusAPI.getApi().getPlayerManager().getNexusPlayer(t.getUniqueId());
+            target = NexusReborn.getPlayerManager().getNexusPlayer(t.getUniqueId());
             if (target == null) {
                 MsgType.WARN.send(sender, "That player has no profile data loaded, please report to Firestar311");
                 return true;
@@ -60,7 +60,7 @@ public class ProfileCmd extends NexusCommand<NexusCore> {
                 return true;
             }
         } else {
-            target = NexusAPI.getApi().getPlayerManager().getNexusPlayer(((Player) sender).getUniqueId());
+            target = NexusReborn.getPlayerManager().getNexusPlayer(((Player) sender).getUniqueId());
         }
         
         if (target == null) {
@@ -132,7 +132,7 @@ public class ProfileCmd extends NexusCommand<NexusCore> {
         
         PlayerToggles toggles = target.getToggles();
         
-        for (Toggle.Info toggleInfo : NexusAPI.getApi().getToggleRegistry()) {
+        for (Toggle.Info toggleInfo : NexusReborn.getToggleRegistry()) {
             if (target.getEffectiveRank().ordinal() <= toggleInfo.getMinRank().ordinal()) {
                 sendProfileLine(sender, toggleInfo.getDisplayName(), toggles.getValue(toggleInfo.getName()));
             }

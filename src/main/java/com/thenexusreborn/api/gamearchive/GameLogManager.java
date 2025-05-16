@@ -1,7 +1,7 @@
 package com.thenexusreborn.api.gamearchive;
 
 import com.google.gson.*;
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 
 import java.io.*;
 import java.sql.SQLException;
@@ -33,7 +33,7 @@ public class GameLogManager {
     }
 
     public void exportGames() throws SQLException, IOException {
-        List<GameInfo> gameInfos = NexusAPI.getApi().getPrimaryDatabase().get(GameInfo.class);
+        List<GameInfo> gameInfos = NexusReborn.getPrimaryDatabase().get(GameInfo.class);
 
         for (GameInfo gameInfo : gameInfos) {
             exportGameInfo(gameInfo);

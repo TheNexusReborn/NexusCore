@@ -1,7 +1,7 @@
 package com.thenexusreborn.nexuscore.util;
 
 import com.stardevllc.starcore.StarColors;
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.api.util.Constants;
 import com.thenexusreborn.nexuscore.reflection.ServerReflection;
@@ -24,7 +24,7 @@ public final class MCUtils {
         if (sender instanceof ConsoleCommandSender) {
             return Rank.CONSOLE;
         } else if (sender instanceof Player player) {
-            return NexusAPI.getApi().getPlayerManager().getNexusPlayer(player.getUniqueId()).getRank();
+            return NexusReborn.getPlayerManager().getNexusPlayer(player.getUniqueId()).getRank();
         }
         return Rank.MEMBER;
     }

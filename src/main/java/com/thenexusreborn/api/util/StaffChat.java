@@ -1,6 +1,6 @@
 package com.thenexusreborn.api.util;
 
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Rank;
 
@@ -36,7 +36,7 @@ public final class StaffChat {
         Rank rank = Rank.valueOf(args[2]);
         try {
             UUID uuid = UUID.fromString(args[1]);
-            String name = NexusAPI.getApi().getPlayerManager().getNameFromUUID(uuid);
+            String name = NexusReborn.getPlayerManager().getNameFromUUID(uuid);
     
             displayName = rank.getColor() + name;
             if (event.equals("anticheat")) {
@@ -50,7 +50,7 @@ public final class StaffChat {
         
         format = format.replace("{prefix}", PREFIX).replace("{displayName}", displayName).replace("{origin}", origin);
     
-        for (NexusPlayer player : new ArrayList<>(NexusAPI.getApi().getPlayerManager().getPlayers().values())) {
+        for (NexusPlayer player : new ArrayList<>(NexusReborn.getPlayerManager().getPlayers().values())) {
             if (player.isOnline()) {
                 if (player.getRank().ordinal() <= Rank.HELPER.ordinal()) {
                     player.sendMessage(format);

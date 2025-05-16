@@ -1,7 +1,7 @@
 package com.thenexusreborn.nexuscore.cmds.nickadmin.skins;
 
 import com.stardevllc.starcore.cmdflags.FlagResult;
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.api.command.ICommand;
@@ -18,7 +18,7 @@ public class SkinsRemoveCmd extends SubCommand<NexusCore> {
     
     @Override
     public boolean execute(CommandSender sender, Rank senderRank, String label, String[] args, FlagResult flagResults) {
-        Set<String> randomSkins = NexusAPI.getApi().getRandomSkins();
+        Set<String> randomSkins = NexusReborn.getRandomSkins();
         
         for (String arg : args) {
             String skin = arg.toLowerCase();

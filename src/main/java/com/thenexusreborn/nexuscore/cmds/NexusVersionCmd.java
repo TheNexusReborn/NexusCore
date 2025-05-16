@@ -2,7 +2,7 @@ package com.thenexusreborn.nexuscore.cmds;
 
 import com.stardevllc.starcore.StarColors;
 import com.stardevllc.starcore.cmdflags.FlagResult;
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.api.NexusSpigotPlugin;
@@ -18,7 +18,7 @@ public class NexusVersionCmd extends NexusCommand<NexusCore> {
     @Override
     public boolean execute(CommandSender sender, Rank senderRank, String label, String[] args, FlagResult flagResults) {
         sender.sendMessage(StarColors.color("&6&l>> &e&lThe Nexus Reborn Plugin Versions"));
-        sender.sendMessage(StarColors.color("&6&l>> &eNexusAPI v" + NexusAPI.getApi().getVersion().toString()));
+        sender.sendMessage(StarColors.color("&6&l>> &eNexusAPI v" + NexusReborn.getVersion().toString()));
         NexusCore nexusCore = (NexusCore) Bukkit.getServer().getPluginManager().getPlugin("NexusCore");
         sender.sendMessage(StarColors.color("&6&l>> &eNexusCore v" + nexusCore.getDescription().getVersion()));
         for (NexusSpigotPlugin nexusPlugin : nexusCore.getNexusPlugins()) {

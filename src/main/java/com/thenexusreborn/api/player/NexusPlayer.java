@@ -2,7 +2,7 @@ package com.thenexusreborn.api.player;
 
 import com.stardevllc.clock.clocks.Stopwatch;
 import com.stardevllc.mojang.MojangProfile;
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.experience.PlayerExperience;
 import com.thenexusreborn.api.nickname.Nickname;
 import com.thenexusreborn.api.reward.Reward;
@@ -195,7 +195,7 @@ public class NexusPlayer implements Comparable<NexusPlayer> {
     }
     
     public NexusPlayer getLastMessage() {
-        return NexusAPI.getApi().getPlayerManager().getNexusPlayer(this.lastMessage);
+        return NexusReborn.getPlayerManager().getNexusPlayer(this.lastMessage);
     }
 
     public void setLastMessage(NexusPlayer nexusPlayer) {
@@ -316,7 +316,7 @@ public class NexusPlayer implements Comparable<NexusPlayer> {
                 this.playerProxy.sendMessage("&6&l>> &a&lLEVEL UP!");
                 this.playerProxy.sendMessage("&6&l>> &e&l" + (getExperience().getLevel() - 1) + " &a-> &e&l" + getExperience().getLevel());
                 this.playerProxy.sendMessage("");
-                for (Reward reward : NexusAPI.getApi().getLevelManager().getLevel(getExperience().getLevel()).getRewards()) {
+                for (Reward reward : NexusReborn.getLevelManager().getLevel(getExperience().getLevel()).getRewards()) {
                     reward.applyReward(this);
                 }
             }

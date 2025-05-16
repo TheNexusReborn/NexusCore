@@ -2,7 +2,7 @@ package com.thenexusreborn.api.gamearchive;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.sql.annotations.column.ColumnCodec;
 import com.thenexusreborn.api.sql.annotations.column.ColumnType;
 import com.thenexusreborn.api.sql.annotations.table.TableName;
@@ -79,7 +79,7 @@ public class GameAction implements Comparable<GameAction> {
     
     public GameAction addValueData(String key, Object value) {
         if (value == null) {
-            NexusAPI.getApi().getLogger().info("Null data for key " + key + " while adding value data to Game Action");
+            NexusReborn.getLogger().info("Null data for key " + key + " while adding value data to Game Action");
             return null;
         }
         

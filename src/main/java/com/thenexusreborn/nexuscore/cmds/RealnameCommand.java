@@ -1,7 +1,7 @@
 package com.thenexusreborn.nexuscore.cmds;
 
 import com.stardevllc.starcore.cmdflags.FlagResult;
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.nexuscore.NexusCore;
@@ -30,7 +30,7 @@ public class RealnameCommand extends NexusCommand<NexusCore> {
             return true;
         }
         
-        NexusPlayer targetNexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(target.getUniqueId());
+        NexusPlayer targetNexusPlayer = NexusReborn.getPlayerManager().getNexusPlayer(target.getUniqueId());
         if (targetNexusPlayer == null) {
             MsgType.WARN.send(sender, "That player has no profile data loaded, please report to Firestar311");
             return true;

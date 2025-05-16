@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.api.command;
 
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.nexuscore.util.MsgType;
@@ -18,7 +18,7 @@ public interface ICommand<T extends JavaPlugin> {
     
     default void debug(CommandSender sender, String message) {
         if (sender instanceof Player player) {
-            NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(player.getUniqueId());
+            NexusPlayer nexusPlayer = NexusReborn.getPlayerManager().getNexusPlayer(player.getUniqueId());
             if (nexusPlayer.getToggleValue("debug")) {
                 MsgType.VERBOSE.send(sender, message);
             }

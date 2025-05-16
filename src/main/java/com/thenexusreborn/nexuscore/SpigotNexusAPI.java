@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore;
 
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.gamearchive.GameLogManager;
 import com.thenexusreborn.api.player.PlayerProxy;
 import com.thenexusreborn.api.registry.ToggleRegistry;
@@ -17,15 +17,15 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
 
-public class SpigotNexusAPI extends NexusAPI {
+public class SpigotNexusAPI extends NexusReborn {
     
     private final NexusCore plugin;
     
     public SpigotNexusAPI(NexusCore plugin) {
-        super(Environment.valueOf(plugin.getConfig().getString("environment").toUpperCase()), plugin.getLogger(), new SpigotPlayerManager(plugin));
+        super(Environment.valueOf(plugin.getConfig().getString("environment").toUpperCase()), plugin.getLogger(), plugin.getDataFolder(), new SpigotPlayerManager(plugin));
         this.plugin = plugin;
         PlayerProxy.setProxyClass(SpigotPlayerProxy.class);
-        setGameLogManager(new GameLogManager(new File(plugin.getDataFolder(), "export" + File.separator + "games")));
+        this.gameLogManager = new GameLogManager(new File(plugin.getDataFolder(), "export" + File.separator + "games"));
     }
     
     @Override
@@ -45,10 +45,5 @@ public class SpigotNexusAPI extends NexusAPI {
         for (NexusSpigotPlugin nexusPlugin : plugin.getNexusPlugins()) {
             nexusPlugin.registerToggles(registry);
         }
-    }
-    
-    @Override
-    public File getFolder() {
-        return plugin.getDataFolder();
     }
 }

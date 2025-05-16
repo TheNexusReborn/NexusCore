@@ -1,7 +1,7 @@
 package com.thenexusreborn.nexuscore.thread;
 
 import com.stardevllc.starcore.utils.StarThread;
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.nexuscore.NexusCore;
@@ -19,7 +19,7 @@ public class PlayerPermThread extends StarThread<NexusCore> {
     
     public void onRun() {
         for (Player player : Bukkit.getOnlinePlayers()) {
-            NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(player.getUniqueId());
+            NexusPlayer nexusPlayer = NexusReborn.getPlayerManager().getNexusPlayer(player.getUniqueId());
             if (nexusPlayer != null) {
                 if (nexusPlayer.getRank().ordinal() > Rank.HELPER.ordinal()) {
                     Set<PermissionAttachmentInfo> effectivePermissions = player.getEffectivePermissions();

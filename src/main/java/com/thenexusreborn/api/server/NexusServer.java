@@ -3,7 +3,7 @@ package com.thenexusreborn.api.server;
 import com.stardevllc.observable.property.IntegerProperty;
 import com.stardevllc.observable.property.ObjectProperty;
 import com.stardevllc.observable.property.StringProperty;
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.NexusPlayer;
 
 import java.util.HashSet;
@@ -38,7 +38,7 @@ public abstract sealed class NexusServer permits ProxyServer, InstanceServer, Vi
             return;
         }
         
-        NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(uuid);
+        NexusPlayer nexusPlayer = NexusReborn.getPlayerManager().getNexusPlayer(uuid);
         if (nexusPlayer == null) {
             return;
         }
@@ -51,7 +51,7 @@ public abstract sealed class NexusServer permits ProxyServer, InstanceServer, Vi
             return;
         }
         
-        NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(uuid);
+        NexusPlayer nexusPlayer = NexusReborn.getPlayerManager().getNexusPlayer(uuid);
         if (nexusPlayer == null) {
             this.players.remove(uuid);
             return;

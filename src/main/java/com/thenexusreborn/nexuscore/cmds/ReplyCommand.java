@@ -1,7 +1,7 @@
 package com.thenexusreborn.nexuscore.cmds;
 
 import com.stardevllc.starcore.StarColors;
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.nexuscore.NexusCore;
@@ -28,7 +28,7 @@ public class ReplyCommand extends NexusCommand<NexusCore> {
             return true;
         }
     
-        NexusPlayer player = NexusAPI.getApi().getPlayerManager().getNexusPlayer(senderPlayer.getUniqueId());
+        NexusPlayer player = NexusReborn.getPlayerManager().getNexusPlayer(senderPlayer.getUniqueId());
         NexusPlayer target = player.getLastMessage();
         if (target == null) {
             player.sendMessage("&cYou haven't messaged anyone or they left.");
