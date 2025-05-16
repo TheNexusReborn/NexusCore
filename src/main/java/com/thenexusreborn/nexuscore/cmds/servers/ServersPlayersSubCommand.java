@@ -1,7 +1,7 @@
 package com.thenexusreborn.nexuscore.cmds.servers;
 
 import com.stardevllc.starcore.StarColors;
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.server.NexusServer;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.api.command.ICommand;
@@ -26,7 +26,7 @@ public class ServersPlayersSubCommand extends ServersSubCommand {
             if (player != null) {
                 playerName = player.getName();
             } else {
-                playerName = NexusAPI.getApi().getPlayerManager().getNameFromUUID(uuid);
+                playerName = NexusReborn.getPlayerManager().getNameFromUUID(uuid);
             }
             serverPlayers.add(playerName);
         }

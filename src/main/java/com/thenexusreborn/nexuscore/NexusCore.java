@@ -8,7 +8,7 @@ import com.stardevllc.starcore.StarColors;
 import com.stardevllc.starcore.utils.ServerProperties;
 import com.stardevllc.starui.GuiManager;
 import com.sun.net.httpserver.HttpServer;
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.gamearchive.GameInfo;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.server.*;
@@ -97,9 +97,9 @@ public class NexusCore extends JavaPlugin implements Listener {
             return;
         }
 
-        NexusAPI.setApi(new SpigotNexusAPI(this));
+        NexusReborn.setInstance(new SpigotNexusAPI(this));
         try {
-            NexusAPI.getApi().init();
+            NexusReborn.init();
         } catch (Exception e) {
             getLogger().severe("Error while enabling the NexusAPI. Disabling plugin");
             e.printStackTrace();
@@ -107,9 +107,9 @@ public class NexusCore extends JavaPlugin implements Listener {
             return;
         }
 
-        NexusAPI.getApi().setClockManager(this.clockManager);
+        NexusReborn.setClockManager(this.clockManager);
 
-        Bukkit.getServicesManager().register(SQLDatabase.class, NexusAPI.getApi().getPrimaryDatabase(), this, ServicePriority.Highest);
+        Bukkit.getServicesManager().register(SQLDatabase.class, NexusReborn.getPrimaryDatabase(), this, ServicePriority.Highest);
 
         new NexusPapiExpansion(this).register();
         getLogger().info("Hooked into PlaceholderAPI");
@@ -129,7 +129,7 @@ public class NexusCore extends JavaPlugin implements Listener {
         JDALogger.setFallbackLoggerEnabled(false);
         this.nexusBot = new NexusBot(this);
 
-        Bukkit.getServer().getPluginManager().registerEvents((SpigotPlayerManager) NexusAPI.getApi().getPlayerManager(), this);
+        Bukkit.getServer().getPluginManager().registerEvents((SpigotPlayerManager) NexusReborn.getPlayerManager(), this);
         Bukkit.getServer().getPluginManager().registerEvents(chatManager, this);
         Bukkit.getServer().getPluginManager().registerEvents(this, this);
         getLogger().info("Registered Event Listeners");
@@ -205,7 +205,7 @@ public class NexusCore extends JavaPlugin implements Listener {
         getLogger().info("Registered Tasks");
 
         getServer().getScheduler().runTaskLater(this, () -> {
-            NexusServerSetupEvent event = new NexusServerSetupEvent(NexusAPI.NETWORK_TYPE);
+            NexusServerSetupEvent event = new NexusServerSetupEvent(NexusReborn.NETWORK_TYPE);
             getServer().getPluginManager().callEvent(event);
             nexusServer = event.getServer();
             if (nexusServer == null) {
@@ -215,19 +215,19 @@ public class NexusCore extends JavaPlugin implements Listener {
                 for (VirtualServer server : virtualServers.values()) {
                     coreInstanceServer.getChildServers().register(server);
                     server.setParentServer(coreInstanceServer);
-                    NexusAPI.getApi().getServerRegistry().register(server);
+                    NexusReborn.getServerRegistry().register(server);
                 }
 
                 coreInstanceServer.onStart();
                 coreInstanceServer.getChildServers().forEach(NexusServer::onStart);
                 nexusServer = coreInstanceServer;
             }
-            NexusAPI.getApi().getServerRegistry().register(nexusServer);
+            NexusReborn.getServerRegistry().register(nexusServer);
         }, 1L);
 
         getServer().getScheduler().runTaskAsynchronously(this, () -> {
             try {
-                NexusAPI.getApi().getGameLogManager().exportGames();
+                NexusReborn.getGameLogManager().exportGames();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -288,7 +288,7 @@ public class NexusCore extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
-        NexusAPI.getApi().getPlayerManager().saveData();
+        NexusReborn.getPlayerManager().saveData();
 
         if (this.nexusBot != null) {
             this.nexusBot.shutdown();
@@ -308,7 +308,7 @@ public class NexusCore extends JavaPlugin implements Listener {
 
         Iterator<Player> iterator = e.iterator();
         while (iterator.hasNext()) {
-            NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(iterator.next().getUniqueId());
+            NexusPlayer nexusPlayer = NexusReborn.getPlayerManager().getNexusPlayer(iterator.next().getUniqueId());
             if (nexusPlayer == null) {
                 continue;
             }

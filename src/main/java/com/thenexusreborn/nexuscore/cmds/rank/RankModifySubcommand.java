@@ -6,7 +6,7 @@ import com.stardevllc.mojang.MojangProfile;
 import com.stardevllc.starcore.StarColors;
 import com.stardevllc.starcore.cmdflags.FlagResult;
 import com.stardevllc.time.TimeParser;
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.sql.objects.SQLDatabase;
 import com.thenexusreborn.api.sql.objects.codecs.RanksCodec;
@@ -35,7 +35,7 @@ public abstract class RankModifySubcommand extends SubCommand<NexusCore> {
         
         MsgType.VERBOSE.send(sender, "Processing request...");
         
-        PlayerManager playerManager = NexusAPI.getApi().getPlayerManager();
+        PlayerManager playerManager = NexusReborn.getPlayerManager();
         Pair<UUID, String> playerInfo = playerManager.getPlayerFromIdentifier(args[0]);
         if (playerInfo == null) {
             try {
@@ -119,7 +119,7 @@ public abstract class RankModifySubcommand extends SubCommand<NexusCore> {
         
         handle(sender, rank, expire, targetRanks, targetName, rankName, time);
         
-        SQLDatabase database = NexusAPI.getApi().getPrimaryDatabase();
+        SQLDatabase database = NexusReborn.getPrimaryDatabase();
         
         try {
             String encodedRanks = new RanksCodec().encode(targetRanks);

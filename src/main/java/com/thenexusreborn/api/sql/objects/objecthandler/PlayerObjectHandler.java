@@ -1,6 +1,6 @@
 package com.thenexusreborn.api.sql.objects.objecthandler;
 
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.experience.PlayerExperience;
 import com.thenexusreborn.api.nickname.*;
 import com.thenexusreborn.api.nickname.player.*;
@@ -151,7 +151,7 @@ public class PlayerObjectHandler extends ObjectHandler {
         
         for (IPEntry ipEntry : player.getIpHistory()) {
             database.saveSilent(ipEntry);
-            NexusAPI.getApi().getPlayerManager().getIpHistory().add(ipEntry);
+            NexusReborn.getPlayerManager().getIpHistory().add(ipEntry);
         }
         
         if (player.getNickname() != null) {

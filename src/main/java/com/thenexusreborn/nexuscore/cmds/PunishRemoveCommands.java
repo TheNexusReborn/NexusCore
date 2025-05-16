@@ -2,7 +2,7 @@ package com.thenexusreborn.nexuscore.cmds;
 
 import com.stardevllc.helper.Pair;
 import com.stardevllc.starcore.StarColors;
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.PlayerManager;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.api.punishment.*;
@@ -55,7 +55,7 @@ public class PunishRemoveCommands implements CommandExecutor {
             return true;
         }
 
-        PlayerManager playerManager = NexusAPI.getApi().getPlayerManager();
+        PlayerManager playerManager = NexusReborn.getPlayerManager();
         Pair<UUID, String> playerInfo = playerManager.getPlayerFromIdentifier(args[0]);
         if (playerInfo == null) {
             sender.sendMessage(StarColors.color(MsgType.WARN + "Could not find a player with that identifier."));
@@ -64,7 +64,7 @@ public class PunishRemoveCommands implements CommandExecutor {
 
         UUID targetUniqueID = playerInfo.key();
     
-        List<Punishment> punishments = NexusAPI.getApi().getPunishmentManager().getPunishmentsByTarget(targetUniqueID);
+        List<Punishment> punishments = NexusReborn.getPunishmentManager().getPunishmentsByTarget(targetUniqueID);
         if (punishments.isEmpty()) {
             sender.sendMessage(StarColors.color(MsgType.WARN + "That player does not have any punishments"));
             return true;
@@ -101,7 +101,7 @@ public class PunishRemoveCommands implements CommandExecutor {
         PardonInfo info = new PardonInfo(System.currentTimeMillis(), actor, reason);
         for (Punishment punishment : activePunishments) {
             punishment.setPardonInfo(info);
-            NexusAPI.getApi().getPrimaryDatabase().saveSilent(punishment);
+            NexusReborn.getPrimaryDatabase().saveSilent(punishment);
             plugin.getPunishmentChannel().sendPunishmentRemoval(punishment);
         }
         

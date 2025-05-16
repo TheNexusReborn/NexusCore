@@ -2,7 +2,7 @@ package com.thenexusreborn.nexuscore.cmds;
 
 import com.stardevllc.starcore.StarColors;
 import com.stardevllc.starcore.cmdflags.FlagResult;
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.nexuscore.api.command.NexusCommand;
 import com.thenexusreborn.nexuscore.api.events.ToggleChangeEvent;
@@ -26,11 +26,11 @@ public class ToggleCmd extends NexusCommand<JavaPlugin> {
             return true;
         }
 
-        NexusPlayer player = NexusAPI.getApi().getPlayerManager().getNexusPlayer(((Player) sender).getUniqueId());
+        NexusPlayer player = NexusReborn.getPlayerManager().getNexusPlayer(((Player) sender).getUniqueId());
         Toggle toggle = player.getToggle(getName().toLowerCase());
 
         if (toggle == null) {
-            Toggle.Info info = NexusAPI.getApi().getToggleRegistry().get(getName().toLowerCase());
+            Toggle.Info info = NexusReborn.getToggleRegistry().get(getName().toLowerCase());
             if (info == null) {
                 player.sendMessage(MsgType.WARN + "No toggle with that name exists.");
                 return true;
@@ -58,7 +58,7 @@ public class ToggleCmd extends NexusCommand<JavaPlugin> {
         }
 
         toggle.setValue(!toggle.getValue());
-        NexusAPI.getApi().getPrimaryDatabase().saveSilent(toggle);
+        NexusReborn.getPrimaryDatabase().saveSilent(toggle);
         String vc = MsgType.INFO.getVariableColor();
         String bc = MsgType.INFO.getBaseColor();
         player.sendMessage(MsgType.INFO + "Toggled " + vc + toggle.getInfo().getName() + bc + " to " + vc + toggle.getValue());

@@ -1,7 +1,7 @@
 package com.thenexusreborn.nexuscore.player;
 
 import com.stardevllc.starcore.utils.ProgressBar;
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.experience.ExperienceLevel;
 import com.thenexusreborn.api.player.IActionBar;
 import com.thenexusreborn.api.player.NexusPlayer;
@@ -33,7 +33,7 @@ public class XPActionBar implements IActionBar {
         int level = player.getExperience().getLevel();
         int currentXp = (int) Math.round(player.getExperience().getLevelXp());
         int nextLevelXp;
-        Map<Integer, ExperienceLevel> playerLevels = NexusAPI.getApi().getLevelManager().getPlayerLevels();
+        Map<Integer, ExperienceLevel> playerLevels = NexusReborn.getLevelManager().getPlayerLevels();
         if (playerLevels.containsKey(level + 1)) {
             nextLevelXp = playerLevels.get(level + 1).getXpRequired();
         } else {

@@ -1,7 +1,7 @@
 package com.thenexusreborn.nexuscore.discord;
 
 import com.stardevllc.helper.CodeGenerator;
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.nexuscore.NexusCore;
 import net.dv8tion.jda.api.Permission;
@@ -80,7 +80,7 @@ public class DiscordListener extends ListenerAdapter {
             event.deferReply().setEphemeral(true).queue();
 
             try {
-                List<NexusPlayer> results = NexusAPI.getApi().getPrimaryDatabase().get(NexusPlayer.class, "discordid", event.getMember().getId());
+                List<NexusPlayer> results = NexusReborn.getPrimaryDatabase().get(NexusPlayer.class, "discordid", event.getMember().getId());
                 if (!results.isEmpty()) {
                     event.getHook().sendMessage("You have already linked your Discord and Minecraft accounts together.");
                     return;

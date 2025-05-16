@@ -1,7 +1,7 @@
 package com.thenexusreborn.nexuscore.scoreboard.impl;
 
 import com.stardevllc.starcore.StarColors;
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.api.scoreboard.NexusScoreboard;
@@ -45,7 +45,7 @@ public class RankTablistHandler extends TablistHandler {
         removeDisconnectedPlayers();
         
         for (Player player : Bukkit.getOnlinePlayers()) {
-            NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(player.getUniqueId());
+            NexusPlayer nexusPlayer = NexusReborn.getPlayerManager().getNexusPlayer(player.getUniqueId());
             if (nexusPlayer != null) {
                 ITeam team = getPlayerTeams().get(nexusPlayer.getUniqueId());
                 String correctChar = BEGIN_CHARS.get(nexusPlayer.getEffectiveRank());

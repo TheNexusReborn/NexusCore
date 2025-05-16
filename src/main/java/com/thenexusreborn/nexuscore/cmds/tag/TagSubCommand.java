@@ -2,7 +2,7 @@ package com.thenexusreborn.nexuscore.cmds.tag;
 
 import com.stardevllc.starcore.StarColors;
 import com.stardevllc.starcore.cmdflags.FlagResult;
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.nexuscore.NexusCore;
@@ -20,7 +20,7 @@ public abstract class TagSubCommand extends SubCommand<NexusCore> {
     public boolean execute(CommandSender sender, Rank senderRank, String label, String[] args, FlagResult flagResults) {
         Player player = (Player) sender;
 
-        NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(player.getUniqueId());
+        NexusPlayer nexusPlayer = NexusReborn.getPlayerManager().getNexusPlayer(player.getUniqueId());
         if (nexusPlayer == null) {
             player.sendMessage(StarColors.color("&cPlease wait for your data to load before using this command."));
             return true;

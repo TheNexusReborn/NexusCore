@@ -8,7 +8,7 @@ import com.stardevllc.starcore.StarColors;
 import com.stardevllc.starcore.skins.Skin;
 import com.stardevllc.starcore.skins.SkinManager;
 import com.stardevllc.time.TimeUnit;
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.nickname.Nickname;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.punishment.Punishment;
@@ -79,10 +79,10 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
             if (!this.players.containsKey(player.getUniqueId())) {
                 if (!getUuidNameMap().containsKey(player.getUniqueId())) {
                     nexusPlayer = createPlayerData(player.getUniqueId(), player.getName());
-                    NexusAPI.getApi().getPrimaryDatabase().saveSilent(nexusPlayer);
+                    NexusReborn.getPrimaryDatabase().saveSilent(nexusPlayer);
                 } else {
                     try {
-                        nexusPlayer = NexusAPI.getApi().getPrimaryDatabase().get(NexusPlayer.class, "uniqueId", player.getUniqueId()).getFirst();
+                        nexusPlayer = NexusReborn.getPrimaryDatabase().get(NexusPlayer.class, "uniqueId", player.getUniqueId()).getFirst();
                     } catch (Throwable ex) {
                         ex.printStackTrace();
                         return;
@@ -99,16 +99,16 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
             getPlayers().put(nexusPlayer.getUniqueId(), nexusPlayer);
             
             Session session;
-            if (NexusAPI.NETWORK_TYPE == NetworkType.SINGLE) {
+            if (NexusReborn.NETWORK_TYPE == NetworkType.SINGLE) {
                 session = new Session(player.getUniqueId());
                 session.start();
             } else {
                 try {
-                    session = NexusAPI.getApi().getPrimaryDatabase().get(Session.class, "uniqueid", player.getUniqueId()).getFirst();
+                    session = NexusReborn.getPrimaryDatabase().get(Session.class, "uniqueid", player.getUniqueId()).getFirst();
                 } catch (Throwable ex) {
                     session = new Session(player.getUniqueId());
                     session.start();
-                    NexusAPI.getApi().getPrimaryDatabase().saveSilent(session);
+                    NexusReborn.getPrimaryDatabase().saveSilent(session);
                 }
             }
             
@@ -126,14 +126,14 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
             
             nexusPlayer.setLastLogin(session.getStart());
             
-            NexusAPI.getApi().getPrimaryDatabase().saveSilent(nexusPlayer);
+            NexusReborn.getPrimaryDatabase().saveSilent(nexusPlayer);
             
             if (!nexusPlayer.getName().equals(player.getName())) {
                 nexusPlayer.setName(player.getName());
             }
             
             try {
-                NexusAPI.getApi().getPrimaryDatabase().save(nexusPlayer);
+                NexusReborn.getPrimaryDatabase().save(nexusPlayer);
             } catch (SQLException ex) {
                 player.sendMessage(StarColors.color(MsgType.ERROR + "Failed to save your player data to the database. Please report as a bug and try to re-log."));
                 ex.printStackTrace();
@@ -158,7 +158,7 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
             
             InetSocketAddress socketAddress = player.getAddress();
             String hostName = socketAddress.getHostString();
-            NexusAPI.getApi().getPlayerManager().addIpHistory(player.getUniqueId(), hostName);
+            NexusReborn.getPlayerManager().addIpHistory(player.getUniqueId(), hostName);
             
             Nickname nickname = nexusPlayer.getNickname();
             SkinManager skinManager = Bukkit.getServicesManager().getRegistration(SkinManager.class).getProvider();
@@ -229,16 +229,16 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
             return; //Probably joined then left before it could be fully loaded
         }
 
-        if (NexusAPI.NETWORK_TYPE == NetworkType.SINGLE) {
+        if (NexusReborn.NETWORK_TYPE == NetworkType.SINGLE) {
             Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
                 Session session = nexusPlayer.getSession();
                 session.end();
                 nexusPlayer.setLastLogout(session.getEnd());
                 long playTime = session.getTimeOnline();
-                NexusAPI.getApi().getPrimaryDatabase().deleteSilent(session);
+                NexusReborn.getPrimaryDatabase().deleteSilent(session);
                 nexusPlayer.setSession(null);
                 nexusPlayer.getPlayerTime().addPlaytime(playTime);
-                NexusAPI.getApi().getPrimaryDatabase().saveSilent(nexusPlayer);
+                NexusReborn.getPrimaryDatabase().saveSilent(nexusPlayer);
             });
         }
         

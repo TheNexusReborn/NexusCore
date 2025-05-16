@@ -1,7 +1,7 @@
 package com.thenexusreborn.nexuscore.player;
 
 import com.stardevllc.starcore.StarColors;
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.PlayerProxy;
 import org.bukkit.Bukkit;
@@ -41,7 +41,7 @@ public class SpigotPlayerProxy extends PlayerProxy {
 
     @Override
     public void showXPActionBar() {
-        NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(this.uniqueId);
+        NexusPlayer nexusPlayer = NexusReborn.getPlayerManager().getNexusPlayer(this.uniqueId);
         if (nexusPlayer != null) {
             nexusPlayer.setActionBar(new XPActionBar(nexusPlayer, nexusPlayer.getActionBar(), 5000));
         }

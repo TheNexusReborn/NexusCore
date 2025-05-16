@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.hooks;
 
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.api.server.NexusServer;
@@ -30,7 +30,7 @@ public class NexusPapiExpansion extends PlaceholderExpansion {
             return null;
         }
 
-        NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(player.getUniqueId());
+        NexusPlayer nexusPlayer = NexusReborn.getPlayerManager().getNexusPlayer(player.getUniqueId());
         if (params.startsWith("coloredname")) {
             if (params.contains("_true")) {
                 return nexusPlayer.getTrueColoredName();
@@ -86,7 +86,7 @@ public class NexusPapiExpansion extends PlaceholderExpansion {
                 return "&7";
             }
         } else if (params.equalsIgnoreCase("servername")) {
-            for (NexusServer server : NexusAPI.getApi().getServerRegistry()) {
+            for (NexusServer server : NexusReborn.getServerRegistry()) {
                 if (server.getPlayers().contains(player.getUniqueId())) {
                     return server.getName();
                 }

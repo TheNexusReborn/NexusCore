@@ -1,6 +1,6 @@
 package com.thenexusreborn.api.player;
 
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.sql.annotations.column.ColumnCodec;
 import com.thenexusreborn.api.sql.annotations.column.ColumnIgnored;
 import com.thenexusreborn.api.sql.annotations.column.ColumnName;
@@ -52,7 +52,7 @@ public class Toggle {
     }
     
     public NexusPlayer getPlayer() {
-        return NexusAPI.getApi().getPlayerManager().getNexusPlayer(uuid);
+        return NexusReborn.getPlayerManager().getNexusPlayer(uuid);
     }
     
     public long getId() {

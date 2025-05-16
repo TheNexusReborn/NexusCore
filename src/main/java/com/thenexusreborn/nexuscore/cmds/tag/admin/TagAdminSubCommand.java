@@ -2,7 +2,7 @@ package com.thenexusreborn.nexuscore.cmds.tag.admin;
 
 import com.stardevllc.starcore.StarColors;
 import com.stardevllc.starcore.cmdflags.FlagResult;
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.api.tags.Tag;
@@ -35,7 +35,7 @@ public abstract class TagAdminSubCommand extends SubCommand<NexusCore> {
         }
         String tagName = sb.substring(0, sb.length() - 1);
 
-        UUID uniqueId = NexusAPI.getApi().getPlayerManager().getUUIDFromName(args[0]);
+        UUID uniqueId = NexusReborn.getPlayerManager().getUUIDFromName(args[0]);
         if (uniqueId == null) {
             sender.sendMessage(StarColors.color(MsgType.WARN + "That player has not yet joined the server."));
             return true;
@@ -44,7 +44,7 @@ public abstract class TagAdminSubCommand extends SubCommand<NexusCore> {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             List<Tag> tags;
             try {
-                tags = NexusAPI.getApi().getPrimaryDatabase().get(Tag.class, "uuid", uniqueId.toString());
+                tags = NexusReborn.getPrimaryDatabase().get(Tag.class, "uuid", uniqueId.toString());
             } catch (SQLException e) {
                 sender.sendMessage(StarColors.color(MsgType.ERROR + "There was a database error while getting the list of tags."));
                 return;
@@ -58,7 +58,7 @@ public abstract class TagAdminSubCommand extends SubCommand<NexusCore> {
                 }
             }
 
-            NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(uniqueId);
+            NexusPlayer nexusPlayer = NexusReborn.getPlayerManager().getNexusPlayer(uniqueId);
 
             handle(sender, nexusPlayer, tag, tagName);
         });

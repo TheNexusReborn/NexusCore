@@ -33,19 +33,16 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public abstract class NexusAPI {
-    private static NexusAPI instance;
+public abstract class NexusReborn {
+    private static NexusReborn instance;
     public static final NetworkType NETWORK_TYPE = NetworkType.SINGLE;
 
-    public static void setApi(NexusAPI api) {
+    public static void setInstance(NexusReborn api) {
         instance = api;
     }
 
-    public static NexusAPI getApi() {
-        return instance;
-    }
-
     protected final Logger logger;
+    protected final File folder;
     protected final PlayerManager playerManager;
     protected final Environment environment;
     protected final PunishmentManager punishmentManager;
@@ -67,15 +64,16 @@ public abstract class NexusAPI {
     
     protected NickPerms nickPerms;
 
-    public NexusAPI(Environment environment, Logger logger, PlayerManager playerManager) {
+    public NexusReborn(Environment environment, Logger logger, File folder, PlayerManager playerManager) {
         this.logger = logger;
+        this.folder = folder;
         this.environment = environment;
         this.playerManager = playerManager;
         this.punishmentManager = new PunishmentManager();
         this.levelManager = new LevelManager();
         this.levelManager.init();
 
-        URL url = NexusAPI.class.getClassLoader().getResource("nexusapi-version.txt");
+        URL url = NexusReborn.class.getClassLoader().getResource("nexusapi-version.txt");
         try (InputStream in = url.openStream()) {
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
             String line = reader.readLine();
@@ -93,16 +91,16 @@ public abstract class NexusAPI {
         return environment;
     }
 
-    public final void init() throws Exception {
-        getLogger().info("Loading NexusAPI Version v" + this.version);
+    public static void init() throws Exception {
+        getLogger().info("Loading NexusAPI Version v" + instance.version);
         
-        serverRegistry = new ServerRegistry<>();
-        databaseRegistry = new DatabaseRegistry(logger);
-
-        registerDatabases(databaseRegistry);
+        instance.serverRegistry = new ServerRegistry<>();
+        instance.databaseRegistry = new DatabaseRegistry(instance.logger);
+        
+        instance.registerDatabases(instance.databaseRegistry);
         getLogger().info("Registered the databases");
 
-        for (SQLDatabase database : databaseRegistry.getObjects().values()) {
+        for (SQLDatabase database : instance.databaseRegistry.getObjects().values()) {
             if (database.getName().toLowerCase().contains("nexus")) {
                 database.registerClass(PlayerExperience.class);
                 database.registerClass(PlayerTime.class);
@@ -123,23 +121,23 @@ public abstract class NexusAPI {
                 database.registerClass(RandomNameEntry.class);
                 database.registerClass(RandomSkinEntry.class);
                 database.registerClass(NickPerms.class);
-                this.primaryDatabase = database;
+                instance.primaryDatabase = database;
             }
         }
 
-        if (primaryDatabase == null) {
+        if (instance.primaryDatabase == null) {
             throw new SQLException("Could not find the primary database.");
         }
-
-        databaseRegistry.setup();
+        
+        instance.databaseRegistry.setup();
         getLogger().info("Successfully setup the database tables");
         
-        List<NameBlacklistEntry> nicknameBlacklistEntries = primaryDatabase.get(NameBlacklistEntry.class);
+        List<NameBlacklistEntry> nicknameBlacklistEntries = instance.primaryDatabase.get(NameBlacklistEntry.class);
         for (NameBlacklistEntry entry : nicknameBlacklistEntries) {
-            this.nicknameBlacklist.add(entry.getName());
+            instance.nicknameBlacklist.add(entry.getName());
         }
         
-        this.nicknameBlacklist.addListener(e -> {
+        instance.nicknameBlacklist.addListener(e -> {
             if (e.added() != null) {
                 getPrimaryDatabase().saveSilent(new NameBlacklistEntry((String) e.added()));
             } else if (e.removed() != null) {
@@ -147,12 +145,12 @@ public abstract class NexusAPI {
             }
         });
         
-        List<RandomNameEntry> randomNameEntries = primaryDatabase.get(RandomNameEntry.class);
+        List<RandomNameEntry> randomNameEntries = instance.primaryDatabase.get(RandomNameEntry.class);
         for (RandomNameEntry entry : randomNameEntries) {
-            this.randomNames.add(entry.getName());
+            instance.randomNames.add(entry.getName());
         }
         
-        this.randomNames.addListener(e -> {
+        instance.randomNames.addListener(e -> {
             if (e.added() != null) {
                 getPrimaryDatabase().saveSilent(new RandomNameEntry((String) e.added()));
             } else if (e.removed() != null) {
@@ -160,12 +158,12 @@ public abstract class NexusAPI {
             }
         });
         
-        List<RandomSkinEntry> randomSkinEntries = primaryDatabase.get(RandomSkinEntry.class);
+        List<RandomSkinEntry> randomSkinEntries = instance.primaryDatabase.get(RandomSkinEntry.class);
         for (RandomSkinEntry entry : randomSkinEntries) {
-            this.randomSkins.add(entry.getName());
+            instance.randomSkins.add(entry.getName());
         }
         
-        this.randomSkins.addListener(e -> {
+        instance.randomSkins.addListener(e -> {
             if (e.added() != null) {
                 getPrimaryDatabase().saveSilent(new RandomSkinEntry((String) e.added()));
             } else if (e.removed() != null) {
@@ -174,39 +172,39 @@ public abstract class NexusAPI {
         });
         
         try {
-            this.nickPerms = getPrimaryDatabase().get(NickPerms.class).getFirst();
+            instance.nickPerms = getPrimaryDatabase().get(NickPerms.class).getFirst();
         } catch (Throwable t) {
-            this.nickPerms = new NickPerms();
-            getPrimaryDatabase().saveSilent(this.nickPerms);
+            instance.nickPerms = new NickPerms();
+            getPrimaryDatabase().saveSilent(instance.nickPerms);
         }
         
-        toggleRegistry = new ToggleRegistry();
+        instance.toggleRegistry = new ToggleRegistry();
+        
+        instance.toggleRegistry.register("vanish", Rank.HELPER, "Vanish", "A staff only thing where you can be completely invisible", false);
+        instance.toggleRegistry.register("incognito", Rank.MEDIA, "Incognito", "A media+ thing where you can be hidden from others", false);
+        instance.toggleRegistry.register("fly", Rank.DIAMOND, "Fly", "A donor perk that allows you to fly in hubs and lobbies", false);
+        instance.toggleRegistry.register("debug", Rank.ADMIN, "Debug", "A toggle that allows debugging of things", false);
 
-        toggleRegistry.register("vanish", Rank.HELPER, "Vanish", "A staff only thing where you can be completely invisible", false);
-        toggleRegistry.register("incognito", Rank.MEDIA, "Incognito", "A media+ thing where you can be hidden from others", false);
-        toggleRegistry.register("fly", Rank.DIAMOND, "Fly", "A donor perk that allows you to fly in hubs and lobbies", false);
-        toggleRegistry.register("debug", Rank.ADMIN, "Debug", "A toggle that allows debugging of things", false);
-
-        int initialToggleSize = toggleRegistry.getObjects().size();
+        int initialToggleSize = instance.toggleRegistry.getObjects().size();
         getLogger().info("Registered " + initialToggleSize + " default toggle types.");
-
-        registerToggles(toggleRegistry);
-        getLogger().info("Registered " + (toggleRegistry.getObjects().size() - initialToggleSize) + " additional default toggle types.");
+        
+        instance.registerToggles(instance.toggleRegistry);
+        getLogger().info("Registered " + (instance.toggleRegistry.getObjects().size() - initialToggleSize) + " additional default toggle types.");
 
         getLogger().info("Registering and Setting up Tags");
-        this.tagRegistry = new StringRegistry<>();
+        instance.tagRegistry = new StringRegistry<>();
         String[] defaultTags = {"thicc", "son", "e-girl", "god", "e-dater", "lord", "epic", "bacca", "benja", "milk man", "champion"};
         for (String dt : defaultTags) {
-            this.tagRegistry.register(dt, dt);
+            instance.tagRegistry.register(dt, dt);
         }
-        getLogger().info("Registered " + this.tagRegistry.getObjects().size() + " default tags.");
+        getLogger().info("Registered " + instance.tagRegistry.getObjects().size() + " default tags.");
 
         for (Punishment punishment : getPrimaryDatabase().get(Punishment.class)) {
-            punishmentManager.addPunishment(punishment);
+            instance.punishmentManager.addPunishment(punishment);
         }
         getLogger().info("Cached punishments in memory");
-
-        playerManager.getIpHistory().addAll(getPrimaryDatabase().get(IPEntry.class));
+        
+        instance.playerManager.getIpHistory().addAll(getPrimaryDatabase().get(IPEntry.class));
         getLogger().info("Loaded IP History");
 
         SQLDatabase database = getPrimaryDatabase();
@@ -217,58 +215,60 @@ public abstract class NexusAPI {
             String name = row.getString("name");
             PlayerRanks playerRanks = (PlayerRanks) row.getObject("ranks");
             playerRanks.setUniqueId(uniqueId);
-            playerManager.getUuidNameMap().put(uniqueId, new Name(name));
-            playerManager.getUuidRankMap().put(uniqueId, playerRanks);
+            instance.playerManager.getUuidNameMap().put(uniqueId, new Name(name));
+            instance.playerManager.getUuidRankMap().put(uniqueId, playerRanks);
         }
-        getLogger().info("Loaded basic player data (database IDs, Unique IDs and Names) - " + playerManager.getUuidNameMap().size() + " total profiles.");
+        getLogger().info("Loaded basic player data (database IDs, Unique IDs and Names) - " + instance.playerManager.getUuidNameMap().size() + " total profiles.");
         
-        getLogger().info("NexusAPI v" + this.version + " load complete.");
+        getLogger().info("NexusAPI v" + instance.version + " load complete.");
     }
 
     public abstract void registerDatabases(DatabaseRegistry registry);
 
     public abstract void registerToggles(ToggleRegistry registry);
     
-    public ObservableSet<String> getNicknameBlacklist() {
-        return nicknameBlacklist;
+    public static ObservableSet<String> getNicknameBlacklist() {
+        return instance.nicknameBlacklist;
     }
     
-    public ObservableSet<String> getRandomNames() {
-        return randomNames;
+    public static ObservableSet<String> getRandomNames() {
+        return instance.randomNames;
     }
     
-    public ObservableSet<String> getRandomSkins() {
-        return randomSkins;
+    public static ObservableSet<String> getRandomSkins() {
+        return instance.randomSkins;
     }
     
-    public String getVersion() {
-        return version;
+    public static String getVersion() {
+        return instance.version;
     }
 
-    public abstract File getFolder();
-
-    public PlayerManager getPlayerManager() {
-        return playerManager;
+    public static File getFolder() {
+        return instance.folder;
     }
 
-    public Logger getLogger() {
-        return logger;
+    public static PlayerManager getPlayerManager() {
+        return instance.playerManager;
     }
 
-    public PunishmentManager getPunishmentManager() {
-        return punishmentManager;
+    public static Logger getLogger() {
+        return instance.logger;
     }
 
-    public GameLogManager getGameLogManager() {
-        return gameLogManager;
+    public static PunishmentManager getPunishmentManager() {
+        return instance.punishmentManager;
     }
 
-    public void setGameLogManager(GameLogManager gameLogManager) {
-        this.gameLogManager = gameLogManager;
+    public static GameLogManager getGameLogManager() {
+        return instance.gameLogManager;
+    }
+
+    public static void setGameLogManager(GameLogManager gameLogManager) {
+        instance.gameLogManager = gameLogManager;
     }
 
     public static void logMessage(Level level, String mainMessage, String... debug) {
-        Logger logger = NexusAPI.getApi().getLogger();
+        Logger logger = NexusReborn.getLogger();
         logger.log(level, "----------- Nexus Log -----------");
         logger.log(level, mainMessage);
         if (debug != null) {
@@ -279,39 +279,39 @@ public abstract class NexusAPI {
         logger.log(level, "---------------------------------");
     }
 
-    public SQLDatabase getPrimaryDatabase() {
-        return this.primaryDatabase;
+    public static SQLDatabase getPrimaryDatabase() {
+        return instance.primaryDatabase;
     }
 
-    public ToggleRegistry getToggleRegistry() {
-        return toggleRegistry;
+    public static ToggleRegistry getToggleRegistry() {
+        return instance.toggleRegistry;
     }
 
-    public URLClassLoader getLoader() {
-        ClassLoader classLoader = getClass().getClassLoader();
+    public static URLClassLoader getLoader() {
+        ClassLoader classLoader = instance.getClass().getClassLoader();
         if (classLoader instanceof URLClassLoader) {
             return (URLClassLoader) classLoader;
         }
         return null;
     }
 
-    public LevelManager getLevelManager() {
-        return levelManager;
+    public static LevelManager getLevelManager() {
+        return instance.levelManager;
     }
 
-    public ClockManager getClockManager() {
-        return clockManager;
+    public static ClockManager getClockManager() {
+        return instance.clockManager;
     }
 
-    public void setClockManager(ClockManager clockManager) {
-        this.clockManager = clockManager;
+    public static void setClockManager(ClockManager clockManager) {
+        instance.clockManager = clockManager;
     }
 
-    public ServerRegistry<NexusServer> getServerRegistry() {
-        return serverRegistry;
+    public static ServerRegistry<NexusServer> getServerRegistry() {
+        return instance.serverRegistry;
     }
     
-    public NickPerms getNickPerms() {
-        return nickPerms;
+    public static NickPerms getNickPerms() {
+        return instance.nickPerms;
     }
 }

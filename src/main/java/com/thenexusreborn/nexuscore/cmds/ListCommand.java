@@ -3,7 +3,7 @@ package com.thenexusreborn.nexuscore.cmds;
 import com.google.common.collect.TreeMultimap;
 import com.stardevllc.starcore.StarColors;
 import com.stardevllc.starcore.cmdflags.FlagResult;
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.nexuscore.NexusCore;
@@ -30,7 +30,7 @@ public class ListCommand extends NexusCommand<NexusCore> {
         int playerCount = 0;
         TreeMultimap<Rank, NexusPlayer> playerList = TreeMultimap.create();
         for (Player player : Bukkit.getOnlinePlayers()) {
-            NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(player.getUniqueId());
+            NexusPlayer nexusPlayer = NexusReborn.getPlayerManager().getNexusPlayer(player.getUniqueId());
             if (nexusPlayer == null) {
                 continue;
             }

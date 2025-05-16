@@ -1,7 +1,7 @@
 package com.thenexusreborn.nexuscore.cmds.nickadmin.names;
 
 import com.stardevllc.starcore.cmdflags.FlagResult;
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.api.command.ICommand;
@@ -18,7 +18,7 @@ public class NamesRemoveCmd extends SubCommand<NexusCore> {
     
     @Override
     public boolean execute(CommandSender sender, Rank senderRank, String label, String[] args, FlagResult flagResults) {
-        Set<String> randomNames = NexusAPI.getApi().getRandomNames();
+        Set<String> randomNames = NexusReborn.getRandomNames();
         
         for (String arg : args) {
             String name = arg.toLowerCase();

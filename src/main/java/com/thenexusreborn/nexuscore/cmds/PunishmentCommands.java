@@ -4,7 +4,7 @@ import com.stardevllc.helper.CodeGenerator;
 import com.stardevllc.helper.Pair;
 import com.stardevllc.starcore.StarColors;
 import com.stardevllc.time.TimeParser;
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.punishment.*;
 import com.thenexusreborn.nexuscore.NexusCore;
@@ -84,7 +84,7 @@ public class PunishmentCommands implements CommandExecutor {
             return true;
         }
         
-        PlayerManager playerManager = NexusAPI.getApi().getPlayerManager();
+        PlayerManager playerManager = NexusReborn.getPlayerManager();
         
         NexusPlayer target;
         
@@ -161,7 +161,7 @@ public class PunishmentCommands implements CommandExecutor {
                     ToggleChangeEvent changeEvent = new ToggleChangeEvent(target, vanish, vanish.getValue(), !vanish.getValue());
                     Bukkit.getPluginManager().callEvent(changeEvent);
                     vanish.setValue(!vanish.getValue());
-                    NexusAPI.getApi().getPrimaryDatabase().saveSilent(vanish);
+                    NexusReborn.getPrimaryDatabase().saveSilent(vanish);
                     target.sendMessage(MsgType.INFO.format("Your nickname was " + punishment.getType().getVerb() + " by " + sender.getName() + ", you have been put into vanish mode."));
                 } else {
                     targetPlayer.kickPlayer(StarColors.color(punishment.formatKick())); //TODO this doesn't provide an id right away though'
@@ -171,7 +171,7 @@ public class PunishmentCommands implements CommandExecutor {
             if (punishment.getType() == PunishmentType.BLACKLIST) {
                 if (punishment.isActive()) {
                     Set<IPEntry> playerIps = new HashSet<>();
-                    for (IPEntry ipEntry : NexusAPI.getApi().getPlayerManager().getIpHistory()) {
+                    for (IPEntry ipEntry : NexusReborn.getPlayerManager().getIpHistory()) {
                         if (ipEntry.getUuid().equals(targetPlayer.getUniqueId())) {
                             playerIps.add(ipEntry);
                         }
@@ -179,7 +179,7 @@ public class PunishmentCommands implements CommandExecutor {
 
                     Set<UUID> alts = new HashSet<>();
                     for (IPEntry playerIp : playerIps) {
-                        alts.addAll(NexusAPI.getApi().getPlayerManager().getPlayersByIp(playerIp.getIp()));
+                        alts.addAll(NexusReborn.getPlayerManager().getPlayersByIp(playerIp.getIp()));
                     }
 
                     String kickMessage = StarColors.color(punishment.formatKick());
@@ -197,7 +197,7 @@ public class PunishmentCommands implements CommandExecutor {
 
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             try {
-                NexusAPI.getApi().getPrimaryDatabase().save(punishment);
+                NexusReborn.getPrimaryDatabase().save(punishment);
             } catch (SQLException e) {
                 sender.sendMessage(StarColors.color(MsgType.WARN + "Could not create the punishment. Please report to Firestar311."));
                 e.printStackTrace();
@@ -210,7 +210,7 @@ public class PunishmentCommands implements CommandExecutor {
                 return;
             }
 
-            NexusAPI.getApi().getPunishmentManager().addPunishment(punishment);
+            NexusReborn.getPunishmentManager().addPunishment(punishment);
             plugin.getPunishmentChannel().sendPunishment(punishment);
         });
         return true;

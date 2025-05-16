@@ -1,7 +1,7 @@
 package com.thenexusreborn.nexuscore.cmds.servers;
 
 import com.stardevllc.starcore.cmdflags.FlagResult;
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.api.server.NexusServer;
 import com.thenexusreborn.nexuscore.NexusCore;
@@ -18,7 +18,7 @@ public class ServersListSubCommand extends SubCommand<NexusCore> {
     @Override
     public boolean execute(CommandSender sender, Rank senderRank, String label, String[] args, FlagResult flagResults) {
         sender.sendMessage(MsgType.INFO.format("List of all servers..."));
-        for (NexusServer server : NexusAPI.getApi().getServerRegistry()) {
+        for (NexusServer server : NexusReborn.getServerRegistry()) {
             String name = server.getName();
             String type = server.getType().name().toLowerCase();
             String mode = server.getMode();

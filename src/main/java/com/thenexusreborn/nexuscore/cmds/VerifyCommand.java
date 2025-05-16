@@ -1,7 +1,7 @@
 package com.thenexusreborn.nexuscore.cmds;
 
 import com.stardevllc.starcore.cmdflags.FlagResult;
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.nexuscore.NexusCore;
@@ -35,10 +35,10 @@ public class VerifyCommand extends NexusCommand<NexusCore> {
         String linkCode = args[0];
         for (DiscordVerifyCode discordVerifyCode : new ArrayList<>(plugin.getDiscordVerifyCodes())) {
             if (discordVerifyCode.getCode().equals(linkCode)) {
-                NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(player.getUniqueId());
+                NexusPlayer nexusPlayer = NexusReborn.getPlayerManager().getNexusPlayer(player.getUniqueId());
                 nexusPlayer.setDiscordId(discordVerifyCode.getDiscordId());
                 try {
-                    NexusAPI.getApi().getPrimaryDatabase().save(nexusPlayer);
+                    NexusReborn.getPrimaryDatabase().save(nexusPlayer);
                     plugin.getDiscordVerifyCodes().remove(discordVerifyCode);
                 } catch (SQLException e) {
                     throw new RuntimeException(e);

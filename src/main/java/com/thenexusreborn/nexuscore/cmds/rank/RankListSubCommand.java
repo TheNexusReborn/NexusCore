@@ -5,7 +5,7 @@ import com.stardevllc.mojang.MojangAPI;
 import com.stardevllc.mojang.MojangProfile;
 import com.stardevllc.starcore.StarColors;
 import com.stardevllc.starcore.cmdflags.FlagResult;
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.api.command.ICommand;
@@ -30,7 +30,7 @@ public class RankListSubCommand extends SubCommand<NexusCore> {
         
         MsgType.VERBOSE.send(sender, "Processing request...");
         
-        PlayerManager playerManager = NexusAPI.getApi().getPlayerManager();
+        PlayerManager playerManager = NexusReborn.getPlayerManager();
         Pair<UUID, String> playerInfo = playerManager.getPlayerFromIdentifier(args[0]);
         if (playerInfo == null) {
             try {

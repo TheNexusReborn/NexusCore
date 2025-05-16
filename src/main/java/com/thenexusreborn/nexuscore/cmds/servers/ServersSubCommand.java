@@ -1,7 +1,7 @@
 package com.thenexusreborn.nexuscore.cmds.servers;
 
 import com.stardevllc.starcore.cmdflags.FlagResult;
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.api.server.NexusServer;
 import com.thenexusreborn.nexuscore.NexusCore;
@@ -22,7 +22,7 @@ public abstract class ServersSubCommand extends SubCommand<NexusCore> {
             return true;
         }
         
-        NexusServer server = NexusAPI.getApi().getServerRegistry().get(args[0]);
+        NexusServer server = NexusReborn.getServerRegistry().get(args[0]);
         if (server == null) {
             sender.sendMessage(MsgType.WARN.format("Invalid server name %v", args[0]));
             return true;

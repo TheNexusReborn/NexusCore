@@ -1,7 +1,7 @@
 package com.thenexusreborn.nexuscore.cmds.tag.admin;
 
 import com.stardevllc.starcore.StarColors;
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.tags.Tag;
 import com.thenexusreborn.nexuscore.NexusCore;
@@ -28,7 +28,7 @@ public class TagAdminAddSubCommand extends TagAdminSubCommand{
             nexusPlayer.addTag(tag);
         }
 
-        NexusAPI.getApi().getPrimaryDatabase().saveSilent(tag);
+        NexusReborn.getPrimaryDatabase().saveSilent(tag);
 
         String playerName = nexusPlayer.getName();
         sender.sendMessage(StarColors.color("&eYou added the tag " + tag.getDisplayName() + " &eto &b" + playerName + "&e's unlocked tags"));

@@ -1,6 +1,6 @@
 package com.thenexusreborn.api.experience;
 
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.sql.annotations.column.PrimaryKey;
 import com.thenexusreborn.api.sql.annotations.table.TableName;
@@ -28,7 +28,7 @@ public class PlayerExperience {
         double currentXp = this.levelXp;
         double newXp = currentXp + xp;
         int currentLevel = this.level;
-        LevelManager levelManager = NexusAPI.getApi().getLevelManager();
+        LevelManager levelManager = NexusReborn.getLevelManager();
         ExperienceLevel nextLevel = levelManager.getLevel(currentLevel + 1);
         if (nextLevel == null) {
             this.levelXp = newXp;
@@ -44,7 +44,7 @@ public class PlayerExperience {
             this.levelXp = newXp;
         }
 
-        NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(this.uniqueId);
+        NexusPlayer nexusPlayer = NexusReborn.getPlayerManager().getNexusPlayer(this.uniqueId);
         if (nexusPlayer != null) {
             nexusPlayer.showXPActionBar();
         }

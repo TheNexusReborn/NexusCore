@@ -7,7 +7,7 @@ import com.google.common.collect.HashBiMap;
 import com.stardevllc.helper.Pair;
 import com.stardevllc.mojang.MojangAPI;
 import com.stardevllc.mojang.MojangProfile;
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.punishment.Punishment;
 import com.thenexusreborn.api.punishment.PunishmentType;
 
@@ -154,7 +154,7 @@ public abstract class PlayerManager {
         nexusPlayer.setFirstJoined(System.currentTimeMillis());
         nexusPlayer.setLastLogin(System.currentTimeMillis());
         nexusPlayer.setLastLogout(System.currentTimeMillis());
-        NexusAPI.getApi().getPrimaryDatabase().saveSilent(nexusPlayer);
+        NexusReborn.getPrimaryDatabase().saveSilent(nexusPlayer);
         this.cachedPlayers.put(uniqueId, nexusPlayer);
         return nexusPlayer;
     }
@@ -200,7 +200,7 @@ public abstract class PlayerManager {
 
     public void saveData() {
         for (NexusPlayer nexusPlayer : this.players.values()) {
-            NexusAPI.getApi().getPrimaryDatabase().saveSilent(nexusPlayer);
+            NexusReborn.getPrimaryDatabase().saveSilent(nexusPlayer);
         }
     }
 
@@ -213,7 +213,7 @@ public abstract class PlayerManager {
     }
 
     public void addIpHistory(UUID uniqueId, String hostName) {
-        PlayerManager playerManager = NexusAPI.getApi().getPlayerManager();
+        PlayerManager playerManager = NexusReborn.getPlayerManager();
         for (IPEntry ipEntry : playerManager.getIpHistory()) {
             if (ipEntry.getIp().equalsIgnoreCase(hostName)) {
                 return;
@@ -221,7 +221,7 @@ public abstract class PlayerManager {
         }
 
         IPEntry ipEntry = new IPEntry(hostName, uniqueId);
-        NexusAPI.getApi().getPrimaryDatabase().saveSilent(ipEntry);
+        NexusReborn.getPrimaryDatabase().saveSilent(ipEntry);
         playerManager.getIpHistory().add(ipEntry);
         
         if (this.ipsUsedByPlayers.containsKey(uniqueId)) {
@@ -239,7 +239,7 @@ public abstract class PlayerManager {
 
         if (getUuidNameMap().containsKey(uuid)) {
             try {
-                player = NexusAPI.getApi().getPrimaryDatabase().get(NexusPlayer.class, "uniqueId", uuid.toString()).getFirst();
+                player = NexusReborn.getPrimaryDatabase().get(NexusPlayer.class, "uniqueId", uuid.toString()).getFirst();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -247,14 +247,14 @@ public abstract class PlayerManager {
 
         if (player == null) {
             player = createPlayerData(uuid, null);
-            NexusAPI.getApi().getPrimaryDatabase().saveSilent(player);
+            NexusReborn.getPrimaryDatabase().saveSilent(player);
         }
 
         return player;
     }
 
     protected Punishment checkPunishments(UUID uniqueId) {
-        List<Punishment> punishments = NexusAPI.getApi().getPunishmentManager().getPunishmentsByTarget(uniqueId);
+        List<Punishment> punishments = NexusReborn.getPunishmentManager().getPunishmentsByTarget(uniqueId);
         if (!punishments.isEmpty()) {
             for (Punishment punishment : punishments) {
                 if (punishment.getType() == PunishmentType.BAN || punishment.getType() == PunishmentType.BLACKLIST) {

@@ -2,7 +2,7 @@ package com.thenexusreborn.nexuscore.cmds;
 
 import com.stardevllc.starcore.cmdflags.FlagResult;
 import com.stardevllc.starcore.skins.SkinManager;
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.nickname.Nickname;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Rank;
@@ -26,14 +26,14 @@ public class UnnickCommand extends NexusCommand<NexusCore> {
         
         boolean self = false;
         if (args.length > 0) {
-            nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(args[0]);
+            nexusPlayer = NexusReborn.getPlayerManager().getNexusPlayer(args[0]);
             
             if (nexusPlayer == null) {
                 MsgType.WARN.send(sender, "Invalid target %v", args[0]);
                 return true;
             }
         } else {
-            nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(((Player) sender).getUniqueId());
+            nexusPlayer = NexusReborn.getPlayerManager().getNexusPlayer(((Player) sender).getUniqueId());
             self = true;
         }
         
@@ -55,7 +55,7 @@ public class UnnickCommand extends NexusCommand<NexusCore> {
         } else {
             nexusPlayer.setNickname(null);
         }
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> NexusAPI.getApi().getPrimaryDatabase().saveSilent(nexusPlayer));
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> NexusReborn.getPrimaryDatabase().saveSilent(nexusPlayer));
         if (self) {
             MsgType.INFO.send(sender, "You successfully unnicked yourself.");
         } else {

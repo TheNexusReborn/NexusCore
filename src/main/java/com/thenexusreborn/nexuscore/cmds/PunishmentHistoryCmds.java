@@ -1,7 +1,7 @@
 package com.thenexusreborn.nexuscore.cmds;
 
 import com.stardevllc.starcore.StarColors;
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.api.punishment.Punishment;
 import com.thenexusreborn.nexuscore.NexusCore;
@@ -43,26 +43,26 @@ public class PunishmentHistoryCmds implements CommandExecutor {
             if (player != null) {
                 commandTargetName = player.getName();
             } else {
-                commandTargetName = NexusAPI.getApi().getPlayerManager().getNameFromUUID(uuid); //Can be replaced with the BiMap idea
+                commandTargetName = NexusReborn.getPlayerManager().getNameFromUUID(uuid); //Can be replaced with the BiMap idea
             }
         } catch (Exception e) {
             commandTargetName = args[0];
             if (commandTargetName.equalsIgnoreCase("PowerMoveRegulator") || commandTargetName.equalsIgnoreCase("Console")) {
                 commandTarget = commandTargetName;
             } else {
-                commandTarget = NexusAPI.getApi().getPlayerManager().getUUIDFromName(commandTargetName).toString();
+                commandTarget = NexusReborn.getPlayerManager().getUUIDFromName(commandTargetName).toString();
             }
         }
         
         Set<Punishment> unfilteredPunishments = new TreeSet<>();
         if (cmd.getName().equals("staffhistory")) {
-            for (Punishment punishment : NexusAPI.getApi().getPunishmentManager().getPunishments()) {
+            for (Punishment punishment : NexusReborn.getPunishmentManager().getPunishments()) {
                 if (punishment.getActor().equals(commandTarget)) {
                     unfilteredPunishments.add(punishment);
                 }
             }
         } else if (cmd.getName().equals("history")) {
-            for (Punishment punishment : NexusAPI.getApi().getPunishmentManager().getPunishments()) {
+            for (Punishment punishment : NexusReborn.getPunishmentManager().getPunishments()) {
                 if (punishment.getTarget().equalsIgnoreCase(commandTarget)) {
                     unfilteredPunishments.add(punishment);
                 }

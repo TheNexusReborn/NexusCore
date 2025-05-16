@@ -1,7 +1,7 @@
 package com.thenexusreborn.nexuscore.thread;
 
 import com.stardevllc.starcore.utils.StarThread;
-import com.thenexusreborn.api.NexusAPI;
+import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.api.server.NexusServer;
@@ -23,7 +23,7 @@ public class PlayerVisibilityThread extends StarThread<NexusCore> {
     @Override
     public void onRun() {
         List<NexusServer> servers = new LinkedList<>();
-        Iterator<NexusServer> serverIterator = NexusAPI.getApi().getServerRegistry().iterator();
+        Iterator<NexusServer> serverIterator = NexusReborn.getServerRegistry().iterator();
         while (serverIterator.hasNext()) {
             NexusServer ns = serverIterator.next();
             if (ns.getType() == ServerType.INSTANCE) {
@@ -62,7 +62,7 @@ public class PlayerVisibilityThread extends StarThread<NexusCore> {
                     }
                 }
 
-                NexusPlayer otherNexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(otherPlayer.getUniqueId());
+                NexusPlayer otherNexusPlayer = NexusReborn.getPlayerManager().getNexusPlayer(otherPlayer.getUniqueId());
                 
                 if (otherPlayerServer == null || otherNexusPlayer == null) {
                     player.hidePlayer(otherPlayer);
@@ -77,7 +77,7 @@ public class PlayerVisibilityThread extends StarThread<NexusCore> {
                     try {
                         canSeeOther = playerServer.recalculateVisibility(player.getUniqueId(), otherPlayer.getUniqueId());
                     } catch (UnsupportedOperationException e) {
-                        NexusPlayer nexusPlayer = NexusAPI.getApi().getPlayerManager().getNexusPlayer(player.getUniqueId());
+                        NexusPlayer nexusPlayer = NexusReborn.getPlayerManager().getNexusPlayer(player.getUniqueId());
                         if (nexusPlayer != null) {
                             Rank playerRank = nexusPlayer.getRank();
 
