@@ -35,7 +35,7 @@ public class NickCommand extends NexusCommand<NexusCore> {
     private static final List<Rank> ALLOWED_RANKS = List.of(Rank.MEMBER, Rank.IRON, Rank.GOLD, Rank.DIAMOND);
     
     public NickCommand(NexusCore plugin) {
-        super(plugin, "nickname", "Set a nickname", Rank.MEDIA, "nick");
+        super(plugin, "nickname", "Set a nickname", Rank.DIAMOND, "nick");
         this.playerOnly = true;
         
         this.cmdFlags.addFlag(RANK, LEVEL, TARGET, SKIN, CREDITS, NEXITES, TIME, PERSIST);
