@@ -197,10 +197,7 @@ public class NexusCore extends JavaPlugin implements Listener {
         getLogger().info("Registered Commands");
 
         new PlayerHUDThread(this).start();
-        new PlayerTablistThread(this).start();
-        new PlayerPermThread(this).start();
         new ServerUpdateThread(this).start();
-        new PlayerLoadActionBarThread(this).start();
         new PlayerVisibilityThread(this).start();
         getLogger().info("Registered Tasks");
 
