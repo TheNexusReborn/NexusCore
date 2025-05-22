@@ -3,9 +3,8 @@ package com.thenexusreborn.api.scoreboard;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.scoreboard.wrapper.ITeam;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.logging.Logger;
 
 public abstract class TablistHandler {
     protected final NexusScoreboard scoreboard;
@@ -40,14 +39,20 @@ public abstract class TablistHandler {
         return playerTeams;
     }
     
-    public void createPlayerTeam(NexusPlayer nexusPlayer) {
+    public ITeam createPlayerTeam(NexusPlayer nexusPlayer) {
         try {
-            ITeam team = scoreboard.registerNewTeam(getPlayerTeamName(nexusPlayer));
+            String playerTeamName = getPlayerTeamName(nexusPlayer);
+            ITeam team = scoreboard.registerNewTeam(playerTeamName);
             team.addEntry(nexusPlayer.getName());
             setDisplayOptions(nexusPlayer, team);
             this.playerTeams.put(nexusPlayer.getUniqueId(), team);
+            return team;
         } catch (Exception e) {
-            //NexusAPI.getApi().getLogger().severe("Error while creating a player team: " + e.getMessage());
+//            NexusReborn.getLogger().severe("Error while creating a player team: " + e.getMessage());
         }
+        
+        return null;
     }
+    
+    public abstract Logger getLogger();
 }

@@ -11,6 +11,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.*;
+import java.util.logging.Logger;
 
 public class RankTablistHandler extends TablistHandler {
     
@@ -104,5 +105,10 @@ public class RankTablistHandler extends TablistHandler {
         } else {
             team.setSuffix("");
         }
+    }
+    
+    @Override
+    public Logger getLogger() {
+        return NexusReborn.getLogger();
     }
 }
