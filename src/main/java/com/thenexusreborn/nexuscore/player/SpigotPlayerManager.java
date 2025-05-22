@@ -214,12 +214,15 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                         }
                     }.runTaskLater(plugin, 60L);
                 }
+                
+                addOnlinePlayer(player.getUniqueId());
             });
         });
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent e) {
+        removeOnlinePlayer(e.getPlayer().getUniqueId());
         NexusPlayer nexusPlayer = this.players.get(e.getPlayer().getUniqueId());
         e.setQuitMessage(null);
         

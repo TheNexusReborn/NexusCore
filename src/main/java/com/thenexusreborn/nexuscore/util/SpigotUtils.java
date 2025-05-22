@@ -10,12 +10,10 @@ public final class SpigotUtils {
     private static final ActionBar ACTION_BAR = new ActionBar();
     private static final PlayerSkull PLAYER_SKULL = new PlayerSkull();
 
-    @Deprecated
     public static void sendActionBar(Player player, String text) {
         ACTION_BAR.send(player, text);
     }
 
-    @Deprecated
     public static ItemStack getPlayerSkull(Player player) {
         return PLAYER_SKULL.getSkull(player);
     }

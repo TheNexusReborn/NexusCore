@@ -4,6 +4,9 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import com.stardevllc.bucket.Bucket;
+import com.stardevllc.bucket.Buckets;
+import com.stardevllc.bucket.partitioning.PartitioningStrategies;
 import com.stardevllc.helper.Pair;
 import com.stardevllc.mojang.MojangAPI;
 import com.stardevllc.mojang.MojangProfile;
@@ -25,6 +28,8 @@ public abstract class PlayerManager {
     protected final Map<UUID, PlayerRanks> uuidRankMap = new HashMap<>();
     protected final Set<IPEntry> ipHistory = new HashSet<>();
     protected final Map<UUID, Set<String>> ipsUsedByPlayers = new HashMap<>();
+    
+    protected final Bucket<UUID> onlinePlayers = Buckets.newHashSetBucket(20, PartitioningStrategies.lowestSize());
     
     public static class Name {
         private String name;
@@ -51,7 +56,19 @@ public abstract class PlayerManager {
             return Objects.hash(name.toLowerCase());
         }
     }
-
+    
+    public void addOnlinePlayer(UUID onlinePlayer) {
+        this.onlinePlayers.add(onlinePlayer);
+    }
+    
+    public void removeOnlinePlayer(UUID onlinePlayer) {
+        this.onlinePlayers.remove(onlinePlayer);
+    }
+    
+    public Bucket<UUID> getOnlinePlayers() {
+        return onlinePlayers;
+    }
+    
     public Map<UUID, NexusPlayer> getPlayers() {
         return players;
     }
