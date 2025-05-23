@@ -1,5 +1,7 @@
 package com.thenexusreborn.nexuscore.util;
 
+import com.stardevllc.converter.string.EnumStringConverter;
+import com.stardevllc.converter.string.StringConverters;
 import com.stardevllc.starcore.StarColors;
 import org.bukkit.command.CommandSender;
 
@@ -12,6 +14,10 @@ public enum MsgType {
     SEVERE("&4", "&4", "&c"),
     DETAIL("&d", "&7", "&e"),
     VERBOSE("&6", "&7&o", "&e&o");
+    
+    static {
+        StringConverters.addConverter(MsgType.class, new EnumStringConverter<>(MsgType.class));
+    }
     
     private final String prefixColor, baseColor, variableColor;
 

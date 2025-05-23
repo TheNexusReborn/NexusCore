@@ -4,6 +4,7 @@ import com.stardevllc.clock.ClockManager;
 import com.stardevllc.observable.collections.ObservableHashSet;
 import com.stardevllc.observable.collections.ObservableSet;
 import com.stardevllc.registry.StringRegistry;
+import com.stardevllc.starcore.StarColors;
 import com.thenexusreborn.api.experience.LevelManager;
 import com.thenexusreborn.api.experience.PlayerExperience;
 import com.thenexusreborn.api.gamearchive.*;
@@ -23,6 +24,7 @@ import com.thenexusreborn.api.sql.objects.Row;
 import com.thenexusreborn.api.sql.objects.SQLDatabase;
 import com.thenexusreborn.api.tags.Tag;
 import com.thenexusreborn.api.util.*;
+import org.bukkit.command.CommandSender;
 
 import java.io.*;
 import java.net.URL;
@@ -36,11 +38,11 @@ import java.util.logging.Logger;
 public abstract class NexusReborn {
     private static NexusReborn instance;
     public static final NetworkType NETWORK_TYPE = NetworkType.SINGLE;
-
+    
     public static void setInstance(NexusReborn api) {
         instance = api;
     }
-
+    
     protected final Logger logger;
     protected final File folder;
     protected final PlayerManager playerManager;
@@ -54,7 +56,7 @@ public abstract class NexusReborn {
     protected ToggleRegistry toggleRegistry;
     protected StringRegistry<String> tagRegistry;
     protected DatabaseRegistry databaseRegistry;
-
+    
     protected SQLDatabase primaryDatabase;
     protected GameLogManager gameLogManager;
     
@@ -63,7 +65,7 @@ public abstract class NexusReborn {
     protected final ObservableSet<String> randomSkins = new ObservableHashSet<>();
     
     protected NickPerms nickPerms;
-
+    
     public NexusReborn(Environment environment, Logger logger, File folder, PlayerManager playerManager) {
         this.logger = logger;
         this.folder = folder;
@@ -72,7 +74,7 @@ public abstract class NexusReborn {
         this.punishmentManager = new PunishmentManager();
         this.levelManager = new LevelManager();
         this.levelManager.init();
-
+        
         URL url = NexusReborn.class.getClassLoader().getResource("nexusapi-version.txt");
         try (InputStream in = url.openStream()) {
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
@@ -86,11 +88,11 @@ public abstract class NexusReborn {
             e.printStackTrace();
         }
     }
-
+    
     public Environment getEnvironment() {
         return environment;
     }
-
+    
     public static void init() throws Exception {
         getLogger().info("Loading NexusAPI Version v" + instance.version);
         
@@ -99,7 +101,7 @@ public abstract class NexusReborn {
         
         instance.registerDatabases(instance.databaseRegistry);
         getLogger().info("Registered the databases");
-
+        
         for (SQLDatabase database : instance.databaseRegistry.getObjects().values()) {
             if (database.getName().toLowerCase().contains("nexus")) {
                 database.registerClass(PlayerExperience.class);
@@ -124,7 +126,7 @@ public abstract class NexusReborn {
                 instance.primaryDatabase = database;
             }
         }
-
+        
         if (instance.primaryDatabase == null) {
             throw new SQLException("Could not find the primary database.");
         }
@@ -184,13 +186,13 @@ public abstract class NexusReborn {
         instance.toggleRegistry.register("incognito", Rank.MEDIA, "Incognito", "A media+ thing where you can be hidden from others", false);
         instance.toggleRegistry.register("fly", Rank.DIAMOND, "Fly", "A donor perk that allows you to fly in hubs and lobbies", false);
         instance.toggleRegistry.register("debug", Rank.ADMIN, "Debug", "A toggle that allows debugging of things", false);
-
+        
         int initialToggleSize = instance.toggleRegistry.getObjects().size();
         getLogger().info("Registered " + initialToggleSize + " default toggle types.");
         
         instance.registerToggles(instance.toggleRegistry);
         getLogger().info("Registered " + (instance.toggleRegistry.getObjects().size() - initialToggleSize) + " additional default toggle types.");
-
+        
         getLogger().info("Registering and Setting up Tags");
         instance.tagRegistry = new StringRegistry<>();
         String[] defaultTags = {"thicc", "son", "e-girl", "god", "e-dater", "lord", "epic", "bacca", "benja", "milk man", "champion"};
@@ -198,7 +200,7 @@ public abstract class NexusReborn {
             instance.tagRegistry.register(dt, dt);
         }
         getLogger().info("Registered " + instance.tagRegistry.getObjects().size() + " default tags.");
-
+        
         for (Punishment punishment : getPrimaryDatabase().get(Punishment.class)) {
             instance.punishmentManager.addPunishment(punishment);
         }
@@ -206,10 +208,10 @@ public abstract class NexusReborn {
         
         instance.playerManager.getIpHistory().addAll(getPrimaryDatabase().get(IPEntry.class));
         getLogger().info("Loaded IP History");
-
+        
         SQLDatabase database = getPrimaryDatabase();
         List<Row> playerRows = database.executeQuery("select * from players;");
-
+        
         for (Row row : playerRows) {
             UUID uniqueId = (UUID) row.getObject("uniqueid");
             String name = row.getString("name");
@@ -222,9 +224,9 @@ public abstract class NexusReborn {
         
         getLogger().info("NexusAPI v" + instance.version + " load complete.");
     }
-
+    
     public abstract void registerDatabases(DatabaseRegistry registry);
-
+    
     public abstract void registerToggles(ToggleRegistry registry);
     
     public static ObservableSet<String> getNicknameBlacklist() {
@@ -242,31 +244,31 @@ public abstract class NexusReborn {
     public static String getVersion() {
         return instance.version;
     }
-
+    
     public static File getFolder() {
         return instance.folder;
     }
-
+    
     public static PlayerManager getPlayerManager() {
         return instance.playerManager;
     }
-
+    
     public static Logger getLogger() {
         return instance.logger;
     }
-
+    
     public static PunishmentManager getPunishmentManager() {
         return instance.punishmentManager;
     }
-
+    
     public static GameLogManager getGameLogManager() {
         return instance.gameLogManager;
     }
-
+    
     public static void setGameLogManager(GameLogManager gameLogManager) {
         instance.gameLogManager = gameLogManager;
     }
-
+    
     public static void logMessage(Level level, String mainMessage, String... debug) {
         Logger logger = NexusReborn.getLogger();
         logger.log(level, "----------- Nexus Log -----------");
@@ -278,15 +280,15 @@ public abstract class NexusReborn {
         }
         logger.log(level, "---------------------------------");
     }
-
+    
     public static SQLDatabase getPrimaryDatabase() {
         return instance.primaryDatabase;
     }
-
+    
     public static ToggleRegistry getToggleRegistry() {
         return instance.toggleRegistry;
     }
-
+    
     public static URLClassLoader getLoader() {
         ClassLoader classLoader = instance.getClass().getClassLoader();
         if (classLoader instanceof URLClassLoader) {
@@ -294,19 +296,19 @@ public abstract class NexusReborn {
         }
         return null;
     }
-
+    
     public static LevelManager getLevelManager() {
         return instance.levelManager;
     }
-
+    
     public static ClockManager getClockManager() {
         return instance.clockManager;
     }
-
+    
     public static void setClockManager(ClockManager clockManager) {
         instance.clockManager = clockManager;
     }
-
+    
     public static ServerRegistry<NexusServer> getServerRegistry() {
         return instance.serverRegistry;
     }
@@ -327,5 +329,9 @@ public abstract class NexusReborn {
             
             player.sendMessage("&6&l[DEBUG] &7&o" + message);
         }
+    }
+    
+    public static void sendDebugMessage(CommandSender sender, String message) {
+        sender.sendMessage(StarColors.color("&6&l[DEBUG] &7&o" + message));
     }
 }

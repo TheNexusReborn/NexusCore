@@ -1,5 +1,8 @@
 package com.thenexusreborn.api.player;
 
+import com.stardevllc.converter.string.EnumStringConverter;
+import com.stardevllc.converter.string.StringConverters;
+
 import java.util.Objects;
 
 public enum Rank {
@@ -21,6 +24,10 @@ public enum Rank {
     INVAR("&7", true),
     IRON("&7", true), 
     MEMBER("&9", false, "");
+    
+    static {
+        StringConverters.addConverter(Rank.class, new EnumStringConverter<>(Rank.class));
+    }
     
     private final String color, prefixOverride;
     private final boolean bold;
