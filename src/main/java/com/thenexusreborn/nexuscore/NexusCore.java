@@ -181,6 +181,7 @@ public class NexusCore extends JavaPlugin implements Listener {
         getCommand("staffhistory").setExecutor(phCmds);
 
         new AltsCommand(this);
+        new PingCommand(this);
 
         new ToggleCmd(this, "incognito", "i");
         new ToggleCmd(this, "vanish", "v");
