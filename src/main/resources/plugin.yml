@@ -60,3 +60,4 @@ commands:
   debug:
     aliases: [dbug]
   toggleop:
+  ping: 
