@@ -2,10 +2,7 @@ package com.thenexusreborn.api.punishment;
 
 import com.stardevllc.helper.StringHelper;
 import com.thenexusreborn.api.NexusReborn;
-import com.thenexusreborn.api.player.NexusPlayer;
-import com.thenexusreborn.api.sql.annotations.column.ColumnCodec;
-import com.thenexusreborn.api.sql.annotations.column.ColumnIgnored;
-import com.thenexusreborn.api.sql.annotations.column.ColumnType;
+import com.thenexusreborn.api.sql.annotations.column.*;
 import com.thenexusreborn.api.sql.annotations.table.TableName;
 import com.thenexusreborn.api.sql.objects.codecs.AcknowledgeInfoCodec;
 import com.thenexusreborn.api.sql.objects.codecs.PardonInfoCodec;
@@ -133,7 +130,7 @@ public class Punishment implements Comparable<Punishment> {
     }
     
     public String getActorNameCache() {
-        if (actorNameCache == null) {
+        if (actorNameCache == null || actorNameCache.equals(getActor())) {
             try {
                 UUID uuid = UUID.fromString(getActor());
                 actorNameCache = NexusReborn.getPlayerManager().getNameFromUUID(uuid);
@@ -153,11 +150,10 @@ public class Punishment implements Comparable<Punishment> {
     }
     
     public String getTargetNameCache() {
-        if (targetNameCache == null) {
+        if (targetNameCache == null || targetNameCache.equals(getTarget())) {
             try {
                 UUID uuid = UUID.fromString(getTarget());
-                NexusPlayer nexusPlayer = NexusReborn.getPlayerManager().getNexusPlayer(uuid);
-                targetNameCache = nexusPlayer.getName();
+                targetNameCache = NexusReborn.getPlayerManager().getNameFromUUID(uuid);
                 if (targetNameCache == null) {
                     targetNameCache = target;
                 }
