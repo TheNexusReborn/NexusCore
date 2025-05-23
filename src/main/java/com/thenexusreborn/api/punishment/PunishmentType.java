@@ -1,5 +1,7 @@
 package com.thenexusreborn.api.punishment;
 
+import com.stardevllc.converter.string.EnumStringConverter;
+import com.stardevllc.converter.string.StringConverters;
 import com.thenexusreborn.api.player.Rank;
 
 public enum PunishmentType {
@@ -8,6 +10,10 @@ public enum PunishmentType {
     KICK("&a", "kicked", Rank.HELPER, null), 
     WARN("&e", "warned", Rank.HELPER, null), 
     BLACKLIST("&8", "blacklisted", Rank.NEXUS, null);
+    
+    static {
+        StringConverters.addConverter(PunishmentType.class, new EnumStringConverter<>(PunishmentType.class));
+    }
     
     private final String color, verb;
     private final Rank minRankTemporary, minRankPermanent;
