@@ -314,4 +314,18 @@ public abstract class NexusReborn {
     public static NickPerms getNickPerms() {
         return instance.nickPerms;
     }
+    
+    public static void sendDebugMessage(String message) {
+        for (NexusPlayer player : getPlayerManager().getPlayers().values()) {
+            if (!player.isOnline()) {
+                continue;
+            }
+            
+            if (!player.getToggleValue("debug")) {
+                continue;
+            }
+            
+            player.sendMessage("&6&l[DEBUG] &7&o" + message);
+        }
+    }
 }
