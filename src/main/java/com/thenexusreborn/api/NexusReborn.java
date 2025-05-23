@@ -25,6 +25,8 @@ import com.thenexusreborn.api.sql.objects.SQLDatabase;
 import com.thenexusreborn.api.tags.Tag;
 import com.thenexusreborn.api.util.*;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Player;
 
 import java.io.*;
 import java.net.URL;
@@ -332,6 +334,13 @@ public abstract class NexusReborn {
     }
     
     public static void sendDebugMessage(CommandSender sender, String message) {
-        sender.sendMessage(StarColors.color("&6&l[DEBUG] &7&o" + message));
+        if (sender instanceof ConsoleCommandSender) {
+            sender.sendMessage(StarColors.color("&6&l[DEBUG] &7&o" + message));
+        } else {
+            NexusPlayer player = getPlayerManager().getNexusPlayer(((Player) sender).getUniqueId());
+            if (player.getToggleValue("debug")) {
+                sender.sendMessage(StarColors.color("&6&l[DEBUG] &7&o" + message));
+            }
+        }
     }
 }
