@@ -1,7 +1,5 @@
 package com.thenexusreborn.nexuscore.thread;
 
-import com.stardevllc.bucket.BucketPartition;
-import com.stardevllc.bucket.Cycle;
 import com.stardevllc.starcore.utils.StarThread;
 import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.IActionBar;
@@ -16,16 +14,13 @@ import java.util.UUID;
 
 public class PlayerHUDThread extends StarThread<NexusCore> {
 
-    private final Cycle<BucketPartition<UUID>> cycle;
-    
     public PlayerHUDThread(NexusCore plugin) {
-        super(plugin, 1L, 0L, false);
-        this.cycle = NexusReborn.getPlayerManager().getOnlinePlayers().asCycle().copy();
+        super(plugin, 1L, 10L, false);
     }
 
     @Override
     public void onRun() {
-        for (UUID pUUID : cycle.next()) {
+        for (UUID pUUID : plugin.getNexusServer().getPlayers()) {
             Player player = Bukkit.getPlayer(pUUID);
             if (pUUID == null) {
                 continue;
