@@ -6,3 +6,5 @@ databases:
     database: database
     primary: true
 environment: DEVELOPMENT
+discord:
+  token: ""

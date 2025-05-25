@@ -27,6 +27,10 @@ public class NexusBot {
     private Map<String, Long> serverChannels = new HashMap<>();
     
     public NexusBot(NexusCore plugin) {
+        if (!plugin.getConfig().contains("discord.token") || plugin.getConfig().getString("discord.token").isBlank()) {
+            return;
+        }
+        
         builder = JDABuilder.createDefault(plugin.getConfig().getString("discord.token"))
                 .enableIntents(GatewayIntent.GUILD_PRESENCES, GatewayIntent.GUILD_MEMBERS, GatewayIntent.MESSAGE_CONTENT, GatewayIntent.DIRECT_MESSAGES)
                 .enableCache(CacheFlag.ACTIVITY, CacheFlag.MEMBER_OVERRIDES, CacheFlag.ROLE_TAGS, CacheFlag.VOICE_STATE)
@@ -36,10 +40,14 @@ public class NexusBot {
     }
     
     public void start() {
+        if (this.plugin == null) {
+            return;
+        }
+        
         if (jda != null) {
             return;
         }
-
+        
         this.publicDiscord = plugin.getConfig().getLong("discord.public");
         this.staffDiscord = plugin.getConfig().getLong("discord.staff");
         
@@ -49,6 +57,10 @@ public class NexusBot {
         
         if (this.staffDiscord == 0) {
             plugin.getLogger().warning("[NexusBot] THe staff discord id is not yet set.");
+        }
+
+        if (this.builder == null) {
+            return;
         }
         
         jda = builder.build();
