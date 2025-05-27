@@ -74,6 +74,7 @@ public class NickWrapper_v1_8_R3 {
         new BukkitRunnable() {
             public void run() {
                 boolean flying = nicked.isFlying();
+                boolean allowFlight = nicked.getAllowFlight();
                 Location location = nicked.getLocation();
                 int level = nicked.getLevel();
                 float xp = nicked.getExp();
@@ -82,6 +83,7 @@ public class NickWrapper_v1_8_R3 {
                 connection.sendPacket(respawnPlayer);
 
                 nicked.setFlying(flying);
+                nicked.setAllowFlight(allowFlight);
                 nicked.teleport(location);
                 nicked.updateInventory();
                 nicked.setLevel(level);
