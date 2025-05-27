@@ -33,7 +33,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.net.InetSocketAddress;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
-import java.util.UUID;
+import java.util.*;
 
 public class SpigotPlayerManager extends PlayerManager implements Listener {
     
@@ -41,7 +41,6 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
 
     private final NexusCore plugin;
     
-
     public SpigotPlayerManager(NexusCore plugin) {
         this.plugin = plugin;
     }
@@ -141,6 +140,15 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
             
             Stopwatch playtimeStopwatch = plugin.getClockManager().createStopwatch(Long.MAX_VALUE);
             playtimeStopwatch.addRepeatingCallback(stopwatchSnapshot -> {
+                if (nexusPlayer.getPlayTimeStopwatch() == null) {
+                    return;
+                }
+                
+                if (!playtimeStopwatch.getUniqueId().equals(nexusPlayer.getPlayTimeStopwatch().getUniqueId())) {
+                    playtimeStopwatch.cancel();
+                    return;
+                }
+                
                 if (nexusPlayer.getToggleValue("vanish")) {
                     return;
                 }
@@ -155,6 +163,7 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                 nexusPlayer.addXp(xp);
             }, TimeUnit.MINUTES.toMillis(10));
             playtimeStopwatch.start();
+            nexusPlayer.setPlayTimeStopwatch(playtimeStopwatch);
             
             InetSocketAddress socketAddress = player.getAddress();
             String hostName = socketAddress.getHostString();
@@ -231,7 +240,13 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
             plugin.getNexusServer().quit(e.getPlayer().getUniqueId());
             return; //Probably joined then left before it could be fully loaded
         }
-
+        
+        Stopwatch playTimeStopwatch = nexusPlayer.getPlayTimeStopwatch();
+        if (playTimeStopwatch != null) {
+            playTimeStopwatch.cancel();
+            nexusPlayer.setPlayTimeStopwatch(null);
+        }
+        
         if (NexusReborn.NETWORK_TYPE == NetworkType.SINGLE) {
             Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
                 Session session = nexusPlayer.getSession();
