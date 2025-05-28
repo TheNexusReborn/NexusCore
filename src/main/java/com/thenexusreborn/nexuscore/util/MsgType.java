@@ -33,7 +33,7 @@ public enum MsgType {
     
     // %v is the variable placeholder
     public String format(String message, Object... replacements) {
-        StringBuilder sb = new StringBuilder(getPrefixColor() + ">> " + getBaseColor());
+        StringBuilder sb = new StringBuilder(toString());
         char[] msgChars = message.toCharArray();
         int replacementIndex = 0;
         for (int i = 0; i < msgChars.length; i++) {
