@@ -75,6 +75,11 @@ public class NexusCore extends JavaPlugin implements Listener {
     public void onEnable() {
         getLogger().info("Loading NexusCore v" + getDescription().getVersion());
         this.saveDefaultConfig();
+        
+        if (!getConfig().contains("motd")) {
+            getConfig().set("motd", List.of("&d&lThe Nexus Reborn &7&l-> &e&lALPHA &7[1.8-1.21.5]", "&7Discord: &3thenexusreborn.com/discord"));
+            saveConfig();
+        }
 
         PluginManager pluginManager = Bukkit.getPluginManager();
         if (pluginManager.getPlugin("StarCore") == null) {
@@ -302,7 +307,15 @@ public class NexusCore extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onServerPing(ServerListPingEvent e) {
-        e.setMotd(StarColors.color("            &5&lTHE NEXUS REBORN &e&lALPHA\n       &7Minecraft Version 1.8-1.21.4"));
+        List<String> motd = this.getConfig().getStringList("motd");
+        StringBuilder motdBuilder = new StringBuilder();
+        for (String line : motd) {
+            motdBuilder.append(line).append("\n");
+        }
+        
+        motdBuilder.delete(motdBuilder.length() - 1, motdBuilder.length());
+        
+        e.setMotd(StarColors.color(motdBuilder.toString()));
 
         Iterator<Player> iterator = e.iterator();
         while (iterator.hasNext()) {
