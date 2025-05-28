@@ -17,11 +17,11 @@ public enum Rank {
     VIP("&e", true),
     ARCHITECT("&a", true),
     MEDIA("&3", true), 
-    PLATINUM("&b", true),
+    PLATINUM("&b&l", true),
     DIAMOND("&b", true), 
-    BRASS("&6", true),
+    BRASS("&6&l", true),
     GOLD("&6", true), 
-    INVAR("&7", true),
+    INVAR("&7&l", true),
     IRON("&7", true), 
     MEMBER("&9", false, "");
     
