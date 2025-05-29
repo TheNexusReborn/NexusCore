@@ -41,7 +41,7 @@ dependencies {
 }
 
 group = 'com.thenexusreborn'
-version = '0.2.0'
+version = '0.3.0'
 
 processResources {
     filesMatching("*.yml") {
