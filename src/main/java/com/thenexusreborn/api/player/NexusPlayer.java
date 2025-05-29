@@ -264,7 +264,12 @@ public class NexusPlayer implements Comparable<NexusPlayer> {
         if (rank != Rank.MEMBER) {
             return rank.getPrefix() + " &f" + getTrueName();
         } else {
-            return rank.getPrefix() + getTrueName();
+            String displayName = rank.getPrefix();
+            if (rank.isNameBold()) {
+                displayName += "&l";
+            }
+            
+            return displayName + getTrueName();
         }
     }
 
@@ -274,7 +279,12 @@ public class NexusPlayer implements Comparable<NexusPlayer> {
         if (rank != Rank.MEMBER) {
             return rank.getPrefix() + " &f" + getName();
         } else {
-            return rank.getPrefix() + getName();
+            String displayName = rank.getPrefix();
+            if (rank.isNameBold()) {
+                displayName += "&l";
+            }
+            
+            return displayName + getName();
         }
     }
     
@@ -416,11 +426,23 @@ public class NexusPlayer implements Comparable<NexusPlayer> {
     }
     
     public String getColoredName() {
-        return getEffectiveRank().getColor() + getName();
+        Rank rank = getEffectiveRank();
+        String coloredName = rank.getColor();
+        if (rank.isNameBold()) {
+            coloredName += "&l";
+        }
+        
+        return coloredName + getName();
     }
     
     public String getTrueColoredName() {
-        return getRank().getColor() + getTrueName();
+        Rank rank = getRank();
+        String coloredName = rank.getColor();
+        if (rank.isNameBold()) {
+            coloredName += "&l";
+        }
+        
+        return coloredName + getTrueName();
     }
     
     public void removeCredits(int credits) {
