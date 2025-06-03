@@ -4,7 +4,7 @@ import com.stardevllc.clock.ClockManager;
 import com.stardevllc.helper.FileHelper;
 import com.stardevllc.starchat.StarChat;
 import com.stardevllc.starchat.channels.ChatChannel;
-import com.stardevllc.starcore.StarColors;
+import com.stardevllc.starcore.api.StarColors;
 import com.stardevllc.starcore.utils.ServerProperties;
 import com.stardevllc.starui.GuiManager;
 import com.sun.net.httpserver.HttpServer;

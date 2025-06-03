@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.cmds.bot;
 
-import com.stardevllc.starcore.cmdflags.FlagResult;
+import com.stardevllc.starcore.api.cmdflags.FlagResult;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.api.command.ICommand;

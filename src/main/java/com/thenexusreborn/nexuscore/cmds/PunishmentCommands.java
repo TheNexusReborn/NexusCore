@@ -2,7 +2,7 @@ package com.thenexusreborn.nexuscore.cmds;
 
 import com.stardevllc.helper.CodeGenerator;
 import com.stardevllc.helper.Pair;
-import com.stardevllc.starcore.StarColors;
+import com.stardevllc.starcore.api.StarColors;
 import com.stardevllc.time.TimeParser;
 import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.*;

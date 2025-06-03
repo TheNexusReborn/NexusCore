@@ -4,7 +4,7 @@ import com.stardevllc.clock.ClockManager;
 import com.stardevllc.observable.collections.ObservableHashSet;
 import com.stardevllc.observable.collections.ObservableSet;
 import com.stardevllc.registry.StringRegistry;
-import com.stardevllc.starcore.StarColors;
+import com.stardevllc.starcore.api.StarColors;
 import com.thenexusreborn.api.experience.LevelManager;
 import com.thenexusreborn.api.experience.PlayerExperience;
 import com.thenexusreborn.api.gamearchive.*;

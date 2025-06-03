@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.cmds;
 
-import com.stardevllc.starcore.cmdflags.FlagResult;
+import com.stardevllc.starcore.api.cmdflags.FlagResult;
 import com.stardevllc.starcore.skins.SkinManager;
 import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.nickname.Nickname;

@@ -1,7 +1,7 @@
 package com.thenexusreborn.nexuscore.cmds;
 
-import com.stardevllc.starcore.StarColors;
-import com.stardevllc.starcore.cmdflags.FlagResult;
+import com.stardevllc.starcore.api.StarColors;
+import com.stardevllc.starcore.api.cmdflags.FlagResult;
 import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.nexuscore.api.command.NexusCommand;

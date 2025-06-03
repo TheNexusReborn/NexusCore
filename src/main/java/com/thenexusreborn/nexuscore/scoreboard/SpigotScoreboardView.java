@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.scoreboard;
 
-import com.stardevllc.starcore.StarColors;
+import com.stardevllc.starcore.api.StarColors;
 import com.thenexusreborn.api.scoreboard.*;
 import com.thenexusreborn.api.scoreboard.wrapper.ITeam;
 import com.thenexusreborn.nexuscore.scoreboard.impl.SpigotObjective;

@@ -1,9 +1,9 @@
 package com.thenexusreborn.nexuscore.cmds;
 
-import com.stardevllc.starcore.cmdflags.FlagResult;
-import com.stardevllc.starcore.cmdflags.type.ComplexFlag;
-import com.stardevllc.starcore.cmdflags.type.PresenceFlag;
-import com.stardevllc.starcore.skins.Skin;
+import com.stardevllc.starcore.api.Skin;
+import com.stardevllc.starcore.api.cmdflags.FlagResult;
+import com.stardevllc.starcore.api.cmdflags.type.ComplexFlag;
+import com.stardevllc.starcore.api.cmdflags.type.PresenceFlag;
 import com.stardevllc.starcore.skins.SkinManager;
 import com.stardevllc.time.TimeParser;
 import com.thenexusreborn.api.NexusReborn;
