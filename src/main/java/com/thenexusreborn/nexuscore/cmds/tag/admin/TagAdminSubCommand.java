@@ -1,5 +1,6 @@
 package com.thenexusreborn.nexuscore.cmds.tag.admin;
 
+import com.stardevllc.helper.Pair;
 import com.stardevllc.starcore.api.StarColors;
 import com.stardevllc.starcore.api.cmdflags.FlagResult;
 import com.thenexusreborn.api.NexusReborn;
@@ -34,9 +35,15 @@ public abstract class TagAdminSubCommand extends SubCommand<NexusCore> {
             sb.append(args[i]).append(" ");
         }
         String tagName = sb.substring(0, sb.length() - 1);
-
-        UUID uniqueId = NexusReborn.getPlayerManager().getUUIDFromName(args[0]);
-        if (uniqueId == null) {
+        
+        if (tagName.length() > 12) {
+            MsgType.WARN.send(sender, "You cannot have more than 12 characters in the tag name");
+            return true;
+        }
+        
+        Pair<UUID, String> playerInfo = NexusReborn.getPlayerManager().getPlayerFromIdentifier(args[0]);
+        
+        if (playerInfo == null) {
             sender.sendMessage(StarColors.color(MsgType.WARN + "That player has not yet joined the server."));
             return true;
         }
@@ -44,7 +51,7 @@ public abstract class TagAdminSubCommand extends SubCommand<NexusCore> {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             List<Tag> tags;
             try {
-                tags = NexusReborn.getPrimaryDatabase().get(Tag.class, "uuid", uniqueId.toString());
+                tags = NexusReborn.getPrimaryDatabase().get(Tag.class, "uuid", playerInfo.key().toString());
             } catch (SQLException e) {
                 sender.sendMessage(StarColors.color(MsgType.ERROR + "There was a database error while getting the list of tags."));
                 return;
@@ -58,7 +65,7 @@ public abstract class TagAdminSubCommand extends SubCommand<NexusCore> {
                 }
             }
 
-            NexusPlayer nexusPlayer = NexusReborn.getPlayerManager().getNexusPlayer(uniqueId);
+            NexusPlayer nexusPlayer = NexusReborn.getPlayerManager().getNexusPlayer(playerInfo.key());
 
             handle(sender, nexusPlayer, tag, tagName);
         });
