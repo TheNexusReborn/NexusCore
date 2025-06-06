@@ -1,7 +1,5 @@
 package com.thenexusreborn.nexuscore.thread;
 
-import com.stardevllc.bucket.BucketPartition;
-import com.stardevllc.bucket.Cycle;
 import com.stardevllc.starcore.utils.StarThread;
 import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.NexusPlayer;
@@ -16,11 +14,8 @@ import java.util.*;
 
 public class PlayerVisibilityThread extends StarThread<NexusCore> {
     
-    private final Cycle<BucketPartition<UUID>> cycle;
-    
     public PlayerVisibilityThread(NexusCore plugin) {
         super(plugin, 1L, 1L, false);
-        this.cycle = NexusReborn.getPlayerManager().getOnlinePlayers().asCycle().copy();
     }
 
     @SuppressWarnings("DuplicatedCode")
@@ -37,12 +32,7 @@ public class PlayerVisibilityThread extends StarThread<NexusCore> {
             }
         }
         
-        for (UUID pUUID : cycle.next()) {
-            Player player = Bukkit.getPlayer(pUUID);
-            if (pUUID == null) {
-                continue;
-            }
-            
+        for (Player player : Bukkit.getOnlinePlayers()) {
             NexusServer playerServer = null;
             
             for (NexusServer nexusServer : servers) {
