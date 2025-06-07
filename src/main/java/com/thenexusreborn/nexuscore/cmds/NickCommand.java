@@ -67,6 +67,11 @@ public class NickCommand extends NexusCommand<NexusCore> {
             name = args[0];
         }
         
+        if (name.length() < 3 || name.length() > 16) {
+            MsgType.WARN.send(sender, "The name must be %v characters in length.", "3 - 16");
+            return true;
+        }
+        
         Player target = (Player) sender;
         boolean self = false;
         if (!(name.equalsIgnoreCase("self") || name.equalsIgnoreCase(target.getName()))) {
