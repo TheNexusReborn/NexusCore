@@ -77,7 +77,7 @@ public class ProfileCmd extends NexusCommand<NexusCore> {
         boolean senderEqualOrHigher = senderRank.ordinal() <= target.getRank().ordinal();
         
         sender.sendMessage(StarColors.color("&6&l>> &eProfile information for &b" + target.getName()));
-            sendProfileLine(sender, "Server", (target.getServer() != null ? target.getServer().getName() : "Not online"));
+            sendProfileLine(sender, "Server", target.getServer() != null ? target.getServer().getName() : "Not online");
         sendProfileLine(sender, "Level", target.getExperience().getLevel());
         sendProfileLine(sender, "Level XP", numberFormat.format(target.getExperience().getLevelXp()));
         sendProfileLine(sender, "First Join", dateFormat.format(target.getPlayerTime().getFirstJoined()));
@@ -90,6 +90,7 @@ public class ProfileCmd extends NexusCommand<NexusCore> {
         }
         
         sendProfileLine(sender, "Play Time", timeFormat.format(target.getPlayerTime().getPlaytime()));
+        sendProfileLine(sender, "Next Playtime Reward: ", timeFormat.format(target.getNextPlaytimeReward()));
         sendProfileLine(sender, "Nexites", numberFormat.format(target.getBalance().getNexites()));
         sendProfileLine(sender, "Credits", numberFormat.format(target.getBalance().getCredits()));
         

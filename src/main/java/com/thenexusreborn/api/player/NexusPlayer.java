@@ -58,6 +58,8 @@ public class NexusPlayer implements Comparable<NexusPlayer> {
     
     @ColumnIgnored
     protected Stopwatch playTimeStopwatch;
+    @ColumnIgnored
+    protected UUID playtimeRewardId;
     
     @ColumnIgnored
     private Map<String, Tag> tags = new HashMap<>();
@@ -523,5 +525,21 @@ public class NexusPlayer implements Comparable<NexusPlayer> {
     @Override
     public int compareTo(NexusPlayer o) {
         return this.getUniqueId().compareTo(o.getUniqueId());
+    }
+    
+    public void setPlaytimeRewardId(UUID playtimeRewardId) {
+        this.playtimeRewardId = playtimeRewardId;
+    }
+    
+    public long getNextPlaytimeReward() {
+        if (playTimeStopwatch == null) {
+            return 0;
+        }
+        
+        if (playtimeRewardId == null) {
+            return 0;
+        }
+        
+        return playTimeStopwatch.getNextRun(playtimeRewardId) - playTimeStopwatch.getTime();
     }
 }

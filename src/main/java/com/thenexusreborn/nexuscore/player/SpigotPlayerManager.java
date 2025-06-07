@@ -125,8 +125,6 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
             
             nexusPlayer.setLastLogin(session.getStart());
             
-            NexusReborn.getPrimaryDatabase().saveSilent(nexusPlayer);
-            
             if (!nexusPlayer.getName().equals(player.getName())) {
                 nexusPlayer.setName(player.getName());
             }
@@ -139,7 +137,7 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
             }
             
             Stopwatch playtimeStopwatch = plugin.getClockManager().createStopwatch(Long.MAX_VALUE);
-            playtimeStopwatch.addRepeatingCallback(stopwatchSnapshot -> {
+            UUID rewardID = playtimeStopwatch.addRepeatingCallback(stopwatchSnapshot -> {
                 if (nexusPlayer.getPlayTimeStopwatch() == null) {
                     return;
                 }
@@ -164,6 +162,7 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
             }, TimeUnit.MINUTES.toMillis(10));
             playtimeStopwatch.start();
             nexusPlayer.setPlayTimeStopwatch(playtimeStopwatch);
+            nexusPlayer.setPlaytimeRewardId(rewardID);
             
             InetSocketAddress socketAddress = player.getAddress();
             String hostName = socketAddress.getHostString();
@@ -171,7 +170,7 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
             
             Nickname nickname = nexusPlayer.getNickname();
             SkinManager skinManager = Bukkit.getServicesManager().getRegistration(SkinManager.class).getProvider();
-            Skin skin = (nickname != null && nickname.getSkin() != null && !nickname.getSkin().isBlank()) ? skinManager.getFromMojang(nickname.getSkin()) : null;
+            Skin skin = nickname != null && nickname.getSkin() != null && !nickname.getSkin().isBlank() ? skinManager.getFromMojang(nickname.getSkin()) : null;
             
             Bukkit.getScheduler().runTask(plugin, () -> {
                 if (skin != null && nickname.isActive()) {
@@ -245,6 +244,7 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
         if (playTimeStopwatch != null) {
             playTimeStopwatch.cancel();
             nexusPlayer.setPlayTimeStopwatch(null);
+            nexusPlayer.setPlaytimeRewardId(null);
         }
         
         if (NexusReborn.NETWORK_TYPE == NetworkType.SINGLE) {
