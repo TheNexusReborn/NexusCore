@@ -11,6 +11,7 @@ import com.sun.net.httpserver.HttpServer;
 import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.gamearchive.GameInfo;
 import com.thenexusreborn.api.player.NexusPlayer;
+import com.thenexusreborn.api.player.Session;
 import com.thenexusreborn.api.server.*;
 import com.thenexusreborn.api.sql.objects.SQLDatabase;
 import com.thenexusreborn.nexuscore.api.NexusSpigotPlugin;
@@ -291,6 +292,17 @@ public class NexusCore extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            NexusPlayer nexusPlayer = NexusReborn.getPlayerManager().getNexusPlayer(player.getUniqueId());
+            Session session = nexusPlayer.getSession();
+            session.end();
+            nexusPlayer.setLastLogout(session.getEnd());
+            long playTime = session.getTimeOnline();
+            NexusReborn.getPrimaryDatabase().deleteSilent(session);
+            nexusPlayer.getPlayerTime().addPlaytime(playTime);
+            NexusReborn.getPrimaryDatabase().saveSilent(nexusPlayer);
+        }
+        
         NexusReborn.getPlayerManager().saveData();
 
         if (this.nexusBot != null) {

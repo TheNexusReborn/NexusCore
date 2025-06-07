@@ -141,8 +141,16 @@ public class PlayerObjectHandler extends ObjectHandler {
     public void afterSave() {
         NexusPlayer player = (NexusPlayer) object;
         
-        if (player.getExperience() != null) {
+        if (player.getTrueExperience() != null) {
             database.saveSilent(player.getExperience());
+        }
+        
+        if (player.getTrueTime() != null) {
+            database.saveSilent(player.getTrueTime());
+        }
+        
+        if (player.getTrueBalance() != null) {
+            database.saveSilent(player.getTrueBalance());
         }
         
         for (Toggle toggle : player.getToggles().findAll()) {
