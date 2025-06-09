@@ -100,7 +100,7 @@ public class RankTablistHandler extends TablistHandler {
         } else {
             team.setPrefix(StarColors.color(nexusPlayer.getEffectiveRank().getPrefix() + " &r"));
         }
-        if (nexusPlayer.hasActiveTag()) {
+        if (nexusPlayer.hasActiveTag() && nexusPlayer.getActiveTag() != null) {
             team.setSuffix(StarColors.color(" " + nexusPlayer.getActiveTag().getDisplayName()));
         } else {
             team.setSuffix("");

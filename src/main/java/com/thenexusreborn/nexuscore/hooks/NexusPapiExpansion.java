@@ -39,10 +39,10 @@ public class NexusPapiExpansion extends PlaceholderExpansion {
             return nexusPlayer.getColoredName();
         } else if (params.startsWith("displayname")) {
             String tag;
-            if (nexusPlayer.hasActiveTag()) {
+            if (nexusPlayer.hasActiveTag() && nexusPlayer.getActiveTag() != null) {
                 tag = " " + nexusPlayer.getActiveTag().getDisplayName();
             } else {
-                tag =  "";
+                tag = "";
             }
             
             String displayName;

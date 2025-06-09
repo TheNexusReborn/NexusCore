@@ -465,6 +465,11 @@ public class NexusPlayer implements Comparable<NexusPlayer> {
     }
 
     public Tag getActiveTag() {
+        if (!this.tags.containsKey(activeTag)) {
+            this.activeTag = null;
+            return null;
+        }
+        
         return this.tags.get(activeTag);
     }
 
@@ -477,7 +482,7 @@ public class NexusPlayer implements Comparable<NexusPlayer> {
     }
 
     public boolean hasActiveTag() {
-        return activeTag != null && !activeTag.isEmpty() && !activeTag.equals("null");
+        return activeTag != null && !activeTag.isEmpty() && !activeTag.equals("null") && this.tags.containsKey(activeTag);
     }
 
     public void addTag(Tag tag) {
