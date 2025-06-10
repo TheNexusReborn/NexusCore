@@ -16,7 +16,7 @@ import org.bukkit.entity.Player;
 
 public class UnnickCommand extends NexusCommand<NexusCore> {
     public UnnickCommand(NexusCore plugin) {
-        super(plugin, "unnickname", "Removes your nickname", Rank.DIAMOND, "unnick");
+        super(plugin, "unnickname", "Removes your nickname", Rank.MEMBER, "unnick");
         this.playerOnly = true;
     }
     
@@ -30,6 +30,11 @@ public class UnnickCommand extends NexusCommand<NexusCore> {
             
             if (nexusPlayer == null) {
                 MsgType.WARN.send(sender, "Invalid target %v", args[0]);
+                return true;
+            }
+            
+            if (senderRank.ordinal() > Rank.ADMIN.ordinal()) {
+                MsgType.WARN.send(sender, "Only Admin+ can remove a nickname from others.");
                 return true;
             }
         } else {
@@ -49,7 +54,7 @@ public class UnnickCommand extends NexusCommand<NexusCore> {
         Nickname nickname = nexusPlayer.getNickname();
         
         SkinManager skinManager = Bukkit.getServicesManager().getRegistration(SkinManager.class).getProvider();
-        plugin.getNickWrapper().setNick(plugin, ((Player) sender), nexusPlayer.getTrueName(), skinManager.getFromMojang(nexusPlayer.getUniqueId()));
+        plugin.getNickWrapper().setNick(plugin, (Player) sender, nexusPlayer.getTrueName(), skinManager.getFromMojang(nexusPlayer.getUniqueId()));
         if (nickname.isPersist()) {
             nickname.setActive(false);
         } else {
