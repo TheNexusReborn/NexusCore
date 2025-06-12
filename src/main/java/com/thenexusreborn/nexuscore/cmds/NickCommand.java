@@ -96,7 +96,7 @@ public class NickCommand extends NexusCommand<NexusCore> {
             }
             
             if (NexusReborn.getNicknameBlacklist().contains(name.toLowerCase())) {
-                if (senderRank.ordinal() > Rank.ADMIN.ordinal()) {
+                if (senderRank.ordinal() > Rank.NEXUS.ordinal()) {
                     MsgType.WARN.send(sender, "That name is blacklisted from use. Please choose a different name.");
                     return true;
                 }
