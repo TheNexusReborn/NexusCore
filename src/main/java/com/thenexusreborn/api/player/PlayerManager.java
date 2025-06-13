@@ -208,6 +208,10 @@ public abstract class PlayerManager {
     }
 
     public NexusPlayer getNexusPlayer(UUID uniqueId) {
+        if (uniqueId == null) {
+            return null;
+        }
+        
         NexusPlayer player = this.players.get(uniqueId);
         if (player == null) {
             return cachedPlayers.getIfPresent(uniqueId);
