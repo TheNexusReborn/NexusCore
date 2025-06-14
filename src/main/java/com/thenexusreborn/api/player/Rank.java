@@ -3,16 +3,28 @@ package com.thenexusreborn.api.player;
 import com.stardevllc.converter.string.EnumStringConverter;
 import com.stardevllc.converter.string.StringConverters;
 
+import java.util.List;
 import java.util.Objects;
 
 public enum Rank {
-    NEXUS("&4", true), 
+    NEXUS("&4", true, List.of(
+            "vulcan.bypass.*",
+            "luckperms.*"
+            ), List.of()
+    ), 
     CONSOLE("&4", false),
     ADMIN("&c", true),
     HEAD_MOD("&5", true, "HEAD MOD"),
     SR_MOD("&5", true, "SR MOD"),
     MOD("&5", true), 
-    HELPER("&d", true), 
+    HELPER("&d", true, List.of(
+            "nexuscore.punishments.notify", 
+            "nexuscore.staff.send", 
+            "nexuscore.staff.view", 
+            "vulcan.alerts", 
+            "vulcan.logs"
+            ), List.of()
+    ), 
     MVP("&e", true, true), 
     VIP("&e", true),
     ARCHITECT("&a", true),
@@ -23,7 +35,13 @@ public enum Rank {
     GOLD("&6", true), 
     INVAR("&7", true, true),
     IRON("&7", true), 
-    MEMBER("&9", false, "");
+    MEMBER("&9", false, "", List.of(
+            "starchat.command.chat", 
+            "starchat.command.message", 
+            "starchat.command.reply"), 
+            List.of(
+                    "bukkit.command.plugins")
+    );
     
     static {
         StringConverters.addConverter(Rank.class, new EnumStringConverter<>(Rank.class));
@@ -32,29 +50,40 @@ public enum Rank {
     private final String color, prefixOverride;
     private final boolean bold, nameBold;
     
+    private final List<String> permissions;
+    private final List<String> negatedPermissions;
+    
     Rank(String color, boolean bold) {
-        this(color, bold, null);
+        this(color, null, bold, false, List.of(), List.of());
+    }
+    
+    Rank(String color, boolean bold, List<String> permissions, List<String> negatedPermissions) {
+        this(color, null, bold, false, permissions, negatedPermissions);
     }
     
     Rank(String color, boolean bold, String prefixOverride) {
-        this.color = color;
-        this.bold = bold;
-        this.prefixOverride = prefixOverride;
-        this.nameBold = false;
+        this(color, prefixOverride, bold, false, List.of(), List.of());
     }
     
-    Rank(String color, String prefixOverride, boolean bold, boolean nameBold) {
-        this.color = color;
-        this.prefixOverride = prefixOverride;
-        this.bold = bold;
-        this.nameBold = nameBold;
+    Rank(String color, boolean bold, String prefixOverride, List<String> permissions, List<String> negatedPermissions) {
+        this(color, prefixOverride, bold, false, permissions, negatedPermissions);
     }
     
     Rank(String color, boolean bold, boolean nameBold) {
+        this(color, null, bold, nameBold, List.of(), List.of());
+    }
+    
+    Rank(String color, boolean bold, boolean nameBold, List<String> permissions, List<String> negatedPermissions) {
+        this(color, null, bold, nameBold, permissions, negatedPermissions);
+    }
+    
+    Rank(String color, String prefixOverride, boolean bold, boolean nameBold, List<String> permissions, List<String> negatedPermissions) {
         this.color = color;
-        this.prefixOverride = null;
+        this.prefixOverride = prefixOverride;
         this.bold = bold;
         this.nameBold = nameBold;
+        this.permissions = permissions;
+        this.negatedPermissions = negatedPermissions;
     }
     
     public String getColor() {
@@ -96,5 +125,13 @@ public enum Rank {
 
     public boolean isBold() {
         return bold;
+    }
+    
+    public List<String> getPermissions() {
+        return permissions;
+    }
+    
+    public List<String> getNegatedPermissions() {
+        return negatedPermissions;
     }
 }

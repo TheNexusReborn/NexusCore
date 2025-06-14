@@ -14,6 +14,7 @@ import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.api.command.ICommand;
 import com.thenexusreborn.nexuscore.api.command.SubCommand;
 import com.thenexusreborn.nexuscore.util.MsgType;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -118,6 +119,10 @@ public abstract class RankModifySubcommand extends SubCommand<NexusCore> {
         }
         
         handle(sender, rank, expire, targetRanks, targetName, rankName, time);
+        
+        if (Bukkit.getPlayer(targetUniqueID) != null) {
+            playerManager.updatePermissions(targetUniqueID, targetRanks);
+        }
         
         SQLDatabase database = NexusReborn.getPrimaryDatabase();
         

@@ -22,6 +22,9 @@ import com.thenexusreborn.nexuscore.reflection.impl.ActionBar;
 import com.thenexusreborn.nexuscore.scoreboard.SpigotNexusScoreboard;
 import com.thenexusreborn.nexuscore.scoreboard.impl.RankTablistHandler;
 import com.thenexusreborn.nexuscore.util.MsgType;
+import net.luckperms.api.LuckPerms;
+import net.luckperms.api.model.user.User;
+import net.luckperms.api.node.Node;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -33,7 +36,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.net.InetSocketAddress;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.Set;
+import java.util.UUID;
 
 public class SpigotPlayerManager extends PlayerManager implements Listener {
     
@@ -168,6 +172,8 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
             String hostName = socketAddress.getHostString();
             NexusReborn.getPlayerManager().addIpHistory(player.getUniqueId(), hostName);
             
+            updatePermissions(nexusPlayer.getUniqueId(), nexusPlayer.getRanks());
+            
             Nickname nickname = nexusPlayer.getNickname();
             SkinManager skinManager = Bukkit.getServicesManager().getRegistration(SkinManager.class).getProvider();
             Skin skin = nickname != null && nickname.getSkin() != null && !nickname.getSkin().isBlank() ? skinManager.getFromMojang(nickname.getSkin()) : null;
@@ -227,7 +233,27 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
             });
         });
     }
-
+    
+    public void updatePermissions(UUID uuid, PlayerRanks ranks) {
+        LuckPerms luckPerms = plugin.getLuckPerms();
+        User user = luckPerms.getPlayerAdapter(Player.class).getUser(Bukkit.getPlayer(uuid));
+        
+        for (Rank rank : Rank.values()) {
+            Node rankNode = Node.builder("group." + rank.name().toLowerCase()).build();
+            if (ranks.contains(rank)) {
+                if (!user.data().contains(rankNode, Node::equals).asBoolean()) {
+                    user.data().add(rankNode);
+                }
+            } else {
+                if (user.data().contains(rankNode, Node::equals).asBoolean()) {
+                    user.data().remove(rankNode);
+                }
+            }
+        }
+        
+        luckPerms.getUserManager().saveUser(user);
+    }
+    
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent e) {
         removeOnlinePlayer(e.getPlayer().getUniqueId());

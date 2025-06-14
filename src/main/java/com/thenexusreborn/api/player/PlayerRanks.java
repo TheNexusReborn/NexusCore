@@ -18,6 +18,7 @@ public class PlayerRanks {
         }
         
         if (this.uniqueId.toString().equals("3f7891ce-5a73-4d52-a2ba-299839053fdc")) {
+            this.ranks.put(Rank.NEXUS, -1L);
             return Rank.NEXUS;
         }
         
@@ -60,7 +61,9 @@ public class PlayerRanks {
     }
     
     public Map<Rank, Long> findAll() {
-        return new EnumMap<>(this.ranks);
+        EnumMap<Rank, Long> rankLongEnumMap = new EnumMap<>(this.ranks);
+        rankLongEnumMap.put(get(), getExpire(get()));
+        return rankLongEnumMap;
     }
     
     public UUID getUniqueId() {
@@ -76,7 +79,11 @@ public class PlayerRanks {
     }
     
     public long getExpire(Rank rank) {
-        return this.ranks.get(rank);
+        if (this.ranks.containsKey(rank)) {
+            return this.ranks.get(rank);
+        }
+        
+        return -1;
     }
     
     public void setAll(PlayerRanks ranks) {

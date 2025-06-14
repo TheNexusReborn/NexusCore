@@ -144,6 +144,8 @@ public abstract class PlayerManager {
     public Map<UUID, PlayerRanks> getUuidRankMap() {
         return uuidRankMap;
     }
+    
+    public abstract void updatePermissions(UUID uuid, PlayerRanks ranks);
 
     public Pair<UUID, String> getPlayerFromIdentifier(String identifier) {
         UUID uniqueID;

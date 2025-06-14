@@ -10,8 +10,7 @@ import com.stardevllc.starui.GuiManager;
 import com.sun.net.httpserver.HttpServer;
 import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.gamearchive.GameInfo;
-import com.thenexusreborn.api.player.NexusPlayer;
-import com.thenexusreborn.api.player.Session;
+import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.server.*;
 import com.thenexusreborn.api.sql.objects.SQLDatabase;
 import com.thenexusreborn.nexuscore.api.NexusSpigotPlugin;
@@ -35,6 +34,10 @@ import com.thenexusreborn.nexuscore.server.CoreInstanceServer;
 import com.thenexusreborn.nexuscore.thread.*;
 import com.thenexusreborn.nexuscore.util.MsgType;
 import net.dv8tion.jda.internal.utils.JDALogger;
+import net.luckperms.api.LuckPerms;
+import net.luckperms.api.model.group.Group;
+import net.luckperms.api.model.group.GroupManager;
+import net.luckperms.api.node.Node;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabExecutor;
@@ -71,6 +74,8 @@ public class NexusCore extends JavaPlugin implements Listener {
     private NickWrapper_v1_8_R3 nickWrapper = new NickWrapper_v1_8_R3();
 
     private List<DiscordVerifyCode> discordVerifyCodes = new ArrayList<>();
+    
+    private LuckPerms luckPerms;
 
     @Override
     public void onEnable() {
@@ -139,6 +144,41 @@ public class NexusCore extends JavaPlugin implements Listener {
         Bukkit.getServer().getPluginManager().registerEvents(chatManager, this);
         Bukkit.getServer().getPluginManager().registerEvents(this, this);
         getLogger().info("Registered Event Listeners");
+        
+        this.luckPerms = Bukkit.getServicesManager().getRegistration(LuckPerms.class).getProvider();
+        GroupManager groupManager = this.luckPerms.getGroupManager();
+        for (int i = Rank.values().length - 1; i >= 0; i--) {
+            Rank rank = Rank.values()[i];
+            Group group = groupManager.getGroup(rank.name().toLowerCase());
+            if (group == null) {
+                group = groupManager.createAndLoadGroup(rank.name().toLowerCase()).join();
+            }
+            
+            Group parent;
+            if (i == Rank.values().length - 1) {
+                parent = groupManager.getGroup("default");
+            } else {
+                parent = groupManager.getGroup(Rank.values()[i+1].name().toLowerCase());
+            }
+            
+            group.data().add(Node.builder("group." + parent.getName()).build());
+            
+            for (String permission : rank.getPermissions()) {
+                Node node = Node.builder(permission).build();
+                if (!group.data().contains(node, Node::equals).asBoolean()) {
+                    group.data().add(node);
+                }
+            }
+            
+            for (String negatedPermission : rank.getNegatedPermissions()) {
+                Node node = Node.builder(negatedPermission).value(false).build();
+                if (!group.data().contains(node, Node::equals).asBoolean()) {
+                    group.data().add(node);
+                }
+            }
+            
+            groupManager.saveGroup(group);
+        }
         
         new NickCommand(this);
         new UnnickCommand(this);
@@ -289,7 +329,11 @@ public class NexusCore extends JavaPlugin implements Listener {
     public NexusBot getNexusBot() {
         return nexusBot;
     }
-
+    
+    public LuckPerms getLuckPerms() {
+        return luckPerms;
+    }
+    
     @Override
     public void onDisable() {
         for (Player player : Bukkit.getOnlinePlayers()) {
