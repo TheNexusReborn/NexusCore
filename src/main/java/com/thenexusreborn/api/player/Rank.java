@@ -8,21 +8,33 @@ import java.util.Objects;
 
 public enum Rank {
     NEXUS("&4", true, List.of(
-            "vulcan.bypass.*",
-            "luckperms.*"
+            "vulcan.*",
+            "luckperms.*",
+            "starchat.clearchat.flags.*",
+            "starchat.clearchat.bypass", 
+            "starchat.privatemessage.visibility.bypass", 
+            "staritems.admin", 
+            "staritems.admin.*"
             ), List.of()
     ), 
     CONSOLE("&4", false),
-    ADMIN("&c", true),
+    ADMIN("&c", true, List.of(
+            "viaversion.admin"
+            ), List.of()
+    ),
     HEAD_MOD("&5", true, "HEAD MOD"),
     SR_MOD("&5", true, "SR MOD"),
-    MOD("&5", true), 
+    MOD("&5", true, List.of(
+            "starchat.mutechat"
+        ), List.of()
+    ), 
     HELPER("&d", true, List.of(
             "nexuscore.punishments.notify", 
             "nexuscore.staff.send", 
             "nexuscore.staff.view", 
             "vulcan.alerts", 
-            "vulcan.logs"
+            "vulcan.logs", 
+            "starchat.clearchat"
             ), List.of()
     ), 
     MVP("&e", true, true), 
