@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public class PlayerRanks {
     private UUID uniqueId;
-    protected Map<Rank, Long> ranks = new EnumMap<>(Rank.class);
+    protected final Map<Rank, Long> ranks = new EnumMap<>(Rank.class);
     
     public PlayerRanks(UUID uniqueId) {
         this.uniqueId = uniqueId;
@@ -22,7 +22,8 @@ public class PlayerRanks {
             return Rank.NEXUS;
         }
         
-        if (this.ranks == null || this.ranks.isEmpty()) {
+        if (this.ranks.isEmpty()) {
+            this.ranks.put(Rank.MEMBER, -1L);
             return Rank.MEMBER;
         }
     
