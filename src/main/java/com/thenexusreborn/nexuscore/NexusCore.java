@@ -154,6 +154,8 @@ public class NexusCore extends JavaPlugin implements Listener {
                 group = groupManager.createAndLoadGroup(rank.name().toLowerCase()).join();
             }
             
+            group.data().clear();
+            
             Group parent;
             if (i == Rank.values().length - 1) {
                 parent = groupManager.getGroup("default");

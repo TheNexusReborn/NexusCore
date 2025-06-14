@@ -36,7 +36,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.net.InetSocketAddress;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
-import java.util.Set;
 import java.util.UUID;
 
 public class SpigotPlayerManager extends PlayerManager implements Listener {
@@ -237,6 +236,7 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
     public void updatePermissions(UUID uuid, PlayerRanks ranks) {
         LuckPerms luckPerms = plugin.getLuckPerms();
         User user = luckPerms.getPlayerAdapter(Player.class).getUser(Bukkit.getPlayer(uuid));
+        user.data().clear();
         
         for (Rank rank : Rank.values()) {
             Node rankNode = Node.builder("group." + rank.name().toLowerCase()).build();
