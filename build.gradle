@@ -47,6 +47,9 @@ processResources {
     filesMatching("*.yml") {
         expand(project.properties)
     }
+    filesMatching("*.txt") {
+        expand(project.properties)
+    }
 }
 
 shadowJar {
