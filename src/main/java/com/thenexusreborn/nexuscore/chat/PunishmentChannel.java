@@ -35,7 +35,7 @@ public class PunishmentChannel extends ChatChannel {
     public void sendPunishmentRemoval(Punishment punishment) {
         String message = this.systemFormat.get().replace("{origin}", punishment.getServer()).replace("{target}", punishment.getTargetNameCache())
                 .replace("{type}", punishment.getType().getColor() + "un" + punishment.getType().getVerb())
-                .replace("{actor}", punishment.getActorNameCache()).replace("{reason}", punishment.getReason());
+                .replace("{actor}", punishment.getPardonInfo().getActorNameCache()).replace("{reason}", punishment.getPardonInfo().getReason());
        message = formatLength(punishment, message);
 
         for (Player player : Bukkit.getOnlinePlayers()) {
