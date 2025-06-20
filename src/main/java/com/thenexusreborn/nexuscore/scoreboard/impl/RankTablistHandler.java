@@ -8,6 +8,7 @@ import com.thenexusreborn.api.scoreboard.NexusScoreboard;
 import com.thenexusreborn.api.scoreboard.TablistHandler;
 import com.thenexusreborn.api.scoreboard.wrapper.ITeam;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -84,21 +85,15 @@ public class RankTablistHandler extends TablistHandler {
     @Override
     public String getPlayerTeamName(NexusPlayer player) {
         String pName = player.getName();
-        String name = BEGIN_CHARS.get(player.getEffectiveRank()) + "_";
-        if (pName.length() > 13) {
-            name += pName.substring(0, 14);
-        } else {
-            name += pName;
-        }
-        return name;
+        return BEGIN_CHARS.get(player.getEffectiveRank()) + "_" + pName;
     }
     
     @Override
     public void setDisplayOptions(NexusPlayer nexusPlayer, ITeam team) {
         if (nexusPlayer.getEffectiveRank() == Rank.MEMBER) {
-            team.setPrefix(StarColors.color(nexusPlayer.getEffectiveRank().getColor()));
+            team.setColor(ChatColor.BLUE);
         } else {
-            team.setPrefix(StarColors.color(nexusPlayer.getEffectiveRank().getPrefix() + " &r"));
+            team.setPrefix(StarColors.color(nexusPlayer.getEffectiveRank().getPrefix() + " "));
         }
         if (nexusPlayer.hasActiveTag() && nexusPlayer.getActiveTag() != null) {
             team.setSuffix(StarColors.color(" " + nexusPlayer.getActiveTag().getDisplayName()));

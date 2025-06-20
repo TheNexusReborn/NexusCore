@@ -7,7 +7,8 @@ import com.stardevllc.starcore.api.cmdflags.type.PresenceFlag;
 import com.stardevllc.starcore.skins.SkinManager;
 import com.stardevllc.time.TimeParser;
 import com.thenexusreborn.api.NexusReborn;
-import com.thenexusreborn.api.nickname.*;
+import com.thenexusreborn.api.nickname.NickPerms;
+import com.thenexusreborn.api.nickname.Nickname;
 import com.thenexusreborn.api.nickname.player.*;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Rank;
@@ -15,8 +16,10 @@ import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.api.command.NexusCommand;
 import com.thenexusreborn.nexuscore.api.events.NicknameSetEvent;
 import com.thenexusreborn.nexuscore.util.MsgType;
+import dev.iiahmed.disguise.*;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -169,7 +172,7 @@ public class NickCommand extends NexusCommand<NexusCore> {
         }
         
         NexusPlayer nexusPlayer = NexusReborn.getPlayerManager().getNexusPlayer(target.getUniqueId());
-
+        
         NickExperience nickExperience = null;
         if (flagResults.getValue(LEVEL) != null && !flagResults.getValue(LEVEL).equals("0")) {
             if (senderRank.ordinal() > nickPerms.getCustomLevel().ordinal()) {
@@ -263,7 +266,7 @@ public class NickCommand extends NexusCommand<NexusCore> {
             }
         }
         
-       
+        
         boolean persist = false;
         if (flagResults.isPresent(PERSIST)) {
             if (senderRank.ordinal() > nickPerms.getPersistStats().ordinal()) {
@@ -312,7 +315,26 @@ public class NickCommand extends NexusCommand<NexusCore> {
         nickname.setActive(true);
         
         if (!self) {
-            plugin.getNickWrapper().setNick(plugin, target, nickname.getName(), skin);
+            DisguiseProvider provider = plugin.getDisguiseProvider();
+            EntityType type;
+            if (provider.isDisguisedAsEntity(target)) {
+                PlayerInfo info = provider.getInfo(target);
+                type = info.getEntityType();
+            } else {
+                type = null;
+            }
+            
+            Disguise.Builder builder = Disguise.builder().setName(nickname.getName());
+            if (skin != null) {
+                builder.setSkin(skin.getValue(), skin.getSignature());
+            }
+            
+            if (type != null) {
+                builder.setEntity(b -> b.setType(type));
+            }
+            
+            Disguise disguise = builder.build();
+            provider.disguise(target, disguise);
         }
         
         if (target.getUniqueId().equals(((Player) sender).getUniqueId())) {

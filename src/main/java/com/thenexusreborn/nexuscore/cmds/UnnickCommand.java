@@ -10,6 +10,8 @@ import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.api.command.NexusCommand;
 import com.thenexusreborn.nexuscore.api.events.NicknameRemoveEvent;
 import com.thenexusreborn.nexuscore.util.MsgType;
+import dev.iiahmed.disguise.Disguise;
+import dev.iiahmed.disguise.DisguiseProvider;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -54,7 +56,19 @@ public class UnnickCommand extends NexusCommand<NexusCore> {
         Nickname nickname = nexusPlayer.getNickname();
         
         SkinManager skinManager = Bukkit.getServicesManager().getRegistration(SkinManager.class).getProvider();
-        plugin.getNickWrapper().setNick(plugin, (Player) sender, nexusPlayer.getTrueName(), skinManager.getFromMojang(nexusPlayer.getUniqueId()));
+        Player player = Bukkit.getPlayer(nexusPlayer.getUniqueId());
+        
+        DisguiseProvider provider = plugin.getDisguiseProvider();
+        if (provider.isDisguised(player)) {
+            if (provider.isDisguisedAsEntity(player)) {
+                Disguise disguise = Disguise.builder().setEntity(b -> b.setType(provider.getInfo(player).getEntityType())).build();
+                provider.undisguise(player);
+                provider.disguise(player, disguise);
+            } else {
+                provider.undisguise(player);
+            }
+        }
+        
         if (nickname.isPersist()) {
             nickname.setActive(false);
         } else {

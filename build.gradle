@@ -22,6 +22,10 @@ repositories {
     maven {
         url = uri('https://repo.maven.apache.org/maven2/')
     }
+
+    maven {
+        url = "https://repo.gravemc.net/releases/"
+    }
 }
 
 dependencies {
@@ -37,8 +41,16 @@ dependencies {
     compileOnly 'com.github.StarDevelopmentLLC:StarCore:0.5.4'
     compileOnly 'com.github.StarDevelopmentLLC:StarChat:0.2.6'
     compileOnly 'me.clip:placeholderapi:2.11.5'
-    compileOnly 'org.spigotmc:spigot:1.8.8-R0.1-SNAPSHOT'
+    compileOnly 'org.spigotmc:spigot:1.21.5-R0.1-SNAPSHOT'
     compileOnly 'net.luckperms:api:5.4'
+    implementation 'dev.iiahmed:ModernDisguise:3.6'
+}
+
+shadowJar {
+    archiveClassifier.set('')
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+//    relocate("com.google", "com.thenexusreborn.google")
+//    destinationDirectory = file(System.getProperty("user.home") + File.separator + "Documents" + File.separator + "JarOutput" + File.separator + "NexusReborn")
 }
 
 group = 'com.thenexusreborn'
@@ -51,11 +63,6 @@ processResources {
     filesMatching("*.txt") {
         expand(project.properties)
     }
-}
-
-shadowJar {
-    archiveClassifier.set('')
-//    destinationDirectory = file(System.getProperty("user.home") + File.separator + "Documents" + File.separator + "JarOutput" + File.separator + "NexusReborn")
 }
 
 java {

@@ -23,7 +23,7 @@ public class PerformanceCmd extends NexusCommand<NexusCore> {
     @Override
     public boolean execute(CommandSender sender, Rank senderRank, String label, String[] args, FlagResult flagResults) {
         sender.sendMessage(StarColors.color("&6&l>> &d&lThe Nexus Reborn Server Performance"));
-        sender.sendMessage(StarColors.color("&6&l> &eTPS: &b" + MCUtils.getRecentTps()));
+//        sender.sendMessage(StarColors.color("&6&l> &eTPS: &b" + MCUtils.getRecentTps()));
 
         long totalMemory = Runtime.getRuntime().totalMemory();
         long freeMemory = Runtime.getRuntime().freeMemory();

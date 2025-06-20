@@ -1,6 +1,7 @@
 main: com.thenexusreborn.nexuscore.NexusCore
 version: ${version}
 name: NexusCore
+api-version: 1.21
 description: The main core of The Nexus Reborn
 author: Firestar311
 depend: [StarCore, StarChat, PlaceholderAPI]

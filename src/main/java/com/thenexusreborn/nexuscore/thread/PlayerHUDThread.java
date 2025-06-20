@@ -1,12 +1,15 @@
 package com.thenexusreborn.nexuscore.thread;
 
+import com.stardevllc.starcore.api.StarColors;
 import com.stardevllc.starcore.utils.StarThread;
 import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.IActionBar;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.scoreboard.TablistHandler;
 import com.thenexusreborn.nexuscore.NexusCore;
-import com.thenexusreborn.nexuscore.util.SpigotUtils;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -29,7 +32,9 @@ public class PlayerHUDThread extends StarThread<NexusCore> {
             NexusPlayer nexusPlayer = NexusReborn.getPlayerManager().getNexusPlayer(player.getUniqueId());
             
             if (nexusPlayer == null) {
-                SpigotUtils.sendActionBar(player, "&cPlease wait while your data is being loaded");
+                TextComponent textComponent = new TextComponent("Please wait while your data is being loaded");
+                textComponent.setColor(ChatColor.RED);
+                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, textComponent);
                 continue;
             }
             
@@ -45,7 +50,7 @@ public class PlayerHUDThread extends StarThread<NexusCore> {
             if (actionBar != null) {
                 String text = actionBar.getText();
                 if (text != null) {
-                    SpigotUtils.sendActionBar(player, text);
+                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacy(StarColors.color(text)));
                 }
             }
         }

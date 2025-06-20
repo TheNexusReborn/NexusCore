@@ -59,7 +59,7 @@ public class ChatManager implements Listener {
                 public void run() {
                     if (nexusPlayer.getToggleValue("incognito")) {
                         for (Player player : Bukkit.getOnlinePlayers()) {
-                            player.showPlayer(Bukkit.getPlayer(nexusPlayer.getUniqueId()));
+                            player.showPlayer(plugin, Bukkit.getPlayer(nexusPlayer.getUniqueId()));
                         }
                     }
                 }

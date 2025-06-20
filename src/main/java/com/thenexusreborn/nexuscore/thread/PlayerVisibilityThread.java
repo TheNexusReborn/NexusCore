@@ -48,7 +48,7 @@ public class PlayerVisibilityThread extends StarThread<NexusCore> {
                 }
                 
                 if (playerServer == null) {
-                    otherPlayer.hidePlayer(player);
+                    otherPlayer.hidePlayer(plugin, player);
                     continue;
                 }
 
@@ -64,13 +64,13 @@ public class PlayerVisibilityThread extends StarThread<NexusCore> {
                 NexusPlayer otherNexusPlayer = NexusReborn.getPlayerManager().getNexusPlayer(otherPlayer.getUniqueId());
                 
                 if (otherPlayerServer == null || otherNexusPlayer == null) {
-                    player.hidePlayer(otherPlayer);
+                    player.hidePlayer(plugin, otherPlayer);
                     continue;
                 }
 
                 if (!playerServer.getName().equals(otherPlayerServer.getName())) {
-                    player.hidePlayer(otherPlayer);
-                    otherPlayer.hidePlayer(player);
+                    player.hidePlayer(plugin, otherPlayer);
+                    otherPlayer.hidePlayer(plugin, player);
                 } else {
                     boolean canSeeOther;
                     try {
@@ -86,12 +86,9 @@ public class PlayerVisibilityThread extends StarThread<NexusCore> {
                             boolean otherPlayerIsNotVisible = otherPlayerIsVanished || otherPlayerIsIncognito;
 
                             if (otherPlayerIsNotVisible) {
-                                //player.hidePlayer(otherPlayer);
-                                //player.showPlayer(otherPlayer);
                                 canSeeOther = otherPlayerRank.ordinal() >= playerRank.ordinal();
                             } else {
                                 canSeeOther = true;
-                                //player.showPlayer(otherPlayer);
                             }
                         } else {
                             canSeeOther = false;
@@ -100,11 +97,11 @@ public class PlayerVisibilityThread extends StarThread<NexusCore> {
 
                     if (canSeeOther) {
                         if (!player.canSee(otherPlayer)) {
-                            player.showPlayer(otherPlayer);
+                            player.showPlayer(plugin, otherPlayer);
                         }
                     } else {
                         if (player.canSee(otherPlayer)) {
-                            player.hidePlayer(otherPlayer);
+                            player.hidePlayer(plugin, otherPlayer);
                         }
                     }
                 }

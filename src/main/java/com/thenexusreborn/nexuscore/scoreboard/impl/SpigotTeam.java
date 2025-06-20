@@ -3,6 +3,7 @@ package com.thenexusreborn.nexuscore.scoreboard.impl;
 import com.stardevllc.starcore.api.StarColors;
 import com.thenexusreborn.api.scoreboard.ValueUpdater;
 import com.thenexusreborn.api.scoreboard.wrapper.ITeam;
+import org.bukkit.ChatColor;
 import org.bukkit.scoreboard.Team;
 
 import java.util.HashSet;
@@ -77,5 +78,15 @@ public class SpigotTeam implements ITeam {
     @Override
     public void setValueUpdater(ValueUpdater valueUpdater) {
         this.valueUpdater = valueUpdater;
+    }
+    
+    @Override
+    public void setColor(ChatColor chatColor) {
+        this.team.setColor(chatColor);
+    }
+    
+    @Override
+    public ChatColor getColor() {
+        return this.team.getColor();
     }
 }

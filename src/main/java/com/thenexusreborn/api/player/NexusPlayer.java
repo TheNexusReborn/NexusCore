@@ -14,6 +14,7 @@ import com.thenexusreborn.api.sql.annotations.table.TableName;
 import com.thenexusreborn.api.sql.objects.codecs.RanksCodec;
 import com.thenexusreborn.api.sql.objects.objecthandler.PlayerObjectHandler;
 import com.thenexusreborn.api.tags.Tag;
+import dev.iiahmed.disguise.Disguise;
 
 import java.util.*;
 
@@ -74,6 +75,9 @@ public class NexusPlayer implements Comparable<NexusPlayer> {
     
     private String discordId;
     
+    @ColumnIgnored
+    private Disguise.Builder disguise;
+    
     protected NexusPlayer() {
         this(null);
     }
@@ -90,6 +94,14 @@ public class NexusPlayer implements Comparable<NexusPlayer> {
         this.playerTime = new PlayerTime(uniqueId);
         this.experience = new PlayerExperience(uniqueId);
         this.balance = new PlayerBalance(uniqueId);
+    }
+    
+    public Disguise.Builder getDisguise() {
+        return disguise;
+    }
+    
+    public void setDisguise(Disguise.Builder disguise) {
+        this.disguise = disguise;
     }
     
     public MojangProfile getMojangProfile() {

@@ -18,14 +18,17 @@ import com.thenexusreborn.api.util.Constants;
 import com.thenexusreborn.api.util.NetworkType;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.api.events.NexusPlayerLoadEvent;
-import com.thenexusreborn.nexuscore.reflection.impl.ActionBar;
 import com.thenexusreborn.nexuscore.scoreboard.SpigotNexusScoreboard;
 import com.thenexusreborn.nexuscore.scoreboard.impl.RankTablistHandler;
 import com.thenexusreborn.nexuscore.util.MsgType;
+import dev.iiahmed.disguise.Disguise;
+import dev.iiahmed.disguise.Disguise.Builder;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.node.Node;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -49,6 +52,15 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
     }
     
     @EventHandler
+    public void onPlayerShowOther(PlayerShowEntityEvent e) {
+        if (e.getEntity() instanceof Player other) {
+            if (plugin.getDisguiseProvider().isDisguised(other)) {
+                plugin.getDisguiseProvider().refreshAsEntity(other, true, e.getPlayer());
+            }
+        }
+    }
+    
+    @EventHandler
     public void onPlayerPreLogin(AsyncPlayerPreLoginEvent e) {
         UUID uniqueId = e.getUniqueId();
 
@@ -68,11 +80,11 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
             return;
         }
         for (Player o : Bukkit.getOnlinePlayers()) {
-            o.hidePlayer(player);
+            o.hidePlayer(plugin, player);
 
             NexusPlayer p = getNexusPlayer(o.getUniqueId());
             if (p == null) {
-                player.hidePlayer(o);
+                player.hidePlayer(plugin, o);
             }
         }
         
@@ -179,7 +191,13 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
             
             Bukkit.getScheduler().runTask(plugin, () -> {
                 if (skin != null && nickname.isActive()) {
-                    plugin.getNickWrapper().setNick(plugin, player, nickname.getName(), skin);
+                    Builder builder = Disguise.builder()
+                            .setName(nickname.getName())
+                            .setSkin(skin.getValue(), skin.getSignature());
+                    Disguise disguise = builder
+                            .build();
+                    plugin.getDisguiseProvider().disguise(player, disguise);
+                    nexusPlayer.setDisguise(builder);
                 }
                 
                 NexusScoreboard scoreboard = new SpigotNexusScoreboard(nexusPlayer);
@@ -215,8 +233,7 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
                     Bukkit.broadcastMessage(StarColors.color(joinMessage));
                 }
                 
-                ActionBar actionBar = new ActionBar();
-                actionBar.send(player, "&aYour data has been loaded!");
+                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacy(StarColors.color("&aYour data has been loaded!")));
                 
                 plugin.getNexusServer().join(nexusPlayer);
                 

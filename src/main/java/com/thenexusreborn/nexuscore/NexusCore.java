@@ -28,11 +28,12 @@ import com.thenexusreborn.nexuscore.discord.DiscordVerifyCode;
 import com.thenexusreborn.nexuscore.discord.NexusBot;
 import com.thenexusreborn.nexuscore.hooks.NexusPapiExpansion;
 import com.thenexusreborn.nexuscore.http.*;
-import com.thenexusreborn.nexuscore.nickname.NickWrapper_v1_8_R3;
 import com.thenexusreborn.nexuscore.player.SpigotPlayerManager;
 import com.thenexusreborn.nexuscore.server.CoreInstanceServer;
 import com.thenexusreborn.nexuscore.thread.*;
 import com.thenexusreborn.nexuscore.util.MsgType;
+import dev.iiahmed.disguise.DisguiseManager;
+import dev.iiahmed.disguise.DisguiseProvider;
 import net.dv8tion.jda.internal.utils.JDALogger;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.group.Group;
@@ -71,16 +72,18 @@ public class NexusCore extends JavaPlugin implements Listener {
 
     private NexusBot nexusBot;
     
-    private NickWrapper_v1_8_R3 nickWrapper = new NickWrapper_v1_8_R3();
-
     private List<DiscordVerifyCode> discordVerifyCodes = new ArrayList<>();
     
     private LuckPerms luckPerms;
+    
+    private DisguiseProvider disguiseProvider = DisguiseManager.getProvider();
 
     @Override
     public void onEnable() {
         getLogger().info("Loading NexusCore v" + getDescription().getVersion());
         this.saveDefaultConfig();
+        
+        DisguiseManager.initialize(this, true);
         
         if (!getConfig().contains("motd")) {
             getConfig().set("motd", List.of("&d&lThe Nexus Reborn &7&l-> &e&lALPHA &7[1.8-1.21.5]", "&7Discord: &3thenexusreborn.com/discord"));
@@ -316,8 +319,8 @@ public class NexusCore extends JavaPlugin implements Listener {
         }
     }
     
-    public NickWrapper_v1_8_R3 getNickWrapper() {
-        return nickWrapper;
+    public DisguiseProvider getDisguiseProvider() {
+        return disguiseProvider;
     }
     
     public List<DiscordVerifyCode> getDiscordVerifyCodes() {

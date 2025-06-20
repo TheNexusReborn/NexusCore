@@ -7,7 +7,6 @@ import com.thenexusreborn.nexuscore.api.command.NexusCommand;
 import com.thenexusreborn.nexuscore.util.MsgType;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 public class PingCommand extends NexusCommand<NexusCore> {
@@ -35,7 +34,7 @@ public class PingCommand extends NexusCommand<NexusCore> {
             player = (Player) sender;
         }
         
-        MsgType.INFO.send(sender, player.getName() + "'s ping is %v", ((CraftPlayer) player).getHandle().ping + "ms");
+        MsgType.INFO.send(sender, player.getName() + "'s ping is %v", player.getPing() + "ms");
         return true;
     }
 }
