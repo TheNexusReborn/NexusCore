@@ -4,7 +4,7 @@ import com.stardevllc.helper.Pair;
 import com.stardevllc.mojang.MojangAPI;
 import com.stardevllc.mojang.MojangProfile;
 import com.stardevllc.starcore.api.StarColors;
-import com.stardevllc.starcore.api.cmdflags.FlagResult;
+import com.stardevllc.starmclib.cmdflags.FlagResult;
 import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.nexuscore.NexusCore;

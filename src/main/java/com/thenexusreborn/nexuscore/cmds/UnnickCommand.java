@@ -1,7 +1,7 @@
 package com.thenexusreborn.nexuscore.cmds;
 
-import com.stardevllc.starcore.api.cmdflags.FlagResult;
-import com.stardevllc.starcore.skins.SkinManager;
+import com.stardevllc.starmclib.cmdflags.FlagResult;
+import com.stardevllc.starmclib.skin.SkinAPI;
 import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.nickname.Nickname;
 import com.thenexusreborn.api.player.NexusPlayer;
@@ -53,8 +53,7 @@ public class UnnickCommand extends NexusCommand<NexusCore> {
         
         Nickname nickname = nexusPlayer.getNickname();
         
-        SkinManager skinManager = Bukkit.getServicesManager().getRegistration(SkinManager.class).getProvider();
-        plugin.getNickWrapper().setNick(plugin, (Player) sender, nexusPlayer.getTrueName(), skinManager.getFromMojang(nexusPlayer.getUniqueId()));
+        plugin.getNickWrapper().setNick(plugin, (Player) sender, nexusPlayer.getTrueName(), SkinAPI.getFromMojang(nexusPlayer.getUniqueId()));
         if (nickname.isPersist()) {
             nickname.setActive(false);
         } else {

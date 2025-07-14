@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.cmds.nickadmin.blacklist;
 
-import com.stardevllc.starcore.api.cmdflags.FlagResult;
+import com.stardevllc.starmclib.cmdflags.FlagResult;
 import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.nexuscore.NexusCore;

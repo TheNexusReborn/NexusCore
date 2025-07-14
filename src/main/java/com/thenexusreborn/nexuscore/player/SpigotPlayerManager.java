@@ -4,9 +4,9 @@ import com.stardevllc.clock.clocks.Stopwatch;
 import com.stardevllc.mojang.MojangAPI;
 import com.stardevllc.mojang.MojangProfile;
 import com.stardevllc.starchat.context.ChatContext;
-import com.stardevllc.starcore.api.Skin;
 import com.stardevllc.starcore.api.StarColors;
-import com.stardevllc.starcore.skins.SkinManager;
+import com.stardevllc.starmclib.skin.Skin;
+import com.stardevllc.starmclib.skin.SkinAPI;
 import com.stardevllc.time.TimeUnit;
 import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.nickname.Nickname;
@@ -174,8 +174,7 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
             updatePermissions(nexusPlayer.getUniqueId(), nexusPlayer.getRanks());
             
             Nickname nickname = nexusPlayer.getNickname();
-            SkinManager skinManager = Bukkit.getServicesManager().getRegistration(SkinManager.class).getProvider();
-            Skin skin = nickname != null && nickname.getSkin() != null && !nickname.getSkin().isBlank() ? skinManager.getFromMojang(nickname.getSkin()) : null;
+            Skin skin = nickname != null && nickname.getSkin() != null && !nickname.getSkin().isBlank() ? SkinAPI.getFromMojang(nickname.getSkin()) : null;
             
             Bukkit.getScheduler().runTask(plugin, () -> {
                 if (skin != null && nickname.isActive()) {

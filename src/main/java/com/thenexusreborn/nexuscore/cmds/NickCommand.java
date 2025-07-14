@@ -1,10 +1,10 @@
 package com.thenexusreborn.nexuscore.cmds;
 
-import com.stardevllc.starcore.api.Skin;
-import com.stardevllc.starcore.api.cmdflags.FlagResult;
-import com.stardevllc.starcore.api.cmdflags.type.ComplexFlag;
-import com.stardevllc.starcore.api.cmdflags.type.PresenceFlag;
-import com.stardevllc.starcore.skins.SkinManager;
+import com.stardevllc.starmclib.cmdflags.FlagResult;
+import com.stardevllc.starmclib.cmdflags.type.ComplexFlag;
+import com.stardevllc.starmclib.cmdflags.type.PresenceFlag;
+import com.stardevllc.starmclib.skin.Skin;
+import com.stardevllc.starmclib.skin.SkinAPI;
 import com.stardevllc.time.TimeParser;
 import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.nickname.*;
@@ -186,7 +186,6 @@ public class NickCommand extends NexusCommand<NexusCore> {
             }
         }
         
-        SkinManager skinManager = Bukkit.getServer().getServicesManager().getRegistration(SkinManager.class).getProvider();
         Skin skin = null;
         if (flagResults.getValue(SKIN) != null) {
             if (senderRank.ordinal() > nickPerms.getCustomSkin().ordinal()) {
@@ -194,7 +193,7 @@ public class NickCommand extends NexusCommand<NexusCore> {
                 return true;
             }
             
-            skin = skinManager.getFromMojang(flagResults.getValue(SKIN).toString());
+            skin = SkinAPI.getFromMojang(flagResults.getValue(SKIN).toString());
             if (skin == null) {
                 MsgType.WARN.send(sender, "The name you provided for the skin is invalid.");
                 return true;
@@ -203,12 +202,12 @@ public class NickCommand extends NexusCommand<NexusCore> {
         
         if (skin == null && !self) {
             if (uuidFromName != null) {
-                skin = skinManager.getFromMojang(uuidFromName);
+                skin = SkinAPI.getFromMojang(uuidFromName);
             } else {
                 List<String> randomSkins = new ArrayList<>(NexusReborn.getRandomSkins());
                 if (!randomSkins.isEmpty()) {
                     String skinRaw = randomSkins.get(random.nextInt(randomSkins.size()));
-                    skin = skinManager.getFromMojang(skinRaw);
+                    skin = SkinAPI.getFromMojang(skinRaw);
                 }
             }
         }

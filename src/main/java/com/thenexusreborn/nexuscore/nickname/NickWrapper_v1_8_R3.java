@@ -1,7 +1,7 @@
 package com.thenexusreborn.nexuscore.nickname;
 
 import com.mojang.authlib.properties.Property;
-import com.stardevllc.starcore.api.Skin;
+import com.stardevllc.starmclib.skin.Skin;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

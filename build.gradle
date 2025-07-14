@@ -12,6 +12,10 @@ repositories {
     }
 
     maven {
+        url 'https://repo.stardevllc.com/releases'
+    }
+
+    maven {
         url = uri('https://hub.spigotmc.org/nexus/content/repositories/snapshots/')
     }
 
@@ -34,8 +38,8 @@ dependencies {
         exclude group: 'com.google.protobuf', module: 'protobuf-java'
     }
     api 'org.slf4j:slf4j-nop:2.0.16'
-    compileOnly 'com.github.StarDevelopmentLLC:StarCore:0.5.4'
-    compileOnly 'com.github.StarDevelopmentLLC:StarChat:0.2.6'
+    compileOnly 'com.stardevllc:StarCore:0.8.3'
+    compileOnly 'com.stardevllc:StarChat:0.4.0'
     compileOnly 'me.clip:placeholderapi:2.11.5'
     compileOnly 'org.spigotmc:spigot:1.8.8-R0.1-SNAPSHOT'
     compileOnly 'net.luckperms:api:5.4'

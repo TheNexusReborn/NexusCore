@@ -1,7 +1,7 @@
 package com.thenexusreborn.nexuscore.api.command;
 
-import com.stardevllc.starcore.api.cmdflags.CmdFlags;
-import com.stardevllc.starcore.api.cmdflags.FlagResult;
+import com.stardevllc.starmclib.cmdflags.CmdFlags;
+import com.stardevllc.starmclib.cmdflags.FlagResult;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.nexuscore.util.MsgType;
 import org.bukkit.command.CommandSender;
@@ -28,7 +28,7 @@ public class SubCommand<T extends JavaPlugin> implements ICommand<T> {
     
     protected CmdFlags cmdFlags = new CmdFlags();
     
-    protected boolean playerOnly = false;
+    protected boolean playerOnly;
 
     public SubCommand(T plugin, ICommand<T> parent, int index, String name, String description, Rank minRank, String... aliases) {
         this.plugin = plugin;

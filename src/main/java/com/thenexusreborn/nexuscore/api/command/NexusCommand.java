@@ -1,7 +1,7 @@
 package com.thenexusreborn.nexuscore.api.command;
 
-import com.stardevllc.starcore.api.cmdflags.CmdFlags;
-import com.stardevllc.starcore.api.cmdflags.FlagResult;
+import com.stardevllc.starmclib.cmdflags.CmdFlags;
+import com.stardevllc.starmclib.cmdflags.FlagResult;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.nexuscore.util.MCUtils;
 import com.thenexusreborn.nexuscore.util.MsgType;
@@ -20,8 +20,8 @@ public class NexusCommand<T extends JavaPlugin> implements ICommand<T>, TabExecu
     protected String name;
     protected String[] aliases;
     protected String description;
-    protected boolean playerOnly = false;
-    protected boolean consoleOnly = false;
+    protected boolean playerOnly;
+    protected boolean consoleOnly;
     
     protected Rank minRank;
     
