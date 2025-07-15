@@ -311,7 +311,7 @@ public class NickCommand extends NexusCommand<NexusCore> {
         nickname.setActive(true);
         
         if (!self) {
-            plugin.getNickWrapper().setNick(plugin, target, nickname.getName(), skin);
+            plugin.getDisguiseWrapper().setNick(target, nickname.getName(), skin);
         }
         
         if (target.getUniqueId().equals(((Player) sender).getUniqueId())) {

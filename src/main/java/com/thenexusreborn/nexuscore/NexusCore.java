@@ -28,11 +28,15 @@ import com.thenexusreborn.nexuscore.discord.DiscordVerifyCode;
 import com.thenexusreborn.nexuscore.discord.NexusBot;
 import com.thenexusreborn.nexuscore.hooks.NexusPapiExpansion;
 import com.thenexusreborn.nexuscore.http.*;
-import com.thenexusreborn.nexuscore.nickname.NickWrapper_v1_8_R3;
+import com.thenexusreborn.nexuscore.nickname.DisguiseWrapper;
 import com.thenexusreborn.nexuscore.player.SpigotPlayerManager;
 import com.thenexusreborn.nexuscore.server.CoreInstanceServer;
 import com.thenexusreborn.nexuscore.thread.*;
 import com.thenexusreborn.nexuscore.util.MsgType;
+import dev.iiahmed.disguise.DisguiseManager;
+import dev.iiahmed.disguise.DisguiseProvider;
+import dev.iiahmed.disguise.util.DefaultEntityProvider;
+import dev.iiahmed.disguise.util.DisguiseUtil;
 import net.dv8tion.jda.internal.utils.JDALogger;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.group.Group;
@@ -50,6 +54,7 @@ import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
+import java.lang.reflect.Field;
 import java.net.InetSocketAddress;
 import java.util.*;
 import java.util.concurrent.Executors;
@@ -71,11 +76,13 @@ public class NexusCore extends JavaPlugin implements Listener {
 
     private NexusBot nexusBot;
     
-    private NickWrapper_v1_8_R3 nickWrapper = new NickWrapper_v1_8_R3();
+    private DisguiseWrapper disguiseWrapper;
 
     private List<DiscordVerifyCode> discordVerifyCodes = new ArrayList<>();
     
     private LuckPerms luckPerms;
+    
+    private final DisguiseProvider disguiseProvider = DisguiseManager.getProvider();
 
     @Override
     public void onEnable() {
@@ -92,6 +99,30 @@ public class NexusCore extends JavaPlugin implements Listener {
             getLogger().severe("StarCore not found, disabling NexusCore.");
             pluginManager.disablePlugin(this);
             return;
+        }
+        
+        DisguiseManager.initialize(this, true);
+        getServer().getServicesManager().register(DisguiseProvider.class, this.disguiseProvider, this, ServicePriority.Normal);
+        this.disguiseWrapper = new DisguiseWrapper();
+        getServer().getServicesManager().register(DisguiseWrapper.class, disguiseWrapper, this, ServicePriority.Normal);
+        
+        getLogger().info("Are Entites Supported: " + this.disguiseProvider.areEntitiesSupported());
+        getLogger().info("DisguiseUtil Injection: " + DisguiseUtil.INJECTION);
+        try {
+            Field supportedField = DefaultEntityProvider.class.getDeclaredField("SUPPORTED");
+            supportedField.setAccessible(true);
+            getLogger().info("EntityProvider.SUPPORTED: " + supportedField.get(null));
+            Field foundField = DefaultEntityProvider.class.getDeclaredField("found");
+            foundField.setAccessible(true);
+            getLogger().info("EntityProvider.found: " + foundField.get(null));
+            Field livingField = DefaultEntityProvider.class.getDeclaredField("living");
+            livingField.setAccessible(true);
+            getLogger().info("EntityProvider.living: " + livingField.get(null));
+            Field registeredField = DefaultEntityProvider.class.getDeclaredField("registered");
+            registeredField.setAccessible(true);
+            getLogger().info("EntityProvider.registered: " + registeredField.get(null));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         this.clockManager = new ClockManager(getLogger(), 50);
@@ -316,8 +347,12 @@ public class NexusCore extends JavaPlugin implements Listener {
         }
     }
     
-    public NickWrapper_v1_8_R3 getNickWrapper() {
-        return nickWrapper;
+    public DisguiseProvider getDisguiseProvider() {
+        return disguiseProvider;
+    }
+    
+    public DisguiseWrapper getDisguiseWrapper() {
+        return disguiseWrapper;
     }
     
     public List<DiscordVerifyCode> getDiscordVerifyCodes() {

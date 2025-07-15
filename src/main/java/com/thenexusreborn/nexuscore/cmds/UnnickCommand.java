@@ -53,7 +53,7 @@ public class UnnickCommand extends NexusCommand<NexusCore> {
         
         Nickname nickname = nexusPlayer.getNickname();
         
-        plugin.getNickWrapper().setNick(plugin, (Player) sender, nexusPlayer.getTrueName(), SkinAPI.getFromMojang(nexusPlayer.getUniqueId()));
+        plugin.getDisguiseWrapper().setNick((Player) sender, nexusPlayer.getTrueName(), SkinAPI.getFromMojang(nexusPlayer.getUniqueId()));
         if (nickname.isPersist()) {
             nickname.setActive(false);
         } else {
