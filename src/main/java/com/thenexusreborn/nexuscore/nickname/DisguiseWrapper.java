@@ -34,7 +34,6 @@ public class DisguiseWrapper {
     }
     
     public DisguiseResponse setDisguise(Player player, String name, Skin skin, EntityType entityType) {
-        System.out.println("Setting disguise for " + player.getName());
         DisguiseProvider provider = getProvider();
         //Get current info
         PlayerInfo currentInfo = provider.getInfo(player);
@@ -69,24 +68,17 @@ public class DisguiseWrapper {
         //Create new disguise (It is pretty light as it doesn't do much on it's own)
         Disguise disguise = disguiseBuilder.build();
         
-        System.out.println("Disguise Name: " + disguise.getName());
-        System.out.println("Disguise Entity: " + (disguise.getEntity() != null ? disguise.getEntity().getType() : null));
-        
         //Undisguise to prevent realname issues
         if (provider.isDisguised(player)) {
-            System.out.println("Undisguised");
             provider.undisguise(player);
         }
         
         //Check to see if all three fields are empty, if they are, don't issue another disguise as we are just resetting to default name at this point
         if (!disguise.hasName() && !disguise.hasSkin() && (!disguise.hasEntity() || entityType == EntityType.PLAYER)) {
-            System.out.println("All fields empty, returning success");
             return DisguiseResponse.SUCCESS;
         }
         
         //Disguise the player with the disguise information and return response value
-        DisguiseResponse response = provider.disguise(player, disguise);
-        System.out.println("Response: " + response);
-        return response;
+        return provider.disguise(player, disguise);
     }
 }

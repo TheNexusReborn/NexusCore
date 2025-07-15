@@ -15,9 +15,9 @@ repositories {
         url 'https://repo.stardevllc.com/releases'
     }
 
-    maven {
-        url = uri('https://repo.gravemc.net/releases/')
-    }
+//    maven {
+//        url = uri('https://repo.gravemc.net/releases/')
+//    }
 
     maven {
         url = uri('https://hub.spigotmc.org/nexus/content/repositories/snapshots/')
@@ -47,7 +47,7 @@ dependencies {
     compileOnly 'me.clip:placeholderapi:2.11.5'
     compileOnly 'org.spigotmc:spigot:1.8.8-R0.1-SNAPSHOT'
     compileOnly 'net.luckperms:api:5.4'
-    api 'dev.iiahmed:ModernDisguise:4.1'
+    api 'dev.iiahmed:ModernDisguise:4.0'
 }
 
 group = 'com.thenexusreborn'
