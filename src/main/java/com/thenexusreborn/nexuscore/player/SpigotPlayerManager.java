@@ -178,7 +178,7 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
             
             Bukkit.getScheduler().runTask(plugin, () -> {
                 if (skin != null && nickname.isActive()) {
-                    plugin.getDisguiseWrapper().setNick(player, nickname.getName(), skin);
+                    plugin.getNickWrapper().setNick(plugin, player, nickname.getName(), skin);
                 }
                 
                 NexusScoreboard scoreboard = new SpigotNexusScoreboard(nexusPlayer);

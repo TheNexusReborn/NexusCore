@@ -28,13 +28,11 @@ import com.thenexusreborn.nexuscore.discord.DiscordVerifyCode;
 import com.thenexusreborn.nexuscore.discord.NexusBot;
 import com.thenexusreborn.nexuscore.hooks.NexusPapiExpansion;
 import com.thenexusreborn.nexuscore.http.*;
-import com.thenexusreborn.nexuscore.nickname.DisguiseWrapper;
+import com.thenexusreborn.nexuscore.nickname.NickWrapper_v1_8_R3;
 import com.thenexusreborn.nexuscore.player.SpigotPlayerManager;
 import com.thenexusreborn.nexuscore.server.CoreInstanceServer;
 import com.thenexusreborn.nexuscore.thread.*;
 import com.thenexusreborn.nexuscore.util.MsgType;
-import dev.iiahmed.disguise.DisguiseManager;
-import dev.iiahmed.disguise.DisguiseProvider;
 import net.dv8tion.jda.internal.utils.JDALogger;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.group.Group;
@@ -70,17 +68,15 @@ public class NexusCore extends JavaPlugin implements Listener {
     private InstanceServer nexusServer;
     private ClockManager clockManager;
     private GuiManager guiManager;
+    
+    private NickWrapper_v1_8_R3 nickWrapper = new NickWrapper_v1_8_R3();
 
     private NexusBot nexusBot;
     
-    private DisguiseWrapper disguiseWrapper;
-
     private List<DiscordVerifyCode> discordVerifyCodes = new ArrayList<>();
      
     private LuckPerms luckPerms;
     
-    private final DisguiseProvider disguiseProvider = DisguiseManager.getProvider();
-
     @Override
     public void onEnable() {
         getLogger().info("Loading NexusCore v" + getDescription().getVersion());
@@ -98,11 +94,6 @@ public class NexusCore extends JavaPlugin implements Listener {
             return;
         }
         
-        DisguiseManager.initialize(this, true);
-        getServer().getServicesManager().register(DisguiseProvider.class, this.disguiseProvider, this, ServicePriority.Normal);
-        this.disguiseWrapper = new DisguiseWrapper();
-        getServer().getServicesManager().register(DisguiseWrapper.class, disguiseWrapper, this, ServicePriority.Normal);
-
         this.clockManager = new ClockManager(getLogger(), 50);
         getServer().getScheduler().runTaskTimer(this, this.clockManager.getRunnable(), 1L, 1L);
         Bukkit.getServicesManager().register(ClockManager.class, this.clockManager, this, ServicePriority.High);
@@ -325,12 +316,8 @@ public class NexusCore extends JavaPlugin implements Listener {
         }
     }
     
-    public DisguiseProvider getDisguiseProvider() {
-        return disguiseProvider;
-    }
-    
-    public DisguiseWrapper getDisguiseWrapper() {
-        return disguiseWrapper;
+    public NickWrapper_v1_8_R3 getNickWrapper() {
+        return nickWrapper;
     }
     
     public List<DiscordVerifyCode> getDiscordVerifyCodes() {
