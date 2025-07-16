@@ -76,7 +76,7 @@ public class NexusCore extends JavaPlugin implements Listener {
     private DisguiseWrapper disguiseWrapper;
 
     private List<DiscordVerifyCode> discordVerifyCodes = new ArrayList<>();
-    
+     
     private LuckPerms luckPerms;
     
     private final DisguiseProvider disguiseProvider = DisguiseManager.getProvider();
