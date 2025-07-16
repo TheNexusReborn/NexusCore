@@ -35,8 +35,6 @@ import com.thenexusreborn.nexuscore.thread.*;
 import com.thenexusreborn.nexuscore.util.MsgType;
 import dev.iiahmed.disguise.DisguiseManager;
 import dev.iiahmed.disguise.DisguiseProvider;
-import dev.iiahmed.disguise.util.DefaultEntityProvider;
-import dev.iiahmed.disguise.util.DisguiseUtil;
 import net.dv8tion.jda.internal.utils.JDALogger;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.group.Group;
@@ -54,7 +52,6 @@ import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
-import java.lang.reflect.Field;
 import java.net.InetSocketAddress;
 import java.util.*;
 import java.util.concurrent.Executors;
@@ -105,25 +102,6 @@ public class NexusCore extends JavaPlugin implements Listener {
         getServer().getServicesManager().register(DisguiseProvider.class, this.disguiseProvider, this, ServicePriority.Normal);
         this.disguiseWrapper = new DisguiseWrapper();
         getServer().getServicesManager().register(DisguiseWrapper.class, disguiseWrapper, this, ServicePriority.Normal);
-        
-        getLogger().info("Are Entites Supported: " + this.disguiseProvider.areEntitiesSupported());
-        getLogger().info("DisguiseUtil Injection: " + DisguiseUtil.INJECTION);
-        try {
-            Field supportedField = DefaultEntityProvider.class.getDeclaredField("SUPPORTED");
-            supportedField.setAccessible(true);
-            getLogger().info("EntityProvider.SUPPORTED: " + supportedField.get(null));
-            Field foundField = DefaultEntityProvider.class.getDeclaredField("found");
-            foundField.setAccessible(true);
-            getLogger().info("EntityProvider.found: " + foundField.get(null));
-            Field livingField = DefaultEntityProvider.class.getDeclaredField("living");
-            livingField.setAccessible(true);
-            getLogger().info("EntityProvider.living: " + livingField.get(null));
-            Field registeredField = DefaultEntityProvider.class.getDeclaredField("registered");
-            registeredField.setAccessible(true);
-            getLogger().info("EntityProvider.registered: " + registeredField.get(null));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         this.clockManager = new ClockManager(getLogger(), 50);
         getServer().getScheduler().runTaskTimer(this, this.clockManager.getRunnable(), 1L, 1L);
