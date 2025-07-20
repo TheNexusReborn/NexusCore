@@ -47,9 +47,11 @@ public class ChatManager implements Listener {
         }
         
         if (nexusPlayer.getToggleValue("vanish")) {
-            e.setCancelled(true);
-            nexusPlayer.sendMessage(MsgType.WARN + "You are not allowed to speak in vanish mode.");
-            return;
+            if (!e.getChatSpace().getName().equalsIgnoreCase(plugin.getStarChatPlugin().getStaffChannel().getName())) {
+                e.setCancelled(true);
+                nexusPlayer.sendMessage(MsgType.WARN + "You are not allowed to speak in vanish mode.");
+                return;
+            }
         }
         
         if (!nexusPlayer.hasSpokenInChat()) {
