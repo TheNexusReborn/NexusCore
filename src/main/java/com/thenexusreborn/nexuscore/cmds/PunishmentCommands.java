@@ -86,7 +86,7 @@ public class PunishmentCommands implements CommandExecutor {
         
         PlayerManager playerManager = NexusReborn.getPlayerManager();
         
-        NexusPlayer target;
+        NexusPlayer target = null;
         
         //First get the player if they are on the server
         //This includes nicked players
@@ -96,9 +96,11 @@ public class PunishmentCommands implements CommandExecutor {
             target = playerManager.getNexusPlayer(targetPlayer.getUniqueId());
         } else {
             Pair<UUID, String> info = playerManager.getPlayerFromIdentifier(args[0]);
-            target = playerManager.getNexusPlayer(info.key());
-            if (target == null) {
-                target = playerManager.createPlayerData(info.key(), info.value());
+            if (info != null) {
+                target = playerManager.getNexusPlayer(info.key());
+                if (target == null) {
+                    target = playerManager.createPlayerData(info.key(), info.value());
+                }
             }
         }
         
@@ -128,20 +130,20 @@ public class PunishmentCommands implements CommandExecutor {
         if (length > 0) {
             startIndex = 2;
         }
-
-        if (args[startIndex].startsWith("[PMR]")) {
+        for (int i = startIndex; i < args.length; i++) {
+            sb.append(args[i]).append(" ");
+        }
+        
+        String reason = sb.toString().trim();
+        if (reason.startsWith("[PMR]")) {
             if (sender instanceof ConsoleCommandSender) {
                 actor = "PowerMoveRegulator";
             } else if (actorRank == Rank.NEXUS) {
                 actor = "PowerMoveRegulator";
             }
-            startIndex++;
+            reason.replace("[PMR] ", "");
         }
-        for (int i = startIndex; i < args.length; i++) {
-            sb.append(args[i]).append(" ");
-        }
-
-        String reason = sb.toString().trim();
+        
         Punishment punishment = new Punishment(System.currentTimeMillis(), length, actor, target.getUniqueId().toString(), server, reason, type, Visibility.SILENT);
 
         if (punishment.getType() == PunishmentType.MUTE) {
@@ -164,7 +166,7 @@ public class PunishmentCommands implements CommandExecutor {
                     NexusReborn.getPrimaryDatabase().saveSilent(vanish);
                     target.sendMessage(MsgType.INFO.format("Your nickname was " + punishment.getType().getVerb() + " by " + sender.getName() + ", you have been put into vanish mode."));
                 } else {
-                    targetPlayer.kickPlayer(StarColors.color(punishment.formatKick())); //TODO this doesn't provide an id right away though'
+                    targetPlayer.kickPlayer(StarColors.color(punishment.formatKick())); //TODO this doesn't provide an id right away though
                 }
             }
 
