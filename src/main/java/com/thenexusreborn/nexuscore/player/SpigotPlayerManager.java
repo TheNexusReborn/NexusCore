@@ -169,7 +169,7 @@ public class SpigotPlayerManager extends PlayerManager implements Listener {
             
             InetSocketAddress socketAddress = player.getAddress();
             String hostName = socketAddress.getHostString();
-            NexusReborn.getPlayerManager().addIpHistory(player.getUniqueId(), hostName);
+            addIpHistory(player.getUniqueId(), hostName);
             
             updatePermissions(nexusPlayer.getUniqueId(), nexusPlayer.getRanks());
             
