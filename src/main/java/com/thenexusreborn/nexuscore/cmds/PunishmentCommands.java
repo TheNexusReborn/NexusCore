@@ -1,9 +1,9 @@
 package com.thenexusreborn.nexuscore.cmds;
 
-import com.stardevllc.helper.CodeGenerator;
-import com.stardevllc.helper.Pair;
 import com.stardevllc.starcore.api.StarColors;
-import com.stardevllc.time.TimeParser;
+import com.stardevllc.starlib.helper.CodeGenerator;
+import com.stardevllc.starlib.helper.Pair;
+import com.stardevllc.starlib.time.TimeParser;
 import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.punishment.*;

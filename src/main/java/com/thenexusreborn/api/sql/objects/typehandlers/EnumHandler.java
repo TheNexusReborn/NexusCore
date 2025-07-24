@@ -1,6 +1,6 @@
 package com.thenexusreborn.api.sql.objects.typehandlers;
 
-import com.stardevllc.helper.ReflectionHelper;
+import com.stardevllc.starlib.helper.ReflectionHelper;
 import com.thenexusreborn.api.sql.objects.TypeHandler;
 
 import java.lang.reflect.Method;

@@ -1,10 +1,10 @@
 package com.thenexusreborn.api.util;
 
-import com.stardevllc.helper.ReflectionHelper;
+import com.stardevllc.starlib.helper.ReflectionHelper;
 
 import java.lang.reflect.Field;
 
-public class ReflectionUtils {
+public final class ReflectionUtils {
     public static Object getValue(Object object, String path) {
         if (!path.contains(".")) {
             return getFieldValue(object, path);

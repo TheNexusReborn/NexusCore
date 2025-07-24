@@ -1,6 +1,6 @@
 package com.thenexusreborn.api.sql.objects;
 
-import com.stardevllc.observable.Property;
+import com.stardevllc.starlib.observable.Property;
 import com.thenexusreborn.api.sql.annotations.ID;
 import com.thenexusreborn.api.sql.annotations.column.*;
 import com.thenexusreborn.api.sql.objects.typehandlers.PropertyTypeHandler;

@@ -1,7 +1,7 @@
 package com.thenexusreborn.nexuscore.http;
 
 import com.google.gson.*;
-import com.stardevllc.helper.StringHelper;
+import com.stardevllc.starlib.helper.StringHelper;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.thenexusreborn.api.gamearchive.*;

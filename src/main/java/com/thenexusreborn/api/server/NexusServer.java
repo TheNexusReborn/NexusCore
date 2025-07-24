@@ -1,8 +1,6 @@
 package com.thenexusreborn.api.server;
 
-import com.stardevllc.observable.property.IntegerProperty;
-import com.stardevllc.observable.property.ObjectProperty;
-import com.stardevllc.observable.property.StringProperty;
+import com.stardevllc.starlib.observable.property.*;
 import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.NexusPlayer;
 

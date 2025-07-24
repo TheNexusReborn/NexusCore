@@ -1,6 +1,6 @@
 package com.thenexusreborn.api.util;
 
-import com.stardevllc.time.TimeFormat;
+import com.stardevllc.starlib.time.TimeFormat;
 
 public final class Constants {
     public static final String DATE_FORMAT = "MM/dd/yyyy h:mm:ss a z";

@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.cmds.nickadmin;
 
-import com.stardevllc.helper.ReflectionHelper;
+import com.stardevllc.starlib.helper.ReflectionHelper;
 import com.stardevllc.starmclib.cmdflags.FlagResult;
 import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.nickname.NickPerms;

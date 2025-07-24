@@ -1,8 +1,8 @@
 package com.thenexusreborn.nexuscore.cmds;
 
 import com.stardevllc.starcore.api.StarColors;
+import com.stardevllc.starlib.time.TimeFormat;
 import com.stardevllc.starmclib.cmdflags.FlagResult;
-import com.stardevllc.time.TimeFormat;
 import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.tags.Tag;
@@ -51,7 +51,7 @@ public class ProfileCmd extends NexusCommand<NexusCore> {
                 return true;
             }
             
-            if (target != null && target.getNickname() != null && args[0].equalsIgnoreCase(target.getTrueName()) && target.getRank().ordinal() < senderRank.ordinal()) {
+            if (target.getNickname() != null && args[0].equalsIgnoreCase(target.getTrueName()) && target.getRank().ordinal() < senderRank.ordinal()) {
                 target = null;
             }
             

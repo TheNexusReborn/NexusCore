@@ -1,7 +1,7 @@
 package com.thenexusreborn.api.punishment;
 
-import com.stardevllc.converter.string.EnumStringConverter;
-import com.stardevllc.converter.string.StringConverters;
+import com.stardevllc.starlib.converter.string.EnumStringConverter;
+import com.stardevllc.starlib.converter.string.StringConverters;
 import com.thenexusreborn.api.player.Rank;
 
 public enum PunishmentType {

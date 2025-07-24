@@ -1,6 +1,6 @@
 package com.thenexusreborn.api.punishment;
 
-import com.stardevllc.helper.StringHelper;
+import com.stardevllc.starlib.helper.StringHelper;
 import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.sql.annotations.column.*;
 import com.thenexusreborn.api.sql.annotations.table.TableName;

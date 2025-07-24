@@ -1,7 +1,7 @@
 package com.thenexusreborn.api.gamearchive;
 
 import com.google.gson.*;
-import com.stardevllc.helper.StringHelper;
+import com.stardevllc.starlib.helper.StringHelper;
 import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.PlayerManager;
 import com.thenexusreborn.api.sql.annotations.column.*;

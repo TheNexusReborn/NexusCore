@@ -1,6 +1,6 @@
 package com.thenexusreborn.api.registry;
 
-import com.stardevllc.registry.StringRegistry;
+import com.stardevllc.starlib.registry.StringRegistry;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.api.player.Toggle.Info;
 

@@ -1,7 +1,7 @@
 package com.thenexusreborn.api.player;
 
-import com.stardevllc.converter.string.EnumStringConverter;
-import com.stardevllc.converter.string.StringConverters;
+import com.stardevllc.starlib.converter.string.EnumStringConverter;
+import com.stardevllc.starlib.converter.string.StringConverters;
 
 import java.util.List;
 import java.util.Objects;

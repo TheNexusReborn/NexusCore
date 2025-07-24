@@ -1,6 +1,6 @@
 package com.thenexusreborn.api.sql.objects.typehandlers;
 
-import com.stardevllc.observable.Property;
+import com.stardevllc.starlib.observable.Property;
 import com.thenexusreborn.api.sql.objects.TypeHandler;
 
 public class PropertyTypeHandler extends TypeHandler {

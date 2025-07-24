@@ -1,6 +1,6 @@
 package com.thenexusreborn.api.sql;
 
-import com.stardevllc.registry.StringRegistry;
+import com.stardevllc.starlib.registry.StringRegistry;
 import com.thenexusreborn.api.sql.objects.SQLDatabase;
 import com.thenexusreborn.api.sql.objects.Table;
 import com.thenexusreborn.api.sql.objects.TypeHandler;

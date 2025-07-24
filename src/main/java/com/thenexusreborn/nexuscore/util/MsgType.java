@@ -1,8 +1,8 @@
 package com.thenexusreborn.nexuscore.util;
 
-import com.stardevllc.converter.string.EnumStringConverter;
-import com.stardevllc.converter.string.StringConverters;
 import com.stardevllc.starcore.api.StarColors;
+import com.stardevllc.starlib.converter.string.EnumStringConverter;
+import com.stardevllc.starlib.converter.string.StringConverters;
 import org.bukkit.command.CommandSender;
 
 public enum MsgType {

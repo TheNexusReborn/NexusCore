@@ -1,6 +1,6 @@
 package com.thenexusreborn.api.server;
 
-import com.stardevllc.registry.StringRegistry;
+import com.stardevllc.starlib.registry.StringRegistry;
 
 public class ServerRegistry<T extends NexusServer> extends StringRegistry<T> {
     public ServerRegistry() {

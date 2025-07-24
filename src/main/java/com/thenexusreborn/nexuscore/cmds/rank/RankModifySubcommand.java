@@ -1,11 +1,11 @@
 package com.thenexusreborn.nexuscore.cmds.rank;
 
-import com.stardevllc.helper.Pair;
-import com.stardevllc.mojang.MojangAPI;
-import com.stardevllc.mojang.MojangProfile;
 import com.stardevllc.starcore.api.StarColors;
+import com.stardevllc.starlib.helper.Pair;
+import com.stardevllc.starlib.mojang.MojangAPI;
+import com.stardevllc.starlib.mojang.MojangProfile;
+import com.stardevllc.starlib.time.TimeParser;
 import com.stardevllc.starmclib.cmdflags.FlagResult;
-import com.stardevllc.time.TimeParser;
 import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.sql.objects.SQLDatabase;

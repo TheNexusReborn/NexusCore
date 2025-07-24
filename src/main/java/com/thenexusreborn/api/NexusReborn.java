@@ -1,10 +1,10 @@
 package com.thenexusreborn.api;
 
-import com.stardevllc.clock.ClockManager;
-import com.stardevllc.observable.collections.ObservableHashSet;
-import com.stardevllc.observable.collections.ObservableSet;
-import com.stardevllc.registry.StringRegistry;
 import com.stardevllc.starcore.api.StarColors;
+import com.stardevllc.starlib.clock.ClockManager;
+import com.stardevllc.starlib.observable.collections.ObservableHashSet;
+import com.stardevllc.starlib.observable.collections.ObservableSet;
+import com.stardevllc.starlib.registry.StringRegistry;
 import com.thenexusreborn.api.experience.LevelManager;
 import com.thenexusreborn.api.experience.PlayerExperience;
 import com.thenexusreborn.api.gamearchive.*;
@@ -143,7 +143,7 @@ public abstract class NexusReborn {
         
         instance.nicknameBlacklist.addListener(e -> {
             if (e.added() != null) {
-                getPrimaryDatabase().saveSilent(new NameBlacklistEntry((String) e.added()));
+                getPrimaryDatabase().saveSilent(new NameBlacklistEntry(e.added()));
             } else if (e.removed() != null) {
                 getPrimaryDatabase().deleteSilent(NameBlacklistEntry.class, e.removed());
             }
@@ -156,7 +156,7 @@ public abstract class NexusReborn {
         
         instance.randomNames.addListener(e -> {
             if (e.added() != null) {
-                getPrimaryDatabase().saveSilent(new RandomNameEntry((String) e.added()));
+                getPrimaryDatabase().saveSilent(new RandomNameEntry(e.added()));
             } else if (e.removed() != null) {
                 getPrimaryDatabase().deleteSilent(RandomNameEntry.class, e.removed());
             }
@@ -169,7 +169,7 @@ public abstract class NexusReborn {
         
         instance.randomSkins.addListener(e -> {
             if (e.added() != null) {
-                getPrimaryDatabase().saveSilent(new RandomSkinEntry((String) e.added()));
+                getPrimaryDatabase().saveSilent(new RandomSkinEntry(e.added()));
             } else if (e.removed() != null) {
                 getPrimaryDatabase().deleteSilent(RandomSkinEntry.class, e.removed());
             }

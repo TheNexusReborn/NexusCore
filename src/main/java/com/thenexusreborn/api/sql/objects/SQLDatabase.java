@@ -1,6 +1,6 @@
 package com.thenexusreborn.api.sql.objects;
 
-import com.stardevllc.observable.Property;
+import com.stardevllc.starlib.observable.Property;
 import com.thenexusreborn.api.sql.DatabaseRegistry;
 import com.thenexusreborn.api.sql.interfaces.SQLDB;
 import com.thenexusreborn.api.sql.objects.typehandlers.*;

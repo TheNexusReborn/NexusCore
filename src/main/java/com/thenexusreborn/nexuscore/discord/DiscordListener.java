@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.discord;
 
-import com.stardevllc.helper.CodeGenerator;
+import com.stardevllc.starlib.helper.CodeGenerator;
 import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.nexuscore.NexusCore;
