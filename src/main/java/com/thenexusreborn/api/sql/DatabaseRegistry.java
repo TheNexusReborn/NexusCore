@@ -1,14 +1,13 @@
 package com.thenexusreborn.api.sql;
 
+import com.stardevllc.starlib.registry.RegistryObject;
 import com.stardevllc.starlib.registry.StringRegistry;
 import com.thenexusreborn.api.sql.objects.SQLDatabase;
 import com.thenexusreborn.api.sql.objects.Table;
 import com.thenexusreborn.api.sql.objects.TypeHandler;
 
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -57,13 +56,15 @@ public class DatabaseRegistry extends StringRegistry<SQLDatabase> {
         return setup;
     }
     
+    
+    
     /**
      * Registers a Database. <br>
      * If the setup flag is true, this will generate the tables from the database being registered. <br>
      * This does not pass any of the exceptions that can happen
      * @param object The object to register
      */
-    public SQLDatabase register(SQLDatabase object) {
+    public RegistryObject<String, SQLDatabase> register(SQLDatabase object) {
         super.register(object.getName(), object);
         if (!this.setup) {
             for (Table table : object.getTables()) {
@@ -76,7 +77,7 @@ public class DatabaseRegistry extends StringRegistry<SQLDatabase> {
         }
         
         object.setRegistry(this);
-        return object;
+        return new RegistryObject<>(object.getName(), object);
     }
     
     /**
@@ -118,9 +119,10 @@ public class DatabaseRegistry extends StringRegistry<SQLDatabase> {
      *
      * @param objects The databases to register
      */
-    public void registerAll(Collection<SQLDatabase> objects) {
+    public List<RegistryObject<String, SQLDatabase>> registerAll(Collection<SQLDatabase> objects) {
+        List<RegistryObject<String, SQLDatabase>> registeredObjects = new LinkedList<>();
         for (SQLDatabase database : objects) {
-            register(database);
+            registeredObjects.add(register(database));
             for (Table table : database.getTables()) {
                 try {
                     database.execute(table.generateCreationStatement());
@@ -129,6 +131,8 @@ public class DatabaseRegistry extends StringRegistry<SQLDatabase> {
                 }
             }
         }
+        
+        return registeredObjects;
     }
     
     /**

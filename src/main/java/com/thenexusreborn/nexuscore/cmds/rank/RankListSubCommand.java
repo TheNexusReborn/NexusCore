@@ -2,9 +2,9 @@ package com.thenexusreborn.nexuscore.cmds.rank;
 
 import com.stardevllc.starcore.api.StarColors;
 import com.stardevllc.starlib.helper.Pair;
-import com.stardevllc.starlib.mojang.MojangAPI;
-import com.stardevllc.starlib.mojang.MojangProfile;
 import com.stardevllc.starmclib.cmdflags.FlagResult;
+import com.stardevllc.starmclib.mojang.MojangAPI;
+import com.stardevllc.starmclib.mojang.MojangProfile;
 import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.nexuscore.NexusCore;
@@ -52,14 +52,14 @@ public class RankListSubCommand extends SubCommand<NexusCore> {
             return true;
         }
         
-        PlayerRanks playerRanks = playerManager.getPlayerRanks(playerInfo.key());
+        PlayerRanks playerRanks = playerManager.getPlayerRanks(playerInfo.first());
         if (playerRanks == null) {
             MsgType.WARN.send(sender, "That player has no ranks");
             return true;
         }
         
         Map<Rank, Long> ranks = playerRanks.findAll();
-        StarColors.coloredMessage(sender, "&6&l>> &eList of ranks for &b" + playerInfo.value());
+        StarColors.coloredMessage(sender, "&6&l>> &eList of ranks for &b" + playerInfo.second());
         ranks.forEach((rank, expire) -> StarColors.coloredMessage(sender, " &6&l> " + rank.getColor() + rank.name().replace("_", " ")));
         
         return true;

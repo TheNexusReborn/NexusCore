@@ -1,6 +1,6 @@
 package com.thenexusreborn.api.sql.objects;
 
-import com.stardevllc.starlib.observable.Property;
+import com.stardevllc.starlib.observable.WritableProperty;
 import com.thenexusreborn.api.sql.DatabaseRegistry;
 import com.thenexusreborn.api.sql.interfaces.SQLDB;
 import com.thenexusreborn.api.sql.objects.typehandlers.*;
@@ -164,9 +164,9 @@ public abstract class SQLDatabase implements SQLDB {
                 Field field = column.getField();
                 field.setAccessible(true);
 
-                if (Property.class.isAssignableFrom(field.getType())) {
+                if (WritableProperty.class.isAssignableFrom(field.getType())) {
                     Object fieldValue = field.get(object);
-                    Property<Object> property = (Property<Object>) fieldValue;
+                    WritableProperty<Object> property = (WritableProperty<Object>) fieldValue;
                     for (TypeHandler typeHandler : this.typeHandlers) {
                         if (typeHandler.matches(property.getTypeClass())) {
                             data = typeHandler.deserializer.deserialize(column, data);

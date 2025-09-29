@@ -2,10 +2,10 @@ package com.thenexusreborn.nexuscore.cmds.rank;
 
 import com.stardevllc.starcore.api.StarColors;
 import com.stardevllc.starlib.helper.Pair;
-import com.stardevllc.starlib.mojang.MojangAPI;
-import com.stardevllc.starlib.mojang.MojangProfile;
 import com.stardevllc.starlib.time.TimeParser;
 import com.stardevllc.starmclib.cmdflags.FlagResult;
+import com.stardevllc.starmclib.mojang.MojangAPI;
+import com.stardevllc.starmclib.mojang.MojangProfile;
 import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.sql.objects.SQLDatabase;
@@ -58,8 +58,8 @@ public abstract class RankModifySubcommand extends SubCommand<NexusCore> {
             return true;
         }
 
-        UUID targetUniqueID = playerInfo.key();
-        String targetName = playerInfo.value();
+        UUID targetUniqueID = playerInfo.first();
+        String targetName = playerInfo.second();
         PlayerRanks targetRanks = playerManager.getPlayerRanks(targetUniqueID);
         
         if (targetRanks == null) {
@@ -128,7 +128,7 @@ public abstract class RankModifySubcommand extends SubCommand<NexusCore> {
         
         try {
             String encodedRanks = new RanksCodec().encode(targetRanks);
-            database.execute(String.format("insert into `players`(`ranks`, `name`, `uniqueid`) values ('%s','%s','%s') on duplicate key update `ranks`='%s';", encodedRanks, playerInfo.value(), playerInfo.key().toString(), encodedRanks));
+            database.execute(String.format("insert into `players`(`ranks`, `name`, `uniqueid`) values ('%s','%s','%s') on duplicate key update `ranks`='%s';", encodedRanks, playerInfo.second(), playerInfo.first().toString(), encodedRanks));
         } catch (SQLException e) {
             MsgType.ERROR.send(sender, "There was an error while saving changes to the database.");
             e.printStackTrace();

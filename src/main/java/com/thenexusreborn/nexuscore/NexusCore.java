@@ -3,10 +3,10 @@ package com.thenexusreborn.nexuscore;
 import com.stardevllc.starchat.StarChat;
 import com.stardevllc.starchat.channels.ChatChannel;
 import com.stardevllc.starcore.api.StarColors;
+import com.stardevllc.starcore.api.ui.GuiManager;
 import com.stardevllc.starcore.utils.ServerProperties;
 import com.stardevllc.starlib.clock.ClockManager;
 import com.stardevllc.starlib.helper.FileHelper;
-import com.stardevllc.starui.GuiManager;
 import com.sun.net.httpserver.HttpServer;
 import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.gamearchive.GameInfo;
@@ -94,7 +94,7 @@ public class NexusCore extends JavaPlugin implements Listener {
             return;
         }
         
-        this.clockManager = new ClockManager(getLogger(), 50);
+        this.clockManager = new ClockManager(50);
         getServer().getScheduler().runTaskTimer(this, this.clockManager.getRunnable(), 1L, 1L);
         Bukkit.getServicesManager().register(ClockManager.class, this.clockManager, this, ServicePriority.High);
 

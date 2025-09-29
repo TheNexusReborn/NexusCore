@@ -1,10 +1,10 @@
 package com.thenexusreborn.api.sql.objects.typehandlers;
 
-import com.stardevllc.starlib.observable.Property;
+import com.stardevllc.starlib.observable.ReadOnlyProperty;
 import com.thenexusreborn.api.sql.objects.TypeHandler;
 
 public class PropertyTypeHandler extends TypeHandler {
     public PropertyTypeHandler() {
-        super(Property.class, "varchar(10000)", (column, object) -> ((Property<?>) object).getValue(), null);
+        super(ReadOnlyProperty.class, "varchar(10000)", (column, object) -> ((ReadOnlyProperty<?>) object).getValue(), null);
     }
 }

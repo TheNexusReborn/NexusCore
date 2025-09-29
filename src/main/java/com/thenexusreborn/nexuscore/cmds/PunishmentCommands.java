@@ -97,9 +97,9 @@ public class PunishmentCommands implements CommandExecutor {
         } else {
             Pair<UUID, String> info = playerManager.getPlayerFromIdentifier(args[0]);
             if (info != null) {
-                target = playerManager.getNexusPlayer(info.key());
+                target = playerManager.getNexusPlayer(info.first());
                 if (target == null) {
-                    target = playerManager.createPlayerData(info.key(), info.value());
+                    target = playerManager.createPlayerData(info.first(), info.second());
                 }
             }
         }

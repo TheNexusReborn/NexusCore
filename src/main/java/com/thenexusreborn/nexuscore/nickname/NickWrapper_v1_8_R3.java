@@ -58,7 +58,7 @@ public class NickWrapper_v1_8_R3 {
         if (skin != null) {
             CraftPlayer craftPlayer = (CraftPlayer) player;
             craftPlayer.getProfile().getProperties().clear();
-            craftPlayer.getProfile().getProperties().put("0", new Property("textures", skin.getValue(), skin.getSignature()));
+            craftPlayer.getProfile().getProperties().put("0", new Property("textures", skin.getTextures(), skin.getSignature()));
         }
     }
 

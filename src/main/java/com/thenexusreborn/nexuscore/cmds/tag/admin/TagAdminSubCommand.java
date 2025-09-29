@@ -51,7 +51,7 @@ public abstract class TagAdminSubCommand extends SubCommand<NexusCore> {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             List<Tag> tags;
             try {
-                tags = NexusReborn.getPrimaryDatabase().get(Tag.class, "uuid", playerInfo.key().toString());
+                tags = NexusReborn.getPrimaryDatabase().get(Tag.class, "uuid", playerInfo.first().toString());
             } catch (SQLException e) {
                 sender.sendMessage(StarColors.color(MsgType.ERROR + "There was a database error while getting the list of tags."));
                 return;
@@ -65,7 +65,7 @@ public abstract class TagAdminSubCommand extends SubCommand<NexusCore> {
                 }
             }
 
-            NexusPlayer nexusPlayer = NexusReborn.getPlayerManager().getNexusPlayer(playerInfo.key());
+            NexusPlayer nexusPlayer = NexusReborn.getPlayerManager().getNexusPlayer(playerInfo.first());
 
             handle(sender, nexusPlayer, tag, tagName);
         });

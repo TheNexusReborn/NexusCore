@@ -33,15 +33,15 @@ public class AltsCommand extends NexusCommand<NexusCore> {
             return true;
         }
         
-        Rank playerRank = playerManager.getPlayerRank(playerInfo.key());
+        Rank playerRank = playerManager.getPlayerRank(playerInfo.first());
         if (playerRank.ordinal() < senderRank.ordinal()) {
-            sender.sendMessage(MsgType.WARN.format("You do not have permission to view %v's alt ccounts", playerInfo.key()));
+            sender.sendMessage(MsgType.WARN.format("You do not have permission to view %v's alt ccounts", playerInfo.first()));
             return true;
         }
 
         Set<String> ips = new HashSet<>();
         for (IPEntry ipEntry : playerManager.getIpHistory()) {
-            if (ipEntry.getUuid().equals(playerInfo.key())) {
+            if (ipEntry.getUuid().equals(playerInfo.first())) {
                 ips.add(ipEntry.getIp());
             }
         }
@@ -60,12 +60,12 @@ public class AltsCommand extends NexusCommand<NexusCore> {
                     altNames.add(nameFromUUID);
                 }
             } else {
-                plugin.getLogger().warning("Found alt " + player.toString() + " for " + playerInfo.value() + " but could not get the name. Cache returned: " + nameFromUUID);
+                plugin.getLogger().warning("Found alt " + player.toString() + " for " + playerInfo.second() + " but could not get the name. Cache returned: " + nameFromUUID);
             }
         }
 
         String altNameList = StringHelper.join(altNames, ", ");
-        sender.sendMessage(StarColors.color(MsgType.INFO + playerInfo.value() + " has the following alt accounts..."));
+        sender.sendMessage(StarColors.color(MsgType.INFO + playerInfo.second() + " has the following alt accounts..."));
         sender.sendMessage(StarColors.color("&6&l> &b" + altNameList));
         return true;
     }

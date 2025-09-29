@@ -1,6 +1,6 @@
 plugins {
     id 'java-library'
-    id 'com.gradleup.shadow' version '9.0.0-beta13'
+    id 'com.gradleup.shadow' version '9.2.2'
     id 'maven-publish'
 }
 
@@ -33,7 +33,6 @@ repositories {
 }
 
 dependencies {
-    api 'com.stardevllc:StarUI:0.1.4'
     api('com.mysql:mysql-connector-j:8.1.0') {
         exclude group: 'com.google.protobuf', module: 'protobuf-java'
     }
@@ -41,16 +40,16 @@ dependencies {
     implementation('net.dv8tion:JDA:5.2.0') {
         exclude module: 'opus-java'
     }
-    compileOnly 'com.stardevllc:StarCore:0.9.1'
-    compileOnly 'com.stardevllc:StarChat:0.5.0'
-    compileOnly 'com.stardevllc:StarItems:0.2.0'
+    compileOnly 'com.stardevllc:StarCore:0.10.1'
+    compileOnly 'com.stardevllc:StarChat:0.5.1'
+    compileOnly 'com.stardevllc:StarItems:0.2.1'
     compileOnly 'me.clip:placeholderapi:2.11.5'
     compileOnly 'org.spigotmc:spigot:1.8.8-R0.1-SNAPSHOT'
     compileOnly 'net.luckperms:api:5.4'
 }
 
 group = 'com.thenexusreborn'
-version = '0.4.0'
+version = '0.4.1'
 
 processResources {
     filesMatching("*.yml") {
@@ -74,8 +73,8 @@ java {
 
 publishing {
     publications {
-        shadow(MavenPublication) { publication ->
-            project.shadow.component(publication)
+        shadow(MavenPublication) {
+            from components.shadow
         }
     }
 }
