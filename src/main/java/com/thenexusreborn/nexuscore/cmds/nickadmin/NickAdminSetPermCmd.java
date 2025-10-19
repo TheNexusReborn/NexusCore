@@ -21,7 +21,7 @@ public class NickAdminSetPermCmd extends SubCommand<NexusCore> {
     private static final Map<String, Field> fields = new HashMap<>();
     
     static {
-        for (Field field : ReflectionHelper.getClassFields(NickPerms.class)) {
+        for (Field field : ReflectionHelper.getClassFields(NickPerms.class).values()) {
             field.setAccessible(true);
             fields.put(field.getName().toLowerCase(), field);
         }

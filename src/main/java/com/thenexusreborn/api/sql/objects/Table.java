@@ -57,7 +57,7 @@ public class Table implements Comparable<Table> {
             name = modelClass.getSimpleName().toLowerCase();
         }
     
-        for (Field field : ReflectionHelper.getClassFields(modelClass)) {
+        for (Field field : ReflectionHelper.getClassFields(modelClass).values()) {
             field.setAccessible(true);
             
             if (field.isAnnotationPresent(ColumnIgnored.class)) {

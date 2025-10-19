@@ -141,11 +141,11 @@ public abstract class NexusReborn {
             instance.nicknameBlacklist.add(entry.getName());
         }
         
-        instance.nicknameBlacklist.addListener(e -> {
-            if (e.added() != null) {
-                getPrimaryDatabase().saveSilent(new NameBlacklistEntry(e.added()));
-            } else if (e.removed() != null) {
-                getPrimaryDatabase().deleteSilent(NameBlacklistEntry.class, e.removed());
+        instance.nicknameBlacklist.addListener((source, added, removed) -> {
+            if (added != null) {
+                getPrimaryDatabase().saveSilent(new NameBlacklistEntry(added));
+            } else if (removed != null) {
+                getPrimaryDatabase().deleteSilent(NameBlacklistEntry.class, removed);
             }
         });
         
@@ -154,11 +154,11 @@ public abstract class NexusReborn {
             instance.randomNames.add(entry.getName());
         }
         
-        instance.randomNames.addListener(e -> {
-            if (e.added() != null) {
-                getPrimaryDatabase().saveSilent(new RandomNameEntry(e.added()));
-            } else if (e.removed() != null) {
-                getPrimaryDatabase().deleteSilent(RandomNameEntry.class, e.removed());
+        instance.randomNames.addListener((source, added, removed) -> {
+            if (added != null) {
+                getPrimaryDatabase().saveSilent(new RandomNameEntry(added));
+            } else if (removed != null) {
+                getPrimaryDatabase().deleteSilent(RandomNameEntry.class, removed);
             }
         });
         
@@ -167,11 +167,11 @@ public abstract class NexusReborn {
             instance.randomSkins.add(entry.getName());
         }
         
-        instance.randomSkins.addListener(e -> {
-            if (e.added() != null) {
-                getPrimaryDatabase().saveSilent(new RandomSkinEntry(e.added()));
-            } else if (e.removed() != null) {
-                getPrimaryDatabase().deleteSilent(RandomSkinEntry.class, e.removed());
+        instance.randomSkins.addListener((source, added, removed) -> {
+            if (added != null) {
+                getPrimaryDatabase().saveSilent(new RandomSkinEntry(added));
+            } else if (removed != null) {
+                getPrimaryDatabase().deleteSilent(RandomSkinEntry.class, removed);
             }
         });
         

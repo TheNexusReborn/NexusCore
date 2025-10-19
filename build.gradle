@@ -40,16 +40,15 @@ dependencies {
     implementation('net.dv8tion:JDA:5.2.0') {
         exclude module: 'opus-java'
     }
-    compileOnly 'com.stardevllc:StarCore:0.10.1'
-    compileOnly 'com.stardevllc:StarChat:0.5.1'
-    compileOnly 'com.stardevllc:StarItems:0.2.1'
+    compileOnly 'com.stardevllc:StarCore:0.13.3'
+    compileOnly 'com.stardevllc:StarChat:0.5.5'
     compileOnly 'me.clip:placeholderapi:2.11.5'
     compileOnly 'org.spigotmc:spigot:1.8.8-R0.1-SNAPSHOT'
     compileOnly 'net.luckperms:api:5.4'
 }
 
 group = 'com.thenexusreborn'
-version = '0.4.1'
+version = '0.5.0'
 
 processResources {
     filesMatching("*.yml") {

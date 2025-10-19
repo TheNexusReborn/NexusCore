@@ -12,16 +12,16 @@ public abstract non-sealed class VirtualServer extends NexusServer {
         super(name, ServerType.VIRTUAL, mode, maxPlayers);
         this.parentServer = new ReadWriteObjectProperty<>(this, "parentServer", InstanceServer.class);
         
-        this.parentServer.addListener(e -> {
-            if (e.oldValue() != null) {
+        this.parentServer.addListener((source, oldValue, newValue) -> {
+            if (oldValue != null) {
                 for (UUID player : players) {
-                    e.oldValue().removePlayer(player);
+                    oldValue.removePlayer(player);
                 }
             }
 
-            if (e.newValue() != null) {
+            if (newValue != null) {
                 for (UUID player : players) {
-                    e.newValue().addPlayer(player);
+                    newValue.addPlayer(player);
                 }
             }
         });
