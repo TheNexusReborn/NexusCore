@@ -34,12 +34,12 @@ public class CoreInstanceServer extends InstanceServer {
 
     @Override
     public void quit(NexusPlayer nexusPlayer) {
-        getChildServers().forEach(s -> s.quit(nexusPlayer));
+        getChildServers().values().forEach(s -> s.quit(nexusPlayer));
     }
 
     @Override
     public void quit(UUID uuid) {
-        getChildServers().forEach(s -> s.quit(uuid));
+        getChildServers().values().forEach(s -> s.quit(uuid));
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.thenexusreborn.api.sql;
 
-import com.stardevllc.starlib.registry.RegistryObject;
-import com.stardevllc.starlib.registry.StringRegistry;
+import com.stardevllc.starlib.objects.registry.Registry;
+import com.stardevllc.starlib.objects.registry.RegistryObject;
 import com.thenexusreborn.api.sql.objects.SQLDatabase;
 import com.thenexusreborn.api.sql.objects.Table;
 import com.thenexusreborn.api.sql.objects.TypeHandler;
@@ -20,7 +20,7 @@ import java.util.logging.Logger;
  * @see SQLDatabase
  */
 @SuppressWarnings("DanglingJavadoc")
-public class DatabaseRegistry extends StringRegistry<SQLDatabase> {
+public class DatabaseRegistry extends Registry<String, SQLDatabase> {
     
     private boolean setup;
     private Logger logger;
@@ -37,7 +37,8 @@ public class DatabaseRegistry extends StringRegistry<SQLDatabase> {
      * @throws SQLException The passed exception if one occurs
      */
     public void setup() throws SQLException {
-        for (SQLDatabase database : getObjects().values()) {
+        
+        for (SQLDatabase database : values()) {
             for (Table table : database.getTables()) {
                 database.execute(table.generateCreationStatement());
             }
@@ -77,7 +78,7 @@ public class DatabaseRegistry extends StringRegistry<SQLDatabase> {
         }
         
         object.setRegistry(this);
-        return new RegistryObject<>(object.getName(), object);
+        return new RegistryObject<>(this, object.getName(), object);
     }
     
     /**
@@ -150,7 +151,7 @@ public class DatabaseRegistry extends StringRegistry<SQLDatabase> {
      */
     @Override
     public SQLDatabase get(String str) {
-        for (SQLDatabase object : getObjects().values()) {
+        for (SQLDatabase object : values()) {
             if (object.getName().equalsIgnoreCase(str)) {
                 return object;
             }

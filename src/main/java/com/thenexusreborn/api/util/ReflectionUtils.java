@@ -1,6 +1,6 @@
 package com.thenexusreborn.api.util;
 
-import com.stardevllc.starlib.helper.ReflectionHelper;
+import com.stardevllc.starlib.reflection.ReflectionHelper;
 
 import java.lang.reflect.Field;
 

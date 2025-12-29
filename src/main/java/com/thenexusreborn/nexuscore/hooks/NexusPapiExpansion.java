@@ -86,7 +86,7 @@ public class NexusPapiExpansion extends PlaceholderExpansion {
                 return "&7";
             }
         } else if (params.equalsIgnoreCase("servername")) {
-            for (NexusServer server : NexusReborn.getServerRegistry()) {
+            for (NexusServer server : NexusReborn.getServerRegistry().values()) {
                 if (server.getPlayers().contains(player.getUniqueId())) {
                     return server.getName();
                 }

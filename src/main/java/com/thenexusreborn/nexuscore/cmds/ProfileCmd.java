@@ -2,7 +2,7 @@ package com.thenexusreborn.nexuscore.cmds;
 
 import com.stardevllc.starcore.api.StarColors;
 import com.stardevllc.starlib.time.TimeFormat;
-import com.stardevllc.starmclib.cmdflags.FlagResult;
+import com.stardevllc.starmclib.command.flags.FlagResult;
 import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.tags.Tag;
@@ -133,7 +133,7 @@ public class ProfileCmd extends NexusCommand<NexusCore> {
         
         PlayerToggles toggles = target.getToggles();
         
-        for (Toggle.Info toggleInfo : NexusReborn.getToggleRegistry()) {
+        for (Toggle.Info toggleInfo : NexusReborn.getToggleRegistry().values()) {
             if (target.getEffectiveRank().ordinal() <= toggleInfo.getMinRank().ordinal()) {
                 sendProfileLine(sender, toggleInfo.getDisplayName(), toggles.getValue(toggleInfo.getName()));
             }

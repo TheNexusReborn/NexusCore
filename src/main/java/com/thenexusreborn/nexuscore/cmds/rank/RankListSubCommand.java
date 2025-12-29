@@ -2,7 +2,7 @@ package com.thenexusreborn.nexuscore.cmds.rank;
 
 import com.stardevllc.starcore.api.StarColors;
 import com.stardevllc.starlib.helper.Pair;
-import com.stardevllc.starmclib.cmdflags.FlagResult;
+import com.stardevllc.starmclib.command.flags.FlagResult;
 import com.stardevllc.starmclib.mojang.MojangAPI;
 import com.stardevllc.starmclib.mojang.MojangProfile;
 import com.thenexusreborn.api.NexusReborn;

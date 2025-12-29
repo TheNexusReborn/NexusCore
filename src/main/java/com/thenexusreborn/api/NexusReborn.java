@@ -2,9 +2,8 @@ package com.thenexusreborn.api;
 
 import com.stardevllc.starcore.api.StarColors;
 import com.stardevllc.starlib.clock.ClockManager;
-import com.stardevllc.starlib.observable.collections.ObservableHashSet;
-import com.stardevllc.starlib.observable.collections.ObservableSet;
-import com.stardevllc.starlib.registry.StringRegistry;
+import com.stardevllc.starlib.observable.collections.set.ObservableHashSet;
+import com.stardevllc.starlib.observable.collections.set.ObservableSet;
 import com.thenexusreborn.api.experience.LevelManager;
 import com.thenexusreborn.api.experience.PlayerExperience;
 import com.thenexusreborn.api.gamearchive.*;
@@ -23,7 +22,8 @@ import com.thenexusreborn.api.sql.DatabaseRegistry;
 import com.thenexusreborn.api.sql.objects.Row;
 import com.thenexusreborn.api.sql.objects.SQLDatabase;
 import com.thenexusreborn.api.tags.Tag;
-import com.thenexusreborn.api.util.*;
+import com.thenexusreborn.api.util.Environment;
+import com.thenexusreborn.api.util.NetworkType;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -56,7 +56,6 @@ public abstract class NexusReborn {
     
     protected ServerRegistry<NexusServer> serverRegistry;
     protected ToggleRegistry toggleRegistry;
-    protected StringRegistry<String> tagRegistry;
     protected DatabaseRegistry databaseRegistry;
     
     protected SQLDatabase primaryDatabase;
@@ -104,7 +103,7 @@ public abstract class NexusReborn {
         instance.registerDatabases(instance.databaseRegistry);
         getLogger().info("Registered the databases");
         
-        for (SQLDatabase database : instance.databaseRegistry.getObjects().values()) {
+        for (SQLDatabase database : instance.databaseRegistry.values()) {
             if (database.getName().toLowerCase().contains("nexus")) {
                 database.registerClass(PlayerExperience.class);
                 database.registerClass(PlayerTime.class);
@@ -141,11 +140,11 @@ public abstract class NexusReborn {
             instance.nicknameBlacklist.add(entry.getName());
         }
         
-        instance.nicknameBlacklist.addListener((source, added, removed) -> {
-            if (added != null) {
-                getPrimaryDatabase().saveSilent(new NameBlacklistEntry(added));
-            } else if (removed != null) {
-                getPrimaryDatabase().deleteSilent(NameBlacklistEntry.class, removed);
+        instance.nicknameBlacklist.addListener(e -> {
+            if (e.added() != null) {
+                getPrimaryDatabase().saveSilent(new NameBlacklistEntry(e.added()));
+            } else if (e.removed() != null) {
+                getPrimaryDatabase().deleteSilent(NameBlacklistEntry.class, e.removed());
             }
         });
         
@@ -154,11 +153,11 @@ public abstract class NexusReborn {
             instance.randomNames.add(entry.getName());
         }
         
-        instance.randomNames.addListener((source, added, removed) -> {
-            if (added != null) {
-                getPrimaryDatabase().saveSilent(new RandomNameEntry(added));
-            } else if (removed != null) {
-                getPrimaryDatabase().deleteSilent(RandomNameEntry.class, removed);
+        instance.randomNames.addListener(e -> {
+            if (e.added() != null) {
+                getPrimaryDatabase().saveSilent(new RandomNameEntry(e.added()));
+            } else if (e.removed() != null) {
+                getPrimaryDatabase().deleteSilent(RandomNameEntry.class, e.removed());
             }
         });
         
@@ -167,11 +166,11 @@ public abstract class NexusReborn {
             instance.randomSkins.add(entry.getName());
         }
         
-        instance.randomSkins.addListener((source, added, removed) -> {
-            if (added != null) {
-                getPrimaryDatabase().saveSilent(new RandomSkinEntry(added));
-            } else if (removed != null) {
-                getPrimaryDatabase().deleteSilent(RandomSkinEntry.class, removed);
+        instance.randomSkins.addListener(e -> {
+            if (e.added() != null) {
+                getPrimaryDatabase().saveSilent(new RandomSkinEntry(e.added()));
+            } else if (e.removed() != null) {
+                getPrimaryDatabase().deleteSilent(RandomSkinEntry.class, e.removed());
             }
         });
         
@@ -189,19 +188,11 @@ public abstract class NexusReborn {
         instance.toggleRegistry.register("fly", Rank.DIAMOND, "Fly", "A donor perk that allows you to fly in hubs and lobbies", false);
         instance.toggleRegistry.register("debug", Rank.ADMIN, "Debug", "A toggle that allows debugging of things", false);
         
-        int initialToggleSize = instance.toggleRegistry.getObjects().size();
+        int initialToggleSize = instance.toggleRegistry.size();
         getLogger().info("Registered " + initialToggleSize + " default toggle types.");
         
         instance.registerToggles(instance.toggleRegistry);
-        getLogger().info("Registered " + (instance.toggleRegistry.getObjects().size() - initialToggleSize) + " additional default toggle types.");
-        
-        getLogger().info("Registering and Setting up Tags");
-        instance.tagRegistry = new StringRegistry<>();
-        String[] defaultTags = {"thicc", "son", "e-girl", "god", "e-dater", "lord", "epic", "bacca", "benja", "milk man", "champion"};
-        for (String dt : defaultTags) {
-            instance.tagRegistry.register(dt, dt);
-        }
-        getLogger().info("Registered " + instance.tagRegistry.getObjects().size() + " default tags.");
+        getLogger().info("Registered " + (instance.toggleRegistry.size() - initialToggleSize) + " additional default toggle types.");
         
         for (Punishment punishment : getPrimaryDatabase().get(Punishment.class)) {
             instance.punishmentManager.addPunishment(punishment);

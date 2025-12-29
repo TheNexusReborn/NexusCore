@@ -40,8 +40,8 @@ dependencies {
     implementation('net.dv8tion:JDA:5.2.0') {
         exclude module: 'opus-java'
     }
-    compileOnly 'com.stardevllc:StarCore:0.13.3'
-    compileOnly 'com.stardevllc:StarChat:0.5.5'
+    compileOnly 'com.stardevllc:StarCore:0.15.2'
+    compileOnly 'com.stardevllc:StarChat:0.5.9'
     compileOnly 'me.clip:placeholderapi:2.11.5'
     compileOnly 'org.spigotmc:spigot:1.8.8-R0.1-SNAPSHOT'
     compileOnly 'net.luckperms:api:5.4'

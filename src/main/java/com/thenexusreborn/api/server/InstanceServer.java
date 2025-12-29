@@ -31,7 +31,7 @@ public abstract non-sealed class InstanceServer extends NexusServer {
     @Override
     public Set<UUID> getPlayers() {
         Set<UUID> players = new HashSet<>(this.players);
-        this.childServers.getObjects().values().forEach(server -> players.addAll(server.getPlayers()));
+        this.childServers.values().forEach(server -> players.addAll(server.getPlayers()));
         return players;
     }
 }

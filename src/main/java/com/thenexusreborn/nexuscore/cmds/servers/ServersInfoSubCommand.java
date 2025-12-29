@@ -26,7 +26,7 @@ public class ServersInfoSubCommand extends ServersSubCommand {
         } else if (server instanceof InstanceServer instanceServer) {
             sender.sendMessage(MsgType.INFO.format("Primary: %v", instanceServer.getPrimaryVirtualServer().getName()));
             List<String> childServerNames = new ArrayList<>();
-            instanceServer.getChildServers().forEach(child -> childServerNames.add(child.getName()));
+            instanceServer.getChildServers().values().forEach(child -> childServerNames.add(child.getName()));
             sender.sendMessage(MsgType.INFO.format("Children: %v", childServerNames));
         }
     }

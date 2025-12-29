@@ -3,7 +3,7 @@ package com.thenexusreborn.nexuscore.cmds;
 import com.stardevllc.starcore.api.StarColors;
 import com.stardevllc.starlib.helper.Pair;
 import com.stardevllc.starlib.helper.StringHelper;
-import com.stardevllc.starmclib.cmdflags.FlagResult;
+import com.stardevllc.starmclib.command.flags.FlagResult;
 import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.nexuscore.NexusCore;

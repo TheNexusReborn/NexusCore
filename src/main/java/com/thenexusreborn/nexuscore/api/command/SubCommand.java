@@ -1,7 +1,7 @@
 package com.thenexusreborn.nexuscore.api.command;
 
-import com.stardevllc.starmclib.cmdflags.CmdFlags;
-import com.stardevllc.starmclib.cmdflags.FlagResult;
+import com.stardevllc.starmclib.command.flags.CmdFlags;
+import com.stardevllc.starmclib.command.flags.FlagResult;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.nexuscore.util.MsgType;
 import org.bukkit.command.CommandSender;
