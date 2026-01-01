@@ -50,7 +50,12 @@ public class PunishmentHistoryCmds implements CommandExecutor {
             if (commandTargetName.equalsIgnoreCase("PowerMoveRegulator") || commandTargetName.equalsIgnoreCase("Console")) {
                 commandTarget = commandTargetName;
             } else {
-                commandTarget = NexusReborn.getPlayerManager().getUUIDFromName(commandTargetName).toString();
+                UUID uuidFromName = NexusReborn.getPlayerManager().getUUIDFromName(commandTargetName);
+                if (uuidFromName != null) {
+                    commandTarget = uuidFromName.toString();
+                } else {
+                    commandTarget = null;
+                }
             }
         }
         
