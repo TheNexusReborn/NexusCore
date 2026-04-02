@@ -21,11 +21,10 @@ public class PlayerHUDThread extends StarThread<NexusCore> {
     @Override
     public void onRun() {
         for (UUID pUUID : plugin.getNexusServer().getPlayers()) {
-            Player player = Bukkit.getPlayer(pUUID);
             if (pUUID == null) {
                 continue;
             }
-            
+            Player player = Bukkit.getPlayer(pUUID);
             NexusPlayer nexusPlayer = NexusReborn.getPlayerManager().getNexusPlayer(player.getUniqueId());
             
             if (nexusPlayer == null) {

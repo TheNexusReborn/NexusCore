@@ -97,7 +97,7 @@ public abstract class NexusReborn {
     public static void init() throws Exception {
         getLogger().info("Loading NexusAPI Version v" + instance.version);
         
-        instance.serverRegistry = new ServerRegistry<>(NexusServer.class);
+        instance.serverRegistry = new ServerRegistry<>(NexusServer.class, "servers", "Servers");
         instance.databaseRegistry = new DatabaseRegistry(instance.logger);
         
         instance.registerDatabases(instance.databaseRegistry);

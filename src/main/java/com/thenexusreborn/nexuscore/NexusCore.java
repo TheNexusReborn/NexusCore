@@ -6,6 +6,7 @@ import com.stardevllc.starchat.StarChat;
 import com.stardevllc.starchat.channels.ChatChannel;
 import com.stardevllc.starlib.clock.ClockManager;
 import com.stardevllc.starlib.helper.FileHelper;
+import com.stardevllc.starlib.registry.IRegistry;
 import com.stardevllc.ui.GuiManager;
 import com.sun.net.httpserver.HttpServer;
 import com.thenexusreborn.api.NexusReborn;
