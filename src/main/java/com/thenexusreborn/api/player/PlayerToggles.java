@@ -15,7 +15,16 @@ public class PlayerToggles {
     }
     
     public void add(Toggle toggle) {
-        this.toggles.put(toggle.getInfo().getName().toLowerCase(), toggle);
+        if (toggle == null) {
+            return;
+        }
+        
+        Info info = toggle.getInfo();
+        if (info == null) {
+            return;
+        }
+        
+        this.toggles.put(info.getName().toLowerCase(), toggle);
     }
     
     public void setValue(String name, boolean value) {

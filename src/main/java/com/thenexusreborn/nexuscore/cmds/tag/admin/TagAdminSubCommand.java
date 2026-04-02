@@ -1,8 +1,8 @@
 package com.thenexusreborn.nexuscore.cmds.tag.admin;
 
-import com.stardevllc.starcore.api.StarColors;
-import com.stardevllc.starlib.helper.Pair;
-import com.stardevllc.starmclib.command.flags.FlagResult;
+import com.stardevllc.StarColors;
+import com.stardevllc.starlib.tuple.pair.Pair;
+import com.stardevllc.command.flags.FlagResult;
 import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Rank;
@@ -51,7 +51,7 @@ public abstract class TagAdminSubCommand extends SubCommand<NexusCore> {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             List<Tag> tags;
             try {
-                tags = NexusReborn.getPrimaryDatabase().get(Tag.class, "uuid", playerInfo.first().toString());
+                tags = NexusReborn.getPrimaryDatabase().get(Tag.class, "uuid", playerInfo.getLeft().toString());
             } catch (SQLException e) {
                 sender.sendMessage(StarColors.color(MsgType.ERROR + "There was a database error while getting the list of tags."));
                 return;
@@ -65,7 +65,7 @@ public abstract class TagAdminSubCommand extends SubCommand<NexusCore> {
                 }
             }
 
-            NexusPlayer nexusPlayer = NexusReborn.getPlayerManager().getNexusPlayer(playerInfo.first());
+            NexusPlayer nexusPlayer = NexusReborn.getPlayerManager().getNexusPlayer(playerInfo.getLeft());
 
             handle(sender, nexusPlayer, tag, tagName);
         });

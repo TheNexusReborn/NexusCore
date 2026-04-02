@@ -1,7 +1,7 @@
 package com.thenexusreborn.nexuscore.cmds;
 
-import com.stardevllc.starmclib.command.flags.FlagResult;
-import com.stardevllc.starmclib.skin.SkinAPI;
+import com.stardevllc.command.flags.FlagResult;
+import com.stardevllc.skin.SkinAPI;
 import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.nickname.Nickname;
 import com.thenexusreborn.api.player.NexusPlayer;

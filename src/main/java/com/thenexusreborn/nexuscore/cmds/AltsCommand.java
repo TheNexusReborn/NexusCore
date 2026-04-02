@@ -1,9 +1,9 @@
 package com.thenexusreborn.nexuscore.cmds;
 
-import com.stardevllc.starcore.api.StarColors;
-import com.stardevllc.starlib.helper.Pair;
+import com.stardevllc.StarColors;
+import com.stardevllc.command.flags.FlagResult;
 import com.stardevllc.starlib.helper.StringHelper;
-import com.stardevllc.starmclib.command.flags.FlagResult;
+import com.stardevllc.starlib.tuple.pair.Pair;
 import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.nexuscore.NexusCore;
@@ -33,15 +33,15 @@ public class AltsCommand extends NexusCommand<NexusCore> {
             return true;
         }
         
-        Rank playerRank = playerManager.getPlayerRank(playerInfo.first());
+        Rank playerRank = playerManager.getPlayerRank(playerInfo.getLeft());
         if (playerRank.ordinal() < senderRank.ordinal()) {
-            sender.sendMessage(MsgType.WARN.format("You do not have permission to view %v's alt ccounts", playerInfo.first()));
+            sender.sendMessage(MsgType.WARN.format("You do not have permission to view %v's alt ccounts", playerInfo.getLeft()));
             return true;
         }
 
         Set<String> ips = new HashSet<>();
         for (IPEntry ipEntry : playerManager.getIpHistory()) {
-            if (ipEntry.getUuid().equals(playerInfo.first())) {
+            if (ipEntry.getUuid().equals(playerInfo.getLeft())) {
                 ips.add(ipEntry.getIp());
             }
         }
@@ -60,12 +60,12 @@ public class AltsCommand extends NexusCommand<NexusCore> {
                     altNames.add(nameFromUUID);
                 }
             } else {
-                plugin.getLogger().warning("Found alt " + player.toString() + " for " + playerInfo.second() + " but could not get the name. Cache returned: " + nameFromUUID);
+                plugin.getLogger().warning("Found alt " + player.toString() + " for " + playerInfo.getRight() + " but could not get the name. Cache returned: " + nameFromUUID);
             }
         }
 
         String altNameList = StringHelper.join(altNames, ", ");
-        sender.sendMessage(StarColors.color(MsgType.INFO + playerInfo.second() + " has the following alt accounts..."));
+        sender.sendMessage(StarColors.color(MsgType.INFO + playerInfo.getRight() + " has the following alt accounts..."));
         sender.sendMessage(StarColors.color("&6&l> &b" + altNameList));
         return true;
     }

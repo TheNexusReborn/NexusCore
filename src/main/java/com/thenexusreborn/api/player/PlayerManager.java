@@ -7,9 +7,10 @@ import com.google.common.collect.HashBiMap;
 import com.stardevllc.starlib.bucket.Bucket;
 import com.stardevllc.starlib.bucket.Buckets;
 import com.stardevllc.starlib.bucket.partitioning.PartitioningStrategies;
-import com.stardevllc.starlib.helper.Pair;
-import com.stardevllc.starmclib.mojang.MojangAPI;
-import com.stardevllc.starmclib.mojang.MojangProfile;
+import com.stardevllc.starlib.tuple.pair.ImmutablePair;
+import com.stardevllc.starlib.tuple.pair.Pair;
+import com.stardevllc.mojang.MojangAPI;
+import com.stardevllc.mojang.MojangProfile;
 import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.punishment.Punishment;
 import com.thenexusreborn.api.punishment.PunishmentType;
@@ -18,6 +19,7 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+@SuppressWarnings("UnstableApiUsage")
 public abstract class PlayerManager {
     
     public static final Set<UUID> NEXUS_TEAM = Set.of(UUID.fromString("3f7891ce-5a73-4d52-a2ba-299839053fdc"), UUID.fromString("fc6a3e38-c1c0-40a6-b7b9-152ffdadc053"), UUID.fromString("84c55f0c-2f09-4cf6-9924-57f536eb2228"));
@@ -162,7 +164,7 @@ public abstract class PlayerManager {
             return null;
         }
         
-        return new Pair<>(uniqueID, name);
+        return ImmutablePair.of(uniqueID, name);
     }
     
     public NexusPlayer createPlayerData(UUID uniqueId, String name) {

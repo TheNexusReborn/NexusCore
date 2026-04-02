@@ -1,6 +1,6 @@
 package com.thenexusreborn.api.sql.objects;
 
-import com.stardevllc.starlib.observable.WritableProperty;
+import com.stardevllc.starlib.values.Property;
 import com.thenexusreborn.api.sql.DatabaseRegistry;
 import com.thenexusreborn.api.sql.interfaces.SQLDB;
 import com.thenexusreborn.api.sql.objects.typehandlers.*;
@@ -19,6 +19,7 @@ import java.util.logging.Logger;
  * Please see the documentation for the get() and the save() methods for saving and loading data from the database<br>
  * All actions happen on the same thread they are called on, nothing is async. There is plans to add methods for this.
  */
+@SuppressWarnings({"SqlSourceToSinkFlow", "SqlNoDataSourceInspection"})
 public abstract class SQLDatabase implements SQLDB {
     protected Logger logger;
     protected String url, name, user, password;
@@ -164,9 +165,9 @@ public abstract class SQLDatabase implements SQLDB {
                 Field field = column.getField();
                 field.setAccessible(true);
 
-                if (WritableProperty.class.isAssignableFrom(field.getType())) {
+                if (Property.class.isAssignableFrom(field.getType())) {
                     Object fieldValue = field.get(object);
-                    WritableProperty<Object> property = (WritableProperty<Object>) fieldValue;
+                    Property<Object> property = (Property<Object>) fieldValue;
                     for (TypeHandler typeHandler : this.typeHandlers) {
                         if (typeHandler.matches(property.getTypeClass())) {
                             data = typeHandler.deserializer.deserialize(column, data);

@@ -1,5 +1,6 @@
 package com.thenexusreborn.nexuscore;
 
+import com.stardevllc.starlib.objects.key.Keys;
 import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.gamearchive.GameLogManager;
 import com.thenexusreborn.api.player.PlayerProxy;
@@ -33,7 +34,7 @@ public class SpigotNexusAPI extends NexusReborn {
         registry.addTypeHandler(new PositionHandler());
         FileConfiguration config = plugin.getConfig();
         SQLDatabase database = new MySQLDatabase(plugin.getLogger(), new MySQLProperties().setDatabaseName(config.getString("databases.database.database")).setHost(config.getString("databases.database.host")).setUsername(config.getString("databases.database.username")).setPassword(config.getString("databases.database.password")));
-        registry.register(database);
+        registry.register(Keys.of(database.getName()), database);
     
         for (NexusSpigotPlugin nexusPlugin : plugin.getNexusPlugins()) {
             nexusPlugin.registerDatabases(registry);

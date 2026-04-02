@@ -1,7 +1,6 @@
 package com.thenexusreborn.nexuscore.thread;
 
-import com.stardevllc.starcore.utils.StarThread;
-import com.stardevllc.starlib.objects.registry.RegistryObject;
+import com.stardevllc.StarThread;
 import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Rank;
@@ -23,9 +22,9 @@ public class PlayerVisibilityThread extends StarThread<NexusCore> {
     @Override
     public void onRun() {
         List<NexusServer> servers = new LinkedList<>();
-        Iterator<RegistryObject<String, NexusServer>> serverIterator = NexusReborn.getServerRegistry().iterator();
+        Iterator<NexusServer> serverIterator = new ArrayList<>(NexusReborn.getServerRegistry().values()).iterator();
         while (serverIterator.hasNext()) {
-            NexusServer ns = serverIterator.next().get();
+            NexusServer ns = serverIterator.next();
             if (ns.getType() == ServerType.INSTANCE) {
                 serverIterator.remove();
             } else {

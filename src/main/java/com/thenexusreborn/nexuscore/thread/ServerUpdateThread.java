@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.thread;
 
-import com.stardevllc.starcore.utils.StarThread;
+import com.stardevllc.StarThread;
 import com.thenexusreborn.nexuscore.NexusCore;
 
 public class ServerUpdateThread extends StarThread<NexusCore> {

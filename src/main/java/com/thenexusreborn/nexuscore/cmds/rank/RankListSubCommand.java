@@ -1,10 +1,11 @@
 package com.thenexusreborn.nexuscore.cmds.rank;
 
-import com.stardevllc.starcore.api.StarColors;
-import com.stardevllc.starlib.helper.Pair;
-import com.stardevllc.starmclib.command.flags.FlagResult;
-import com.stardevllc.starmclib.mojang.MojangAPI;
-import com.stardevllc.starmclib.mojang.MojangProfile;
+import com.stardevllc.StarColors;
+import com.stardevllc.command.flags.FlagResult;
+import com.stardevllc.mojang.MojangAPI;
+import com.stardevllc.mojang.MojangProfile;
+import com.stardevllc.starlib.tuple.pair.ImmutablePair;
+import com.stardevllc.starlib.tuple.pair.Pair;
 import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.nexuscore.NexusCore;
@@ -37,12 +38,12 @@ public class RankListSubCommand extends SubCommand<NexusCore> {
                 UUID uuid = UUID.fromString(args[0]);
                 MojangProfile mojangProfile = MojangAPI.getProfile(uuid);
                 if (mojangProfile != null) {
-                    playerInfo = new Pair<>(uuid, mojangProfile.getName());
+                    playerInfo = ImmutablePair.of(uuid, mojangProfile.getName());
                 }
             } catch (Exception e) {
                 MojangProfile mojangProfile = MojangAPI.getProfile(args[0]);
                 if (mojangProfile != null) {
-                    playerInfo = new Pair<>(mojangProfile.getUniqueId(), mojangProfile.getName());
+                    playerInfo = ImmutablePair.of(mojangProfile.getUniqueId(), mojangProfile.getName());
                 }
             }
         }
@@ -52,14 +53,14 @@ public class RankListSubCommand extends SubCommand<NexusCore> {
             return true;
         }
         
-        PlayerRanks playerRanks = playerManager.getPlayerRanks(playerInfo.first());
+        PlayerRanks playerRanks = playerManager.getPlayerRanks(playerInfo.getLeft());
         if (playerRanks == null) {
             MsgType.WARN.send(sender, "That player has no ranks");
             return true;
         }
         
         Map<Rank, Long> ranks = playerRanks.findAll();
-        StarColors.coloredMessage(sender, "&6&l>> &eList of ranks for &b" + playerInfo.second());
+        StarColors.coloredMessage(sender, "&6&l>> &eList of ranks for &b" + playerInfo.getRight());
         ranks.forEach((rank, expire) -> StarColors.coloredMessage(sender, " &6&l> " + rank.getColor() + rank.name().replace("_", " ")));
         
         return true;

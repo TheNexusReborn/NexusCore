@@ -20,7 +20,7 @@ public class CoreInstanceServer extends InstanceServer {
     @Override
     public void join(NexusPlayer nexusPlayer) {
         String name = getName();
-        if (primaryVirtualServer != null) {
+        if (primaryVirtualServer != null && primaryVirtualServer.get() != null) {
             primaryVirtualServer.get().join(nexusPlayer);
             name = primaryVirtualServer.get().getName();
         }

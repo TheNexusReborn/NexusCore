@@ -1,8 +1,8 @@
 package com.thenexusreborn.nexuscore.cmds;
 
-import com.stardevllc.starcore.api.StarColors;
+import com.stardevllc.StarColors;
 import com.stardevllc.starlib.time.TimeFormat;
-import com.stardevllc.starmclib.command.flags.FlagResult;
+import com.stardevllc.command.flags.FlagResult;
 import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.sql.objects.SQLDatabase;

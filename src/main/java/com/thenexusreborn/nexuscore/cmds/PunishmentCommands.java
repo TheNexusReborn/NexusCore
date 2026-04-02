@@ -1,9 +1,9 @@
 package com.thenexusreborn.nexuscore.cmds;
 
-import com.stardevllc.starcore.api.StarColors;
+import com.stardevllc.StarColors;
 import com.stardevllc.starlib.helper.CodeGenerator;
-import com.stardevllc.starlib.helper.Pair;
 import com.stardevllc.starlib.time.TimeParser;
+import com.stardevllc.starlib.tuple.pair.Pair;
 import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.*;
 import com.thenexusreborn.api.punishment.*;
@@ -52,7 +52,7 @@ public class PunishmentCommands implements CommandExecutor {
             }
             
             try {
-                length = new TimeParser().parseTime(args[1]);
+                length = TimeParser.parseTime(args[1]);
             } catch (Exception e) {
                 sender.sendMessage(StarColors.color(MsgType.WARN + "Invalid length argument."));
                 return true;
@@ -97,9 +97,9 @@ public class PunishmentCommands implements CommandExecutor {
         } else {
             Pair<UUID, String> info = playerManager.getPlayerFromIdentifier(args[0]);
             if (info != null) {
-                target = playerManager.getNexusPlayer(info.first());
+                target = playerManager.getNexusPlayer(info.getLeft());
                 if (target == null) {
-                    target = playerManager.createPlayerData(info.first(), info.second());
+                    target = playerManager.createPlayerData(info.getLeft(), info.getRight());
                 }
             }
         }

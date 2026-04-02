@@ -1,7 +1,7 @@
 package com.thenexusreborn.nexuscore.cmds;
 
-import com.stardevllc.starcore.api.StarColors;
-import com.stardevllc.starlib.helper.Pair;
+import com.stardevllc.StarColors;
+import com.stardevllc.starlib.tuple.pair.Pair;
 import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.PlayerManager;
 import com.thenexusreborn.api.player.Rank;
@@ -62,7 +62,7 @@ public class PunishRemoveCommands implements CommandExecutor {
             return true;
         }
 
-        UUID targetUniqueID = playerInfo.first();
+        UUID targetUniqueID = playerInfo.getLeft();
     
         List<Punishment> punishments = NexusReborn.getPunishmentManager().getPunishmentsByTarget(targetUniqueID);
         if (punishments.isEmpty()) {

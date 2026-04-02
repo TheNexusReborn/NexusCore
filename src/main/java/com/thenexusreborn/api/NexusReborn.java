@@ -1,9 +1,9 @@
 package com.thenexusreborn.api;
 
-import com.stardevllc.starcore.api.StarColors;
+import com.stardevllc.StarColors;
 import com.stardevllc.starlib.clock.ClockManager;
-import com.stardevllc.starlib.observable.collections.set.ObservableHashSet;
-import com.stardevllc.starlib.observable.collections.set.ObservableSet;
+import com.stardevllc.starlib.collections.observable.set.ObservableHashSet;
+import com.stardevllc.starlib.collections.observable.set.ObservableSet;
 import com.thenexusreborn.api.experience.LevelManager;
 import com.thenexusreborn.api.experience.PlayerExperience;
 import com.thenexusreborn.api.gamearchive.*;
@@ -97,7 +97,7 @@ public abstract class NexusReborn {
     public static void init() throws Exception {
         getLogger().info("Loading NexusAPI Version v" + instance.version);
         
-        instance.serverRegistry = new ServerRegistry<>();
+        instance.serverRegistry = new ServerRegistry<>(NexusServer.class);
         instance.databaseRegistry = new DatabaseRegistry(instance.logger);
         
         instance.registerDatabases(instance.databaseRegistry);

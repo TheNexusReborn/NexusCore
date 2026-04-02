@@ -1,27 +1,27 @@
 package com.thenexusreborn.api.server;
 
-import com.stardevllc.starlib.observable.property.readwrite.ReadWriteObjectProperty;
+import com.stardevllc.starlib.values.property.ObjectProperty;
 
 import java.util.UUID;
 
 public abstract non-sealed class VirtualServer extends NexusServer {
     
-    protected final ReadWriteObjectProperty<InstanceServer> parentServer;
+    protected final ObjectProperty<InstanceServer> parentServer;
     
     public VirtualServer(InstanceServer parent, String name, String mode, int maxPlayers) {
         super(name, ServerType.VIRTUAL, mode, maxPlayers);
-        this.parentServer = new ReadWriteObjectProperty<>(this, "parentServer", InstanceServer.class);
+        this.parentServer = new ObjectProperty<>(this, "parentServer", InstanceServer.class);
         
-        this.parentServer.addListener(c -> {
-            if (c.oldValue() != null) {
+        this.parentServer.addChangeListener((v, o, n) -> {
+            if (o != null) {
                 for (UUID player : players) {
-                    c.oldValue().removePlayer(player);
+                    o.removePlayer(player);
                 }
             }
 
-            if (c.newValue() != null) {
+            if (n != null) {
                 for (UUID player : players) {
-                    c.newValue().addPlayer(player);
+                    n.addPlayer(player);
                 }
             }
         });

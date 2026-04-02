@@ -1,12 +1,12 @@
 package com.thenexusreborn.nexuscore;
 
+import com.stardevllc.ServerProperties;
+import com.stardevllc.StarColors;
 import com.stardevllc.starchat.StarChat;
 import com.stardevllc.starchat.channels.ChatChannel;
-import com.stardevllc.starcore.api.StarColors;
-import com.stardevllc.starcore.api.ui.GuiManager;
-import com.stardevllc.starcore.utils.ServerProperties;
 import com.stardevllc.starlib.clock.ClockManager;
 import com.stardevllc.starlib.helper.FileHelper;
+import com.stardevllc.ui.GuiManager;
 import com.sun.net.httpserver.HttpServer;
 import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.gamearchive.GameInfo;
@@ -260,16 +260,16 @@ public class NexusCore extends JavaPlugin implements Listener {
                 coreInstanceServer.setPrimaryVirtualServer(event.getPrimaryVirtualServer());
                 Map<String, VirtualServer> virtualServers = event.getVirtualServers();
                 for (VirtualServer server : virtualServers.values()) {
-                    coreInstanceServer.getChildServers().register(server);
+                    coreInstanceServer.getChildServers().register(server.getName(), server);
                     server.setParentServer(coreInstanceServer);
-                    NexusReborn.getServerRegistry().register(server);
+                    NexusReborn.getServerRegistry().register(server.getName(), server);
                 }
 
                 coreInstanceServer.onStart();
                 coreInstanceServer.getChildServers().values().forEach(NexusServer::onStart);
                 nexusServer = coreInstanceServer;
             }
-            NexusReborn.getServerRegistry().register(nexusServer);
+            NexusReborn.getServerRegistry().register(nexusServer.getName(), nexusServer);
         }, 1L);
 
         getServer().getScheduler().runTaskAsynchronously(this, () -> {

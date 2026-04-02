@@ -1,11 +1,11 @@
 package com.thenexusreborn.nexuscore.cmds;
 
 import com.stardevllc.starlib.time.TimeParser;
-import com.stardevllc.starmclib.command.flags.FlagResult;
-import com.stardevllc.starmclib.command.flags.type.ComplexFlag;
-import com.stardevllc.starmclib.command.flags.type.PresenceFlag;
-import com.stardevllc.starmclib.skin.Skin;
-import com.stardevllc.starmclib.skin.SkinAPI;
+import com.stardevllc.command.flags.FlagResult;
+import com.stardevllc.command.flags.type.ComplexFlag;
+import com.stardevllc.command.flags.type.PresenceFlag;
+import com.stardevllc.skin.Skin;
+import com.stardevllc.skin.SkinAPI;
 import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.nickname.*;
 import com.thenexusreborn.api.nickname.player.*;
@@ -251,10 +251,8 @@ public class NickCommand extends NexusCommand<NexusCore> {
                 return true;
             }
             
-            TimeParser timeParser = new TimeParser();
-            
             try {
-                long playtime = timeParser.parseTime(flagResults.getValue(TIME).toString());
+                long playtime = TimeParser.parseTime(flagResults.getValue(TIME).toString());
                 nickTime = new NickTime(target.getUniqueId(), playtime, nexusPlayer.getTrueTime());
             } catch (NumberFormatException e) {
                 MsgType.WARN.send(sender, "You provided an invalid time value.");

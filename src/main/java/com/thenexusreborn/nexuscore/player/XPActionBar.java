@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.player;
 
-import com.stardevllc.starcore.utils.ProgressBar;
+import com.stardevllc.ProgressBar;
 import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.experience.ExperienceLevel;
 import com.thenexusreborn.api.player.IActionBar;

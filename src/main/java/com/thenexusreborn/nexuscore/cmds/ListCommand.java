@@ -1,8 +1,8 @@
 package com.thenexusreborn.nexuscore.cmds;
 
 import com.google.common.collect.TreeMultimap;
-import com.stardevllc.starcore.api.StarColors;
-import com.stardevllc.starmclib.command.flags.FlagResult;
+import com.stardevllc.StarColors;
+import com.stardevllc.command.flags.FlagResult;
 import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Rank;
