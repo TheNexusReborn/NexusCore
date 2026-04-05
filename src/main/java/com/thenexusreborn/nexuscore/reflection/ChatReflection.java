@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.reflection;
 
-import com.stardevllc.StarColors;
+import com.stardevllc.minecraft.StarColors;
 
 import java.lang.reflect.Method;
 

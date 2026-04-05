@@ -1,6 +1,6 @@
 package com.thenexusreborn.api.player;
 
-import com.stardevllc.mojang.MojangProfile;
+import com.stardevllc.minecraft.mojang.MojangProfile;
 import com.stardevllc.starlib.clock.clocks.Stopwatch;
 import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.experience.PlayerExperience;

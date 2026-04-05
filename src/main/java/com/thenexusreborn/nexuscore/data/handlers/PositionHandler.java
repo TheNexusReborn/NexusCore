@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.data.handlers;
 
-import com.stardevllc.Position;
+import com.stardevllc.minecraft.Position;
 import com.thenexusreborn.api.sql.objects.TypeHandler;
 
 public class PositionHandler extends TypeHandler {

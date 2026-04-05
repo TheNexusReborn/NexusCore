@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.cmds;
 
-import com.stardevllc.StarColors;
+import com.stardevllc.minecraft.StarColors;
 import com.stardevllc.starlib.helper.CodeGenerator;
 import com.stardevllc.starlib.time.TimeParser;
 import com.stardevllc.starlib.tuple.pair.Pair;

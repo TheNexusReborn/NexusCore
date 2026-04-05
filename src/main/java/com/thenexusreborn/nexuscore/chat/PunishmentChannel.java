@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.chat;
 
-import com.stardevllc.StarColors;
+import com.stardevllc.minecraft.StarColors;
 import com.stardevllc.starchat.channels.ChatChannel;
 import com.stardevllc.starchat.context.ChatContext;
 import com.thenexusreborn.api.punishment.Punishment;

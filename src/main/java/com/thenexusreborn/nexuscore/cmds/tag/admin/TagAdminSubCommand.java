@@ -1,8 +1,8 @@
 package com.thenexusreborn.nexuscore.cmds.tag.admin;
 
-import com.stardevllc.StarColors;
+import com.stardevllc.minecraft.StarColors;
 import com.stardevllc.starlib.tuple.pair.Pair;
-import com.stardevllc.command.flags.FlagResult;
+import com.stardevllc.minecraft.command.flags.FlagResult;
 import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Rank;

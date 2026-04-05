@@ -1,10 +1,10 @@
 package com.thenexusreborn.nexuscore.cmds.rank;
 
-import com.stardevllc.StarColors;
-import com.stardevllc.command.flags.FlagResult;
-import com.stardevllc.mojang.MojangAPI;
+import com.stardevllc.minecraft.StarColors;
+import com.stardevllc.minecraft.command.flags.FlagResult;
+import com.stardevllc.minecraft.mojang.MojangAPI;
 import com.stardevllc.starlib.time.TimeParser;
-import com.stardevllc.mojang.MojangProfile;
+import com.stardevllc.minecraft.mojang.MojangProfile;
 import com.stardevllc.starlib.tuple.pair.ImmutablePair;
 import com.stardevllc.starlib.tuple.pair.Pair;
 import com.thenexusreborn.api.NexusReborn;

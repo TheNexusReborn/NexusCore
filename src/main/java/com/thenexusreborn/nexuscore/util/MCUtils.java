@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.util;
 
-import com.stardevllc.StarColors;
+import com.stardevllc.minecraft.StarColors;
 import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.api.util.Constants;

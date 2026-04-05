@@ -1,10 +1,10 @@
 package com.thenexusreborn.nexuscore.cmds;
 
-import com.stardevllc.StarColors;
-import com.stardevllc.StarThread;
+import com.stardevllc.minecraft.StarColors;
+import com.stardevllc.minecraft.StarThread;
 import com.stardevllc.starlib.units.MemoryUnit;
-import com.stardevllc.command.flags.FlagResult;
-import com.stardevllc.command.flags.type.PresenceFlag;
+import com.stardevllc.minecraft.command.flags.FlagResult;
+import com.stardevllc.minecraft.command.flags.type.PresenceFlag;
 import com.thenexusreborn.api.player.Rank;
 import com.thenexusreborn.nexuscore.NexusCore;
 import com.thenexusreborn.nexuscore.api.command.NexusCommand;

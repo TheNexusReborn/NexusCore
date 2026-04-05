@@ -1,11 +1,11 @@
 package com.thenexusreborn.nexuscore.cmds;
 
 import com.stardevllc.starlib.time.TimeParser;
-import com.stardevllc.command.flags.FlagResult;
-import com.stardevllc.command.flags.type.ComplexFlag;
-import com.stardevllc.command.flags.type.PresenceFlag;
-import com.stardevllc.skin.Skin;
-import com.stardevllc.skin.SkinAPI;
+import com.stardevllc.minecraft.command.flags.FlagResult;
+import com.stardevllc.minecraft.command.flags.type.ComplexFlag;
+import com.stardevllc.minecraft.command.flags.type.PresenceFlag;
+import com.stardevllc.minecraft.skin.Skin;
+import com.stardevllc.minecraft.skin.SkinAPI;
 import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.nickname.*;
 import com.thenexusreborn.api.nickname.player.*;

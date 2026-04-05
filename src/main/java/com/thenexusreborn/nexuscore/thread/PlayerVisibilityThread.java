@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.thread;
 
-import com.stardevllc.StarThread;
+import com.stardevllc.minecraft.StarThread;
 import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.player.NexusPlayer;
 import com.thenexusreborn.api.player.Rank;

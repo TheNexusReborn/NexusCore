@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.scoreboard.impl;
 
-import com.stardevllc.StarColors;
+import com.stardevllc.minecraft.StarColors;
 import com.thenexusreborn.api.scoreboard.ValueUpdater;
 import com.thenexusreborn.api.scoreboard.wrapper.ITeam;
 import org.bukkit.scoreboard.Team;

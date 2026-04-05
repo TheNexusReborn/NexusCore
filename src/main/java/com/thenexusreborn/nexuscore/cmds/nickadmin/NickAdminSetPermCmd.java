@@ -1,7 +1,7 @@
 package com.thenexusreborn.nexuscore.cmds.nickadmin;
 
 import com.stardevllc.starlib.reflection.ReflectionHelper;
-import com.stardevllc.command.flags.FlagResult;
+import com.stardevllc.minecraft.command.flags.FlagResult;
 import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.nickname.NickPerms;
 import com.thenexusreborn.api.player.Rank;

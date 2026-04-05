@@ -1,13 +1,13 @@
 package com.thenexusreborn.nexuscore.player;
 
-import com.stardevllc.mojang.MojangAPI;
+import com.stardevllc.minecraft.mojang.MojangAPI;
 import com.stardevllc.starchat.context.ChatContext;
-import com.stardevllc.StarColors;
+import com.stardevllc.minecraft.StarColors;
 import com.stardevllc.starlib.clock.clocks.Stopwatch;
 import com.stardevllc.starlib.time.TimeUnit;
-import com.stardevllc.mojang.MojangProfile;
-import com.stardevllc.skin.Skin;
-import com.stardevllc.skin.SkinAPI;
+import com.stardevllc.minecraft.mojang.MojangProfile;
+import com.stardevllc.minecraft.skin.Skin;
+import com.stardevllc.minecraft.skin.SkinAPI;
 import com.thenexusreborn.api.NexusReborn;
 import com.thenexusreborn.api.nickname.Nickname;
 import com.thenexusreborn.api.player.*;

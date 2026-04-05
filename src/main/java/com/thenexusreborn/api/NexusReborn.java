@@ -1,6 +1,6 @@
 package com.thenexusreborn.api;
 
-import com.stardevllc.StarColors;
+import com.stardevllc.minecraft.StarColors;
 import com.stardevllc.starlib.clock.ClockManager;
 import com.stardevllc.starlib.collections.observable.set.ObservableHashSet;
 import com.stardevllc.starlib.collections.observable.set.ObservableSet;

@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.reflection.impl;
 
-import com.stardevllc.StarColors;
+import com.stardevllc.minecraft.StarColors;
 import com.thenexusreborn.nexuscore.reflection.ChatReflection;
 import org.bukkit.entity.Player;
 

@@ -1,6 +1,6 @@
 package com.thenexusreborn.nexuscore.util;
 
-import com.stardevllc.StarColors;
+import com.stardevllc.minecraft.StarColors;
 import com.stardevllc.starlib.converter.string.EnumStringConverter;
 import com.stardevllc.starlib.converter.string.StringConverters;
 import org.bukkit.command.CommandSender;

@@ -1,7 +1,7 @@
 package com.thenexusreborn.nexuscore.cmds;
 
-import com.stardevllc.StarColors;
-import com.stardevllc.command.flags.FlagResult;
+import com.stardevllc.minecraft.StarColors;
+import com.stardevllc.minecraft.command.flags.FlagResult;
 import com.stardevllc.starlib.helper.StringHelper;
 import com.stardevllc.starlib.tuple.pair.Pair;
 import com.thenexusreborn.api.NexusReborn;
