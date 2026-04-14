@@ -25,6 +25,11 @@ public class PlayerHUDThread extends StarThread<NexusCore> {
                 continue;
             }
             Player player = Bukkit.getPlayer(pUUID);
+            
+            if (player == null) {
+                continue;
+            }
+            
             NexusPlayer nexusPlayer = NexusReborn.getPlayerManager().getNexusPlayer(player.getUniqueId());
             
             if (nexusPlayer == null) {
