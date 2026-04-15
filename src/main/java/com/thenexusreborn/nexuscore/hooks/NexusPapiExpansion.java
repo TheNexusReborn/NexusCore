@@ -20,6 +20,10 @@ public class NexusPapiExpansion extends PlaceholderExpansion {
     /* 
     nexuscore_coloredname - Colored name of the player
     nexuscore_displayname - Main Displayname including prefix, name and tag
+    
+    nexuscore_prefix - Prefix of the player
+    nexuscore_tag - Tag of the player
+    
     nexuscore_level - Player level
     nexuscore_chatcolor - Player's chat color based on rank
     nexuscore_servername - Name of the current server
@@ -54,6 +58,18 @@ public class NexusPapiExpansion extends PlaceholderExpansion {
             }
             
             return displayName + tag;
+        } else if (params.startsWith("prefix")) {
+            if (params.contains("_true")) {
+                return nexusPlayer.getPrefix();
+            } 
+            
+            return nexusPlayer.getTruePrefix();
+        } else if (params.startsWith("tag")) {
+            if (nexusPlayer.hasActiveTag()) {
+                return nexusPlayer.getActiveTag().getDisplayName();
+            }
+            
+            return "";
         } else if (params.startsWith("level")) {
             int level;
             if (params.contains("_true")) {

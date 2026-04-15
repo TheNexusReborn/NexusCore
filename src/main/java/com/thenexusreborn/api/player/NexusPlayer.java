@@ -274,6 +274,14 @@ public class NexusPlayer implements Comparable<NexusPlayer> {
             return displayName + getTrueName();
         }
     }
+    
+    public String getPrefix() {
+        return getEffectiveRank().getPrefix();
+    }
+    
+    public String getTruePrefix() {
+        return getRank().getPrefix();
+    }
 
     public String getDisplayName() {
         Rank rank = getEffectiveRank();
